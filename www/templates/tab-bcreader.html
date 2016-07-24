@@ -1,0 +1,19 @@
+<ion-view view-title="CodeReader">
+    <ion-content padding="true" class="padding">
+        <ion-list>
+            <ion-item class="item">
+                <button ng-click="getBarcode()" class="button button-block button-primary">Scan Barcode</button>
+            </ion-item>
+            <ion-item class="item">
+                <p>Codigo: {{code}}</p>
+            </ion-item>
+          <ion-item class="item">
+            <p>Format: {{barcodeData.format}}</p>
+          </ion-item>
+          <ion-item class="item">
+            <p>hasCancelled: {{barcodeData.cancelled}}</p>
+          </ion-item>
+          <!--<p>BarcodeData: {{barcodeData}}</p>-->
+        </ion-list>
+    </ion-content>
+</ion-view>

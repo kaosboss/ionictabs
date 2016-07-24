@@ -1,0 +1,19 @@
+<ion-view view-title="Ibeacon">
+    <ion-content padding="true" class="padding">
+      <button ng-click="startScan()" type="button" class="button button-block button-primary">Start Scan</button>
+      <button ng-click="stopScan()" class="button button-block button-primary">Stop Scan</button>
+    <!--</ion-content>-->
+  <!--<ion-content>-->
+        <ion-list>
+            <ion-item class="item" ng-repeat="(key, value) in beacons" type="item-text-wrap">
+            <p>Nome: {{value.nome}}</p>
+            <p>UUID: {{value.uuid}}</p>
+            <p>major: {{value.major}}</p>
+            <p>minor: {{value.minor}}</p>
+            <p>minor: {{value.accuracy}}m</p>
+            <p>minor: {{value.rssi}}</p>
+            <p>Proximity: {{value.proximity}}</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
