@@ -8,10 +8,11 @@
 var APPverion = "0.1";
 var APPtutorial = 0;
 var APPfirstTime = 0;
+var APPdir = null;
 
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
-  .run(function ($ionicPlatform) {
+  .run(function ($ionicPlatform, $rootScope, $cordovaSQLite) {
     $ionicPlatform.ready(function () {
       console.log("ionic platform  ready");
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -24,9 +25,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         // org.apache.cordova.statusbar required
         StatusBar.styleDefault();
       }
-      console.log("ionic platform db: init"); // #### DB #########
 
-      // window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory,
+      var db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
+
+      $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `info` ( `name`	TEXT,	`value`	TEXT)");
+      // });
+      // window.resolveLocalFileSystemURL( APPdir,
       //   function (confDir) {
       //     console.log("Got directory: " + confDir.fullPath);
       //     var dbFullPath = cordova.file.externalDataDirectory + "2014110801.sqlite";
@@ -75,6 +79,147 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       //       },
       //       function (error) {
       //         console.warn("##getFile: " + error);
+      //       });
+      //   }, // Success callback [resolveLocalFileSystemURL]
+      //   function (error) {
+      //     console.warn(error);
+      //   }); // Failure callback [resolveLocalFileSystemURL]
+
+    });
+  })
+  .controller('DashCtrl', function ($scope, $cordovaSQLite) {
+
+    document.addEventListener("deviceready", function () {
+
+      console.log("ionic platform db: init"); // #### DB #########
+
+      // "select value from info where name=?", ["APP"]
+      var query = "select value from info where name=?";
+      $cordovaSQLite.execute($scope.db, query, ["APP"]).then(function (res) {
+        if (res.rows.length > 0) {
+          var message = "SELECTED -> " + res.rows.item(0).value;
+          // alert(message);
+          console.log(message);
+          console.log("Got APP version: Installed v" + res.rows.item(0).value);
+          alert("Got APP version: Installed v" + res.rows.item(0).value);
+        } else {
+          alert("No results found");
+          console.log("No results found, firsttime?");
+
+          var query = "INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ")";
+          $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
+            var message = "INSERT ID -> " + res.insertId;
+            console.log(message);
+            console.log("Inserted APP version: v" + APPverion + " tutorial: ON");
+            APPfirstTime = 1;
+            alert(message);
+          }, function (err) {
+            console.error(err);
+            alert(err);
+          });
+
+          var query = "INSERT INTO `info` (name,value) VALUES ('APPtutorial', 'Sim')";
+          $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
+            var message = "INSERT ID -> " + res.insertId;
+            console.log(message);
+            console.log("Inserted APP tutorial: Sim");
+            APPtutorial = 1;
+            alert(message);
+          }, function (err) {
+            console.error(err);
+            alert(err);
+          });
+
+        }
+      }, function (err) {
+        alert(err);
+        console.error("ERROR ON get app version", err);
+      });
+
+//       $scope.insert = function (firstname, lastname) {
+// //alert('check: ' + $scope.aaa);
+//         var query = "INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ")";
+//         $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
+//           var message = "INSERT ID -> " + res.insertId;
+//           console.log(message);
+//           alert(message);
+//         }, function (err) {
+//           console.error(err);
+//           alert(err);
+//         });
+//       }
+//
+//       $scope.select = function (lastname) {
+//         var query = "SELECT firstname, lastname FROM people WHERE lastname = ?";
+//         $cordovaSQLite.execute($scope.db, query, [lastname]).then(function (res) {
+//           if (res.rows.length > 0) {
+//             var message = "SELECTED -> " + res.rows.item(0).firstname + " " + res.rows.item(0).lastname;
+//             alert(message);
+//             console.log(message);
+//           } else {
+//             alert("No results found");
+//             console.log("No results found");
+//           }
+//         }, function (err) {
+//           alert(err);
+//           console.error(err);
+//         });
+//       }
+
+      //android cordova.file.externalDataDirectory,
+      // APPdir = cordova.file.applicationStorageDirectory;
+      //   APPdir = cordova.file.applicationDirectory;
+      //   console.log("APPdir: %s orig: %s", APPdir, cordova.file.externalDataDirectory);
+      //
+      // window.resolveLocalFileSystemURL( APPdir,
+      //   function (confDir) {
+      //     console.log("Got directory: " + confDir.fullPath);
+      //     var dbFullPath = confDir.fullPath + "2014110801.sqlite";
+      //     confDir.getFile("2014110801.sqlite" , {create: true},
+      //       function (confFile) {
+      //         console.log("Got file: " + confFile.fullPath);
+      //         cordovaSQLite.openDatabase(dbFullPath, true,
+      //           function () {
+      //             cordovaSQLite.execQueryArrayResult("select value from info where name=?", ["APP"],
+      //               function (version) {
+      //                 if (version != "")
+      //                   console.log("Got APP version: Installed v" + version);
+      //                 else {
+      //                   console.warn("Got APP empty version");
+      //                 }
+      //               },
+      //               function (error) {
+      //                 console.warn("##execQueryArrayResult 11: " + error);
+      //                 //CREATE TABLE `info` ( `name`	TEXT,	`value`	TEXT);
+      //                 cordovaSQLite.execQueryNoResult("CREATE TABLE `info` ( `name`	TEXT,	`value`	TEXT);", function (res) {
+      //                     console.log("Created table info");
+      //                     cordovaSQLite.execQueryNoResult("INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ");", function (res) {
+      //                         console.log("Inserted APP version: v" + APPverion + " tutorial: ON");
+      //                         APPfirstTime = 1;
+      //                         cordovaSQLite.execQueryNoResult("INSERT INTO `info` (name,value) VALUES ('APPtutorial', 'Sim');", function (res) {
+      //                             console.log("Inserted APP tutorial: Sim");
+      //                             APPtutorial = 1;
+      //                           },
+      //                           function (error) {
+      //                             console.warn("##execQueryArrayResult22: " + error);
+      //                           });
+      //                       },
+      //                       function (error) {
+      //                         console.warn("##execQueryArrayResult33: " + error);
+      //                       });
+      //
+      //                   },
+      //                   function (error) {
+      //                     console.warn("##execQueryArrayResult44: " + error);
+      //                   });
+      //               });
+      //           },
+      //           function (error) {
+      //             console.warn("##openDatabase55: " + error);
+      //           });
+      //       },
+      //       function (error) {
+      //         console.warn("##getFile66: " + error);
       //       });
       //   }, // Success callback [resolveLocalFileSystemURL]
       //   function (error) {
@@ -202,50 +347,69 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   //   };
   //
   // })
-  .controller('CameraCtrl', function ($scope, $cordovaCamera) {
+  .controller('CameraCtrl', function ($scope, $cordovaCamera, $cordovaDevice, $cordovaSQLite, $ionicPlatform) {
 
     // $scope.lastPhoto ="";
 
     document.addEventListener("deviceready", function () {
 
-    console.log("camera controller ready 1");
-    // $scope.getPhoto = function () {
-    //   var options = {
-    //     destinationType: Camera.DestinationType.FILE_URI,
-    //     sourceType: Camera.PictureSourceType.CAMERA,
-    //     // targetWidth: 100,
-    //     // targetHeight: 100,
-    //     // encodingType: 0,
-    //   };
-    //
-    //   $cordovaCamera.getPicture(options).then(function (imageURI) {
-    //     console.log(imageURI);
-    //     $scope.lastPhoto = imageURI;
-    //     $scope.$apply();
-    //   }, function (err) {
-    //     console.log("ERROR: getPicture", err);
-    //   });
-    //
+      console.log("camera controller ready 1");
+      $ionicPlatform.ready(function () {
+        console.log("retrieving first pic");
+        var query = "select value from info where name=?";
+        $cordovaSQLite.execute($scope.db, query, ["IMG"]).then(function (res) {
+          if (res.rows.length > 0) {
+            var message = "SELECTED -> " + res.rows.item(res.rows.length-1).value;
+            alert(message);
+            console.log(message, res);
+            $scope.lastPhoto = res.rows.item(res.rows.length-1).value;
+            // $scope.$apply();
+          } else {
+            alert("No results found");
+            console.log("No results found");
+          }
+        }, function (err) {
+          alert(err);
+          console.error(err);
+        });
+      });
+      // $scope.getPhoto = function () {
+      //   var options = {
+      //     destinationType: Camera.DestinationType.FILE_URI,
+      //     sourceType: Camera.PictureSourceType.CAMERA,
+      //     // targetWidth: 100,
+      //     // targetHeight: 100,
+      //     // encodingType: 0,
+      //   };
+      //
+      //   $cordovaCamera.getPicture(options).then(function (imageURI) {
+      //     console.log(imageURI);
+      //     $scope.lastPhoto = imageURI;
+      //     $scope.$apply();
+      //   }, function (err) {
+      //     console.log("ERROR: getPicture", err);
+      //   });
+      //
 
-      function movePic(file){
+      function movePic(file) {
         // window.resolveLocalFileSystemURI(file, resolveOnSuccess, resOnError);
         window.resolveLocalFileSystemURL(file, resolveOnSuccess, resOnError);
       }
 
 //Callback function when the file system uri has been resolved
-      function resolveOnSuccess(entry){
+      function resolveOnSuccess(entry) {
         var d = new Date();
         var n = d.getTime();
         //new file name
         var newFileName = n + ".jpg";
         var myFolderApp = "images";
 
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSys) {
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
             //The folder is created if doesn't exist
-            fileSys.root.getDirectory( myFolderApp,
-              {create:true, exclusive: false},
-              function(directory) {
-                entry.moveTo(directory, newFileName,  successMove, resOnError);
+            fileSys.root.getDirectory(myFolderApp,
+              {create: true, exclusive: false},
+              function (directory) {
+                entry.moveTo(directory, newFileName, successMove, resOnError);
               },
               resOnError);
           },
@@ -256,8 +420,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       function successMove(entry) {
         //I do my insert with "entry.fullPath" as for the path
         $scope.lastPhoto = entry.toURL();
-        $scope.$apply();
         console.log("Success moved file, new URL: %s", entry.toURL());
+
+        var query = "INSERT INTO `info` (name,value) VALUES ('IMG', '" + entry.toURL() + "')";
+        $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
+          var message = "INSERT ID -> " + res.insertId;
+          console.log(message);
+          alert(message);
+        }, function (err) {
+          console.error(err);
+          alert(err);
+        });
       }
 
       function resOnError(error) {
@@ -289,6 +462,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
       };
 
+      var device = $cordovaDevice.getDevice();
       if (device.platform === 'iOS') {
         // iOS only code
         $cordovaCamera.cleanup().then(function () {
@@ -298,7 +472,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
 
 
-    // }
+      // }
     }, false);
   })
   .controller("BarCodeReaderController", function ($scope, $cordovaBarcodeScanner) {
@@ -307,18 +481,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       console.log("Calling scanbarcode");
       $cordovaBarcodeScanner
         .scan({
-          "preferFrontCamera" : false, // iOS and Android
-          "showFlipCameraButton" : false, // iOS and Android
+          "preferFrontCamera": false, // iOS and Android
+          "showFlipCameraButton": false, // iOS and Android
           //"prompt" : "Coloque um código barras dentro da área" // supported on Android only
           // "formats" : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-         // "orientation" : "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
+          // "orientation" : "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
         })
-        .then(function(barcodeData) {
+        .then(function (barcodeData) {
           // Success! Barcode data is here
           $scope.code = barcodeData.text;
           $scope.barcodeData = barcodeData;
-              // $scope.$apply();
-        }, function(error) {
+          // $scope.$apply();
+        }, function (error) {
           // An error occurred
           console.error("Failed QR coe scan!", error)
         });
@@ -345,62 +519,102 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     };
 
   })
-  .controller("SQLliteController", function ($scope, $ionicPlatform) {
-    $scope.tutorial = "Não";
-    $scope.firstTime = "Não";
+  .controller("SQLliteController", function ($scope, $ionicPlatform, $cordovaSQLite) {
+    $scope.tutorial = "Nao";
+    $scope.firstTime = "Nao";
 
-    // if (APPfirstTime)
-    //   $scope.firstTime = "Sim";
-    // if (APPtutorial)
-    //   $scope.tutorial = "Sim";
-    //
-    // console.log("ionic controller SQLliteController ready");
-    //
-    // $scope.isTutorial = function () {
-    //
-    //   console.log("ionic controller SQLliteController isTutotial");
-    //   $ionicPlatform.ready(function () {
-    //     cordovaSQLite.execQuerySingleResult("select value from info where name=?", ["APPtutorial"], function (res) {
-    //         console.log("Result from APPtutorial: " + res);
-    //         $scope.tutorial = res;
-    //         $scope.$apply();
-    //         // APPtutorial = 1;
-    //       },
-    //       function (error) {
-    //         console.warn("##execQueryArrayResult: " + error);
-    //       });
-    //   })
-    // };
-    //
-    // $scope.updateTutorial = function () {
-    //   console.log("ionic controller SQLliteController updateTutorial");
-    //   $ionicPlatform.ready(function () {
-    //     cordovaSQLite.execQueryNoResult("update info set value='Não' where name='APPtutorial';", function () {
-    //         console.log("update APPtutorial");
-    //         // $scope.tutorial = "Não";
-    //         // $scope.$apply();
-    //         APPtutorial = 0;
-    //       },
-    //       function (error) {
-    //         console.warn("##execQueryArrayResult: " + error);
-    //       });
-    //   })
-    // }
-    //
-    // $scope.moreTutorial = function () {
-    //   console.log("ionic controller SQLliteController moreTutorial");
-    //   $ionicPlatform.ready(function () {
-    //     cordovaSQLite.execQueryNoResult("update info set value='Sim' where name='APPtutorial';", function () {
-    //         console.log("more update APPtutorial");
-    //         // $scope.tutorial = "Sim";
-    //         // $scope.$apply();
-    //         APPtutorial = 0;
-    //       },
-    //       function (error) {
-    //         console.warn("##execQueryArrayResult: " + error);
-    //       });
-    //   })
-    // }
+    if (APPfirstTime)
+      $scope.firstTime = "Sim";
+    if (APPtutorial)
+      $scope.tutorial = "Sim";
+
+    console.log("ionic controller SQLliteController ready");
+
+    // $scope.insert = function (firstname, lastname) {
+// //alert('check: ' + $scope.aaa);
+//         var query = "INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ")";
+//         $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
+//           var message = "INSERT ID -> " + res.insertId;
+//           console.log(message);
+//           alert(message);
+//         }, function (err) {
+//           console.error(err);
+//           alert(err);
+//         });
+//       }
+//
+//       $scope.select = function (lastname) {
+//         var query = "SELECT firstname, lastname FROM people WHERE lastname = ?";
+//         $cordovaSQLite.execute($scope.db, query, [lastname]).then(function (res) {
+//           if (res.rows.length > 0) {
+//             var message = "SELECTED -> " + res.rows.item(0).firstname + " " + res.rows.item(0).lastname;
+//             alert(message);
+//             console.log(message);
+//           } else {
+//             alert("No results found");
+//             console.log("No results found");
+//           }
+//         }, function (err) {
+//           alert(err);
+//           console.error(err);
+//         });
+//       }
+
+    $scope.isTutorial = function () {
+
+      console.log("ionic controller SQLliteController isTutotial");
+
+      $ionicPlatform.ready(function () {
+
+        var query = "select value from info where name=?";
+        $cordovaSQLite.execute($scope.db, query, ["APPtutorial"]).then(function (res) {
+          if (res.rows.length > 0) {
+            var message = "SELECTED -> " + res.rows.item(0).value;
+            alert(message);
+            console.log(message);
+            $scope.tutorial = res.rows.item(0).value;
+          } else {
+            alert("No results found");
+            console.log("No results found");
+          }
+        }, function (err) {
+          alert(err);
+          console.error(err);
+        });
+      })
+    };
+
+    $scope.updateTutorial = function () {
+      console.log("ionic controller SQLliteController updateTutorial");
+      $ionicPlatform.ready(function () {
+        var query = "update info set value='Nao' where name='APPtutorial'";
+        $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
+          // var message = "INSERT ID -> " + res.insertId;
+          console.log("update APPtutorial");
+          alert("update APPtutorial Nao");
+          APPtutorial = 0;
+        }, function (err) {
+          console.error(err);
+          alert(err);
+        });
+      })
+    };
+
+    $scope.moreTutorial = function () {
+      console.log("ionic controller SQLliteController updateTutorial");
+      $ionicPlatform.ready(function () {
+        var query = "update info set value='Sim' where name='APPtutorial'";
+        $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
+          // var message = "INSERT ID -> " + res.insertId;
+          console.log("update APPtutorial");
+          alert("update APPtutorial Sim");
+          APPtutorial = 1;
+        }, function (err) {
+          console.error(err);
+          alert(err);
+        });
+      })
+    }
   })
   .config(function ($stateProvider, $urlRouterProvider) {
 
