@@ -1,4 +1,108 @@
 angular.module('starter.services', [])
+  .factory('$IbeaconScanner', ['$rootScope', function ($rootScope) {
+    var beacons = {};
+    var myRegion = null;
+    var myRegion = null;
+
+    var uuid = '74278BDA-B644-4520-8F0C-720E1F6EF512'; // mandatory
+    var identifier = 'PIs'; // mandatory
+    var minor = 64001; // optional, defaults to wildcard if left empty
+    var major = 4660; // optional, defaults to wildcard if left empty
+    var nomes = {
+      "64001": "Regiao de interesse 2",
+      "64003": "Regiao de interesse 3"
+    }
+
+    var sendUpdates=false;
+
+    return {
+
+      sendUpdates: function (updates) {
+        sendUpdates = updates;
+      },
+
+      startBeaconScan: function () {
+
+        console.log("startBeaconScan ready");
+
+        if (!myRegion) {
+          myRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major);
+          console.log("myRegion Created");
+          // myRegion = myRegion;
+        }
+
+        var delegate = new cordova.plugins.locationManager.Delegate();
+
+        delegate.didDetermineStateForRegion = function (pluginResult) {
+        };
+
+        delegate.didStartMonitoringForRegion = function (pluginResult) {
+        };
+
+        delegate.didRangeBeaconsInRegion = function (pluginResult) {
+          var i = 0;
+          // console.log('XX: didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
+          // cordova.plugins.locationManager.appendToDeviceLog('didRangeBeaconsInRegion:' + JSON.stringify(pluginResult));
+          // console.log("event, plug res: UUID: %s prox: %s lenght: %s", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity, pluginResult.beacons[i].length, event, pluginResult.beacons[i]);
+          var uniqueBeaconKey;
+          for (i = 0; i < pluginResult.beacons.length; i++) {
+            pluginResult.beacons[i].nome = nomes[pluginResult.beacons[i].minor];
+            uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
+            if ((!beacons[uniqueBeaconKey])) {
+              $rootScope.currentRI = pluginResult.beacons[i].nome;
+              // console.log("Device busy: %s", $rootScope.deviceBUSY);
+              if (!$rootScope.deviceBUSY) {
+                // console.log("Device free not busy");
+                beacons[uniqueBeaconKey] = pluginResult.beacons[i];
+                $rootScope.beacons = beacons;
+                if ($rootScope.enableBeacons) {
+                  $rootScope.$broadcast('RI_FOUND');
+                  console.log("Sending broadcast RI_FOUND");
+                } else
+                  console.log("NoT enabled beacons for broadcast RI_FOUND");
+              } else console.log("Device BUSY for broadcast RI_FOUND, queue?ß");
+            } else {
+              beacons[uniqueBeaconKey] = pluginResult.beacons[i];
+              $rootScope.beacons = beacons;
+              if (sendUpdates) {
+                $rootScope.$broadcast('BEACONS_UPDATE');
+                console.log("Sending broadcast BEACONS_UPDATE");
+              }
+            }
+            // console.log("FOUND: ", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity)
+          }
+          // $scope.$apply();
+        };
+
+        cordova.plugins.locationManager.setDelegate(delegate);
+        //  required in iOS 8+
+        cordova.plugins.locationManager.requestWhenInUseAuthorization();
+        // cordova.plugins.locationManager.requestAlwaysAuthorization();
+
+        cordova.plugins.locationManager.startRangingBeaconsInRegion(myRegion)
+          .fail(function (e) {
+            console.log("ERROR: START SCAN ", e);
+          })
+          .done(function (e) {
+            console.log("Done: START SCAN", e);
+          });
+      },
+
+      stopBeaconScan: function () {
+
+        cordova.plugins.locationManager.stopRangingBeaconsInRegion(myRegion)
+          .fail(function (e) {
+            console.log("ERROR STOP SCAN", e);
+          })
+          .done(function (e) {
+            console.log("Done: STOP SCAN", e);
+            beacons = {};
+            $rootScope.beacons = beacons;
+            // $scope.$apply();
+          });
+      }
+    }
+  }])
   .factory('$cordovaCamera', ['$q', function ($q) {
 
     return {
@@ -223,67 +327,67 @@ angular.module('starter.services', [])
       }
     };
   }])
-    // .factory('IbeaconFactory', ['$q', function($q) {
-    //
-    //   return {
-    //     scanBarcode: function() {
-    //       var q = $q.defer();
-    //       cordova.plugins.BarcodeScanner(function(result) {
-    //         // Do any magic you need
-    //         q.resolve(result);
-    //       }, function(err) {
-    //         q.reject(err);
-    //       });
-    //
-    //       return q.promise;
-    //     }
-    //   }
-    // }])
-.factory('Chats', function() {
-  // Might use a resource here that returns a JSON array
+  // .factory('IbeaconFactory', ['$q', function($q) {
+  //
+  //   return {
+  //     scanBarcode: function() {
+  //       var q = $q.defer();
+  //       cordova.plugins.BarcodeScanner(function(result) {
+  //         // Do any magic you need
+  //         q.resolve(result);
+  //       }, function(err) {
+  //         q.reject(err);
+  //       });
+  //
+  //       return q.promise;
+  //     }
+  //   }
+  // }])
+  .factory('Chats', function () {
+    // Might use a resource here that returns a JSON array
 
-  // Some fake testing data
-  var chats = [{
-    id: 0,
-    name: 'Ben Sparrow',
-    lastText: 'You on your way?',
-    face: 'img/ben.png'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'img/max.png'
-  }, {
-    id: 2,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'img/adam.jpg'
-  }, {
-    id: 3,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'img/perry.png'
-  }, {
-    id: 4,
-    name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
-    face: 'img/mike.png'
-  }];
+    // Some fake testing data
+    var chats = [{
+      id: 0,
+      name: 'Ben Sparrow',
+      lastText: 'You on your way?',
+      face: 'img/ben.png'
+    }, {
+      id: 1,
+      name: 'Max Lynx',
+      lastText: 'Hey, it\'s me',
+      face: 'img/max.png'
+    }, {
+      id: 2,
+      name: 'Adam Bradleyson',
+      lastText: 'I should buy a boat',
+      face: 'img/adam.jpg'
+    }, {
+      id: 3,
+      name: 'Perry Governor',
+      lastText: 'Look at my mukluks!',
+      face: 'img/perry.png'
+    }, {
+      id: 4,
+      name: 'Mike Harrington',
+      lastText: 'This is wicked good ice cream.',
+      face: 'img/mike.png'
+    }];
 
-  return {
-    all: function() {
-      return chats;
-    },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
-    },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
+    return {
+      all: function () {
+        return chats;
+      },
+      remove: function (chat) {
+        chats.splice(chats.indexOf(chat), 1);
+      },
+      get: function (chatId) {
+        for (var i = 0; i < chats.length; i++) {
+          if (chats[i].id === parseInt(chatId)) {
+            return chats[i];
+          }
         }
+        return null;
       }
-      return null;
-    }
-  };
-});
+    };
+  });

@@ -36,11 +36,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       });
     });
   })
-  .controller('DashCtrl', function ($rootScope, $scope, $cordovaSQLite, $ionicPopup, $timeout) {
+  .controller('DashCtrl', function ($rootScope, $scope, $cordovaSQLite, $ionicPopup, $timeout, $IbeaconScanner) {
 
     document.addEventListener("deviceready", function () {
 
       //$scope.msg = "";
+
+      $scope.startBeaconScanning = function () {
+        $IbeaconScanner.startBeaconScan();
+      };
+
+      $scope.stopBeaconScanning = function () {
+        $IbeaconScanner.stopBeaconScan();
+      };
 
       $scope.showAlert = function () {
         var alertPopup = $ionicPopup.alert({
@@ -51,10 +59,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
         alertPopup.then(function (res) {
           console.log('OK on APP version');
+          $IbeaconScanner.startBeaconScan();
         });
 
         $timeout(function () {
           alertPopup.close();
+          $IbeaconScanner.startBeaconScan();
         }, 5000);
       };
 
@@ -108,97 +118,117 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             console.error(err);
             alert(err);
           });
-
         }
       }, function (err) {
         alert(err);
         console.error("ERROR ON get app version", err);
       });
+
+      // setTimeout(function () {
+      //   $IbeaconScanner.startBeaconScan();
+      // }, 1000);
+
     });
   })
-  .controller("IbeaconController", function ($rootScope, $scope, $ionicPlatform) {
+  .controller("IbeaconController", function ($ionicHistory, $rootScope, $scope, $IbeaconScanner) {
 
-    $scope.beacons = {};
-    $scope.myRegion = null;
-    var myRegion = null;
+    $scope.beacons = $rootScope.beacons;
 
-    var uuid = '74278BDA-B644-4520-8F0C-720E1F6EF512'; // mandatory
-    var identifier = 'PIs'; // mandatory
-    var minor = 64001; // optional, defaults to wildcard if left empty
-    var major = 4660; // optional, defaults to wildcard if left empty
-    // throws an error if the parameters are not valid
-    console.log("ionic controller IBEACON ready");
-    $ionicPlatform.ready(function () {
-      console.log("ionic controller platform ready");
-      if (!myRegion) {
-        myRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major);
-        console.log("myRegion Created");
-        $scope.myRegion = myRegion;
-      }
+    $scope.$on("BEACONS_UPDATE", function (e) {
+      $scope.beacons = $rootScope.beacons;
+      console.log("Received broadcast BEACONS_UPDATE");
+      $scope.$apply();
     });
 
-    $scope.startScan = function () {
-      var delegate = new cordova.plugins.locationManager.Delegate();
+    $scope.$on("$ionicView.beforeEnter", function(event, data){
+      $IbeaconScanner.sendUpdates(true);
+      console.log("State $ionicView.beforeEnter Params: ", data);
+    });
 
-      delegate.didDetermineStateForRegion = function (pluginResult) {
-      };
-
-      delegate.didStartMonitoringForRegion = function (pluginResult) {
-      };
-
-      delegate.didRangeBeaconsInRegion = function (pluginResult) {
-        var i = 0;
-        // console.log('XX: didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
-        // cordova.plugins.locationManager.appendToDeviceLog('didRangeBeaconsInRegion:' + JSON.stringify(pluginResult));
-        // console.log("event, plug res: UUID: %s prox: %s lenght: %s", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity, pluginResult.beacons[i].length, event, pluginResult.beacons[i]);
-        var uniqueBeaconKey;
-        for (i = 0; i < pluginResult.beacons.length; i++) {
-          pluginResult.beacons[i].nome = "PI 1-2";
-          uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
-          if ((!$scope.beacons[uniqueBeaconKey])) {
-            $rootScope.currentRI = pluginResult.beacons[i].nome;
-            // console.log("Device busy: %s", $rootScope.deviceBUSY);
-            if (!$rootScope.deviceBUSY) {
-              // console.log("Device free not busy");
-              if ($rootScope.enableBeacons) {
-                $rootScope.$broadcast('RI_FOUND');
-                console.log("Sending broadcast RI_FOUND");
-              } else
-                console.log("NoT enabled beacons for broadcast RI_FOUND");
-            } else console.log("Device BUSY for broadcast RI_FOUND, queue?ß");
-          }
-          $scope.beacons[uniqueBeaconKey] = pluginResult.beacons[i];
-          // console.log("FOUND: ", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity)
-        }
-        // $scope.$apply();
-      };
-
-      cordova.plugins.locationManager.setDelegate(delegate);
-      //  required in iOS 8+
-      // cordova.plugins.locationManager.requestWhenInUseAuthorization();
-      cordova.plugins.locationManager.requestAlwaysAuthorization();
-
-      cordova.plugins.locationManager.startRangingBeaconsInRegion($scope.myRegion)
-        .fail(function (e) {
-          console.log("ERROR: START SCAN ", e);
-        })
-        .done(function (e) {
-          console.log("Done: START SCAN", e);
-        });
-    };
-
-    $scope.stopScan = function () {
-
-      cordova.plugins.locationManager.stopRangingBeaconsInRegion($scope.myRegion)
-        .fail(function (e) {
-          console.log("ERROR STOP SCAN", e);
-        })
-        .done(function (e) {
-          console.log("Done: STOP SCAN", e);
-          $scope.beacons = {};
-          // $scope.$apply();
-        });
-    };
+    $scope.$on("$ionicParentView.beforeLeave", function(event, data){
+      $IbeaconScanner.sendUpdates(false);
+      console.log("State $ionicParentView.beforeLeave Params: ", data);
+    });
+    // $scope.myRegion = null;
+    // var myRegion = null;
+    //
+    // var uuid = '74278BDA-B644-4520-8F0C-720E1F6EF512'; // mandatory
+    // var identifier = 'PIs'; // mandatory
+    // var minor = 64001; // optional, defaults to wildcard if left empty
+    // var major = 4660; // optional, defaults to wildcard if left empty
+    // // throws an error if the parameters are not valid
+    // console.log("ionic controller IBEACON ready");
+    // $ionicPlatform.ready(function () {
+    //   console.log("ionic controller platform ready");
+    //   if (!myRegion) {
+    //     myRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major);
+    //     console.log("myRegion Created");
+    //     $scope.myRegion = myRegion;
+    //   }
+    // });
+    //
+    // $scope.startScan = function () {
+    //   var delegate = new cordova.plugins.locationManager.Delegate();
+    //
+    //   delegate.didDetermineStateForRegion = function (pluginResult) {
+    //   };
+    //
+    //   delegate.didStartMonitoringForRegion = function (pluginResult) {
+    //   };
+    //
+    //   delegate.didRangeBeaconsInRegion = function (pluginResult) {
+    //     var i = 0;
+    //     // console.log('XX: didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
+    //     // cordova.plugins.locationManager.appendToDeviceLog('didRangeBeaconsInRegion:' + JSON.stringify(pluginResult));
+    //     // console.log("event, plug res: UUID: %s prox: %s lenght: %s", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity, pluginResult.beacons[i].length, event, pluginResult.beacons[i]);
+    //     var uniqueBeaconKey;
+    //     for (i = 0; i < pluginResult.beacons.length; i++) {
+    //       pluginResult.beacons[i].nome = "PI 1-2";
+    //       uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
+    //       if ((!$scope.beacons[uniqueBeaconKey])) {
+    //         $rootScope.currentRI = pluginResult.beacons[i].nome;
+    //         // console.log("Device busy: %s", $rootScope.deviceBUSY);
+    //         if (!$rootScope.deviceBUSY) {
+    //           // console.log("Device free not busy");
+    //           if ($rootScope.enableBeacons) {
+    //             $rootScope.$broadcast('RI_FOUND');
+    //             console.log("Sending broadcast RI_FOUND");
+    //           } else
+    //             console.log("NoT enabled beacons for broadcast RI_FOUND");
+    //         } else console.log("Device BUSY for broadcast RI_FOUND, queue?ß");
+    //       }
+    //       $scope.beacons[uniqueBeaconKey] = pluginResult.beacons[i];
+    //       // console.log("FOUND: ", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity)
+    //     }
+    //     // $scope.$apply();
+    //   };
+    //
+    //   cordova.plugins.locationManager.setDelegate(delegate);
+    //   //  required in iOS 8+
+    //   // cordova.plugins.locationManager.requestWhenInUseAuthorization();
+    //   cordova.plugins.locationManager.requestAlwaysAuthorization();
+    //
+    //   cordova.plugins.locationManager.startRangingBeaconsInRegion($scope.myRegion)
+    //     .fail(function (e) {
+    //       console.log("ERROR: START SCAN ", e);
+    //     })
+    //     .done(function (e) {
+    //       console.log("Done: START SCAN", e);
+    //     });
+    // };
+    //
+    // $scope.stopScan = function () {
+    //
+    //   cordova.plugins.locationManager.stopRangingBeaconsInRegion($scope.myRegion)
+    //     .fail(function (e) {
+    //       console.log("ERROR STOP SCAN", e);
+    //     })
+    //     .done(function (e) {
+    //       console.log("Done: STOP SCAN", e);
+    //       $scope.beacons = {};
+    //       // $scope.$apply();
+    //     });
+    // };
   })
   .controller('PopupCtrl', function ($rootScope, $scope, $ionicPopup, $timeout) {
 
@@ -247,8 +277,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       $scope.popupON = 1;
       $rootScope.popupON = 1;
       var confirmPopup = $ionicPopup.confirm({
-        title: 'Regiao de interesse: ' + $scope.currentRI,
-        template: 'Estás perto da Regiao ' + $scope.currentRI + ', queres ver o conteudo?',
+        title: 'RI: ' + $scope.currentRI,
+        template: 'Estás perto da ' + $scope.currentRI + ', queres ver o conteudo?',
         scope: $scope,
         buttons: [
           {text: 'FICAR'},
@@ -287,16 +317,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     };
 
     // An alert dialog
-    $scope.showAlert = function () {
-      var alertPopup = $ionicPopup.alert({
-        title: 'Don\'t eat that!',
-        template: 'It might taste good'
-      });
-
-      alertPopup.then(function (res) {
-        console.log('Thank you for not eating my delicious ice cream cone');
-      });
-    };
+    // $scope.showAlert = function () {
+    //   var alertPopup = $ionicPopup.alert({
+    //     title: 'Don\'t eat that!',
+    //     template: 'It might taste good'
+    //   });
+    //
+    //   alertPopup.then(function (res) {
+    //     console.log('Thank you for not eating my delicious ice cream cone');
+    //   });
+    // };
 
     $scope.$on('RI_FOUND', function (e) {
       // do something
@@ -312,11 +342,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     //   $scope.showConfirm();
     // }, 4000);
   })
-  .controller('CameraCtrl', function ($rootScope, $scope, $cordovaCamera, $cordovaDevice, $cordovaSQLite, $ionicPlatform) {
+  .controller('CameraCtrl', function ($rootScope, $scope, $cordovaCamera, $cordovaDevice, $cordovaSQLite, $ionicPlatform, $ionicPopup, $timeout) {
 
     // $scope.lastPhoto ="";
 
     document.addEventListener("deviceready", function () {
+
+      $scope.showAlert = function (msg) {
+        var alertPopup = $ionicPopup.alert({
+          scope: $scope,
+          title: 'INFORMACAO',
+          template: msg
+        });
+
+        alertPopup.then(function (res) {
+          console.log('OK on camera');
+        });
+
+        $timeout(function () {
+          alertPopup.close();
+        }, 5000);
+      };
 
       console.log("camera controller ready 1");
       $ionicPlatform.ready(function () {
@@ -325,16 +371,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         $cordovaSQLite.execute($scope.db, query, ["IMG"]).then(function (res) {
           if (res.rows.length > 0) {
             var message = "SELECTED -> " + res.rows.item(res.rows.length - 1).value;
-            alert(message);
+            $scope.showAlert(message);
             console.log(message, res);
             $scope.lastPhoto = res.rows.item(res.rows.length - 1).value;
             // $scope.$apply();
           } else {
-            alert("No results found");
+            $scope.showAlert("No results found");
             console.log("No results found");
           }
         }, function (err) {
-          alert(err);
+          $scope.showAlert(err);
           console.error(err);
         });
       });
