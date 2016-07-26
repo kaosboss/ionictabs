@@ -19,8 +19,10 @@ angular.module('starter.controllers', [])
         $scope.chat = Chats.get($stateParams.chatId);
     })
 
-    .controller('AccountCtrl', function ($scope) {
-        $scope.settings = {
-            enableFriends: true
-        };
+    .controller('AccountCtrl', function ($rootScope, $scope) {
+        $scope.enableBeacons = $rootScope.enableBeacons;
+        $scope.toggleChange = function () {
+          $rootScope.enableBeacons = !$rootScope.enableBeacons;
+          console.log("enableBeacons new state: %s", $rootScope.enableBeacons);
+        }
     });

@@ -3,9 +3,9 @@
     <ion-list>
       <ion-item class="item">
         <div class="button-bar">
-          <button ng-click="isTutorial()" class="button button-block button-balanced">Check Tutorial</button>
-          <button ng-click="updateTutorial()" class="button button-block button-energized">Done Tutorial</button>
-          <button ng-click="moreTutorial()" class="button button-block button-energized">Clear Tutorial</button>
+          <button ng-click="isTutorial()" class="button button-block button-balanced">Check</button>
+          <button ng-click="updateTutorial()" class="button button-block button-energized">Done</button>
+          <button ng-click="moreTutorial()" class="button button-block button-energized">Clear</button>
         </div>
       </ion-item>
       <ion-item class="item">
@@ -13,5 +13,6 @@
         <p>First Time: {{firstTime}}</p>
       </ion-item>
     </ion-list>
+    <div ng-controller="PopupCtrl"></div>
   </ion-content>
 </ion-view>
