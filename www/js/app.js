@@ -10,13 +10,21 @@ var APPtutorial = 0;
 var APPfirstTime = 0;
 var APPdir = null;
 var db = null;
-var enableBeacons = true;
+var enableBeacons = false;
+var initialOutput = "";
+var debug=1;
+var noBLE=1;
+
+cw = function (value) {
+  initialOutput += value + '\n';
+  console.log(value);
+};
 
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
-  .run(function ($ionicPlatform, $rootScope, $cordovaSQLite) {
+  .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
-      console.log("ionic platform  ready");
+      cw("ionic startting run");
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
       if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -27,80 +35,48 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         // org.apache.cordova.statusbar required
         StatusBar.styleDefault();
       }
-      document.addEventListener("deviceready", function () {
-        $rootScope.enableBeacons = enableBeacons;
-        $rootScope.deviceBUSY  = 0;
-        console.log("ionic platform db: init firsttime"); // #### DB #########
-        db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
-        $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `info` ( `name`	TEXT,	`value`	TEXT)");
-      });
     });
   })
-  .controller('DashCtrl', function ($rootScope, $scope, $cordovaSQLite, $ionicPopup, $timeout, $IbeaconScanner) {
+  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner) {
 
-    document.addEventListener("deviceready", function () {
+    dbres = 0;
+    if (debug) alert("start");
 
-      //$scope.msg = "";
+    $ionicPlatform.ready(function () {
+      cw("ionic platform ready");
+      // db = $rootScope.db = $window.sqlitePlugin.openDatabase({name: "snpquinta.db", location: "default"});
+      db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
 
-      $scope.startBeaconScanning = function () {
-        $IbeaconScanner.startBeaconScan();
-      };
-
-      $scope.stopBeaconScanning = function () {
-        $IbeaconScanner.stopBeaconScan();
-      };
-
-      $scope.showAlert = function () {
-        var alertPopup = $ionicPopup.alert({
-          scope: $scope,
-          title: 'INFORMACAO',
-          template: $scope.msg
+      if (db) {
+        cw("DB open");
+        console.log("DB", db);
+        $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `info` ( `name`	TEXT,	`value`	TEXT)", []).then(function (res) {
+          // alert("OK onDB create");
+        }, function (err) {
+          alert(err);
         });
-
-        alertPopup.then(function (res) {
-          console.log('OK on APP version');
-          $IbeaconScanner.startBeaconScan();
-        });
-
-        $timeout(function () {
-          alertPopup.close();
-          $IbeaconScanner.startBeaconScan();
-        }, 5000);
-      };
-
-      var dbres = 0;
-      console.log("Dashboard controller, first controller");
-      if (!db) {
-        dbres = 2;
-        console.log("ionic platform db: init, second"); // #### DB #########
-        db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
-        $cordovaSQLite.execute($rootScope.db, "CREATE TABLE IF NOT EXISTS `info` ( `name`	TEXT,	`value`	TEXT)");
       }
-
       dbres = 1;
-      // "select value from info where name=?", ["APP"]
+
       var query = "select value from info where name=?";
-      $cordovaSQLite.execute($scope.db, query, ["APP"]).then(function (res) {
+      $cordovaSQLite.execute(db, query, ["APP"]).then(function (res) {
         if (res.rows.length > 0) {
           // var message = "SELECTED -> " + res.rows.item(0).value;
-          // alert(message);
-          // console.log(message);
-          console.log("Got APP version: Installed v" + res.rows.item(0).value);
-          $scope.msg = "Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ")";
-          $scope.showAlert();
+          var currentPlatform = ionic.Platform.platform();
+          var currentPlatformVersion = ionic.Platform.version();
+          console.log("Got APP version: Installed v" + res.rows.item(0).value  + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
+          $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
         } else {
-          $scope.msg = "No results found, primeira utilizacao!";
-          $scope.showAlert();
+          $scope.showAlert("No results found, primeira utilizacao!");
           console.log("No results found, firsttime?");
 
           var query = "INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ")";
-          $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
+          $cordovaSQLite.execute(db, query, []).then(function (res) {
             // var message = "INSERT ID -> " + res.insertId;
             // console.log(message);
             console.log("Inserted APP version: v" + APPverion + " tutorial: ON");
-            $scope.msg = "Inserted APP version: v" + APPverion + " tutorial: ON";
             APPfirstTime = 1;
-            $scope.showAlert();
+            $scope.showAlert("Inserted APP version: v" + APPverion + " tutorial: ON");
             // alert(message);
           }, function (err) {
             console.error(err);
@@ -108,12 +84,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           });
 
           var query = "INSERT INTO `info` (name,value) VALUES ('APPtutorial', 'Sim')";
-          $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
+          $cordovaSQLite.execute(db, query, []).then(function (res) {
             var message = "INSERT ID -> " + res.insertId;
-            console.log(message);
+            // console.log(message);
             console.log("Inserted APP tutorial: Sim");
             APPtutorial = 1;
-            alert(message);
+            // alert(message);
           }, function (err) {
             console.error(err);
             alert(err);
@@ -123,112 +99,86 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         alert(err);
         console.error("ERROR ON get app version", err);
       });
-
-      // setTimeout(function () {
-      //   $IbeaconScanner.startBeaconScan();
-      // }, 1000);
-
     });
+
+    // });
+
+
+    // $scope.startBeaconScanning = function () {
+    //   $IbeaconScanner.startBeaconScan();
+    // };
+    //
+    // $scope.stopBeaconScanning = function () {
+    //   $IbeaconScanner.stopBeaconScan();
+    // };
+    //
+    $scope.showAlert = function (msg) {
+      var alertPopup = $ionicPopup.alert({
+        scope: $scope,
+        title: 'INFORMACAO',
+        template: msg
+      });
+
+      alertPopup.then(function (res) {
+        console.log('OK on APP version');
+        if ($window.device.model.indexOf("iPhone4") == -1) {
+          $rootScope.enableBeacons=true;
+          noBLE=0;
+          $IbeaconScanner.startBeaconScan();
+        }
+      });
+
+      $timeout(function () {
+        alertPopup.close();
+        // if ($window.device.model.indexOf("iPhone4") == -1) {
+        //   $rootScope.enableBeacons=true;
+        //   $IbeaconScanner.startBeaconScan();
+        // }
+      }, 5000);
+    };
+
+    if (debug)
+      setTimeout(function () {
+        alert(initialOutput);
+      }, 10000);
+
+    // setTimeout(function () {
+    //   $IbeaconScanner.startBeaconScan();
+    // }, 1000);
+
+    // });
   })
-  .controller("IbeaconController", function ($ionicHistory, $rootScope, $scope, $IbeaconScanner) {
+  .controller("IbeaconController", function ($rootScope, $scope, $ionicPlatform, $window, $IbeaconScanner) {
 
     $scope.beacons = $rootScope.beacons;
 
-    $scope.$on("BEACONS_UPDATE", function (e) {
-      $scope.beacons = $rootScope.beacons;
-      console.log("Received broadcast BEACONS_UPDATE");
-      $scope.$apply();
+    $ionicPlatform.ready(function () {
+
+      if ($window.device.model.indexOf("iPhone4") == -1) {
+
+        cw("IbeaconController: BLE support found!");
+
+        $rootScope.enableBeacons=true;
+
+        $scope.$on("BEACONS_UPDATE", function (e) {
+          $scope.beacons = $rootScope.beacons;
+          console.log("Received broadcast BEACONS_UPDATE");
+          $scope.$apply();
+        });
+
+        $scope.$on("$ionicView.beforeEnter", function(event, data){
+          $IbeaconScanner.sendUpdates(true);
+          console.log("State $ionicView.beforeEnter Params: ", data);
+        });
+
+        $scope.$on("$ionicParentView.beforeLeave", function(event, data){
+          $IbeaconScanner.sendUpdates(false);
+          console.log("State $ionicParentView.beforeLeave Params: ", data);
+        });
+      } else cw("IbeaconController: NO BLE support found!");
+
     });
 
-    $scope.$on("$ionicView.beforeEnter", function(event, data){
-      $IbeaconScanner.sendUpdates(true);
-      console.log("State $ionicView.beforeEnter Params: ", data);
-    });
-
-    $scope.$on("$ionicParentView.beforeLeave", function(event, data){
-      $IbeaconScanner.sendUpdates(false);
-      console.log("State $ionicParentView.beforeLeave Params: ", data);
-    });
-    // $scope.myRegion = null;
-    // var myRegion = null;
-    //
-    // var uuid = '74278BDA-B644-4520-8F0C-720E1F6EF512'; // mandatory
-    // var identifier = 'PIs'; // mandatory
-    // var minor = 64001; // optional, defaults to wildcard if left empty
-    // var major = 4660; // optional, defaults to wildcard if left empty
-    // // throws an error if the parameters are not valid
-    // console.log("ionic controller IBEACON ready");
-    // $ionicPlatform.ready(function () {
-    //   console.log("ionic controller platform ready");
-    //   if (!myRegion) {
-    //     myRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major);
-    //     console.log("myRegion Created");
-    //     $scope.myRegion = myRegion;
-    //   }
-    // });
-    //
-    // $scope.startScan = function () {
-    //   var delegate = new cordova.plugins.locationManager.Delegate();
-    //
-    //   delegate.didDetermineStateForRegion = function (pluginResult) {
-    //   };
-    //
-    //   delegate.didStartMonitoringForRegion = function (pluginResult) {
-    //   };
-    //
-    //   delegate.didRangeBeaconsInRegion = function (pluginResult) {
-    //     var i = 0;
-    //     // console.log('XX: didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
-    //     // cordova.plugins.locationManager.appendToDeviceLog('didRangeBeaconsInRegion:' + JSON.stringify(pluginResult));
-    //     // console.log("event, plug res: UUID: %s prox: %s lenght: %s", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity, pluginResult.beacons[i].length, event, pluginResult.beacons[i]);
-    //     var uniqueBeaconKey;
-    //     for (i = 0; i < pluginResult.beacons.length; i++) {
-    //       pluginResult.beacons[i].nome = "PI 1-2";
-    //       uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
-    //       if ((!$scope.beacons[uniqueBeaconKey])) {
-    //         $rootScope.currentRI = pluginResult.beacons[i].nome;
-    //         // console.log("Device busy: %s", $rootScope.deviceBUSY);
-    //         if (!$rootScope.deviceBUSY) {
-    //           // console.log("Device free not busy");
-    //           if ($rootScope.enableBeacons) {
-    //             $rootScope.$broadcast('RI_FOUND');
-    //             console.log("Sending broadcast RI_FOUND");
-    //           } else
-    //             console.log("NoT enabled beacons for broadcast RI_FOUND");
-    //         } else console.log("Device BUSY for broadcast RI_FOUND, queue?ß");
-    //       }
-    //       $scope.beacons[uniqueBeaconKey] = pluginResult.beacons[i];
-    //       // console.log("FOUND: ", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity)
-    //     }
-    //     // $scope.$apply();
-    //   };
-    //
-    //   cordova.plugins.locationManager.setDelegate(delegate);
-    //   //  required in iOS 8+
-    //   // cordova.plugins.locationManager.requestWhenInUseAuthorization();
-    //   cordova.plugins.locationManager.requestAlwaysAuthorization();
-    //
-    //   cordova.plugins.locationManager.startRangingBeaconsInRegion($scope.myRegion)
-    //     .fail(function (e) {
-    //       console.log("ERROR: START SCAN ", e);
-    //     })
-    //     .done(function (e) {
-    //       console.log("Done: START SCAN", e);
-    //     });
-    // };
-    //
-    // $scope.stopScan = function () {
-    //
-    //   cordova.plugins.locationManager.stopRangingBeaconsInRegion($scope.myRegion)
-    //     .fail(function (e) {
-    //       console.log("ERROR STOP SCAN", e);
-    //     })
-    //     .done(function (e) {
-    //       console.log("Done: STOP SCAN", e);
-    //       $scope.beacons = {};
-    //       // $scope.$apply();
-    //     });
-    // };
   })
   .controller('PopupCtrl', function ($rootScope, $scope, $ionicPopup, $timeout) {
 
@@ -286,12 +236,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             text: '<b>IR</b>',
             type: 'button-positive',
             onTap: function (e) {
-              // if (!$scope.data.wifi) {
-              //   //don't allow the user to close unless he enters wifi password
-              //   e.preventDefault();
-              // } else {
-              //   return $scope.data.wifi;
-              // }
               console.log("Confirmed navigation to region");
               return 1;
             }
@@ -437,7 +381,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
           var message = "INSERT ID -> " + res.insertId;
           console.log(message);
-          alert(message);
+          // alert(message);
         }, function (err) {
           console.error(err);
           alert(err);
@@ -479,10 +423,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       var device = $cordovaDevice.getDevice();
       if (device.platform === 'iOS') {
         // iOS only code
-        $cordovaCamera.cleanup().then(function () {
-          console.log("CleanUP Enter");
-
-        }); // only for FILE_URI
+        // $cordovaCamera.cleanup().then(function () {
+        //   console.log("CleanUP Enter");
+        //
+        // }); // only for FILE_URI
       }
 
 
@@ -537,66 +481,35 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   })
   .controller("SQLliteController", function ($scope, $ionicPlatform, $cordovaSQLite) {
-    $scope.tutorial = "Nao";
-    $scope.firstTime = "Nao";
+
+    $scope.app = {
+      tutorial: "",
+      firstTime: "Nao"
+    };
+
+    // $scope.tutorial = "Nao";
+    // $scope.firstTime = "Nao";
 
     if (APPfirstTime)
-      $scope.firstTime = "Sim";
+      $scope.app.firstTime = "Sim";
     if (APPtutorial)
-      $scope.tutorial = "Sim";
+      $scope.app.tutorial = "Sim";
 
     console.log("ionic controller SQLliteController ready");
 
-    // $scope.insert = function (firstname, lastname) {
-// //alert('check: ' + $scope.aaa);
-//         var query = "INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ")";
-//         $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
-//           var message = "INSERT ID -> " + res.insertId;
-//           console.log(message);
-//           alert(message);
-//         }, function (err) {
-//           console.error(err);
-//           alert(err);
-//         });
-//       }
-//
-//       $scope.select = function (lastname) {
-//         var query = "SELECT firstname, lastname FROM people WHERE lastname = ?";
-//         $cordovaSQLite.execute($scope.db, query, [lastname]).then(function (res) {
-//           if (res.rows.length > 0) {
-//             var message = "SELECTED -> " + res.rows.item(0).firstname + " " + res.rows.item(0).lastname;
-//             alert(message);
-//             console.log(message);
-//           } else {
-//             alert("No results found");
-//             console.log("No results found");
-//           }
-//         }, function (err) {
-//           alert(err);
-//           console.error(err);
-//         });
-//       }
+    $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
+      $scope.app.tutorial = res;
+    });
+    // $cordovaSQLite.updateValueToDB("info", ["Sim", "APPtutorial"]).then(function (res) {
+    //   // console.log("Client side, returned update", res);
+    // });
+    // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) { $scope.app.tutorial = res; });
 
     $scope.isTutorial = function () {
-
       console.log("ionic controller SQLliteController isTutotial");
-
       $ionicPlatform.ready(function () {
-
-        var query = "select value from info where name=?";
-        $cordovaSQLite.execute($scope.db, query, ["APPtutorial"]).then(function (res) {
-          if (res.rows.length > 0) {
-            var message = "SELECTED -> " + res.rows.item(0).value;
-            alert(message);
-            console.log(message);
-            $scope.tutorial = res.rows.item(0).value;
-          } else {
-            alert("No results found");
-            console.log("No results found");
-          }
-        }, function (err) {
-          alert(err);
-          console.error(err);
+        $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
+          $scope.app.tutorial = res;
         });
       })
     };
@@ -604,15 +517,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     $scope.updateTutorial = function () {
       console.log("ionic controller SQLliteController updateTutorial");
       $ionicPlatform.ready(function () {
-        var query = "update info set value='Nao' where name='APPtutorial'";
-        $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
-          // var message = "INSERT ID -> " + res.insertId;
-          console.log("update APPtutorial");
-          alert("update APPtutorial Nao");
-          APPtutorial = 0;
-        }, function (err) {
-          console.error(err);
-          alert(err);
+        $cordovaSQLite.updateValueToDB("info", ["Sim", "APPtutorial"]).then(function (res) {
+          if (!res.rowsAffected)
+            console.warn("ALERT: Update db got 0 affected rows");
+          // console.log("Client side, returned update", res);
         });
       })
     };
@@ -620,15 +528,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     $scope.moreTutorial = function () {
       console.log("ionic controller SQLliteController updateTutorial");
       $ionicPlatform.ready(function () {
-        var query = "update info set value='Sim' where name='APPtutorial'";
-        $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
-          // var message = "INSERT ID -> " + res.insertId;
-          console.log("update APPtutorial");
-          alert("update APPtutorial Sim");
-          APPtutorial = 1;
-        }, function (err) {
-          console.error(err);
-          alert(err);
+        $cordovaSQLite.updateValueToDB("info", ["Nao", "APPtutorial"]).then(function (res) {
+          if (!res.rowsAffected)
+            console.warn("ALERT: Update db got 0 affected rows");
+          // console.log("Client side, returned update", res);
         });
       })
     }

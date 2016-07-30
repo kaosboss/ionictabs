@@ -1,7 +1,8 @@
 <ion-view view-title="Account">
   <ion-content>
     <ion-list>
-      <ion-toggle ng-change="toggleChange()" ng-model="enableBeacons">
+      <ion-toggle disabled="true" ng-change="toggleChange()" ng-model="enableBeacons">
+      <!--<ion-toggle disabled="{{BLE}}" ng-change="toggleChange()" ng-model="enableBeacons">-->
         Ativar Localizacao na Quinta
       </ion-toggle>
       <!--<ion-toggle ng-model="settings.enableFriends">-->

@@ -1,5 +1,5 @@
 angular.module('starter.services', [])
-  .factory('$IbeaconScanner', ['$rootScope', function ($rootScope) {
+  .factory('$IbeaconScanner', ['$rootScope', '$window', function ($rootScope, $window) {
     var beacons = {};
     var myRegion = null;
     var myRegion = null;
@@ -13,7 +13,104 @@ angular.module('starter.services', [])
       "64003": "Regiao de interesse 3"
     }
 
-    var sendUpdates=false;
+    cw("Factory $IbeaconScanner");
+
+    var sendUpdates = false;
+
+    checkBLE = function () {
+      if ($window.device.model.indexOf("iPhone4") == -1)
+        return true;
+    };
+
+    // if ($window.device.model.indexOf("iPhone4") != -1) {
+    //   cw("Factory: NO BLE support found!");
+    //   $rootScope.enableBeacons=false;
+    //   return {
+    //     sendUpdates: function (updates) {
+    //       sendUpdates = updates;
+    //     },
+    //     checkBLE: checkBLE
+    //   }
+    // } else cw("Factory: BLE support found!");
+
+    startBeaconScan = function () {
+
+      if (!myRegion) {
+        myRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major);
+        console.log("myRegion Created");
+        // myRegion = myRegion;
+      }
+
+      var delegate = new cordova.plugins.locationManager.Delegate();
+
+      delegate.didDetermineStateForRegion = function (pluginResult) {
+      };
+
+      delegate.didStartMonitoringForRegion = function (pluginResult) {
+      };
+
+      delegate.didRangeBeaconsInRegion = function (pluginResult) {
+        var i = 0;
+        // console.log('XX: didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
+        // cordova.plugins.locationManager.appendToDeviceLog('didRangeBeaconsInRegion:' + JSON.stringify(pluginResult));
+        // console.log("event, plug res: UUID: %s prox: %s lenght: %s", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity, pluginResult.beacons[i].length, event, pluginResult.beacons[i]);
+        var uniqueBeaconKey;
+        for (i = 0; i < pluginResult.beacons.length; i++) {
+          pluginResult.beacons[i].nome = nomes[pluginResult.beacons[i].minor];
+          uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
+          if ((!beacons[uniqueBeaconKey])) {
+            $rootScope.currentRI = pluginResult.beacons[i].nome;
+            // console.log("Device busy: %s", $rootScope.deviceBUSY);
+            if (!$rootScope.deviceBUSY) {
+              // console.log("Device free not busy");
+              beacons[uniqueBeaconKey] = pluginResult.beacons[i];
+              $rootScope.beacons = beacons;
+              if ($rootScope.enableBeacons) {
+                $rootScope.$broadcast('RI_FOUND');
+                console.log("Sending broadcast RI_FOUND");
+              } else
+                console.log("Disabled: enabled beacons for broadcast RI_FOUND");
+            } else console.log("Device BUSY for broadcast RI_FOUND, queue?");
+          } else {
+            beacons[uniqueBeaconKey] = pluginResult.beacons[i];
+            $rootScope.beacons = beacons;
+            if (sendUpdates) {
+              $rootScope.$broadcast('BEACONS_UPDATE');
+              console.log("Sending broadcast BEACONS_UPDATE");
+            }
+          }
+          // console.log("FOUND: ", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity)
+        }
+        // $scope.$apply();
+      };
+
+      cordova.plugins.locationManager.setDelegate(delegate);
+      //  required in iOS 8+
+      cordova.plugins.locationManager.requestWhenInUseAuthorization();
+      // cordova.plugins.locationManager.requestAlwaysAuthorization();
+
+      cordova.plugins.locationManager.startRangingBeaconsInRegion(myRegion)
+        .fail(function (e) {
+          console.log("ERROR: START SCAN ", e);
+        })
+        .done(function (e) {
+          console.log("Done: START SCAN", e);
+        });
+    };
+
+    stopBeaconScan = function () {
+
+      cordova.plugins.locationManager.stopRangingBeaconsInRegion(myRegion)
+        .fail(function (e) {
+          console.log("ERROR STOP SCAN", e);
+        })
+        .done(function (e) {
+          console.log("Done: STOP SCAN", e);
+          beacons = {};
+          $rootScope.beacons = beacons;
+          // $scope.$apply();
+        });
+    };
 
     return {
 
@@ -21,86 +118,11 @@ angular.module('starter.services', [])
         sendUpdates = updates;
       },
 
-      startBeaconScan: function () {
+      startBeaconScan: startBeaconScan,
 
-        console.log("startBeaconScan ready");
+      stopBeaconScan: stopBeaconScan,
 
-        if (!myRegion) {
-          myRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major);
-          console.log("myRegion Created");
-          // myRegion = myRegion;
-        }
-
-        var delegate = new cordova.plugins.locationManager.Delegate();
-
-        delegate.didDetermineStateForRegion = function (pluginResult) {
-        };
-
-        delegate.didStartMonitoringForRegion = function (pluginResult) {
-        };
-
-        delegate.didRangeBeaconsInRegion = function (pluginResult) {
-          var i = 0;
-          // console.log('XX: didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
-          // cordova.plugins.locationManager.appendToDeviceLog('didRangeBeaconsInRegion:' + JSON.stringify(pluginResult));
-          // console.log("event, plug res: UUID: %s prox: %s lenght: %s", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity, pluginResult.beacons[i].length, event, pluginResult.beacons[i]);
-          var uniqueBeaconKey;
-          for (i = 0; i < pluginResult.beacons.length; i++) {
-            pluginResult.beacons[i].nome = nomes[pluginResult.beacons[i].minor];
-            uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
-            if ((!beacons[uniqueBeaconKey])) {
-              $rootScope.currentRI = pluginResult.beacons[i].nome;
-              // console.log("Device busy: %s", $rootScope.deviceBUSY);
-              if (!$rootScope.deviceBUSY) {
-                // console.log("Device free not busy");
-                beacons[uniqueBeaconKey] = pluginResult.beacons[i];
-                $rootScope.beacons = beacons;
-                if ($rootScope.enableBeacons) {
-                  $rootScope.$broadcast('RI_FOUND');
-                  console.log("Sending broadcast RI_FOUND");
-                } else
-                  console.log("NoT enabled beacons for broadcast RI_FOUND");
-              } else console.log("Device BUSY for broadcast RI_FOUND, queue?ß");
-            } else {
-              beacons[uniqueBeaconKey] = pluginResult.beacons[i];
-              $rootScope.beacons = beacons;
-              if (sendUpdates) {
-                $rootScope.$broadcast('BEACONS_UPDATE');
-                console.log("Sending broadcast BEACONS_UPDATE");
-              }
-            }
-            // console.log("FOUND: ", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity)
-          }
-          // $scope.$apply();
-        };
-
-        cordova.plugins.locationManager.setDelegate(delegate);
-        //  required in iOS 8+
-        cordova.plugins.locationManager.requestWhenInUseAuthorization();
-        // cordova.plugins.locationManager.requestAlwaysAuthorization();
-
-        cordova.plugins.locationManager.startRangingBeaconsInRegion(myRegion)
-          .fail(function (e) {
-            console.log("ERROR: START SCAN ", e);
-          })
-          .done(function (e) {
-            console.log("Done: START SCAN", e);
-          });
-      },
-
-      stopBeaconScan: function () {
-
-        cordova.plugins.locationManager.stopRangingBeaconsInRegion(myRegion)
-          .fail(function (e) {
-            console.log("ERROR STOP SCAN", e);
-          })
-          .done(function (e) {
-            console.log("Done: STOP SCAN", e);
-            beacons = {};
-            $rootScope.beacons = beacons;
-            // $scope.$apply();
-          });
-      }
+      checkBLE: checkBLE
     }
   }])
   .factory('$cordovaCamera', ['$q', function ($q) {
@@ -239,93 +261,159 @@ angular.module('starter.services', [])
       }
     };
   }])
-  .factory('$cordovaSQLite', ['$q', '$window', function ($q, $window) {
+  .factory('$cordovaSQLite', ['$q', '$window', '$rootScope', function ($q, $window, $rootScope) {
 
-    return {
-      openDB: function (options, background) {
+    // document.addEventListener("deviceready", function () {
 
-        if (angular.isObject(options) && !angular.isString(options)) {
-          if (typeof background !== 'undefined') {
-            options.bgType = background;
-          }
-          return $window.sqlitePlugin.openDatabase(options);
+    cw("ionic platform db: init, factory"); // #### DB #########
+
+    var result = {};
+
+    openDB = function (options, background) {
+
+      if (angular.isObject(options) && !angular.isString(options)) {
+        if (typeof background !== 'undefined') {
+          options.bgType = background;
         }
+        // if ($window.sqlitePlugin)
+        return $window.sqlitePlugin.openDatabase(options);
+      }
+      // if ($window.sqlitePlugin)
+      return $window.sqlitePlugin.openDatabase({
+        name: options,
+        bgType: background
+      });
+    };
 
-        return $window.sqlitePlugin.openDatabase({
-          name: options,
-          bgType: background
-        });
-      },
-
-      execute: function (db, query, binding) {
-        var q = $q.defer();
-        db.transaction(function (tx) {
-          tx.executeSql(query, binding, function (tx, result) {
-              q.resolve(result);
-            },
-            function (transaction, error) {
-              q.reject(error);
-            });
-        });
-        return q.promise;
-      },
-
-      insertCollection: function (db, query, bindings) {
-        var q = $q.defer();
-        var coll = bindings.slice(0); // clone collection
-
-        db.transaction(function (tx) {
-          (function insertOne() {
-            var record = coll.splice(0, 1)[0]; // get the first record of coll and reduce coll by one
-            try {
-              tx.executeSql(query, record, function (tx, result) {
-                if (coll.length === 0) {
-                  q.resolve(result);
-                } else {
-                  insertOne();
-                }
-              }, function (transaction, error) {
-                q.reject(error);
-                return;
-              });
-            } catch (exception) {
-              q.reject(exception);
-            }
-          })();
-        });
-        return q.promise;
-      },
-
-      nestedExecute: function (db, query1, query2, binding1, binding2) {
-        var q = $q.defer();
-
-        db.transaction(function (tx) {
-            tx.executeSql(query1, binding1, function (tx, result) {
-              q.resolve(result);
-              tx.executeSql(query2, binding2, function (tx, res) {
-                q.resolve(res);
-              });
-            });
+    execute = function (db, query, binding) {
+      var q = $q.defer();
+      db.transaction(function (tx) {
+        tx.executeSql(query, binding, function (tx, result) {
+            q.resolve(result);
           },
           function (transaction, error) {
             q.reject(error);
           });
+      });
+      return q.promise;
+    };
 
-        return q.promise;
-      },
+    insertCollection = function (db, query, bindings) {
+      var q = $q.defer();
+      var coll = bindings.slice(0); // clone collection
 
-      deleteDB: function (dbName) {
-        var q = $q.defer();
+      db.transaction(function (tx) {
+        (function insertOne() {
+          var record = coll.splice(0, 1)[0]; // get the first record of coll and reduce coll by one
+          try {
+            tx.executeSql(query, record, function (tx, result) {
+              if (coll.length === 0) {
+                q.resolve(result);
+              } else {
+                insertOne();
+              }
+            }, function (transaction, error) {
+              q.reject(error);
+              return;
+            });
+          } catch (exception) {
+            q.reject(exception);
+          }
+        })();
+      });
+      return q.promise;
+    };
 
-        $window.sqlitePlugin.deleteDatabase(dbName, function (success) {
-          q.resolve(success);
-        }, function (error) {
+    nestedExecute = function (db, query1, query2, binding1, binding2) {
+      var q = $q.defer();
+
+      db.transaction(function (tx) {
+          tx.executeSql(query1, binding1, function (tx, result) {
+            q.resolve(result);
+            tx.executeSql(query2, binding2, function (tx, res) {
+              q.resolve(res);
+            });
+          });
+        },
+        function (transaction, error) {
           q.reject(error);
         });
 
-        return q.promise;
+      return q.promise;
+    };
+
+    deleteDB = function (dbName) {
+      var q = $q.defer();
+
+      $window.sqlitePlugin.deleteDatabase(dbName, function (success) {
+        q.resolve(success);
+      }, function (error) {
+        q.reject(error);
+      });
+
+      return q.promise;
+    };
+
+    getVarFromDB = function (tipo, binding) {
+      switch (tipo) {
+
+        case "info":
+
+          var query = "select value from info where name=?";
+          return this.execute(db, query, [binding]).then(function (res) {
+            result = res;
+            if (res.rows.length > 0) {
+              var message = "SELECTED -> " + res.rows.item(0).value;
+              console.log(message);
+              return result.rows.item(0).value;
+            } else {
+              // alert("No results found");
+              console.log("No results found");
+              return 0;
+            }
+          }, function (err) {
+            // alert(err);
+            console.error(err);
+          });
       }
     };
+
+    updateValueToDB = function (tipo, binding) {
+      switch (tipo) {
+        case "info":
+
+          var query = "update info set value=? where name=?";
+          return this.execute(db, query, binding).then(function (res) {
+            result = res;
+            console.log("UPDATED DB, binding: %s", binding.toString());
+            if (!res.rowsAffected)
+              console.warn("ALERT: Update db got 0 affected rows");
+            return res;
+          }, function (err) {
+            // alert(err);
+            console.error(err);
+            return 0;
+          });
+      }
+    };
+
+    return {
+      openDB: openDB,
+
+      execute: execute,
+
+      // insertCollection: insertCollection,
+
+      // nestedExecute: nestedExecute,
+
+      // deleteDB: deleteDB,
+
+      getVarFromDB: getVarFromDB,
+
+      updateValueToDB: updateValueToDB
+
+    };
+    // });
   }])
   // .factory('IbeaconFactory', ['$q', function($q) {
   //
