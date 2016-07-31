@@ -1,4 +1,43 @@
 angular.module('starter.services', [])
+  .service('UserService', function ($cordovaSQLite) {
+    // For the purpose of this example I will store user data on ionic local storage but you should save it on a database
+    var setUser = function (user_data) {
+      // window.localStorage.starter_facebook_user = JSON.stringify(user_data);
+      $cordovaSQLite.updateValueToDB("info", [JSON.stringify(user_data), "userinfo"]).then(function (res) {
+        if (res.rowsAffected == 0) {
+          console.warn("ERROR updating profile, inserting new");
+          $cordovaSQLite.insertVarToDB("info", ["userinfo", JSON.stringify(user_data)]).then(function (res) {
+            console.log("INSERTED userdata: : ", res);
+            // return JSON.parse(res || '{}')
+          }, function (err) {
+            console.error("ERROR inserting profile, NOT stored", err);
+          });
+        } else
+          console.log("Stored profile", res)
+
+      }, function (err) {
+        console.error("ERROR updating profile, NOT stored", err);
+      });
+
+    };
+
+    var getUser = function () {
+      var userInfo = $cordovaSQLite.getVarFromDB("info", "userinfo").then(function (res) {
+        // console.log("SQLST: ", res);
+        // console.log("SQLST: ", JSON.parse(res));
+        userInfo = JSON.parse(res || '{}')
+        return userInfo
+      });
+      return userInfo;
+      // console.log("LOCALST: ", JSON.parse(window.localStorage.starter_facebook_user || '{}'));
+      // return JSON.parse(window.localStorage.starter_facebook_user || '{}');
+    };
+
+    return {
+      getUser: getUser,
+      setUser: setUser
+    };
+  })
   .factory('$IbeaconScanner', ['$rootScope', '$window', function ($rootScope, $window) {
     var beacons = {};
     var myRegion = null;
@@ -361,11 +400,10 @@ angular.module('starter.services', [])
 
           var query = "select value from info where name=?";
           return this.execute(db, query, [binding]).then(function (res) {
-            result = res;
             if (res.rows.length > 0) {
               var message = "SELECTED -> " + res.rows.item(0).value;
-              console.log(message);
-              return result.rows.item(0).value;
+              // console.log(message);
+              return res.rows.item(0).value;
             } else {
               // alert("No results found");
               console.log("No results found");
@@ -374,6 +412,27 @@ angular.module('starter.services', [])
           }, function (err) {
             // alert(err);
             console.error(err);
+          });
+      }
+    };
+
+    insertVarToDB = function (tipo, binding) {
+
+      switch (tipo) {
+
+        case "info":
+
+          var query = "INSERT INTO `info` (name,value) VALUES (?, ?)";
+          return this.execute(db, query, binding).then(function (res) {
+            result = res;
+            if (res) {
+              console.log(res);
+              return res.insertId;
+            }
+          }, function (err) {
+            // alert(err);
+            console.error(err);
+            return 0;
           });
       }
     };
@@ -410,27 +469,13 @@ angular.module('starter.services', [])
 
       getVarFromDB: getVarFromDB,
 
-      updateValueToDB: updateValueToDB
+      updateValueToDB: updateValueToDB,
+
+      insertVarToDB: insertVarToDB
 
     };
     // });
   }])
-  // .factory('IbeaconFactory', ['$q', function($q) {
-  //
-  //   return {
-  //     scanBarcode: function() {
-  //       var q = $q.defer();
-  //       cordova.plugins.BarcodeScanner(function(result) {
-  //         // Do any magic you need
-  //         q.resolve(result);
-  //       }, function(err) {
-  //         q.reject(err);
-  //       });
-  //
-  //       return q.promise;
-  //     }
-  //   }
-  // }])
   .factory('Chats', function () {
     // Might use a resource here that returns a JSON array
 

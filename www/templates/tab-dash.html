@@ -1,25 +1,23 @@
 <ion-view view-title="Dashboard">
   <ion-content class="padding">
-    <p>
-      A quinta pedagógica é um espaço contacto com a natureza e devido às várias espécies de aves que utilizam
-      sistemas
-      internos de orientação, como pombos, periquitos e gansos que vivem na quinta, achamos que o risco de
-      adicionar um
-      emissor Wi-Fi com potência suficiente para a cobertura total do espaço, não se justifica.
-    </p>
     <!--<button ng-click="openDB()" class="button button-block button-energized">Start BD</button>-->
     <!--<button ng-click="createTB()" class="button button-block button-balanced">create tbß</button>-->
-    <p>
-      Apesar das alterações electromagnéticas medidas com o emissor em funcionamento serem muito baixas devido
-      dispersão
-      do terreno com pouca densidade, seria necessário um estudo mais aprofundado para uma conclusão satisfatória
-      em
-      termos de impacto nos animais.
-    </p>
-    <p>
-      A quinta já coexiste com cobertura 3G/4G com alguma qualidade, que serve as necessidades do visitante que
-      precise de conectividade permanente e cujo impacto ambiental já existe.
-    </p>
+
     <div ng-controller="PopupCtrl"></div>
+    <div ng-controller="WelcomeCtrl">
+      <p align="center">
+        Nome: {{profile_name}}
+      </p>
+      <p align="center">
+        Email: {{profile_email}}
+      </p>
+      <p>
+        <img class="center" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">
+      </p>
+
+      <a class="facebook-sign-in button button-block" ng-click="facebookSignIn()">Login with Facebook</a>
+    </div>
+  <div ng-controller="HomeCtrl">
+    <a class="button button-assertive button-block button-outline" ng-click="showLogOutMenu()">Log Out</a>    </div>
   </ion-content>
 </ion-view>

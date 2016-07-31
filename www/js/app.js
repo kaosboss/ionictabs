@@ -12,8 +12,8 @@ var APPdir = null;
 var db = null;
 var enableBeacons = false;
 var initialOutput = "";
-var debug=1;
-var noBLE=1;
+var debug = 0;
+var noBLE = 1;
 
 cw = function (value) {
   initialOutput += value + '\n';
@@ -70,7 +70,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           // var message = "SELECTED -> " + res.rows.item(0).value;
           var currentPlatform = ionic.Platform.platform();
           var currentPlatformVersion = ionic.Platform.version();
-          console.log("Got APP version: Installed v" + res.rows.item(0).value  + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
+          console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
           $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
         } else {
           $scope.showAlert("No results found, primeira utilizacao!");
@@ -128,8 +128,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       alertPopup.then(function (res) {
         console.log('OK on APP version');
         if ($window.device.model.indexOf("iPhone4") == -1) {
-          $rootScope.enableBeacons=true;
-          noBLE=0;
+          $rootScope.enableBeacons = true;
+          noBLE = 0;
           $IbeaconScanner.startBeaconScan();
         }
       });
@@ -164,7 +164,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
         cw("IbeaconController: BLE support found!");
 
-        $rootScope.enableBeacons=true;
+        $rootScope.enableBeacons = true;
 
         $scope.$on("BEACONS_UPDATE", function (e) {
           $scope.beacons = $rootScope.beacons;
@@ -172,12 +172,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           $scope.$apply();
         });
 
-        $scope.$on("$ionicView.beforeEnter", function(event, data){
+        $scope.$on("$ionicView.beforeEnter", function (event, data) {
           $IbeaconScanner.sendUpdates(true);
           console.log("State $ionicView.beforeEnter Params: ", data);
         });
 
-        $scope.$on("$ionicParentView.beforeLeave", function(event, data){
+        $scope.$on("$ionicParentView.beforeLeave", function (event, data) {
           $IbeaconScanner.sendUpdates(false);
           console.log("State $ionicParentView.beforeLeave Params: ", data);
         });
@@ -384,7 +384,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         console.log("Success moved file, new URL: %s", entry.toURL());
 
         var query = "INSERT INTO `journal` (IMG,caption) VALUES (?,?)";
-        $cordovaSQLite.execute($scope.db, query, [entry.toURL(),"No caption yet!"]).then(function (res) {
+        $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!"]).then(function (res) {
           var message = "INSERT ID -> " + res.insertId;
           console.log(message);
           // alert(message);
@@ -541,6 +541,196 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         });
       })
     }
+  })
+  .controller('WelcomeCtrl', function ($scope, $state, $q, UserService, $ionicLoading, $ionicPlatform, $cordovaSQLite) {
+    // This is the success callback from the login method
+
+    $ionicPlatform.ready(function () {
+
+      $cordovaSQLite.getVarFromDB("info", "userinfo").then(function (res) {
+        user = JSON.parse(res || '{}');
+        // console.log("RES USER:", res);
+        $scope.profile_photo = user.picture;
+        $scope.profile_name = user.name;
+        $scope.profile_email = user.email;
+        console.log("FB NAME3: %s pic: %s", user.name, user.picture);
+      });
+
+
+      var fbLoginSuccess = function (response) {
+        if (!response.authResponse) {
+          fbLoginError("Cannot find the authResponse");
+          return;
+        }
+
+        var authResponse = response.authResponse;
+
+        getFacebookProfileInfo(authResponse)
+          .then(function (profileInfo) {
+            // For the purpose of this example I will store user data on local storage
+            UserService.setUser({
+              authResponse: authResponse,
+              userID: profileInfo.id,
+              name: profileInfo.name,
+              email: profileInfo.email,
+              picture: "https://graph.facebook.com/" + authResponse.userID + "/picture?type=large"
+            });
+            // console.log({
+            //   authResponse: authResponse,
+            //   userID: profileInfo.id,
+            //   name: profileInfo.name,
+            //   email: profileInfo.email,
+            //   picture: "http://graph.facebook.com/" + authResponse.userID + "/picture?type=large"
+            // });
+
+            $scope.profile_photo = "https://graph.facebook.com/" + authResponse.userID + "/picture?type=large";
+            $scope.profile_name = profileInfo.name;
+            $scope.profile_email = profileInfo.email;
+
+            console.log("GOT FB: ", profileInfo.name, "https://graph.facebook.com/" + authResponse.userID + "/picture?type=large");
+
+            $ionicLoading.hide();
+            $state.go('tab.camera');
+          }, function (fail) {
+            // Fail get profile info
+            console.log('profile info fail', fail);
+          });
+      };
+
+      // This is the fail callback from the login method
+      var fbLoginError = function (error) {
+        console.log('fbLoginError', error);
+        $ionicLoading.hide();
+      };
+
+      // This method is to get the user profile info from the facebook api
+      var getFacebookProfileInfo = function (authResponse) {
+        var info = $q.defer();
+
+        facebookConnectPlugin.api('/me?fields=email,name&access_token=' + authResponse.accessToken, null,
+          function (response) {
+            console.log(response);
+            info.resolve(response);
+          },
+          function (response) {
+            console.log(response);
+            info.reject(response);
+          }
+        );
+        return info.promise;
+      };
+
+      //This method is executed when the user press the "Login with facebook" button
+      $scope.facebookSignIn = function () {
+        facebookConnectPlugin.getLoginStatus(function (success) {
+          if (success.status === 'connected') {
+            // The user is logged in and has authenticated your app, and response.authResponse supplies
+            // the user's ID, a valid access token, a signed request, and the time the access token
+            // and signed request each expire
+            console.log('getLoginStatus', success.status);
+
+            // Check if we have our user saved
+            // var userp = UserService.getUser('facebook');
+            // var user = userp.then(function (res) {
+            //   return(res);
+            // });
+            var user;
+
+            $cordovaSQLite.getVarFromDB("info", "userinfo").then(function (res) {
+              user = res;
+              console.log("RES USER:", res);
+
+              // UserService.getUser('facebook').then(function (res) {
+              //   user = res;
+              console.log("getUser: Got: ", user);
+              // });
+
+              if (!user.userID) {
+                getFacebookProfileInfo(success.authResponse)
+                  .then(function (profileInfo) {
+                    // For the purpose of this example I will store user data on local storage
+                    UserService.setUser({
+                      authResponse: success.authResponse,
+                      userID: profileInfo.id,
+                      name: profileInfo.name,
+                      email: profileInfo.email,
+                      picture: "https://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large"
+                    });
+                    $scope.profile_photo = "https://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large";
+                    $scope.profile_name = profileInfo.name;
+                    $scope.profile_email = profileInfo.email;
+                    // $scope.$apply();
+                    console.log("FB NAME2: %s pic: %s", user.name, user.picture);
+                    $state.go('tab.camera');
+                  }, function (fail) {
+                    // Fail get profile info
+                    console.log('profile info fail', fail);
+                  });
+              } else {
+                $scope.profile_photo = user.picture;
+                $scope.profile_name = user.name;
+                $scope.profile_email = user.email;
+                console.log("FB NAME: %s pic: %s", user.name, user.picture);
+                $scope.$apply();
+                $state.go('tab.camera');
+              }
+
+            });
+
+          } else {
+            // If (success.status === 'not_authorized') the user is logged in to Facebook,
+            // but has not authenticated your app
+            // Else the person is not logged into Facebook,
+            // so we're not sure if they are logged into this app or not.
+
+            console.log('getLoginStatus', success.status);
+
+            $ionicLoading.show({
+              template: 'Logging in...'
+            });
+
+            // Ask the permissions you need. You can learn more about
+            // FB permissions here: https://developers.facebook.com/docs/facebook-login/permissions/v2.4
+            facebookConnectPlugin.login(['email', 'public_profile'], fbLoginSuccess, fbLoginError);
+          }
+        });
+      };
+    });
+
+  })
+  .controller('HomeCtrl', function ($scope, UserService, $ionicActionSheet, $state, $ionicLoading, $ionicPlatform) {
+
+    $ionicPlatform.ready(function () {
+
+      $scope.user = UserService.getUser();
+
+      $scope.showLogOutMenu = function () {
+        var hideSheet = $ionicActionSheet.show({
+          destructiveText: 'Logout',
+          titleText: 'De certeza que quer fazer logout?',
+          cancelText: 'Cancelar',
+          cancel: function () {
+          },
+          buttonClicked: function (index) {
+            return true;
+          },
+          destructiveButtonClicked: function () {
+            $ionicLoading.show({
+              template: 'Logging out...'
+            });
+
+            // Facebook logout
+            facebookConnectPlugin.logout(function () {
+                $ionicLoading.hide();
+                $state.go('tab.camera');
+              },
+              function (fail) {
+                $ionicLoading.hide();
+              });
+          }
+        });
+      };
+    });
   })
   .config(function ($stateProvider, $urlRouterProvider) {
 
