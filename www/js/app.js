@@ -52,6 +52,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         console.log("DB", db);
         $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `info` ( `name`	TEXT,	`value`	TEXT)", []).then(function (res) {
           // alert("OK onDB create");
+          cw("Table info created");
+        }, function (err) {
+          alert(err);
+        });
+        $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (`IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT)", []).then(function (res) {          // alert("OK onDB create");
+          cw("Table journal created");
         }, function (err) {
           alert(err);
         });
@@ -310,14 +316,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
       console.log("camera controller ready 1");
       $ionicPlatform.ready(function () {
-        console.log("retrieving first pic");
-        var query = "select value from info where name=?";
-        $cordovaSQLite.execute($scope.db, query, ["IMG"]).then(function (res) {
+        console.log("retrieving last pic");
+        var query = "select * from journal";
+        $cordovaSQLite.execute(db, query, []).then(function (res) {
           if (res.rows.length > 0) {
-            var message = "SELECTED -> " + res.rows.item(res.rows.length - 1).value;
+            var message = "SELECTED -> " + res.rows.item(res.rows.length - 1).IMG;
             $scope.showAlert(message);
             console.log(message, res);
-            $scope.lastPhoto = res.rows.item(res.rows.length - 1).value;
+            $scope.lastPhoto = res.rows.item(res.rows.length - 1).IMG;
             // $scope.$apply();
           } else {
             $scope.showAlert("No results found");
@@ -377,8 +383,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         $scope.lastPhoto = entry.toURL();
         console.log("Success moved file, new URL: %s", entry.toURL());
 
-        var query = "INSERT INTO `info` (name,value) VALUES ('IMG', '" + entry.toURL() + "')";
-        $cordovaSQLite.execute($scope.db, query, []).then(function (res) {
+        var query = "INSERT INTO `journal` (IMG,caption) VALUES (?,?)";
+        $cordovaSQLite.execute($scope.db, query, [entry.toURL(),"No caption yet!"]).then(function (res) {
           var message = "INSERT ID -> " + res.insertId;
           console.log(message);
           // alert(message);
