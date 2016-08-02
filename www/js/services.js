@@ -50,16 +50,17 @@ angular.module('starter.services', [])
     var nomes = {
       "64001": "Regiao de interesse 2",
       "64003": "Regiao de interesse 3"
-    }
+    };
+    var scanning = false;
 
     cw("Factory $IbeaconScanner");
 
     var sendUpdates = false;
 
-    checkBLE = function () {
-      if ($window.device.model.indexOf("iPhone4") == -1)
-        return true;
-    };
+    // checkBLE = function () {
+    //   if ($window.device.model.indexOf("iPhone4") == -1)
+    //     return true;
+    // };
 
     // if ($window.device.model.indexOf("iPhone4") != -1) {
     //   cw("Factory: NO BLE support found!");
@@ -71,6 +72,9 @@ angular.module('starter.services', [])
     //     checkBLE: checkBLE
     //   }
     // } else cw("Factory: BLE support found!");
+    isScanning = function () {
+      return scanning;
+    };
 
     startBeaconScan = function () {
 
@@ -134,6 +138,7 @@ angular.module('starter.services', [])
         })
         .done(function (e) {
           console.log("Done: START SCAN", e);
+          scanning = true;
         });
     };
 
@@ -148,6 +153,7 @@ angular.module('starter.services', [])
           beacons = {};
           $rootScope.beacons = beacons;
           // $scope.$apply();
+          scanning=false;
         });
     };
 
@@ -161,7 +167,7 @@ angular.module('starter.services', [])
 
       stopBeaconScan: stopBeaconScan,
 
-      checkBLE: checkBLE
+      isScanning: isScanning
     }
   }])
   .factory('$cordovaCamera', ['$q', function ($q) {

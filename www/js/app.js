@@ -35,6 +35,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         // org.apache.cordova.statusbar required
         StatusBar.styleDefault();
       }
+      cordova.plugins.BluetoothStatus.initPlugin();
     });
   })
   .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner) {
@@ -43,69 +44,114 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     if (debug) alert("start");
 
     $ionicPlatform.ready(function () {
-      cw("ionic platform ready");
-      // db = $rootScope.db = $window.sqlitePlugin.openDatabase({name: "snpquinta.db", location: "default"});
-      db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
+        cw("ionic platform ready");
+        // cordova.plugins.BluetoothStatus.initPlugin();
+        // db = $rootScope.db = $window.sqlitePlugin.openDatabase({name: "snpquinta.db", location: "default"});
+        db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
 
-      if (db) {
-        cw("DB open");
-        console.log("DB", db);
-        $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `info` ( `name`	TEXT,	`value`	TEXT)", []).then(function (res) {
-          // alert("OK onDB create");
-          cw("Table info created");
-        }, function (err) {
-          alert(err);
-        });
-        $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (`IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT)", []).then(function (res) {          // alert("OK onDB create");
-          cw("Table journal created");
-        }, function (err) {
-          alert(err);
-        });
-      }
-      dbres = 1;
-
-      var query = "select value from info where name=?";
-      $cordovaSQLite.execute(db, query, ["APP"]).then(function (res) {
-        if (res.rows.length > 0) {
-          // var message = "SELECTED -> " + res.rows.item(0).value;
-          var currentPlatform = ionic.Platform.platform();
-          var currentPlatformVersion = ionic.Platform.version();
-          console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
-          $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
-        } else {
-          $scope.showAlert("No results found, primeira utilizacao!");
-          console.log("No results found, firsttime?");
-
-          var query = "INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ")";
-          $cordovaSQLite.execute(db, query, []).then(function (res) {
-            // var message = "INSERT ID -> " + res.insertId;
-            // console.log(message);
-            console.log("Inserted APP version: v" + APPverion + " tutorial: ON");
-            APPfirstTime = 1;
-            $scope.showAlert("Inserted APP version: v" + APPverion + " tutorial: ON");
-            // alert(message);
+        if (db) {
+          cw("DB open");
+          console.log("DB", db);
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `info` ( `name`	TEXT,	`value`	TEXT)", []).then(function (res) {
+            // alert("OK onDB create");
+            cw("Table info created");
           }, function (err) {
-            console.error(err);
             alert(err);
           });
-
-          var query = "INSERT INTO `info` (name,value) VALUES ('APPtutorial', 'Sim')";
-          $cordovaSQLite.execute(db, query, []).then(function (res) {
-            var message = "INSERT ID -> " + res.insertId;
-            // console.log(message);
-            console.log("Inserted APP tutorial: Sim");
-            APPtutorial = 1;
-            // alert(message);
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (`IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT)", []).then(function (res) {          // alert("OK onDB create");
+            cw("Table journal created");
           }, function (err) {
-            console.error(err);
             alert(err);
           });
         }
-      }, function (err) {
-        alert(err);
-        console.error("ERROR ON get app version", err);
-      });
-    });
+        dbres = 1;
+
+        var query = "select value from info where name=?";
+        $cordovaSQLite.execute(db, query, ["APP"]).then(function (res) {
+          if (res.rows.length > 0) {
+            // var message = "SELECTED -> " + res.rows.item(0).value;
+            var currentPlatform = ionic.Platform.platform();
+            var currentPlatformVersion = ionic.Platform.version();
+            console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
+            $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
+          } else {
+            $scope.showAlert("No results found, primeira utilizacao!");
+            console.log("No results found, firsttime?");
+
+            var query = "INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ")";
+            $cordovaSQLite.execute(db, query, []).then(function (res) {
+              // var message = "INSERT ID -> " + res.insertId;
+              // console.log(message);
+              console.log("Inserted APP version: v" + APPverion + " tutorial: ON");
+              APPfirstTime = 1;
+              $scope.showAlert("Inserted APP version: v" + APPverion + " tutorial: ON");
+              // alert(message);
+            }, function (err) {
+              console.error(err);
+              alert(err);
+            });
+
+            var query = "INSERT INTO `info` (name,value) VALUES ('APPtutorial', 'Sim')";
+            $cordovaSQLite.execute(db, query, []).then(function (res) {
+              var message = "INSERT ID -> " + res.insertId;
+              // console.log(message);
+              console.log("Inserted APP tutorial: Sim");
+              APPtutorial = 1;
+              // alert(message);
+            }, function (err) {
+              console.error(err);
+              alert(err);
+            });
+          }
+        }, function (err) {
+          alert(err);
+          console.error("ERROR ON get app version", err);
+        });
+
+
+        checkBT = function () {
+          var msg = "Has BT: " + cordova.plugins.BluetoothStatus.hasBT + " Has BLE: " + cordova.plugins.BluetoothStatus.hasBTLE + " isBTenable: " + cordova.plugins.BluetoothStatus.BTenabled;
+
+          if (cordova.plugins.BluetoothStatus.hasBTLE) {
+            noBLE = 0;
+            $rootScope.enableBeacons = true;
+
+            $window.addEventListener('BluetoothStatus.enabled', function () {
+              console.log('Bluetooth has been enabled');
+              if (!$IbeaconScanner.isScanning())
+                $IbeaconScanner.startBeaconScan();
+            });
+            $window.addEventListener('BluetoothStatus.disabled', function () {
+              console.log('Bluetooth has been disabled');
+              if ($IbeaconScanner.isScanning())
+                $IbeaconScanner.stopBeaconScan();
+            });
+
+            if (device.platform === 'iOS') {
+              msg = msg + " IOS: isAuthorized: " + cordova.plugins.BluetoothStatus.iosAuthorized;
+              if (!cordova.plugins.BluetoothStatus.BTenabled) {
+                console.log("TURN BT ON - IOS");
+                $scope.showBT("Ligue o Bluetooth para a localizaçao na Quinta");
+              } else {
+                $IbeaconScanner.startBeaconScan();
+              }
+            }
+            if (device.platform === 'Android') {
+              if (!cordova.plugins.BluetoothStatus.BTenabled) {
+                cordova.plugins.BluetoothStatus.promptForBT();
+              } else {
+                $IbeaconScanner.startBeaconScan();
+              }
+            }
+          }
+          // $scope.showBT(msg);
+          console.log(msg);
+        };
+
+        // $timeout(checkBT, 3000);
+
+      }
+    );
 
     // });
 
@@ -118,6 +164,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     //   $IbeaconScanner.stopBeaconScan();
     // };
     //
+
+    $scope.showBT = function (msg) {
+      var alertPopup2 = $ionicPopup.alert({
+        scope: $scope,
+        title: 'INFORMACAO',
+        template: msg
+      });
+
+      alertPopup2.then(function (res) {
+        console.log('OK on BT info');
+      });
+
+      $timeout(function () {
+        alertPopup2.close();
+      }, 5000);
+    };
+
     $scope.showAlert = function (msg) {
       var alertPopup = $ionicPopup.alert({
         scope: $scope,
@@ -127,11 +190,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
       alertPopup.then(function (res) {
         console.log('OK on APP version');
-        if ($window.device.model.indexOf("iPhone4") == -1) {
-          $rootScope.enableBeacons = true;
-          noBLE = 0;
-          $IbeaconScanner.startBeaconScan();
-        }
+        checkBT();
       });
 
       $timeout(function () {
@@ -160,7 +219,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
     $ionicPlatform.ready(function () {
 
-      if ($window.device.model.indexOf("iPhone4") == -1) {
+      if (cordova.plugins.BluetoothStatus.hasBTLE) {
 
         cw("IbeaconController: BLE support found!");
 
