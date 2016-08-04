@@ -22,7 +22,7 @@ cw = function (value) {
 
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
-  .run(function ($ionicPlatform) {
+  .run(function ($ionicPlatform, $rootScope) {
     $ionicPlatform.ready(function () {
       cw("ionic startting run");
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -36,12 +36,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         StatusBar.styleDefault();
       }
       cordova.plugins.BluetoothStatus.initPlugin();
+      $rootScope.popupQueue = [];
+      $rootScope.showPopup = function (popup) {
+        $rootScope.mypop = popup;
+        $rootScope.$broadcast("SHOW_POPUP");
+      };
+      $rootScope.showAlert = function (msg) {
+        $rootScope.mypop = {
+          template: msg || '',
+          title: 'INFORMAÇÃO',
+          subTitle: '',
+          buttonText: "OK"
+        };
+        $rootScope.$broadcast("SHOW_POPUP");
+      }
     });
   })
   .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService) {
 
     dbres = 0;
     if (debug) alert("start");
+
     $scope.netWork = {
       type: "",
       isOnline: false,
@@ -53,23 +68,25 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
         $scope.checkNetwork = function () {
-          $scope.netWork.type = $cordovaNetwork.getNetwork()
-          $scope.netWork.isOnline = $cordovaNetwork.isOnline()
-          $scope.netWork.isOffline = $cordovaNetwork.isOffline()
+          $scope.netWork.type = $cordovaNetwork.getNetwork();
+          $scope.netWork.isOnline = $cordovaNetwork.isOnline();
+          $scope.netWork.isOffline = $cordovaNetwork.isOffline();
 
           $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
             $scope.netWork.onlineState = networkState;
             $scope.netWork.isOnline = true;
             $scope.netWork.isOffline = false;
+            $rootScope.showAlert("NetWork ONLINE");
           });
 
           $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
             $scope.netWork.offlineState = networkState;
             $scope.netWork.isOnline = false;
             $scope.netWork.isOffline = true;
+            $rootScope.showAlert("NetWork OFFLINE");
           });
         };
-        $scope.checkNetwork();
+        // $scope.checkNetwork();
         // cordova.plugins.BluetoothStatus.initPlugin();
         // db = $rootScope.db = $window.sqlitePlugin.openDatabase({name: "snpquinta.db", location: "default"});
         db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
@@ -79,12 +96,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           console.log("DB", db);
           $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `info` ( `name`	TEXT,	`value`	TEXT)", []).then(function (res) {
             // alert("OK onDB create");
-            cw("Table info created");
+            cw("Table info");
           }, function (err) {
             alert(err);
           });
           $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (`IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT)", []).then(function (res) {          // alert("OK onDB create");
-            cw("Table journal created");
+            cw("Table journal");
           }, function (err) {
             alert(err);
           });
@@ -149,6 +166,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
               console.log('Bluetooth has been disabled');
               if ($IbeaconScanner.isScanning())
                 $IbeaconScanner.stopBeaconScan();
+
+              $rootScope.showPopup({
+                title: "INFORMAÇÃO",
+                buttonText: "OK",
+                template: "O bluetooth está desligado, sem alertas de interesse"
+              });
             });
 
             if (device.platform === 'iOS') {
@@ -276,6 +299,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       alertPopup.then(function (res) {
         console.log('OK on APP version');
         checkBT();
+        $scope.checkNetwork();
       });
 
       $timeout(function () {
@@ -333,40 +357,53 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   .controller('PopupCtrl', function ($rootScope, $scope, $ionicPopup, $timeout) {
 
 // Triggered on a button click, or some other target
-    $scope.showPopup = function () {
+    $scope.showPopup = function (mypop) {
       $scope.data = {};
+      if (!mypop)
+        mypop = {};
 
-      // An elaborate, custom popup
-      var myPopup = $ionicPopup.show({
-        template: '<input type="password" ng-model="data.wifi">',
-        title: 'Enter Wi-Fi Password',
-        subTitle: 'Please use normal things',
-        scope: $scope,
-        buttons: [
-          {text: 'Cancel'},
+      if (!mypop.timeout)
+        mypop.timeout = 5000;
+
+      var buttonText = mypop.buttonText || "OK";
+      var oButtons = mypop.oButtons || [
           {
-            text: '<b>Save</b>',
+            text: '<b>' + mypop.buttonText + '</b>',
             type: 'button-positive',
-            onTap: function (e) {
-              if (!$scope.data.wifi) {
-                //don't allow the user to close unless he enters wifi password
-                e.preventDefault();
-              } else {
-                return $scope.data.wifi;
-              }
-            }
           }
-        ]
+        ];
+      var myPopup = $ionicPopup.show({
+        template: mypop.template || '',
+        title: mypop.title || 'INFORMAÇÃO',
+        subTitle: mypop.subTitle || '',
+        scope: $scope,
+        buttons: oButtons
       });
 
       myPopup.then(function (res) {
-        console.log('Tapped!', res);
+        console.log('Force Tap!');
+        $scope.popupON = 0;
       });
 
-      // $timeout(function () {
-      //   myPopup.close(); //close the popup after 3 seconds for some reason
-      // }, 3000);
+      $timeout(function () {
+        myPopup.close();
+      }, mypop.timeout);
     };
+
+    $scope.$on('SHOW_POPUP', function (e) {
+      // do something
+      // console.log("POPUP controller scope.on RI_FOUND, enter.");
+      if (!$scope.popupON) {
+        $scope.popupON = 1;
+        $scope.showPopup($rootScope.mypop);
+      }
+      else {
+        if ($rootScope.mypop.queue) {
+          console.log("ShowPopUP: Got event, but popup ON, skipping, but queue: ", $rootScope.mypop);
+          $rootScope.popupQueue.push($rootScope.mypop);
+        }
+      }
+    });
 
     // A confirm dialog
     $scope.showRI = function () {
@@ -686,8 +723,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       })
     }
   })
-  .controller('WelcomeCtrl', function ($scope, $state, $q, UserService, $ionicLoading, $ionicPlatform, $cordovaSQLite, $cordovaFileTransfer) {
+  .controller('WelcomeCtrl', function ($scope, $rootScope, $state, $q, UserService, $ionicLoading, $ionicPlatform, $cordovaSQLite, $cordovaFileTransfer,$cordovaNetwork) {
     // This is the success callback from the login method
+
+    $scope.fb = {
+      loggedIN: true
+    };
+
+    $scope.logged = function () {
+      return $scope.fb.loggedIN;
+    };
 
     $ionicPlatform.ready(function () {
 
@@ -722,13 +767,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           // var url = 'http://cordova.apache.org/static/img/cordova_bot.png';
           // Parameters passed to getFile create a new file or return the file if it already exists.
 
-          fs.root.getFile(newFileName, { create: true, exclusive: false }, function (fileEntry) {
+          fs.root.getFile(newFileName, {create: true, exclusive: false}, function (fileEntry) {
             // download(fileEntry, url, true);
 
             $cordovaFileTransfer.download(url, fileEntry.toURL(), {}, true).then(function (result) {
               console.log('Save file on ' + fileEntry.toURL() + ' success!');
               $scope.note = 'Save file on ' + fileEntry.toURL() + ' success!';
-              $scope.profile_photo=fileEntry.toURL();
+              $scope.profile_photo = fileEntry.toURL();
               // $ionicLoading.hide();
               var tempUser = UserService.getUser();
               tempUser.then(function (res) {
@@ -761,6 +806,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         $scope.profile_name = user.name;
         $scope.profile_email = user.email;
         console.log("FB NAME3: %s pic: %s", user.name, user.picture);
+        $scope.fb.loggedIN=true;
       });
 
 
@@ -811,6 +857,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       var fbLoginError = function (error) {
         console.log('fbLoginError', error);
         $ionicLoading.hide();
+        $scope.fb.loggedIN=false;
       };
 
       // This method is to get the user profile info from the facebook api
@@ -832,6 +879,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
       //This method is executed when the user press the "Login with facebook" button
       $scope.facebookSignIn = function () {
+
+        if (!$cordovaNetwork.isOnline()) {
+          $rootScope.showAlert("Ligue a Internet e tente novamente");
+          return;
+        }
+
         facebookConnectPlugin.getLoginStatus(function (success) {
           if (success.status === 'connected') {
             // The user is logged in and has authenticated your app, and response.authResponse supplies
@@ -870,8 +923,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                     $scope.profile_name = profileInfo.name;
                     $scope.profile_email = profileInfo.email;
                     // $scope.$apply();
-                    console.log("FB NAME2: %s pic: %s", user.name, user.picture);
-                    $state.go('tab.camera');
+                    console.log("FB NAME2: %s pic: %s", profileInfo.name, profileInfo.picture);
+                    // $state.go('tab.camera');
+                    $scope.Download("https://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large");
+                    $rootScope.showAlert("Facebook Logged IN com o nome: " +profileInfo.name + " email: " + profileInfo.email);
                   }, function (fail) {
                     // Fail get profile info
                     console.log('profile info fail', fail);
@@ -908,13 +963,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     });
 
   })
-  .controller('HomeCtrl', function ($scope, UserService, $ionicActionSheet, $state, $ionicLoading, $ionicPlatform) {
+  .controller('HomeCtrl', function ($scope, $rootScope, UserService, $ionicActionSheet, $state, $ionicLoading, $ionicPlatform, $cordovaNetwork, $cordovaSQLite) {
 
     $ionicPlatform.ready(function () {
 
-      var getUser = UserService.getUser();
+      // var getUser = UserService.getUser();
 
       $scope.showLogOutMenu = function () {
+
+        if (!$cordovaNetwork.isOnline()) {
+          $rootScope.showAlert("Ligue a Internet e tente novamente");
+          return;
+        }
+
         var hideSheet = $ionicActionSheet.show({
           destructiveText: 'Logout',
           titleText: 'De certeza que quer fazer logout?',
@@ -932,7 +993,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             // Facebook logout
             facebookConnectPlugin.logout(function () {
                 $ionicLoading.hide();
-                $state.go('tab.camera');
+                // $state.go('tab.camera');
+              $rootScope.showAlert("Facebook Logged OUT!");
               },
               function (fail) {
                 $ionicLoading.hide();

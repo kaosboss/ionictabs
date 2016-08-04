@@ -1,8 +1,7 @@
 <ion-view view-title="Dashboard">
   <ion-content class="padding">
     <!--<button ng-click="openDB()" class="button button-block button-energized">Start BD</button>-->
-    <p>Ligaçao Tipo: {{netWork.onlineState}}</p>
-    <p>isOnline: {{netWork.isOnline}}</p>
+    <p>Ligaçao: {{netWork.type}} onlineState: {{netWork.onlineState}} isOnline: {{netWork.isOnline}}</p>
     <!--<p>isOffline: {{netWork.isOffline}}</p>-->
     <!--<p>onlineState: {{netWork.onlineState}}</p>-->
     <!--<p>offLineState: {{netWork.offLineState}}</p>-->
@@ -17,12 +16,12 @@
       <p>
         <img id="fb_photo" class="center" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">
       </p>
-      <button ng-click="Download()" class="button button-block button-balanced">DW profile pic</button>
-      <p>Nota: {{note}}</p>
-      <p>Download Progress: {{downloadProgress}}</p>
+      <!--<button ng-click="Download()" class="button button-block button-balanced">DW profile pic</button>-->
+      <!--<p>Nota: {{note}}</p>-->
+      <!--<p>Download Progress: {{downloadProgress}}</p>-->
       <a class="facebook-sign-in button button-block" ng-click="facebookSignIn()">Login with Facebook</a>
     </div>
   <div ng-controller="HomeCtrl">
-    <a class="button button-assertive button-block button-outline" ng-click="showLogOutMenu()">Log Out</a>    </div>
+    <a class="button button-assertive button-block button-outline" ng-hide="logged()" ng-click="showLogOutMenu()">Log Out</a>    </div>
   </ion-content>
 </ion-view>
