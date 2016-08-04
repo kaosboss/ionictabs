@@ -1,8 +1,12 @@
 <ion-view view-title="Dashboard">
   <ion-content class="padding">
     <!--<button ng-click="openDB()" class="button button-block button-energized">Start BD</button>-->
-    <!--<button ng-click="createTB()" class="button button-block button-balanced">create tbß</button>-->
-
+    <p>Ligaçao</p>
+    <p>Tipo: {{netWork.type}}</p>
+    <p>isOnline: {{netWork.isOnline}}</p>
+    <p>isOffline: {{netWork.isOffline}}</p>
+    <p>onlineState: {{netWork.onlineState}}</p>
+    <p>offLineState: {{netWork.offLineState}}</p>
     <div ng-controller="PopupCtrl"></div>
     <div ng-controller="WelcomeCtrl">
       <p align="center">
@@ -12,9 +16,11 @@
         Email: {{profile_email}}
       </p>
       <p>
-        <img class="center" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">
+        <img id="fb_photo" class="center" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">
       </p>
-
+      <button ng-click="Download()" class="button button-block button-balanced">DW profile pic</button>
+      <p>Nota: {{note}}</p>
+      <p>Download Progress: {{downloadProgress}}</p>
       <a class="facebook-sign-in button button-block" ng-click="facebookSignIn()">Login with Facebook</a>
     </div>
   <div ng-controller="HomeCtrl">

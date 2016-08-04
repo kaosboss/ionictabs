@@ -22,6 +22,8 @@ angular.module('starter.services', [])
     };
 
     var getUser = function () {
+      return $cordovaSQLite.getVarFromDB("info", "userinfo");
+
       var userInfo = $cordovaSQLite.getVarFromDB("info", "userinfo").then(function (res) {
         // console.log("SQLST: ", res);
         // console.log("SQLST: ", JSON.parse(res));
@@ -38,6 +40,115 @@ angular.module('starter.services', [])
       setUser: setUser
     };
   })
+  .factory('$cordovaFileTransfer', ['$q', '$timeout', function ($q, $timeout) {
+    return {
+      download: function (source, filePath, options, trustAllHosts) {
+        var q = $q.defer();
+        var ft = new FileTransfer();
+        var uri = (options && options.encodeURI === false) ? source : encodeURI(source);
+
+        if (options && options.timeout !== undefined && options.timeout !== null) {
+          $timeout(function () {
+            ft.abort();
+          }, options.timeout);
+          options.timeout = null;
+        }
+
+        ft.onprogress = function (progress) {
+          q.notify(progress);
+        };
+
+        q.promise.abort = function () {
+          ft.abort();
+        };
+
+        ft.download(uri, filePath, q.resolve, q.reject, trustAllHosts, options);
+        return q.promise;
+      },
+
+      upload: function (server, filePath, options, trustAllHosts) {
+        var q = $q.defer();
+        var ft = new FileTransfer();
+        var uri = (options && options.encodeURI === false) ? server : encodeURI(server);
+
+        if (options && options.timeout !== undefined && options.timeout !== null) {
+          $timeout(function () {
+            ft.abort();
+          }, options.timeout);
+          options.timeout = null;
+        }
+
+        ft.onprogress = function (progress) {
+          q.notify(progress);
+        };
+
+        q.promise.abort = function () {
+          ft.abort();
+        };
+
+        ft.upload(filePath, uri, q.resolve, q.reject, options, trustAllHosts);
+        return q.promise;
+      }
+    };
+  }])
+  .factory('$cordovaNetwork', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
+
+    /**
+     * Fires offline a event
+     */
+    var offlineEvent = function () {
+      var networkState = navigator.connection.type;
+      $timeout(function () {
+        $rootScope.$broadcast('$cordovaNetwork:offline', networkState);
+      });
+    };
+
+    /**
+     * Fires online a event
+     */
+    var onlineEvent = function () {
+      var networkState = navigator.connection.type;
+      $timeout(function () {
+        $rootScope.$broadcast('$cordovaNetwork:online', networkState);
+      });
+    };
+
+    document.addEventListener('deviceready', function () {
+      if (navigator.connection) {
+        document.addEventListener('offline', offlineEvent, false);
+        document.addEventListener('online', onlineEvent, false);
+      }
+    });
+
+    return {
+      getNetwork: function () {
+        return navigator.connection.type;
+      },
+
+      isOnline: function () {
+        var networkState = navigator.connection.type;
+        return networkState !== Connection.UNKNOWN && networkState !== Connection.NONE;
+      },
+
+      isOffline: function () {
+        var networkState = navigator.connection.type;
+        return networkState === Connection.UNKNOWN || networkState === Connection.NONE;
+      },
+
+      clearOfflineWatch: function () {
+        document.removeEventListener('offline', offlineEvent);
+        $rootScope.$$listeners['$cordovaNetwork:offline'] = [];
+      },
+
+      clearOnlineWatch: function () {
+        document.removeEventListener('online', onlineEvent);
+        $rootScope.$$listeners['$cordovaNetwork:online'] = [];
+      }
+    };
+  }])
+  .run(['$injector', function ($injector) {
+    $injector.get('$cordovaNetwork'); //ensure the factory always gets initialised
+  }])
   .factory('$IbeaconScanner', ['$rootScope', '$window', function ($rootScope, $window) {
     var beacons = {};
     var myRegion = null;

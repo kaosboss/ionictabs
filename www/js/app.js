@@ -38,13 +38,38 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       cordova.plugins.BluetoothStatus.initPlugin();
     });
   })
-  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner) {
+  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService) {
 
     dbres = 0;
     if (debug) alert("start");
+    $scope.netWork = {
+      type: "",
+      isOnline: false,
+      isOffline: true,
+      onlineState: "",
+      offLineState: ""
+    };
 
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
+        $scope.checkNetwork = function () {
+          $scope.netWork.type = $cordovaNetwork.getNetwork()
+          $scope.netWork.isOnline = $cordovaNetwork.isOnline()
+          $scope.netWork.isOffline = $cordovaNetwork.isOffline()
+
+          $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+            $scope.netWork.onlineState = networkState;
+            $scope.netWork.isOnline = true;
+            $scope.netWork.isOffline = false;
+          });
+
+          $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
+            $scope.netWork.offlineState = networkState;
+            $scope.netWork.isOnline = false;
+            $scope.netWork.isOffline = true;
+          });
+        };
+        $scope.checkNetwork();
         // cordova.plugins.BluetoothStatus.initPlugin();
         // db = $rootScope.db = $window.sqlitePlugin.openDatabase({name: "snpquinta.db", location: "default"});
         db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
@@ -108,7 +133,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           console.error("ERROR ON get app version", err);
         });
 
-
         checkBT = function () {
           var msg = "Has BT: " + cordova.plugins.BluetoothStatus.hasBT + " Has BLE: " + cordova.plugins.BluetoothStatus.hasBTLE + " isBTenable: " + cordova.plugins.BluetoothStatus.BTenabled;
 
@@ -148,6 +172,67 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           console.log(msg);
         };
 
+        // $scope.Download = function (imgurl) {
+        //
+        //   if ($scope.netWork.isOffline)
+        //     return;
+        //
+        //   if (!imgurl)
+        //     imgurl = document.getElementById("fb_photo");
+        //   console.log("IMG URL: %s", imgurl.src);
+        //
+        //   var url = imgurl.src;
+        //   var filename = url.split("/").pop();
+        //   var targetPath = cordova.file.documentsDirectory + filename;
+        //   var d = new Date();
+        //   var n = d.getTime();
+        //   //new file name
+        //   var newFileName = n + ".jpg";
+        //   console.log("DOC DIR: %s", cordova.file.documentsDirectory);
+        //
+        //   // $ionicLoading.show({
+        //   //   template: 'Logging in...'
+        //   // });
+        //
+        //   window.requestFileSystem(LocalFileSystem.PERSISTENT, 5 * 1024 * 1024, function (fs) {
+        //
+        //     console.log('file system open: ' + fs.name);
+        //
+        //     // Make sure you add the domain name to the Content-Security-Policy <meta> element.
+        //     // var url = 'http://cordova.apache.org/static/img/cordova_bot.png';
+        //     // Parameters passed to getFile create a new file or return the file if it already exists.
+        //
+        //     fs.root.getFile(newFileName, { create: true, exclusive: false }, function (fileEntry) {
+        //       // download(fileEntry, url, true);
+        //
+        //       $cordovaFileTransfer.download(url, fileEntry.toURL(), {}, true).then(function (result) {
+        //         console.log('Save file on ' + fileEntry.toURL() + ' success!');
+        //         $scope.note = 'Save file on ' + fileEntry.toURL() + ' success!';
+        //         $scope.profile_photo=fileEntry.toURL();
+        //         // $ionicLoading.hide();
+        //         var tempUser = UserService.getUser();
+        //         tempUser.then(function (res) {
+        //           var userInfo = JSON.parse(res || '{}')
+        //           console.log("GOT USER from user service", userInfo);
+        //           userInfo.picture = fileEntry.toURL();
+        //           UserService.setUser(userInfo);
+        //         });
+        //
+        //       }, function (error) {
+        //         $scope.note = 'Error Download file';
+        //       }, function (progress) {
+        //         $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+        //       });
+        //
+        //     }, function () {
+        //       console.log("onErrorCreateFile");
+        //     });
+        //
+        //   }, function () {
+        //     console.log("onErrorLoadFs");
+        //   });
+        //
+        // };
         // $timeout(checkBT, 3000);
 
       }
@@ -601,10 +686,73 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       })
     }
   })
-  .controller('WelcomeCtrl', function ($scope, $state, $q, UserService, $ionicLoading, $ionicPlatform, $cordovaSQLite) {
+  .controller('WelcomeCtrl', function ($scope, $state, $q, UserService, $ionicLoading, $ionicPlatform, $cordovaSQLite, $cordovaFileTransfer) {
     // This is the success callback from the login method
 
     $ionicPlatform.ready(function () {
+
+      $scope.Download = function (url) {
+
+        if ($scope.netWork.isOffline)
+          return;
+
+        if (!url)
+          url = document.getElementById("fb_photo").src;
+
+        console.log("IMG URL: %s", url);
+
+        // var url = imgurl;
+        // var filename = url.split("/").pop();
+        // var targetPath = cordova.file.documentsDirectory + filename;
+        var d = new Date();
+        var n = d.getTime();
+        //new file name
+        var newFileName = n + ".jpg";
+        // console.log("DOC DIR: %s", cordova.file.documentsDirectory);
+
+        // $ionicLoading.show({
+        //   template: 'Logging in...'
+        // });
+
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 5 * 1024 * 1024, function (fs) {
+
+          console.log('file system open: ' + fs.name);
+
+          // Make sure you add the domain name to the Content-Security-Policy <meta> element.
+          // var url = 'http://cordova.apache.org/static/img/cordova_bot.png';
+          // Parameters passed to getFile create a new file or return the file if it already exists.
+
+          fs.root.getFile(newFileName, { create: true, exclusive: false }, function (fileEntry) {
+            // download(fileEntry, url, true);
+
+            $cordovaFileTransfer.download(url, fileEntry.toURL(), {}, true).then(function (result) {
+              console.log('Save file on ' + fileEntry.toURL() + ' success!');
+              $scope.note = 'Save file on ' + fileEntry.toURL() + ' success!';
+              $scope.profile_photo=fileEntry.toURL();
+              // $ionicLoading.hide();
+              var tempUser = UserService.getUser();
+              tempUser.then(function (res) {
+                var userInfo = JSON.parse(res || '{}')
+                console.log("GOT USER from user service", userInfo);
+                userInfo.picture = fileEntry.toURL();
+                UserService.setUser(userInfo);
+              });
+
+            }, function (error) {
+              $scope.note = 'Error Download file';
+            }, function (progress) {
+              $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+            });
+
+          }, function () {
+            console.log("onErrorCreateFile");
+          });
+
+        }, function () {
+          console.log("onErrorLoadFs");
+        });
+
+      };
 
       $cordovaSQLite.getVarFromDB("info", "userinfo").then(function (res) {
         user = JSON.parse(res || '{}');
@@ -649,7 +797,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             console.log("GOT FB: ", profileInfo.name, "https://graph.facebook.com/" + authResponse.userID + "/picture?type=large");
 
             $ionicLoading.hide();
-            $state.go('tab.camera');
+
+            // $state.go('tab.camera');
+            $scope.Download("https://graph.facebook.com/" + authResponse.userID + "/picture?type=large");
+
           }, function (fail) {
             // Fail get profile info
             console.log('profile info fail', fail);
@@ -761,7 +912,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
     $ionicPlatform.ready(function () {
 
-      $scope.user = UserService.getUser();
+      var getUser = UserService.getUser();
 
       $scope.showLogOutMenu = function () {
         var hideSheet = $ionicActionSheet.show({
