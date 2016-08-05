@@ -1,4 +1,5 @@
 // Ionic Starter App
+// Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
@@ -20,9 +21,12 @@ cw = function (value) {
   console.log(value);
 };
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.services'])
 
   .run(function ($ionicPlatform, $rootScope) {
+    $rootScope.APP = {
+      logged: false
+    };
     $ionicPlatform.ready(function () {
       cw("ionic startting run");
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -52,10 +56,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     });
   })
-  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService) {
+  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users) {
 
     dbres = 0;
     if (debug) alert("start");
+
+    $scope.logged = $rootScope.APP.logged;
 
     $scope.netWork = {
       type: "",
@@ -70,18 +76,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         $scope.checkNetwork = function () {
           $scope.netWork.type = $cordovaNetwork.getNetwork();
           $scope.netWork.isOnline = $cordovaNetwork.isOnline();
+          $rootScope.isOnline = $scope.netWork.isOnline;
           $scope.netWork.isOffline = $cordovaNetwork.isOffline();
 
           $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
-            $scope.netWork.onlineState = networkState;
+            $scope.netWork.type = networkState;
+            $rootScope.isOnline = true;
             $scope.netWork.isOnline = true;
             $scope.netWork.isOffline = false;
             $rootScope.showAlert("NetWork ONLINE");
           });
 
           $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
-            $scope.netWork.offlineState = networkState;
+            $scope.netWork.type = networkState;
             $scope.netWork.isOnline = false;
+            $rootScope.isOnline = false;
             $scope.netWork.isOffline = true;
             $rootScope.showAlert("NetWork OFFLINE");
           });
@@ -116,6 +125,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             var currentPlatformVersion = ionic.Platform.version();
             console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
             $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
+            var tempUser = UserService.getUser();
+            tempUser.then(function (res) {
+              var userInfo = JSON.parse(res || '{}')
+              console.log("GOT USER from user service", userInfo);
+              if (userInfo.picture && userInfo.name && userInfo.picture) {
+                $rootScope.APP.logged = true;
+                $scope.logged = true;
+                // users.offline();
+                console.log("USER: LOGGED: true");
+              } else {
+                $rootScope.APP.logged = false;
+                $scope.logged = false;
+                console.log("USER: LOGGED: false");
+              }
+            });
           } else {
             $scope.showAlert("No results found, primeira utilizacao!");
             console.log("No results found, firsttime?");
@@ -126,7 +150,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
               // console.log(message);
               console.log("Inserted APP version: v" + APPverion + " tutorial: ON");
               APPfirstTime = 1;
-              $scope.showAlert("Inserted APP version: v" + APPverion + " tutorial: ON");
+              // $scope.showAlert("Inserted APP version: v" + APPverion + " tutorial: ON");
               // alert(message);
             }, function (err) {
               console.error(err);
@@ -723,18 +747,36 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       })
     }
   })
-  .controller('WelcomeCtrl', function ($scope, $rootScope, $state, $q, UserService, $ionicLoading, $ionicPlatform, $cordovaSQLite, $cordovaFileTransfer,$cordovaNetwork) {
+  .controller('WelcomeCtrl', function ($scope, $rootScope, $state, $q, UserService, $ionicLoading, $ionicPlatform, $cordovaSQLite, $cordovaFileTransfer, $cordovaNetwork, users) {
     // This is the success callback from the login method
 
     $scope.fb = {
       loggedIN: true
     };
 
-    $scope.logged = function () {
+    $scope.fblogged = function () {
       return $scope.fb.loggedIN;
     };
 
+    $scope.addUser = function (user) {
+      if (!$scope.users) {
+        $scope.users = users.init();
+        $scope.users.$add(user);
+        users.offline();
+      } else {
+        $scope.users.$add(user);
+        users.offline();
+      }
+
+    };
+
     $ionicPlatform.ready(function () {
+
+      console.log("Logged: " + $rootScope.APP.logged + " online: " + $cordovaNetwork.isOnline());
+      if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
+        $scope.users = users.init();
+        console.log("First Init firebase");
+      }
 
       $scope.Download = function (url) {
 
@@ -800,14 +842,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       };
 
       $cordovaSQLite.getVarFromDB("info", "userinfo").then(function (res) {
-        user = JSON.parse(res || '{}');
-        // console.log("RES USER:", res);
-        $scope.profile_photo = user.picture;
-        $scope.profile_name = user.name;
-        $scope.profile_email = user.email;
-        console.log("FB NAME3: %s pic: %s", user.name, user.picture);
-        $scope.fb.loggedIN=true;
-      });
+          user = JSON.parse(res || '{}');
+          // console.log("RES USER:", res);
+          if (user.picture && user.name && user.picture) {
+            $rootScope.APP.logged = true;
+            $scope.profile_photo = user.picture;
+            $scope.profile_name = user.name;
+            $scope.profile_email = user.email;
+            console.log("FB NAME3: %s pic: %s", user.name, user.picture);
+            $scope.fb.loggedIN = true;
+          } else {
+            $rootScope.APP.logged = false;
+            $scope.fb.loggedIN = false;
+          }
+        }
+      );
 
 
       var fbLoginSuccess = function (response) {
@@ -846,7 +895,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
             // $state.go('tab.camera');
             $scope.Download("https://graph.facebook.com/" + authResponse.userID + "/picture?type=large");
-
+            if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
+              $rootScope.APP.logged = true;
+              $scope.addUser({
+                nome: profileInfo.name,
+                email: profileInfo.email,
+                platform: ionic.Platform.platform(),
+                version: ionic.Platform.version()
+              })
+            }
           }, function (fail) {
             // Fail get profile info
             console.log('profile info fail', fail);
@@ -857,7 +914,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       var fbLoginError = function (error) {
         console.log('fbLoginError', error);
         $ionicLoading.hide();
-        $scope.fb.loggedIN=false;
+        $scope.fb.loggedIN = false;
       };
 
       // This method is to get the user profile info from the facebook api
@@ -926,7 +983,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                     console.log("FB NAME2: %s pic: %s", profileInfo.name, profileInfo.picture);
                     // $state.go('tab.camera');
                     $scope.Download("https://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large");
-                    $rootScope.showAlert("Facebook Logged IN com o nome: " +profileInfo.name + " email: " + profileInfo.email);
+                    if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
+                      $rootScope.APP.logged = true;
+                      $scope.addUser({
+                        nome: profileInfo.name,
+                        email: profileInfo.email,
+                        platform: ionic.Platform.platform(),
+                        version: ionic.Platform.version()
+                      })
+                    }
+                    $rootScope.showAlert("Facebook Logged IN com o nome: " + profileInfo.name + " email: " + profileInfo.email);
+
                   }, function (fail) {
                     // Fail get profile info
                     console.log('profile info fail', fail);
@@ -994,7 +1061,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             facebookConnectPlugin.logout(function () {
                 $ionicLoading.hide();
                 // $state.go('tab.camera');
-              $rootScope.showAlert("Facebook Logged OUT!");
+                $rootScope.showAlert("Facebook Logged OUT!");
               },
               function (fail) {
                 $ionicLoading.hide();

@@ -264,7 +264,7 @@ angular.module('starter.services', [])
           beacons = {};
           $rootScope.beacons = beacons;
           // $scope.$apply();
-          scanning=false;
+          scanning = false;
         });
     };
 
@@ -593,6 +593,27 @@ angular.module('starter.services', [])
     };
     // });
   }])
+  .factory("users", function ($firebaseArray) {
+
+    var usersRef;
+
+    init = function () {
+      console.log("FIREBASE: INIT");
+      usersRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Utilizadores");
+      return $firebaseArray(usersRef);
+    };
+
+    offline = function () {
+      console.log("FIREBASE: going offline");
+      Firebase.goOffline();
+    };
+
+    return {
+      init: init,
+      offline: offline
+    };
+
+  })
   .factory('Chats', function () {
     // Might use a resource here that returns a JSON array
 
