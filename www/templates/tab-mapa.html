@@ -1,0 +1,12 @@
+<ion-view view-title="Mapa">
+  <ion-content padding="true" class="padding">
+    <button type="button" class="button button-block button-assertive">Localização: {{$root.currentRI}} </button>
+    <canvas id="imageView"></canvas>
+    <div ng-controller="PopupCtrl"></div>
+    <ion-item class="item">
+      <p>Nome Região de interesse: {{nome}}</p>    </ion-item>
+    <ion-item class="item"">
+      <p>Região desbloqueada: {{locked}}</p>
+    </ion-item>
+  </ion-content>
+</ion-view>

@@ -7,8 +7,9 @@
       <div ng-controller="PopupCtrl">
         <!--<button ng-click="showRI()" type="button" class="button button-block button-primary">showPopup</button>-->
         <!--<button ng-click="showConfirm()" type="button" class="button button-block button-primary">showConfirm</button>-->
-        <!--<button ng-click="showAlert()" type="button" class="button button-block button-primary">showAlert</button>-->
+        <button type="button" class="button button-block button-primary">Região atual: {{$root.currentRI}} </button>
         </div>
+
         <ion-list>
             <ion-item class="item" ng-repeat="(key, value) in beacons" type="item-text-wrap">
             <p>Nome: {{value.nome}}</p>

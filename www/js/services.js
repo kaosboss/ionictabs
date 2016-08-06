@@ -159,9 +159,10 @@ angular.module('starter.services', [])
     var minor = 64001; // optional, defaults to wildcard if left empty
     var major = 4660; // optional, defaults to wildcard if left empty
     var nomes = {
-      "64001": "Regiao de interesse 2",
-      "64003": "Regiao de interesse 3"
+      "64001": "Regiao de interesse B",
+      "64003": "Regiao de interesse C"
     };
+
     var scanning = false;
 
     cw("Factory $IbeaconScanner");

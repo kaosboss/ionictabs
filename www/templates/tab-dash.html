@@ -1,28 +1,34 @@
 <ion-view view-title="Dashboard">
   <ion-content class="padding">
     <!--<button ng-click="openDB()" class="button button-block button-energized">Start BD</button>-->
-    <p>Ligaçao: {{netWork.type}} isOnline: {{netWork.isOnline}}</p>
-    <p>Utilizador Logged: {{$root.APP.logged}}</p>
+    <ion-item class="item">
+      <p align="center">Ligaçao: {{netWork.type}} isOnline: {{netWork.isOnline}}</p>
+      <p align="center">Utilizador Logged: {{$root.APP.logged}}</p>
+    </ion-item>
     <!--<p>isOffline: {{netWork.isOffline}}</p>-->
     <!--<p>onlineState: {{netWork.onlineState}}</p>-->
     <!--<p>offLineState: {{netWork.offLineState}}</p>-->
     <div ng-controller="PopupCtrl"></div>
     <div ng-controller="WelcomeCtrl">
-      <p align="center">
-        Nome: {{profile_name}}
-      </p>
-      <p align="center">
-        Email: {{profile_email}}
-      </p>
-      <p>
-        <img id="fb_photo" class="center" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">
-      </p>
-      <!--<button ng-click="Download()" class="button button-block button-balanced">DW profile pic</button>-->
-      <!--<p>Nota: {{note}}</p>-->
-      <!--<p>Download Progress: {{downloadProgress}}</p>-->
-      <a class="facebook-sign-in button button-block" ng-hide=$root.APP.logged ng-click="facebookSignIn()">Login with Facebook</a>
+      <ion-item class="item">
+        <p align="center">
+          Nome: {{profile_name}}
+        </p>
+        <p align="center">
+          Email: {{profile_email}}
+        </p>
+        <p>
+          <img id="fb_photo" class="center" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">
+        </p>
+        <!--<button ng-click="Download()" class="button button-block button-balanced">DW profile pic</button>-->
+        <!--<p>Nota: {{note}}</p>-->
+        <!--<p>Download Progress: {{downloadProgress}}</p>-->
+        <a class="facebook-sign-in button button-block" ng-hide=$root.APP.logged ng-click="facebookSignIn()">Login with
+          Facebook</a>
     </div>
-  <div ng-controller="HomeCtrl">
-    <a class="button button-assertive button-block button-outline" ng-show=$root.APP.logged ng-click="showLogOutMenu()">Log Out</a>    </div>
+    <div ng-controller="HomeCtrl">
+      <a class="button button-assertive button-block button-outline" ng-show=$root.APP.logged
+         ng-click="showLogOutMenu()">Log Out</a></div>
+    </ion-item>
   </ion-content>
 </ion-view>

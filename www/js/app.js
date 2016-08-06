@@ -382,6 +382,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
 // Triggered on a button click, or some other target
     $scope.showPopup = function (mypop) {
+      $rootScope.popupON = 1;
       $scope.data = {};
       if (!mypop)
         mypop = {};
@@ -407,6 +408,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       myPopup.then(function (res) {
         console.log('Force Tap!');
         $scope.popupON = 0;
+        $rootScope.popupON = 0;
       });
 
       $timeout(function () {
@@ -1071,6 +1073,202 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       };
     });
   })
+  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaSQLite) {
+
+    $scope.$on('RI_FOUND', function (e) {
+      console.log("tab mapa refresh");
+      drawImage();
+    });
+
+    $ionicPlatform.ready(function () {
+
+      var regioes = {
+        "Regiao de interesse A": "RI_A",
+        "Regiao de interesse B": "RI_B",
+        "Regiao de interesse C": "RI_C",
+        "Regiao de interesse D": "RI_D",
+        "Regiao de interesse E": "RI_E",
+        "Regiao de interesse F": "RI_F",
+        "Regiao de interesse G": "RI_G",
+        "Regiao de interesse H": "RI_H"
+      };
+
+      console.log("Mapactrl ready");
+      $ionicLoading.show({
+          template: 'A verificar o Mapa'
+        });
+
+      var canvas = document.getElementById('imageView');
+      var context = canvas.getContext('2d');
+      var aCircles = [];
+
+      touchUp = function (e) {
+        console.log("rootpop: ", $rootScope.popupON);
+        // e.preventDefault();
+        // alert("clicked");
+        //console.log(e);
+
+        for (var f = 0; f <= aCircles.length - 1; f++) {
+
+          var circleY = aCircles[f].centerY;
+          var circleX = aCircles[f].centerX;
+          var circleRadius = aCircles[f].radius;
+          var y = e.offsetY - circleY;
+          var x = e.offsetX - circleX;
+          var dist = Math.sqrt(y * y + x * x);
+          //console.log("circle: %s dist: ", aCircles[f].nome, dist);
+
+          if (dist < circleRadius) {
+            //go to google
+            $scope.nome = aCircles[f].nome;
+            $scope.locked = aCircles[f].locked;
+            console.log("in circle: %s", aCircles[f].nome);
+            $rootScope.showAlert("Ir para  " + aCircles[f].descricao + " locked: " + aCircles[f].locked);
+          }
+        }
+      };
+
+      createCircles = function () {
+        aCircles = [
+          {
+            nome: "RI_A",
+            descricao: "Região de interesse A",
+            centerX: 273,
+            centerY: 105,
+            radius: 20,
+            locked: false
+          },
+          {
+            nome: "RI_B",
+            descricao: "Região de interesse B",
+            centerX: 230,
+            centerY: 95,
+            radius: 20,
+            locked: false
+          },
+          {
+            nome: "RI_C",
+            descricao: "Região de interesse C",
+            centerX: 187,
+            centerY: 88,
+            radius: 22,
+            locked: false
+          },
+          {
+            nome: "RI_D",
+            descricao: "Região de interesse D",
+            centerX: 135,
+            centerY: 70,
+            radius: 32,
+            locked: true
+          },
+          {
+            nome: "RI_E",
+            descricao: "Região de interesse E",
+            centerX: 53,
+            centerY: 50,
+            radius: 36,
+            locked: true
+          },
+          {
+            nome: "RI_F",
+            descricao: "Região de interesse F",
+            centerX: 75,
+            centerY: 110,
+            radius: 31,
+            locked: true
+          },
+          {
+            nome: "RI_G",
+            descricao: "Região de interesse G",
+            centerX: 178,
+            centerY: 125,
+            radius: 20,
+            locked: true
+          },
+          {
+            nome: "RI_H",
+            descricao: "Região de interesse H",
+            centerX: 225,
+            centerY: 125,
+            radius: 20,
+            locked: true
+          }
+        ];
+      };
+
+      drawCircle = function (oCircle) {
+        // console.log("oCircle: ", oCircle);
+        var centerX = oCircle.centerX;
+        var centerY = oCircle.centerY;
+        var radius = oCircle.radius || 20;
+        var blue = "108, 202, 255";
+        var red= "255, 104, 85";
+        var color = blue;
+
+        context.beginPath();
+        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+
+        if ($rootScope.currentRI) {
+          if (regioes[$rootScope.currentRI] == oCircle.nome)
+              color = red;
+        }
+
+        if (oCircle.locked)
+          context.fillStyle = "rgba(" + color + ", 0.9)";
+        else
+          context.fillStyle = "rgba(" + color + ", 0.5)";
+
+        context.fill();
+        context.lineWidth = 1;
+
+        context.strokeStyle = '#003300';
+        context.stroke();
+      };
+
+
+      drawCircles = function () {
+        for (var f = 0; f <= aCircles.length - 1; f++) {
+          drawCircle(aCircles[f]);
+        }
+        $ionicLoading.hide();
+      };
+
+      drawImage = function () {
+        //shadow
+        //alert();
+        context.shadowBlur = 20;
+        context.shadowColor = "rgb(0,0,0)";
+
+        //image
+        var image = new Image();
+        image.onload = function () {
+          //alert("load");
+          console.log("load image done");
+          context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+          createCircles();
+          drawCircles();
+
+        };
+        //canvas.addEventListener("touchend", touchUp, false);
+        canvas.addEventListener("click", touchUp, false);
+        //image.src ="http://i.imgur.com/p3gjnKa.jpg";
+        image.src = "img/mapaqtapedagogica.png";
+        //<img id="pic" src="http://i.telegraph.co.uk/multimedia/archive/03589/Wellcome_Image_Awa_3589699k.jpg">
+
+        //$(image).load(function () {
+        //image.height = canvas.height();
+        //image.width = canvas.width();
+        //context.drawImage(image);
+        //context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        //});
+      };
+
+      drawImage();
+    })
+  })
+
   .config(function ($stateProvider, $urlRouterProvider) {
 
     // Ionic uses AngularUI Router which uses the concept of states
@@ -1094,6 +1292,15 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           'tab-dash': {
             templateUrl: 'templates/tab-dash.html',
             controller: 'DashCtrl'
+          }
+        }
+      })
+      .state('tab.mapa', {
+        url: '/mapa',
+        views: {
+          'tab-mapa': {
+            templateUrl: 'templates/tab-mapa.html',
+            controller: 'MapaCtrl'
           }
         }
       })
