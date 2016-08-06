@@ -101,10 +101,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         cordova.plugins.Keyboard.disableScroll(true);
       }
-      if (window.StatusBar) {
-        // org.apache.cordova.statusbar required
-        StatusBar.styleDefault();
-      }
+
       cordova.plugins.BluetoothStatus.initPlugin();
       $rootScope.popupQueue = [];
       $rootScope.showPopup = function (popup) {
@@ -119,6 +116,14 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           buttonText: "OK"
         };
         $rootScope.$broadcast("SHOW_POPUP");
+      };
+
+      ionic.Platform.fullScreen();
+      if (window.StatusBar) {
+        return StatusBar.hide();
+        // org.apache.cordova.statusbar required
+        StatusBar.styleDefault();
+
       }
     });
   })
@@ -1168,9 +1173,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       };
 
       console.log("Mapactrl ready");
-      $ionicLoading.show({
-          template: 'A verificar o Mapa'
-        });
+      // $ionicLoading.show({
+      //     template: 'A verificar o Mapa'
+      //   });
 
       var canvas = document.getElementById('imageView');
       var context = canvas.getContext('2d');
@@ -1251,7 +1256,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         for (var f = 0; f <= aCircles.length - 1; f++) {
           drawCircle(aCircles[f]);
         }
-        $ionicLoading.hide();
+        // $ionicLoading.hide();
       };
 
       drawImage = function () {
