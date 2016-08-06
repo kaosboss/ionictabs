@@ -27,7 +27,7 @@ angular.module('starter.controllers', [])
         $rootScope.enableBeacons = !$rootScope.enableBeacons;
         if ($rootScope.enableBeacons) {
           $rootScope.beacons = {};
-          $rootScope.$broadcast('RI_FOUND');
+          $rootScope.$broadcast('BEACONS_UPDATE');
         }
         console.log("enableBeacons new state: %s", $rootScope.enableBeacons);
       }

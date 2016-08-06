@@ -531,6 +531,26 @@ angular.module('starter.services', [])
             // alert(err);
             console.error(err);
           });
+          break;
+
+        case "regioes":
+          var query = "select value from regioes where name=?";
+          return this.execute(db, query, [binding]).then(function (res) {
+            if (res.rows.length > 0) {
+              var message = "SELECTED -> " + res.rows.item(0).value;
+              // console.log(message);
+              return res.rows.item(0).value;
+            } else {
+              // alert("No results found");
+              console.log("No results found");
+              return 0;
+            }
+          }, function (err) {
+            // alert(err);
+            console.error(err);
+          });
+
+          break;
       }
     };
 
@@ -541,6 +561,21 @@ angular.module('starter.services', [])
         case "info":
 
           var query = "INSERT INTO `info` (name,value) VALUES (?, ?)";
+          return this.execute(db, query, binding).then(function (res) {
+            result = res;
+            if (res) {
+              console.log(res);
+              return res.insertId;
+            }
+          }, function (err) {
+            // alert(err);
+            console.error(err);
+            return 0;
+          });
+
+        case "regioes":
+
+          var query = "INSERT INTO `regioes` (name,value) VALUES (?, ?)";
           return this.execute(db, query, binding).then(function (res) {
             result = res;
             if (res) {
@@ -571,6 +606,22 @@ angular.module('starter.services', [])
             console.error(err);
             return 0;
           });
+        break;
+
+        case "regioes":
+          var query = "update regioes set value=? where name=?";
+          return this.execute(db, query, binding).then(function (res) {
+            result = res;
+            console.log("UPDATED DB, binding: %s", binding.toString());
+            if (!res.rowsAffected)
+              console.warn("ALERT: Update db got 0 affected rows");
+            return res;
+          }, function (err) {
+            // alert(err);
+            console.error(err);
+            return 0;
+          });
+          break;
       }
     };
 
@@ -589,7 +640,7 @@ angular.module('starter.services', [])
 
       updateValueToDB: updateValueToDB,
 
-      insertVarToDB: insertVarToDB
+      insertVarToDB: insertVarToDB,
 
     };
     // });
@@ -614,6 +665,39 @@ angular.module('starter.services', [])
       offline: offline
     };
 
+  })
+  .factory("$regioes", function ($cordovaSQLite) {
+
+    console.log("Factory $regioes");
+
+    var setRegioes = function (regioes) {
+      // window.localStorage.starter_facebook_user = JSON.stringify(user_data);
+      $cordovaSQLite.updateValueToDB("regioes", [JSON.stringify(regioes), "estados"]).then(function (res) {
+        if (res.rowsAffected == 0) {
+          console.warn("ERROR updating regioes, inserting new");
+          $cordovaSQLite.insertVarToDB("regioes", ["estados", JSON.stringify(regioes)]).then(function (res) {
+            console.log("INSERTED regioes: : ", res);
+            // return JSON.parse(res || '{}')
+          }, function (err) {
+            console.error("ERROR inserting regioes, NOT stored", err);
+          });
+        } else
+          console.log("Stored regioes", res)
+
+      }, function (err) {
+        console.error("ERROR updating regioes, NOT stored", err);
+      });
+
+    };
+
+    var getRegioes = function () {
+      return $cordovaSQLite.getVarFromDB("regioes", "estados");
+    };
+
+    return {
+      setRegioes: setRegioes,
+      getRegioes: getRegioes
+    }
   })
   .factory('Chats', function () {
     // Might use a resource here that returns a JSON array

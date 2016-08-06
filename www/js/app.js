@@ -15,6 +15,72 @@ var enableBeacons = false;
 var initialOutput = "";
 var debug = 0;
 var noBLE = 1;
+var aCircles_inicial = [
+  {
+    nome: "RI_A",
+    descricao: "Região de interesse A",
+    centerX: 273,
+    centerY: 105,
+    radius: 20,
+    locked: false
+  },
+  {
+    nome: "RI_B",
+    descricao: "Região de interesse B",
+    centerX: 230,
+    centerY: 95,
+    radius: 20,
+    locked: false
+  },
+  {
+    nome: "RI_C",
+    descricao: "Região de interesse C",
+    centerX: 187,
+    centerY: 88,
+    radius: 22,
+    locked: false
+  },
+  {
+    nome: "RI_D",
+    descricao: "Região de interesse D",
+    centerX: 135,
+    centerY: 70,
+    radius: 32,
+    locked: true
+  },
+  {
+    nome: "RI_E",
+    descricao: "Região de interesse E",
+    centerX: 53,
+    centerY: 50,
+    radius: 36,
+    locked: true
+  },
+  {
+    nome: "RI_F",
+    descricao: "Região de interesse F",
+    centerX: 75,
+    centerY: 110,
+    radius: 31,
+    locked: true
+  },
+  {
+    nome: "RI_G",
+    descricao: "Região de interesse G",
+    centerX: 178,
+    centerY: 125,
+    radius: 20,
+    locked: true
+  },
+  {
+    nome: "RI_H",
+    descricao: "Região de interesse H",
+    centerX: 225,
+    centerY: 125,
+    radius: 20,
+    locked: true
+  }
+];
 
 cw = function (value) {
   initialOutput += value + '\n';
@@ -56,7 +122,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       }
     });
   })
-  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users) {
+  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes) {
 
     dbres = 0;
     if (debug) alert("start");
@@ -109,8 +175,13 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           }, function (err) {
             alert(err);
           });
-          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (`IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT)", []).then(function (res) {          // alert("OK onDB create");
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (`IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT)", []).then(function (res) {
             cw("Table journal");
+          }, function (err) {
+            alert(err);
+          });
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `regioes` ( `name`	TEXT,	`value`	TEXT)", []).then(function (res) {
+            cw("Table regioes");
           }, function (err) {
             alert(err);
           });
@@ -168,6 +239,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
               console.error(err);
               alert(err);
             });
+
+            $regioes.setRegioes(aCircles_inicial);
+
           }
         }, function (err) {
           alert(err);
@@ -1073,11 +1147,11 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       };
     });
   })
-  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $cordovaSQLite) {
+  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes) {
 
     $scope.$on('RI_FOUND', function (e) {
       console.log("tab mapa refresh");
-      drawImage();
+      createCircles();
     });
 
     $ionicPlatform.ready(function () {
@@ -1123,78 +1197,24 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             $scope.nome = aCircles[f].nome;
             $scope.locked = aCircles[f].locked;
             console.log("in circle: %s", aCircles[f].nome);
-            $rootScope.showAlert("Ir para  " + aCircles[f].descricao + " locked: " + aCircles[f].locked);
+            $rootScope.showAlert(aCircles[f].descricao + " locked: " + aCircles[f].locked);
           }
         }
       };
 
       createCircles = function () {
-        aCircles = [
-          {
-            nome: "RI_A",
-            descricao: "Região de interesse A",
-            centerX: 273,
-            centerY: 105,
-            radius: 20,
-            locked: false
-          },
-          {
-            nome: "RI_B",
-            descricao: "Região de interesse B",
-            centerX: 230,
-            centerY: 95,
-            radius: 20,
-            locked: false
-          },
-          {
-            nome: "RI_C",
-            descricao: "Região de interesse C",
-            centerX: 187,
-            centerY: 88,
-            radius: 22,
-            locked: false
-          },
-          {
-            nome: "RI_D",
-            descricao: "Região de interesse D",
-            centerX: 135,
-            centerY: 70,
-            radius: 32,
-            locked: true
-          },
-          {
-            nome: "RI_E",
-            descricao: "Região de interesse E",
-            centerX: 53,
-            centerY: 50,
-            radius: 36,
-            locked: true
-          },
-          {
-            nome: "RI_F",
-            descricao: "Região de interesse F",
-            centerX: 75,
-            centerY: 110,
-            radius: 31,
-            locked: true
-          },
-          {
-            nome: "RI_G",
-            descricao: "Região de interesse G",
-            centerX: 178,
-            centerY: 125,
-            radius: 20,
-            locked: true
-          },
-          {
-            nome: "RI_H",
-            descricao: "Região de interesse H",
-            centerX: 225,
-            centerY: 125,
-            radius: 20,
-            locked: true
-          }
-        ];
+
+        $regioes.getRegioes().then(function (res) {
+          aCircles = JSON.parse(res || [{}]);
+          console.log("GOT regioes from cordova service to aCircles", aCircles);
+          drawImage();
+        });
+      };
+
+      $scope.unlock_regiao = function () {
+        aCircles[3].locked = false;
+        $regioes.setRegioes(aCircles);
+        setTimeout(createCircles, 1000);
       };
 
       drawCircle = function (oCircle) {
@@ -1247,14 +1267,14 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           console.log("load image done");
           context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-          createCircles();
+          // createCircles();
           drawCircles();
 
         };
         //canvas.addEventListener("touchend", touchUp, false);
         canvas.addEventListener("click", touchUp, false);
         //image.src ="http://i.imgur.com/p3gjnKa.jpg";
-        image.src = "img/mapaqtapedagogica.png";
+        image.src = "img/mapaqtapedagogica.jpg";
         //<img id="pic" src="http://i.telegraph.co.uk/multimedia/archive/03589/Wellcome_Image_Awa_3589699k.jpg">
 
         //$(image).load(function () {
@@ -1265,7 +1285,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         //});
       };
 
-      drawImage();
+      createCircles();
     })
   })
 
