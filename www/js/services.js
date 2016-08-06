@@ -149,7 +149,7 @@ angular.module('starter.services', [])
   .run(['$injector', function ($injector) {
     $injector.get('$cordovaNetwork'); //ensure the factory always gets initialised
   }])
-  .factory('$IbeaconScanner', ['$rootScope', '$window', function ($rootScope, $window) {
+  .factory('$IbeaconScanner', ['$rootScope', '$window', '$regioes', function ($rootScope, $window, $regioes) {
     var beacons = {};
     var myRegion = null;
     var myRegion = null;
@@ -160,7 +160,7 @@ angular.module('starter.services', [])
     var major = 4660; // optional, defaults to wildcard if left empty
     var nomes = {
       "64001": "Regiao de interesse B",
-      "64003": "Regiao de interesse C"
+      "64003": "Regiao de interesse E"
     };
 
     var scanning = false;
@@ -221,8 +221,26 @@ angular.module('starter.services', [])
               beacons[uniqueBeaconKey] = pluginResult.beacons[i];
               $rootScope.beacons = beacons;
               if ($rootScope.enableBeacons) {
+                var regioes = $regioes.getAllRegioesList();
+                $regioes.getRegioes().then(function (res) {
+                  var found=false;
+                  var aCircles = JSON.parse(res || [{}]);
+                  console.log("IBEACON: GOT regioes from cordova service to aCircles", aCircles);
+                    for (var f = 0; f <= aCircles.length - 1; f++) {
+                      if (aCircles[f].nome == regioes[$rootScope.currentRI]) {
+                        aCircles[f].locked = false;
+                        found = true;
+                      }
+                    }
+                    if (found) {
+                      console.log("IBEACON: UPDATE: GOT regioes from cordova service to aCircles", aCircles);
+                      $regioes.setRegioes(aCircles);
+                    }
+                });
+
                 $rootScope.$broadcast('RI_FOUND');
                 console.log("Sending broadcast RI_FOUND");
+
               } else
                 console.log("Disabled: enabled beacons for broadcast RI_FOUND");
             } else console.log("Device BUSY for broadcast RI_FOUND, queue?");
@@ -670,6 +688,25 @@ angular.module('starter.services', [])
 
     console.log("Factory $regioes");
 
+    var regioes = {
+      "Regiao de interesse A": "RI_A",
+      "Regiao de interesse B": "RI_B",
+      "Regiao de interesse C": "RI_C",
+      "Regiao de interesse D": "RI_D",
+      "Regiao de interesse E": "RI_E",
+      "Regiao de interesse F": "RI_F",
+      "Regiao de interesse G": "RI_G",
+      "Regiao de interesse H": "RI_H"
+    };
+
+    var convertRegiaoLongToShort = function (reg) {
+      return regioes[reg];
+    };
+
+    var getAllRegioesList = function () {
+      return regioes;
+    };
+
     var setRegioes = function (regioes) {
       // window.localStorage.starter_facebook_user = JSON.stringify(user_data);
       $cordovaSQLite.updateValueToDB("regioes", [JSON.stringify(regioes), "estados"]).then(function (res) {
@@ -696,7 +733,9 @@ angular.module('starter.services', [])
 
     return {
       setRegioes: setRegioes,
-      getRegioes: getRegioes
+      getRegioes: getRegioes,
+      convertRegiaoLongToShort: convertRegiaoLongToShort,
+      getAllRegioesList: getAllRegioesList
     }
   })
   .factory('Chats', function () {

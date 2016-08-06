@@ -208,7 +208,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
               if (userInfo.picture && userInfo.name && userInfo.picture) {
                 $rootScope.APP.logged = true;
                 $scope.logged = true;
-                // users.offline();
+                users.offline();
                 console.log("USER: LOGGED: true");
               } else {
                 $rootScope.APP.logged = false;
@@ -843,12 +843,11 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       if (!$scope.users) {
         $scope.users = users.init();
         $scope.users.$add(user);
-        users.offline();
+        $scope.users.offline();
       } else {
         $scope.users.$add(user);
-        users.offline();
+        $scope.users.offline();
       }
-
     };
 
     $ionicPlatform.ready(function () {
@@ -982,7 +981,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                 nome: profileInfo.name,
                 email: profileInfo.email,
                 platform: ionic.Platform.platform(),
-                version: ionic.Platform.version()
+                version: ionic.Platform.version(),
+                timestamp: Date.now(),
+                data: Date().toLocaleLowerCase()
               })
             }
           }, function (fail) {
@@ -1070,7 +1071,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                         nome: profileInfo.name,
                         email: profileInfo.email,
                         platform: ionic.Platform.platform(),
-                        version: ionic.Platform.version()
+                        version: ionic.Platform.version(),
+                        timestamp: Date.now(),
+                        data: Date().toLocaleLowerCase()
                       })
                     }
                     $rootScope.showAlert("Facebook Logged IN com o nome: " + profileInfo.name + " email: " + profileInfo.email);
@@ -1155,22 +1158,14 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
   .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes) {
 
     $scope.$on('RI_FOUND', function (e) {
-      console.log("tab mapa refresh");
+      console.log("tab mapa RI_FOUND refresh: %s", $rootScope.currentRI);
+
       createCircles();
     });
 
     $ionicPlatform.ready(function () {
 
-      var regioes = {
-        "Regiao de interesse A": "RI_A",
-        "Regiao de interesse B": "RI_B",
-        "Regiao de interesse C": "RI_C",
-        "Regiao de interesse D": "RI_D",
-        "Regiao de interesse E": "RI_E",
-        "Regiao de interesse F": "RI_F",
-        "Regiao de interesse G": "RI_G",
-        "Regiao de interesse H": "RI_H"
-      };
+      var regioes = $regioes.getAllRegioesList();
 
       console.log("Mapactrl ready");
       // $ionicLoading.show({
@@ -1207,11 +1202,11 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         }
       };
 
-      createCircles = function () {
+      createCircles = function (nova_regiao) {
 
         $regioes.getRegioes().then(function (res) {
           aCircles = JSON.parse(res || [{}]);
-          console.log("GOT regioes from cordova service to aCircles", aCircles);
+          console.log("ceateCircles: GOT regioes from cordova service to aCircles", aCircles);
           drawImage();
         });
       };
