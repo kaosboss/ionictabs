@@ -6,7 +6,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-var APPverion = "0.1";
+var APPverion = "0.2";
 var APPtutorial = 0;
 var APPfirstTime = 0;
 var APPdir = null;
@@ -89,10 +89,35 @@ cw = function (value) {
 
 angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.services'])
 
-  .run(function ($ionicPlatform, $rootScope) {
+  .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window) {
     $rootScope.APP = {
       logged: false
     };
+
+    if (ionic.Platform.platform() == "android")
+      $ionicPlatform.registerBackButtonAction(function (e) {
+        if ($rootScope.backButtonPressedOnceToExit) {
+          ionic.Platform.exitApp();
+        }
+
+        else if ($ionicHistory.backView()) {
+          $ionicHistory.goBack();
+        }
+        else {
+          $rootScope.backButtonPressedOnceToExit = true;
+          window.plugins.toast.showShortCenter(
+            "Pressione o botão novamente para sair", function (a) {
+            }, function (b) {
+            }
+          );
+          setTimeout(function () {
+            $rootScope.backButtonPressedOnceToExit = false;
+          }, 2000);
+        }
+        e.preventDefault();
+        return false;
+      }, 101);
+
     $ionicPlatform.ready(function () {
       cw("ionic startting run");
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -110,6 +135,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       };
       $rootScope.showAlert = function (msg) {
         $rootScope.mypop = {
+          cssClass: "myPopup",
           template: msg || '',
           title: 'INFORMAÇÃO',
           subTitle: '',
@@ -119,15 +145,15 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       };
 
       ionic.Platform.fullScreen();
-      if (window.StatusBar) {
-        return StatusBar.hide();
+      if ($window.StatusBar) {
+        return $window.StatusBar.hide();
         // org.apache.cordova.statusbar required
         // StatusBar.styleDefault();
       }
     });
   })
   // .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $ionicLoading) {
-  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes) {
+  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $state) {
 
     dbres = 0;
     if (debug) alert("start");
@@ -148,6 +174,17 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
+
+      $window.document.addEventListener("pause", function (event) {
+        // $rootScope.$broadcast('cordovaPauseEvent');
+        console.log('run() -> cordovaPauseEvent');
+      });
+
+      $window.document.addEventListener("resume", function (event) {
+        // $rootScope.$broadcast('cordovaResumeEvent');
+        console.log('run() -> cordovaResumeEvent');
+      });
+
         $scope.checkNetwork = function () {
           $scope.netWork.type = $cordovaNetwork.getNetwork();
           $scope.netWork.isOnline = $cordovaNetwork.isOnline();
@@ -208,7 +245,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             var currentPlatformVersion = ionic.Platform.version();
             // $ionicLoading.hide();
             console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
-            $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
+            // $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
             var tempUser = UserService.getUser();
             tempUser.then(function (res) {
               var userInfo = JSON.parse(res || '{}')
@@ -218,12 +255,18 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                 $scope.logged = true;
                 users.offline();
                 console.log("USER: LOGGED: true");
+                checkBT();
+                $state.go("tab.atividades");
               } else {
                 $rootScope.APP.logged = false;
                 $scope.logged = false;
                 console.log("USER: LOGGED: false");
+                checkBT();
+                $rootScope.enableBeacons=false;
+                $state.go("tab.login");
               }
             });
+
           } else {
             $scope.showAlert("No results found, primeira utilizacao!");
             console.log("No results found, firsttime?");
@@ -254,6 +297,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             });
 
             $regioes.setRegioes(aCircles_inicial);
+            $rootScope.enableBeacons=false;
+            checkBT();
+            $state.go("tab.intro");
 
           }
         }, function (err) {
@@ -270,6 +316,12 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
             $window.addEventListener('BluetoothStatus.enabled', function () {
               console.log('Bluetooth has been enabled');
+              // if ($scope.promptedforBT) {
+              //   ionic.Platform.fullScreen();
+              //   if (window.StatusBar) {
+              //     return StatusBar.hide();
+              //   }
+              // }
               if (!$IbeaconScanner.isScanning())
                 $IbeaconScanner.startBeaconScan();
             });
@@ -279,6 +331,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                 $IbeaconScanner.stopBeaconScan();
 
               $rootScope.showPopup({
+                cssClass: "myPopup",
                 title: "INFORMAÇÃO",
                 buttonText: "OK",
                 template: "O bluetooth está desligado, sem alertas de interesse"
@@ -296,6 +349,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             }
             if (device.platform === 'Android') {
               if (!cordova.plugins.BluetoothStatus.BTenabled) {
+                $scope.promptedforBT = true;
                 cordova.plugins.BluetoothStatus.promptForBT();
               } else {
                 $IbeaconScanner.startBeaconScan();
@@ -386,6 +440,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
     $scope.showBT = function (msg) {
       var alertPopup2 = $ionicPopup.alert({
+        cssClass: "myPopup",
         scope: $scope,
         title: 'INFORMACAO',
         template: msg
@@ -402,6 +457,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
     $scope.showAlert = function (msg) {
       var alertPopup = $ionicPopup.alert({
+        cssClass: "myPopup",
         scope: $scope,
         title: 'INFORMACAO',
         template: msg
@@ -485,6 +541,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           }
         ];
       var myPopup = $ionicPopup.show({
+        cssClass: "myPopup",
         template: mypop.template || '',
         title: mypop.title || 'INFORMAÇÃO',
         subTitle: mypop.subTitle || '',
@@ -527,6 +584,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       $scope.popupON = 1;
       $rootScope.popupON = 1;
       var confirmPopup = $ionicPopup.confirm({
+        cssClass: "myPopup",
         title: 'RI: ' + $scope.currentRI,
         template: 'Estás perto da ' + $scope.currentRI + ', queres ver o conteudo?',
         scope: $scope,
@@ -537,7 +595,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             type: 'button-positive',
             onTap: function (e) {
               console.log("Confirmed navigation to region");
-              $state.go("tab.regiao",{
+              $state.go("tab.regiao", {
                 RI: $regioes.convertRegiaoLongToShort($scope.currentRI)
               });
               return 1;
@@ -597,6 +655,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
       $scope.showAlert = function (msg) {
         var alertPopup = $ionicPopup.alert({
+          cssClass: "myPopup",
           scope: $scope,
           title: 'INFORMACAO',
           template: msg
@@ -871,7 +930,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
       $scope.Download = function (url) {
 
-        if ($scope.netWork.isOffline)
+        if (!$rootScope.isOnline)
           return;
 
         if (!url)
@@ -978,14 +1037,14 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
         // facebookConnectPlugin.api('/me?fields=email,name&access_token=' + authResponse.accessToken, null,
         facebookConnectPlugin.api('/me/friends?fields=email,name&access_token=' + authResponse.accessToken, null,
-        // facebookConnectPlugin.api('me?fields=friends&access_token=' + authResponse.accessToken, null,
-        // facebookConnectPlugin.api('/me/friends', {fields: 'id, name, email'},
+          // facebookConnectPlugin.api('me?fields=friends&access_token=' + authResponse.accessToken, null,
+          // facebookConnectPlugin.api('/me/friends', {fields: 'id, name, email'},
           function (response) {
             console.log("friends good res: ", response);
             info.resolve(response);
           },
           function (response) {
-            console.log("friends bad res: ",response);
+            console.log("friends bad res: ", response);
             info.reject(response);
           }
         );
@@ -1019,7 +1078,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       var fbLoginSuccess = function (response) {
         if (!response.authResponse) {
           fbLoginError("Cannot find the authResponse");
-          return;
+          // return;
         }
 
         var authResponse = response.authResponse;
@@ -1073,6 +1132,8 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                 data: Date().toLocaleLowerCase()
               })
             }
+            $rootScope.enableBeacons=true;
+            $state.go("tab.atividades");
           }, function (fail) {
             // Fail get profile info
             console.log('profile info fail', fail);
@@ -1147,6 +1208,8 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                       })
                     }
                     $rootScope.showAlert("Facebook Logged IN com o nome: " + profileInfo.name + " email: " + profileInfo.email);
+                    $rootScope.enableBeacons=true;
+                    $state.go("tab.atividades");
 
                   }, function (fail) {
                     // Fail get profile info
@@ -1158,7 +1221,8 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                 $scope.profile_email = user.email;
                 $rootScope.console.log("FB NAME: %s pic: %s", user.name, user.picture);
                 $scope.$apply();
-                $state.go('tab.camera');
+                $rootScope.enableBeacons=true;
+                $state.go('tab.atividades');
               }
 
             });
@@ -1214,8 +1278,8 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             // Facebook logout
             facebookConnectPlugin.logout(function () {
                 $ionicLoading.hide();
-                // $state.go('tab.camera');
                 $rootScope.showAlert("Facebook Logged OUT!");
+                $state.go('tab.atividades');
               },
               function (fail) {
                 $ionicLoading.hide();
@@ -1261,7 +1325,6 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           var x = e.offsetX - circleX;
           var dist = Math.sqrt(y * y + x * x);
           //console.log("circle: %s dist: ", aCircles[f].nome, dist);
-
           if (dist < circleRadius) {
             //go to google
             $scope.nome = aCircles[f].nome;
@@ -1269,7 +1332,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             console.log("in circle: %s", aCircles[f].nome);
             if (aCircles[f].locked)
               $rootScope.showAlert("A " + aCircles[f].descricao + " está por descobrir");
-            else $state.go("tab.regiao",{
+            else $state.go("tab.regiao", {
               RI: aCircles[f].nome
             });
           }
@@ -1369,10 +1432,37 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
   })
   .controller('RegiaoCtrl', function ($scope, $rootScope) {
+    // $scope.goBack = function(){
+    //   console.log("going back ######");
+    //   $ionicHistory.goBack();
+    // }
+  })
+  .controller('AtividadesCtrl', function ($scope, $rootScope) {
 
   })
-  .config(function ($stateProvider, $urlRouterProvider) {
+  .controller('LoginCtrl', function ($scope, $rootScope) {
 
+  })
+  .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate) {
+
+    // Called to navigate to the main app
+    $scope.startApp = function () {
+      $state.go('tab.dash');
+    };
+    $scope.next = function () {
+      $ionicSlideBoxDelegate.next();
+    };
+    $scope.previous = function () {
+      $ionicSlideBoxDelegate.previous();
+    };
+
+    // Called each time the slide changes
+    $scope.slideChanged = function (index) {
+      $scope.slideIndex = index;
+    };
+  })
+  .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+    $ionicConfigProvider.tabs.position('bottom');
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
     // Set up the various states which the app can be in.
@@ -1397,6 +1487,33 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           }
         }
       })
+      .state('tab.intro', {
+        url: '/intro',
+        views: {
+          'tab-intro': {
+            templateUrl: 'templates/tab-intro.html',
+            controller: 'IntroCtrl'
+          }
+        }
+      })
+      .state('tab.atividades', {
+        url: '/atividades',
+        views: {
+          'tab-atividades': {
+            templateUrl: 'templates/tab-atividades.html',
+            controller: 'AtividadesCtrl'
+          }
+        }
+      })
+      .state('tab.login', {
+        url: '/login',
+        views: {
+          'tab-login': {
+            templateUrl: 'templates/tab-login.html',
+            controller: 'LoginCtrl'
+          }
+        }
+      })
       .state('tab.mapa', {
         url: '/mapa',
         views: {
@@ -1410,17 +1527,17 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         url: '/regiao/:RI/:PI',
         views: {
           'tab-regiao': {
-            templateUrl: function ($stateParams){
+            templateUrl: function ($stateParams) {
               console.log("state params: ", $stateParams);
               // Here you can access to the url params with $stateParams
               // Just return the right url template according to the params
               if (!$stateParams.PI) {
-                console.log(' returned: templates/regioes/' +  $stateParams.RI + '.html');
-                return 'templates/regioes/' +  $stateParams.RI + '/' +  $stateParams.RI + '.html';
+                console.log(' returned: templates/regioes/' + $stateParams.RI + '.html');
+                return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.RI + '.html';
               }
               else if ($stateParams.RI) {
-                console.log(' returned templates/regioes/' +  $stateParams.RI + '/' +  $stateParams.PI + '.html');
-                return 'templates/regioes/' +  $stateParams.RI + '/' +  $stateParams.PI + '.html';
+                console.log(' returned templates/regioes/' + $stateParams.RI + '/' + $stateParams.PI + '.html');
+                return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.PI + '.html';
               }
             },
             controller: 'RegiaoCtrl'

@@ -1,0 +1,28 @@
+<ion-view view-title="Login">
+  <ion-content padding="true" class="padding">
+    <!--<a class="button button-block button-calm" href="#/tab/mapa">Go To Mapa Tab</a>-->
+    <ion-item class="item">
+      <div ng-controller="WelcomeCtrl">
+        <p align="center">
+          Nome: {{profile_name}}
+        </p>
+        <p align="center">
+          Email: {{profile_email}}
+        </p>
+        <p>
+          <img id="fb_photo" class="center" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">
+          <!--<img id="fb_photo" class="center" ng-src="" style="max-width: 100%; height: auto;">-->
+        </p>
+        <!--<a class="button button-block" ng-hide=$root.APP.logged ng-click="facebookSignIn()">Login with-->
+        <!--<a class="button button-block" ng-click="getFriends()">Login with-->
+        <a class="facebook-sign-in button button-block" ng-click="facebookSignIn()">Login with
+          Facebook</a>
+      </div>
+      <div ng-controller="HomeCtrl">
+        <a class="button button-assertive button-block button-outline" ng-show=$root.APP.logged
+           ng-click="showLogOutMenu()">Log Out</a>
+      </div>
+    </ion-item>
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
+</ion-view>
