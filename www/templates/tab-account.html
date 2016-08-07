@@ -1,13 +1,28 @@
-<ion-view view-title="Account">
+<ion-view view-title="Definições">
   <ion-content>
     <ion-list>
       <ion-toggle ng-change="toggleChange()" ng-model="enableBeacons">
-      <!--<ion-toggle disabled="{{BLE}}" ng-change="toggleChange()" ng-model="enableBeacons">-->
         Ativar Localizacao na Quinta
       </ion-toggle>
+      <ion-item class="item">
+        <p align="center">Ligaçao: {{$root.netWorktype}} isOnline: {{$root.isOnline}}</p>
+        <p align="center">Utilizador Logged: {{$root.APP.logged}}</p>
+      </ion-item>
+      <ion-item class="item">
+        <p align="center">
+          Nome: {{profile_name}}
+        </p>
+        <p align="center">
+          Email: {{profile_email}}
+        </p>
+        <p>
+          <img id="fb_photo" class="center" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">
+        </p>
+      </ion-item>
       <!--<ion-toggle ng-model="settings.enableFriends">-->
-        <!--Ativar  Friends-->
+      <!--Ativar  Friends-->
       <!--</ion-toggle>-->
     </ion-list>
+    <div ng-controller="PopupCtrl"></div>
   </ion-content>
 </ion-view>

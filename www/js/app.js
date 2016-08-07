@@ -122,12 +122,11 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       if (window.StatusBar) {
         return StatusBar.hide();
         // org.apache.cordova.statusbar required
-        StatusBar.styleDefault();
-
+        // StatusBar.styleDefault();
       }
     });
   })
-  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes) {
+  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $ionicLoading) {
 
     dbres = 0;
     if (debug) alert("start");
@@ -142,16 +141,22 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       offLineState: ""
     };
 
+    $ionicLoading.show({
+      template: 'A carregar...'
+    });
+
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
         $scope.checkNetwork = function () {
           $scope.netWork.type = $cordovaNetwork.getNetwork();
           $scope.netWork.isOnline = $cordovaNetwork.isOnline();
           $rootScope.isOnline = $scope.netWork.isOnline;
+          $rootScope.netWorktype = $cordovaNetwork.getNetwork();
           $scope.netWork.isOffline = $cordovaNetwork.isOffline();
 
           $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
             $scope.netWork.type = networkState;
+            $rootScope.netWorktype = networkState;
             $rootScope.isOnline = true;
             $scope.netWork.isOnline = true;
             $scope.netWork.isOffline = false;
@@ -160,6 +165,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
           $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
             $scope.netWork.type = networkState;
+            $rootScope.netWorktype = networkState;
             $scope.netWork.isOnline = false;
             $rootScope.isOnline = false;
             $scope.netWork.isOffline = true;
@@ -199,6 +205,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             // var message = "SELECTED -> " + res.rows.item(0).value;
             var currentPlatform = ionic.Platform.platform();
             var currentPlatformVersion = ionic.Platform.version();
+            $ionicLoading.hide();
             console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
             $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
             var tempUser = UserService.getUser();
@@ -934,9 +941,26 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           } else {
             $rootScope.APP.logged = false;
             $scope.fb.loggedIN = false;
+            // This method is to get the user profile info from the facebook api
           }
         }
       );
+
+      var getFacebookProfileInfo = function (authResponse) {
+        var info = $q.defer();
+
+        facebookConnectPlugin.api('/me?fields=email,name&access_token=' + authResponse.accessToken, null,
+          function (response) {
+            console.log(response);
+            info.resolve(response);
+          },
+          function (response) {
+            console.log(response);
+            info.reject(response);
+          }
+        );
+        return info.promise;
+      };
 
 
       var fbLoginSuccess = function (response) {
@@ -957,6 +981,8 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
               email: profileInfo.email,
               picture: "https://graph.facebook.com/" + authResponse.userID + "/picture?type=large"
             });
+            console.log("FB: profile:", profileInfo);
+
             // console.log({
             //   authResponse: authResponse,
             //   userID: profileInfo.id,
@@ -972,6 +998,13 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             console.log("GOT FB: ", profileInfo.name, "https://graph.facebook.com/" + authResponse.userID + "/picture?type=large");
 
             $ionicLoading.hide();
+
+            if (device.platform === 'Android') {
+              ionic.Platform.fullScreen();
+              if (window.StatusBar) {
+                return StatusBar.hide();
+              }
+            }
 
             // $state.go('tab.camera');
             $scope.Download("https://graph.facebook.com/" + authResponse.userID + "/picture?type=large");
@@ -997,23 +1030,6 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         console.log('fbLoginError', error);
         $ionicLoading.hide();
         $scope.fb.loggedIN = false;
-      };
-
-      // This method is to get the user profile info from the facebook api
-      var getFacebookProfileInfo = function (authResponse) {
-        var info = $q.defer();
-
-        facebookConnectPlugin.api('/me?fields=email,name&access_token=' + authResponse.accessToken, null,
-          function (response) {
-            console.log(response);
-            info.resolve(response);
-          },
-          function (response) {
-            console.log(response);
-            info.reject(response);
-          }
-        );
-        return info.promise;
       };
 
       //This method is executed when the user press the "Login with facebook" button
@@ -1086,7 +1102,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                 $scope.profile_photo = user.picture;
                 $scope.profile_name = user.name;
                 $scope.profile_email = user.email;
-                console.log("FB NAME: %s pic: %s", user.name, user.picture);
+                $rootScope.console.log("FB NAME: %s pic: %s", user.name, user.picture);
                 $scope.$apply();
                 $state.go('tab.camera');
               }
@@ -1157,9 +1173,12 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
   })
   .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes) {
 
+    $ionicLoading.show({
+      template: 'A verificar o Mapa'
+    });
+
     $scope.$on('RI_FOUND', function (e) {
       console.log("tab mapa RI_FOUND refresh: %s", $rootScope.currentRI);
-
       createCircles();
     });
 
@@ -1168,9 +1187,6 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       var regioes = $regioes.getAllRegioesList();
 
       console.log("Mapactrl ready");
-      // $ionicLoading.show({
-      //     template: 'A verificar o Mapa'
-      //   });
 
       var canvas = document.getElementById('imageView');
       var context = canvas.getContext('2d');
@@ -1223,7 +1239,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         var centerY = oCircle.centerY;
         var radius = oCircle.radius || 20;
         var blue = "108, 202, 255";
-        var red= "255, 104, 85";
+        var red = "255, 104, 85";
         var color = blue;
 
         context.beginPath();
@@ -1231,7 +1247,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
         if ($rootScope.currentRI) {
           if (regioes[$rootScope.currentRI] == oCircle.nome)
-              color = red;
+            color = red;
         }
 
         if (oCircle.locked)
@@ -1251,7 +1267,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         for (var f = 0; f <= aCircles.length - 1; f++) {
           drawCircle(aCircles[f]);
         }
-        // $ionicLoading.hide();
+        $ionicLoading.hide();
       };
 
       drawImage = function () {
@@ -1288,7 +1304,12 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       createCircles();
     })
   })
+  .controller('DebugCtrl', function ($scope, $rootScope) {
 
+  })
+  .controller('GameCtrl', function ($scope, $rootScope) {
+
+  })
   .config(function ($stateProvider, $urlRouterProvider) {
 
     // Ionic uses AngularUI Router which uses the concept of states
@@ -1330,6 +1351,24 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           'tab-camera': {
             templateUrl: 'templates/tab-camera.html',
             controller: 'CameraCtrl'
+          }
+        }
+      })
+      .state('tab.game', {
+        url: '/game',
+        views: {
+          'tab-game': {
+            templateUrl: 'templates/tab-game.html',
+            controller: 'GameCtrl'
+          }
+        }
+      })
+      .state('tab.debug', {
+        url: '/debug',
+        views: {
+          'tab-debug': {
+            templateUrl: 'templates/tab-debug.html',
+            controller: 'DebugCtrl'
           }
         }
       })

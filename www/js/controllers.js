@@ -19,7 +19,7 @@ angular.module('starter.controllers', [])
     $scope.chat = Chats.get($stateParams.chatId);
   })
 
-  .controller('AccountCtrl', function ($rootScope, $scope) {
+  .controller('AccountCtrl', function ($rootScope, $scope, UserService) {
     $scope.BLE = true;
     $scope.enableBeacons = $rootScope.enableBeacons;
     $scope.toggleChange = function () {
@@ -31,5 +31,21 @@ angular.module('starter.controllers', [])
         }
         console.log("enableBeacons new state: %s", $rootScope.enableBeacons);
       }
-    }
+    };
+
+    var tempUser = UserService.getUser();
+    tempUser.then(function (res) {
+      var userInfo = JSON.parse(res || '{}')
+      console.log("Definicoes; GOT USER from user service", userInfo);
+      if (userInfo.picture && userInfo.name && userInfo.email) {
+        $scope.logged = true;
+        console.log("USER: LOGGED: true");
+        $scope.profile_name = userInfo.name;
+        $scope.profile_email = userInfo.email;
+        $scope.profile_photo = userInfo.picture;
+      } else {
+        $scope.logged = false;
+        console.log("USER: LOGGED: false");
+      }
+    });
   });
