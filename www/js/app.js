@@ -126,7 +126,8 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       }
     });
   })
-  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $ionicLoading) {
+  // .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $ionicLoading) {
+  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes) {
 
     dbres = 0;
     if (debug) alert("start");
@@ -141,9 +142,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       offLineState: ""
     };
 
-    $ionicLoading.show({
-      template: 'A carregar...'
-    });
+    // $ionicLoading.show({
+    //   template: 'A carregar...'
+    // });
 
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
@@ -205,7 +206,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             // var message = "SELECTED -> " + res.rows.item(0).value;
             var currentPlatform = ionic.Platform.platform();
             var currentPlatformVersion = ionic.Platform.version();
-            $ionicLoading.hide();
+            // $ionicLoading.hide();
             console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
             $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
             var tempUser = UserService.getUser();
@@ -464,7 +465,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
     });
 
   })
-  .controller('PopupCtrl', function ($rootScope, $scope, $ionicPopup, $timeout) {
+  .controller('PopupCtrl', function ($rootScope, $scope, $ionicPopup, $timeout, $regioes, $state) {
 
 // Triggered on a button click, or some other target
     $scope.showPopup = function (mypop) {
@@ -536,6 +537,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             type: 'button-positive',
             onTap: function (e) {
               console.log("Confirmed navigation to region");
+              $state.go("tab.regiao",{
+                RI: $regioes.convertRegiaoLongToShort($scope.currentRI)
+              });
               return 1;
             }
           }
@@ -906,7 +910,8 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
               // $ionicLoading.hide();
               var tempUser = UserService.getUser();
               tempUser.then(function (res) {
-                var userInfo = JSON.parse(res || '{}')
+                var userInfo = JSON.parse(res || '{}');
+                $scope.authResponse = userInfo.authResponse;
                 console.log("GOT USER from user service", userInfo);
                 userInfo.picture = fileEntry.toURL();
                 UserService.setUser(userInfo);
@@ -962,6 +967,54 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         return info.promise;
       };
 
+      var getFacebookProfileFriends = function () {
+        if (!$scope.authResponse) {
+          console.log("getFriends: no authresponse");
+          // return;
+        }
+
+        var authResponse = $scope.authResponse || {};
+        var info = $q.defer();
+
+        // facebookConnectPlugin.api('/me?fields=email,name&access_token=' + authResponse.accessToken, null,
+        facebookConnectPlugin.api('/me/friends?fields=email,name&access_token=' + authResponse.accessToken, null,
+        // facebookConnectPlugin.api('me?fields=friends&access_token=' + authResponse.accessToken, null,
+        // facebookConnectPlugin.api('/me/friends', {fields: 'id, name, email'},
+          function (response) {
+            console.log("friends good res: ", response);
+            info.resolve(response);
+          },
+          function (response) {
+            console.log("friends bad res: ",response);
+            info.reject(response);
+          }
+        );
+        return info.promise;
+      };
+
+      $scope.getFriends = function () {
+        getFacebookProfileFriends()
+          .then(function (profileInfo) {
+
+            console.log("Profile friends res: ", profileInfo)
+
+            // if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
+            //   $rootScope.APP.logged = true;
+            //   $scope.addUser({
+            //     nome: profileInfo.name,
+            //     email: profileInfo.email,
+            //     platform: ionic.Platform.platform(),
+            //     version: ionic.Platform.version(),
+            //     timestamp: Date.now(),
+            //     data: Date().toLocaleLowerCase()
+            //   })
+            // }
+          }, function (fail) {
+            // Fail get profile info
+            console.log('profile friends fail', fail);
+          });
+      }
+
 
       var fbLoginSuccess = function (response) {
         if (!response.authResponse) {
@@ -970,6 +1023,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         }
 
         var authResponse = response.authResponse;
+        $scope.authResponse = response.authResponse;
 
         getFacebookProfileInfo(authResponse)
           .then(function (profileInfo) {
@@ -1173,9 +1227,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
   })
   .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes) {
 
-    $ionicLoading.show({
-      template: 'A verificar o Mapa'
-    });
+    // $ionicLoading.show({
+    //   template: 'A verificar o Mapa'
+    // });
 
     $scope.$on('RI_FOUND', function (e) {
       console.log("tab mapa RI_FOUND refresh: %s", $rootScope.currentRI);
@@ -1213,7 +1267,11 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             $scope.nome = aCircles[f].nome;
             $scope.locked = aCircles[f].locked;
             console.log("in circle: %s", aCircles[f].nome);
-            $rootScope.showAlert(aCircles[f].descricao + " locked: " + aCircles[f].locked);
+            if (aCircles[f].locked)
+              $rootScope.showAlert("A " + aCircles[f].descricao + " está por descobrir");
+            else $state.go("tab.regiao",{
+              RI: aCircles[f].nome
+            });
           }
         }
       };
@@ -1267,7 +1325,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         for (var f = 0; f <= aCircles.length - 1; f++) {
           drawCircle(aCircles[f]);
         }
-        $ionicLoading.hide();
+        // $ionicLoading.hide();
       };
 
       drawImage = function () {
@@ -1310,6 +1368,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
   .controller('GameCtrl', function ($scope, $rootScope) {
 
   })
+  .controller('RegiaoCtrl', function ($scope, $rootScope) {
+
+  })
   .config(function ($stateProvider, $urlRouterProvider) {
 
     // Ionic uses AngularUI Router which uses the concept of states
@@ -1342,6 +1403,27 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           'tab-mapa': {
             templateUrl: 'templates/tab-mapa.html',
             controller: 'MapaCtrl'
+          }
+        }
+      })
+      .state('tab.regiao', {
+        url: '/regiao/:RI/:PI',
+        views: {
+          'tab-regiao': {
+            templateUrl: function ($stateParams){
+              console.log("state params: ", $stateParams);
+              // Here you can access to the url params with $stateParams
+              // Just return the right url template according to the params
+              if (!$stateParams.PI) {
+                console.log(' returned: templates/regioes/' +  $stateParams.RI + '.html');
+                return 'templates/regioes/' +  $stateParams.RI + '/' +  $stateParams.RI + '.html';
+              }
+              else if ($stateParams.RI) {
+                console.log(' returned templates/regioes/' +  $stateParams.RI + '/' +  $stateParams.PI + '.html');
+                return 'templates/regioes/' +  $stateParams.RI + '/' +  $stateParams.PI + '.html';
+              }
+            },
+            controller: 'RegiaoCtrl'
           }
         }
       })
