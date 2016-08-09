@@ -647,9 +647,47 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
     //   $scope.showConfirm();
     // }, 4000);
   })
-  .controller('CameraCtrl', function ($rootScope, $scope, $cordovaCamera, $cordovaDevice, $cordovaSQLite, $ionicPlatform, $ionicPopup, $timeout) {
+  .controller('CameraCtrl', function ($rootScope, $scope, $cordovaCamera, $cordovaDevice, $cordovaSQLite, $ionicPlatform, $ionicPopup, $timeout, $ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
 
     // $scope.lastPhoto ="";
+    $scope.allImages = [{
+      src: ''
+    }];
+    //   {
+    //   src: 'img/pic2.png'
+    // }, {
+    //   src: 'img/pic3.png'
+    // }];
+
+    $scope.zoomMin = 1;
+
+    $scope.showImages = function(index) {
+      $scope.activeSlide = index;
+      $scope.showModal('templates/gallery-zoomview.html');
+    };
+
+    $scope.showModal = function(templateUrl) {
+      $ionicModal.fromTemplateUrl(templateUrl, {
+        scope: $scope
+      }).then(function(modal) {
+        $scope.modal = modal;
+        $scope.modal.show();
+      });
+    };
+
+    $scope.closeModal = function() {
+      $scope.modal.hide();
+      $scope.modal.remove()
+    };
+
+    $scope.updateSlideStatus = function(slide) {
+      var zoomFactor = $ionicScrollDelegate.$getByHandle('scrollHandle' + slide).getScrollPosition().zoom;
+      if (zoomFactor == $scope.zoomMin) {
+        $ionicSlideBoxDelegate.enableSlide(true);
+      } else {
+        $ionicSlideBoxDelegate.enableSlide(false);
+      }
+    };
 
     document.addEventListener("deviceready", function () {
 
@@ -680,6 +718,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             $scope.showAlert(message);
             console.log(message, res);
             $scope.lastPhoto = res.rows.item(res.rows.length - 1).IMG;
+            $scope.allImages[0].src = $scope.lastPhoto;
             // $scope.$apply();
           } else {
             $scope.showAlert("No results found");
@@ -1558,7 +1597,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         views: {
           'tab-game': {
             templateUrl: 'templates/tab-game.html',
-            controller: 'GameCtrl'
+            controller: 'GalleryCtrl'
           }
         }
       })

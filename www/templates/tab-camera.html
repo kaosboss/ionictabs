@@ -1,9 +1,19 @@
 <ion-view view-title="Journal">
-  <ion-content padding="true" class="padding">
+  <!--<ion-content padding="true" class="padding">-->
+  <ion-content scroll="false" class="has-header padding">
     <button ng-click="takePicture()" class="button button-block button-calm">Take Photo</button>
-    <!--<img ng-src="file:///var/mobile/Containers/Data/Application/46281AB5-3232-4EFB-930A-3ED318091433/Documents/images/1469381804942.jpg" style="max-width: 100%; height: auto;">-->
-    <!--<img ng-src="file:///data/data/com.ionicframework.example250341/files/files/images/1469053245802.jpg" style="max-width: 100%; height: auto;">-->
-    <img ng-src="{{lastPhoto}}" style="max-width: 100%; height: auto;">
+    <div class="item item-divider">
+      <i class="ion-images"></i>
+      Imagens
+    </div>
+
+    <a class="item item-list-detail">
+      <ion-scroll direction="y">
+        <!--<img ng-repeat="image in allImages" ng-src="{{image.src}}" ng-click="showImages($index)" class="image-list-thumb"/>-->
+        <!--<img ng-src="{{lastPhoto}}" style="max-width: 100%; height: auto;">      -->
+        <img ng-src="{{lastPhoto}}" class="image-list-thumb" ng-click="showImages($index)">
+      </ion-scroll>
+    </a>
     <div ng-controller="PopupCtrl"></div>
   </ion-content>
 </ion-view>
