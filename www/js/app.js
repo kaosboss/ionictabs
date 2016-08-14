@@ -87,7 +87,7 @@ cw = function (value) {
   console.log(value);
 };
 
-angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'starter.controllers', 'starter.services'])
 
   .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window) {
     $rootScope.APP = {
@@ -130,6 +130,7 @@ angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.con
       cordova.plugins.BluetoothStatus.initPlugin();
       $rootScope.popupQueue = [];
       $rootScope.smallDevice = false;
+      $rootScope.currentRI = "Sem região de interesse"
       $rootScope.showPopup = function (popup) {
         $rootScope.mypop = popup;
         $rootScope.$broadcast("SHOW_POPUP");
@@ -691,7 +692,7 @@ angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.con
 
     document.addEventListener("deviceready", function () {
 
-      resizeImage= function (img_path) {
+      resizeImage = function (img_path) {
         var q = $q.defer();
         $window.imageResizer.resizeImage(function (success_resp) {
           // console.log('success, img re-size: ' + JSON.stringify(success_resp));
@@ -737,7 +738,7 @@ angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.con
           if (res.rows.length > 0) {
             var message = "SELECTED -> " + res.rows.item(res.rows.length - 1).IMG;
             // $scope.showAlert(message);
-            for (var f=0; f<res.rows.length; f++)
+            for (var f = 0; f < res.rows.length; f++)
               $scope.allImages.push({
                 src: res.rows.item(f).thumbnail_data,
                 img: res.rows.item(f).IMG
@@ -1052,6 +1053,12 @@ angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.con
                 $scope.authResponse = userInfo.authResponse;
                 console.log("GOT USER from user service", userInfo);
                 userInfo.picture = fileEntry.toURL();
+                $rootScope.APP.logged=true;
+                $rootScope.$broadcast('LOGGED_IN', {
+                  name: userInfo.name,
+                  email: userInfo.email,
+                  profile_photo: userInfo.picture
+                });
                 UserService.setUser(userInfo);
               });
 
@@ -1086,6 +1093,7 @@ angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.con
             $scope.fb.loggedIN = false;
             // This method is to get the user profile info from the facebook api
           }
+
         }
       );
 
@@ -1175,6 +1183,7 @@ angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.con
             });
             console.log("FB: profile:", profileInfo);
 
+            // $rootScope.$broadcast('LOGGED_IN', networkState);
             // console.log({
             //   authResponse: authResponse,
             //   userID: profileInfo.id,
@@ -1380,15 +1389,17 @@ angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.con
       createCircles();
     });
 
-    $ionicPlatform.ready(function () {
 
-      var regioes = $regioes.getAllRegioesList();
+    $ionicPlatform.ready(function () {
 
       console.log("Mapactrl ready");
 
       var canvas = document.getElementById('imageView');
-      var context = canvas.getContext('2d');
-      var aCircles = [];
+      if (canvas) {
+        var regioes = $regioes.getAllRegioesList();
+        var context = canvas.getContext('2d');
+        var aCircles = [];
+      }
 
       touchUp = function (e) {
         console.log("rootpop: ", $rootScope.popupON);
@@ -1514,7 +1525,7 @@ angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.con
   })
   .controller('RegiaoCtrl', function ($scope, $rootScope) {
     // $scope.goBack = function(){
-      console.log("going RegiaoCtrl ######");
+    console.log("going RegiaoCtrl ######");
     //   $ionicHistory.goBack();
     // }
   })
@@ -1627,14 +1638,14 @@ angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.con
               }
             },
             controller: 'MapaCtrl'
-              // function ($stateParams) {
-              // console.log("dynamic ctrl: ", $stateParams);
-              // if ($stateParams.RI=="ALL")
-              //   return 'MapaCtrl';
-              // else
-              //   return 'RegiaoCtrl';
+            // function ($stateParams) {
+            // console.log("dynamic ctrl: ", $stateParams);
+            // if ($stateParams.RI=="ALL")
+            //   return 'MapaCtrl';
+            // else
+            //   return 'RegiaoCtrl';
             // }
-              // 'RegiaoCtrl'
+            // 'RegiaoCtrl'
           }
         }
       })

@@ -22,6 +22,14 @@ angular.module('starter.controllers', [])
   .controller('AccountCtrl', function ($rootScope, $scope, UserService) {
     $scope.BLE = true;
     $scope.enableBeacons = $rootScope.enableBeacons;
+
+    $scope.$on("LOGGED_IN", function (userInfo) {
+      console.log("AcountCTRL: logged_in event: ", userInfo);
+      $scope.profile_name = userInfo.name;
+      $scope.profile_email = userInfo.email;
+      $scope.profile_photo = userInfo.picture;
+    });
+
     $scope.toggleChange = function () {
       if (!noBLE) {
         $rootScope.enableBeacons = !$rootScope.enableBeacons;
@@ -33,19 +41,24 @@ angular.module('starter.controllers', [])
       }
     };
 
-    var tempUser = UserService.getUser();
-    tempUser.then(function (res) {
-      var userInfo = JSON.parse(res || '{}')
-      console.log("Definicoes; GOT USER from user service", userInfo);
-      if (userInfo.picture && userInfo.name && userInfo.email) {
-        $scope.logged = true;
-        console.log("USER: LOGGED: true");
-        $scope.profile_name = userInfo.name;
-        $scope.profile_email = userInfo.email;
-        $scope.profile_photo = userInfo.picture;
-      } else {
-        $scope.logged = false;
-        console.log("USER: LOGGED: false");
-      }
-    });
+    getProfile = function () {
+      var tempUser = UserService.getUser();
+      tempUser.then(function (res) {
+        var userInfo = JSON.parse(res || '{}')
+        console.log("Definicoes; GOT USER from user service", userInfo);
+        if (userInfo.picture && userInfo.name && userInfo.email) {
+          $scope.logged = true;
+          console.log("USER: LOGGED: true");
+          $scope.profile_name = userInfo.name;
+          $scope.profile_email = userInfo.email;
+          $scope.profile_photo = userInfo.picture;
+        } else {
+          $scope.logged = false;
+          console.log("USER: LOGGED: false");
+        }
+      });
+    };
+
+    getProfile();
+
   });

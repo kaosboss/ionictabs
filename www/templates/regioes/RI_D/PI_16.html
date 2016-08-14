@@ -1,8 +1,61 @@
 <ion-view view-title="Ponto de interesse 16">
-  <ion-content padding="true" class="padding">
-    <p>Ponto de interesse 16</p>
-    <a class="button button-block button-calm" href="#/tab/regiao/RI_D/">Regiao de interesse D</a>
-    <a class="button button-block button-calm" href="#/tab/mapa">Mapa</a>
+  <!--<ion-content padding="true" class="padding">-->
+  <!--<p>Ponto de interesse 16</p>-->
+  <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_D/">Regiao de interesse D</a>-->
+  <!--<a class="button button-block button-calm" href="#/tab/regiao/ALL/">Mapa</a>-->
+  <!--</ion-content>-->
+  <ion-content scroll-event-interval="5">
+
+    <div class="list card">
+
+      <div class="item item-avatar">
+        <img src="img/galo_avatar.jpg">
+
+        <h4>Galo Pantufas</h4>
+        <h5>As galinhas domésticas não costumam voar</h5>
+        <h5>enquanto as selvagens podem voar por </h5>
+        <h5>curtas distâncias.</h5>
+
+        <!--<p>November 05, 1955</p>-->
+      </div>
+
+      <div class="item item-body">
+        <img class="full-image" src="img/pigeon.jpg">
+
+        <p align="justify">
+          O pombo-correio é uma variedade domesticada do pombo-comum ou pombo-das-rochas (Columba livia). Foi escolhido
+          porque, como todo pombo retorna geralmente a seu próprio ninho e a sua própria mãe, era relativamente fácil
+          produzir seletivamente os pássaros que encontravam repetidamente o caminho de volta em longas distâncias.
+        </p>
+
+        <p align="justify">Essa espécie foi muito usada durante a Segunda Guerra Mundial para o envio de mensagens e
+          documentos.</p>
+
+        <p align="justify">Os pombos-correios foram usados para carregar mensagens escritas em papel claro fino (tal
+          como o papel de cigarro) em um tubo pequeno unido a um pé; por isso o nome de pombo-correio.</p>
+
+
+        <p>
+          <a href="#" class="subdued">1 Like</a>
+          <a href="#" class="subdued">5 Comments</a>
+        </p>
+      </div>
+      <div class="item tabs tabs-secondary tabs-icon-left">
+        <a class="tab-item" href="#">
+          <i class="icon ion-thumbsup"></i>
+          Like
+        </a>
+        <a class="tab-item" href="#">
+          <i class="icon ion-chatbox"></i>
+          Comment
+        </a>
+        <a class="tab-item" href="#">
+          <i class="icon ion-share"></i>
+          Share
+        </a>
+      </div>
+    </div>
+
   </ion-content>
   <div ng-controller="PopupCtrl"></div>
 </ion-view>
