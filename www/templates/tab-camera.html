@@ -1,17 +1,17 @@
 <ion-view view-title="Journal">
   <!--<ion-content padding="true" class="padding">-->
-  <ion-content scroll="false" class="has-header padding">
-    <button ng-click="takePicture()" class="button button-block button-calm">Take Photo</button>
+  <ion-floating-button click="takePicture()" has-footer="true" button-color="#2AC9AA" icon="ion-camera" iconColor="#fff">
+  </ion-floating-button>
+  <ion-content class="has-header padding">
+    <!--<button ng-click="takePicture()" class="button button-block button-calm">Take Photo</button>-->
     <div class="item item-divider">
       <i class="ion-images"></i>
       Imagens
     </div>
 
     <a class="item item-list-detail">
-      <ion-scroll direction="y">
-        <!--<img ng-repeat="image in allImages" ng-src="{{image.src}}" ng-click="showImages($index)" class="image-list-thumb"/>-->
-        <!--<img ng-src="{{lastPhoto}}" style="max-width: 100%; height: auto;">      -->
-        <img ng-src="{{lastPhoto}}" class="image-list-thumb" ng-click="showImages($index)">
+      <ion-scroll direction="x">
+        <img ng-repeat="image in allImages" ng-src="{{image.src}}" ng-click="showImages($index)" class="image-list-thumb"/>
       </ion-scroll>
     </a>
     <div ng-controller="PopupCtrl"></div>

@@ -2,7 +2,7 @@
   <ion-content scroll="false" class="padding">
   <ion-slide-box on-slide-changed="slideChanged(index)">
     <ion-slide>
-      <h3>Bem vindo ao SNP</h3>
+      <h3 align="center">Bem vindo ao SNP</h3>
       <div id="logo">
         <img src="img/SNP.jpg" style="width:200px;height:200px;margin:auto;display:block">
         <!--<img src="img/SNP.jpg">-->
@@ -14,10 +14,10 @@
       </p>
     </ion-slide>
     <ion-slide>
-      <h3>Descrição slide 2</h3>
+      <h3 align="center">Descrição slide 2</h3>
 
-      <div id="list">
-        <h5>Lista:</h5>
+      <div class="APPlist">
+        <h5 align="center">Lista:</h5>
         <ol>
           <li>Primeiro item</li>
           <li>Segundo item</li>
@@ -27,20 +27,31 @@
       </div>
     </ion-slide>
     <ion-slide>
-      <h3>Descrição slide 3</h3>
-      <p align="justify">
-        Este botão tem duas opções, se o utilizador estiver ligado, o mesmo é redirecionado para a tab de Atividades.
-        Se não estiver logged, redireciona para o login.
-      </p>
-      <h5>Lista:</h5>
-      <ol>
-        <li>Primeiro item</li>
-        <li>Segundo item</li>
-        <li>Terceiro item</li>
-        <li></li>
-      </ol>
-      <a class="button button-calm" ng-hide=$root.APP.logged href="#/tab/login">Concluido - Login</a>
-      <a class="button button-calm" ng-show=$root.APP.logged href="#/tab/atividades">Concluido - Atividades</a>
+      <!--<p align="justify">-->
+        <!--Este botão tem duas opções, se o utilizador estiver ligado, o mesmo é redirecionado para a tab de Atividades.-->
+        <!--Se não estiver logged, redireciona para o login.-->
+      <!--</p>-->
+      <!--<a class="button button-calm" ng-hide=$root.APP.logged href="#/tab/login">Concluido - Login</a>-->
+      <!--<a class="button button-calm" ng-show=$root.APP.logged href="#/tab/atividades">Concluido - Atividades</a>-->
+
+      <h3 align="center">Descrição slide 3</h3>
+
+      <!--<p align="justify">-->
+      <!--Este botão tem duas opções, se o utilizador estiver ligado, o mesmo é redirecionado para a tab de Atividades.-->
+      <!--Se não estiver logged, redireciona para o login.-->
+      <!--</p>-->
+
+      <div class="APPlist">
+        <h5 align="center">Lista:</h5>
+        <ol>
+          <li>Primeiro item</li>
+          <li>Segundo item</li>
+          <li>Terceiro item</li>
+          <li>Quarto item</li>
+        </ol>
+      </div>
+      <a class="button button-calm APPcenter" ng-hide=$root.APP.logged href="#/tab/login">Concluido - Login</a>
+      <a class="button button-calm APPcenter" ng-show=$root.APP.logged href="#/tab/atividades">Concluido - Atividades</a>
     </ion-slide>
   </ion-slide-box>
   </ion-content>

@@ -4,6 +4,7 @@
       <ion-toggle ng-change="toggleChange()" ng-model="enableBeacons">
         Ativar Localizacao na Quinta
       </ion-toggle>
+      </ion-list>
       <ion-item class="item">
         <p align="center">Ligaçao: {{$root.netWorktype}} isOnline: {{$root.isOnline}}</p>
         <p align="center">Utilizador Logged: {{$root.APP.logged}}</p>
@@ -16,7 +17,7 @@
           Email: {{profile_email}}
         </p>
         <p>
-          <img id="fb_photo" class="center" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">
+          <img id="fb_photo" class="APPcenter" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">
         </p>
       </ion-item>
       <!--<ion-toggle ng-model="settings.enableFriends">-->
@@ -28,7 +29,7 @@
           <a class="button button-assertive" href="#/tab/debug">Debug</a>
         </div>
       </ion-item>
-    </ion-list>
+    <!--</ion-list>-->
     <div ng-controller="PopupCtrl"></div>
   </ion-content>
 </ion-view>

@@ -1,14 +1,22 @@
-<div class="modal image-modal transparent" on-swipe-down="closeModal()">
+<div class="modal image-modal transparent" on-swipe-up="closeModal()">
   <ion-slide-box on-slide-changed="slideChanged(index)" active-slide="activeSlide">
-    <ion-slide ng-repeat="image in allImages">
+    <ion-slide ng-repeat="image in allImages" >
+      <!--<img ng-src="{{image.img}}" class="fullscreen-image"/>-->
+      <!--<ion-scroll direction="x" scrollbar-x="false" scrollbar-y="false" style="width: 100%; height: 100%"-->
+                  <!--zooming="true" min-zoom="{{zoomMin}}"-->
+                  <!--delegate-handle="scrollHandle{{$index}}" on-scroll="updateSlideStatus(activeSlide)" on-release="updateSlideStatus(activeSlide)" overflow-scroll="false">-->
 
-      <ion-scroll direction="x" scrollbar-x="false" scrollbar-y="false"
-                  zooming="true" min-zoom="{{zoomMin}}" style="width: 100%; height: 100%"
-                  delegate-handle="scrollHandle{{$index}}" on-scroll="updateSlideStatus(activeSlide)" on-release="updateSlideStatus(activeSlide)" overflow-scroll="false">
+        <!--&lt;!&ndash;&lt;!&ndash;&lt;!&ndash;<img class="fullscreen-image"/>&ndash;&gt;&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash;<div ng-class="$root.smallDevice ? 'image_smalldevice' : 'image'" style="background-image: url( {{image.img}} )"></div>&ndash;&gt;&ndash;&gt;-->
+        <!--<div class="fullscreen-image" style="background-image: url( {{image.img}} )"></div>-->
 
-        <div class="image" style="background-image: url( {{image.src}} )"></div>
+    <ion-scroll direction="xy" scrollbar-x="false" scrollbar-y="false"
+                zooming="true" min-zoom="{{zoomMin}}" style="width: 100%; height: 100%"
+                delegate-handle="scrollHandle{{$index}}" on-scroll="updateSlideStatus(activeSlide)" on-release="updateSlideStatus(activeSlide)" overflow-scroll="false">
 
+      <div class="image_full" style="background-image: url( {{image.img}} )"></div>
       </ion-scroll>
+
     </ion-slide>
   </ion-slide-box>
 </div>

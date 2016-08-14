@@ -87,7 +87,7 @@ cw = function (value) {
   console.log(value);
 };
 
-angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'firebase','ion-floating-menu', 'starter.controllers', 'starter.services'])
 
   .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window) {
     $rootScope.APP = {
@@ -129,6 +129,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
       cordova.plugins.BluetoothStatus.initPlugin();
       $rootScope.popupQueue = [];
+      $rootScope.smallDevice = false;
       $rootScope.showPopup = function (popup) {
         $rootScope.mypop = popup;
         $rootScope.$broadcast("SHOW_POPUP");
@@ -175,15 +176,15 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
 
-      $window.document.addEventListener("pause", function (event) {
-        // $rootScope.$broadcast('cordovaPauseEvent');
-        console.log('run() -> cordovaPauseEvent');
-      });
+        $window.document.addEventListener("pause", function (event) {
+          // $rootScope.$broadcast('cordovaPauseEvent');
+          console.log('run() -> cordovaPauseEvent');
+        });
 
-      $window.document.addEventListener("resume", function (event) {
-        // $rootScope.$broadcast('cordovaResumeEvent');
-        console.log('run() -> cordovaResumeEvent');
-      });
+        $window.document.addEventListener("resume", function (event) {
+          // $rootScope.$broadcast('cordovaResumeEvent');
+          console.log('run() -> cordovaResumeEvent');
+        });
 
         $scope.checkNetwork = function () {
           $scope.netWork.type = $cordovaNetwork.getNetwork();
@@ -243,9 +244,15 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             // var message = "SELECTED -> " + res.rows.item(0).value;
             var currentPlatform = ionic.Platform.platform();
             var currentPlatformVersion = ionic.Platform.version();
+            var currentDevice = ionic.Platform.device();
+
+            if ((currentDevice.model.indexOf("iPhone4") != -1) || (currentDevice.model.indexOf("iPhone5") != -1)) {
+              $rootScope.smallDevice = true;
+              $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion + " Model: " + currentDevice.model);
+            }
+
             // $ionicLoading.hide();
             console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
-            // $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
             var tempUser = UserService.getUser();
             tempUser.then(function (res) {
               var userInfo = JSON.parse(res || '{}')
@@ -262,7 +269,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                 $scope.logged = false;
                 console.log("USER: LOGGED: false");
                 checkBT();
-                $rootScope.enableBeacons=false;
+                $rootScope.enableBeacons = false;
                 $state.go("tab.login");
               }
             });
@@ -297,7 +304,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             });
 
             $regioes.setRegioes(aCircles_inicial);
-            $rootScope.enableBeacons=false;
+            $rootScope.enableBeacons = false;
             checkBT();
             $state.go("tab.intro");
 
@@ -647,49 +654,63 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
     //   $scope.showConfirm();
     // }, 4000);
   })
-  .controller('CameraCtrl', function ($rootScope, $scope, $cordovaCamera, $cordovaDevice, $cordovaSQLite, $ionicPlatform, $ionicPopup, $timeout, $ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
+  .controller('CameraCtrl', function ($rootScope, $scope, $cordovaCamera, $cordovaDevice, $cordovaSQLite, $ionicPlatform, $ionicPopup, $timeout, $ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate, $window, $q) {
 
     // $scope.lastPhoto ="";
-    $scope.allImages = [{
-      src: ''
-    }];
-    //   {
-    //   src: 'img/pic2.png'
-    // }, {
-    //   src: 'img/pic3.png'
-    // }];
+    $scope.allImages = [];
 
     $scope.zoomMin = 1;
 
-    $scope.showImages = function(index) {
+    $scope.showImages = function (index) {
       $scope.activeSlide = index;
       $scope.showModal('templates/gallery-zoomview.html');
     };
 
-    $scope.showModal = function(templateUrl) {
+    $scope.showModal = function (templateUrl) {
       $ionicModal.fromTemplateUrl(templateUrl, {
         scope: $scope
-      }).then(function(modal) {
+      }).then(function (modal) {
         $scope.modal = modal;
         $scope.modal.show();
       });
     };
 
-    $scope.closeModal = function() {
+    $scope.closeModal = function () {
       $scope.modal.hide();
       $scope.modal.remove()
     };
 
-    $scope.updateSlideStatus = function(slide) {
+    $scope.updateSlideStatus = function (slide) {
       var zoomFactor = $ionicScrollDelegate.$getByHandle('scrollHandle' + slide).getScrollPosition().zoom;
       if (zoomFactor == $scope.zoomMin) {
         $ionicSlideBoxDelegate.enableSlide(true);
       } else {
-        $ionicSlideBoxDelegate.enableSlide(false);
+        // $ionicSlideBoxDelegate.enableSlide(false);
       }
     };
 
     document.addEventListener("deviceready", function () {
+
+      resizeImage= function (img_path) {
+        var q = $q.defer();
+        $window.imageResizer.resizeImage(function (success_resp) {
+          // console.log('success, img re-size: ' + JSON.stringify(success_resp));
+          console.log('success, img re-size: ');
+          q.resolve(success_resp);
+        }, function (fail_resp) {
+          console.log('fail, img re-size: ' + JSON.stringify(fail_resp));
+          q.reject(fail_resp);
+        }, img_path, 100, 0, {
+          imageDataType: ImageResizer.IMAGE_DATA_TYPE_URL,
+          resizeType: ImageResizer.RESIZE_TYPE_MIN_PIXEL,
+          pixelDensity: true,
+          storeImage: false,
+          photoAlbum: false,
+          format: 'jpg'
+        });
+
+        return q.promise;
+      };
 
       $scope.showAlert = function (msg) {
         var alertPopup = $ionicPopup.alert({
@@ -715,10 +736,16 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         $cordovaSQLite.execute(db, query, []).then(function (res) {
           if (res.rows.length > 0) {
             var message = "SELECTED -> " + res.rows.item(res.rows.length - 1).IMG;
-            $scope.showAlert(message);
+            // $scope.showAlert(message);
+            for (var f=0; f<res.rows.length; f++)
+              $scope.allImages.push({
+                src: res.rows.item(f).thumbnail_data,
+                img: res.rows.item(f).IMG
+              });
+
             console.log(message, res);
             $scope.lastPhoto = res.rows.item(res.rows.length - 1).IMG;
-            $scope.allImages[0].src = $scope.lastPhoto;
+            // $scope.allImages.src = $scope.lastPhoto;
             // $scope.$apply();
           } else {
             $scope.showAlert("No results found");
@@ -776,18 +803,28 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       function successMove(entry) {
         //I do my insert with "entry.fullPath" as for the path
         $scope.lastPhoto = entry.toURL();
+
         console.log("Success moved file, new URL: %s", entry.toURL());
 
-        var query = "INSERT INTO `journal` (IMG,caption) VALUES (?,?)";
-        $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!"]).then(function (res) {
-          var message = "INSERT ID -> " + res.insertId;
-          console.log(message);
-          // alert(message);
-        }, function (err) {
-          console.error(err);
-          alert(err);
+        resizeImage(entry.toURL()).then(function (res) {
+          console.log("RESize RES: ", res);
+          $scope.allImages.push({
+            src: "data:image/png;base64," + res.imageData,
+            img: entry.toURL()
+          });
+          // $scope.$apply();
+
+          var query = "INSERT INTO `journal` (IMG,caption, thumbnail_data) VALUES (?,?,?)";
+          $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
+            var message = "INSERT ID -> " + res.insertId;
+            console.log(message);
+            // alert(message);
+          }, function (err) {
+            console.error(err);
+            alert(err);
+          });
+          $rootScope.deviceBUSY = 0;
         });
-        $rootScope.deviceBUSY = 0;
       }
 
       function resOnError(error) {
@@ -802,9 +839,12 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           return;
         $scope.takingPicture = 1;
         navigator.camera.getPicture(onSuccess, onFail, {
-          quality: 50,
+          quality: 75,
           destinationType: Camera.DestinationType.FILE_URI,
           encodingType: 0,
+          targetWidth: 640,
+          targetHeight: 480,
+          correctOrientation: true
         });
 
         function onSuccess(imageURI) {
@@ -983,7 +1023,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         var d = new Date();
         var n = d.getTime();
         //new file name
-        var newFileName = n + ".jpg";
+        var newFileName = "profile_photo.jpg";
         // console.log("DOC DIR: %s", cordova.file.documentsDirectory);
 
         // $ionicLoading.show({
@@ -1171,7 +1211,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                 data: Date().toLocaleLowerCase()
               })
             }
-            $rootScope.enableBeacons=true;
+            $rootScope.enableBeacons = true;
             $state.go("tab.atividades");
           }, function (fail) {
             // Fail get profile info
@@ -1247,7 +1287,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                       })
                     }
                     $rootScope.showAlert("Facebook Logged IN com o nome: " + profileInfo.name + " email: " + profileInfo.email);
-                    $rootScope.enableBeacons=true;
+                    $rootScope.enableBeacons = true;
                     $state.go("tab.atividades");
 
                   }, function (fail) {
@@ -1260,7 +1300,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                 $scope.profile_email = user.email;
                 $rootScope.console.log("FB NAME: %s pic: %s", user.name, user.picture);
                 $scope.$apply();
-                $rootScope.enableBeacons=true;
+                $rootScope.enableBeacons = true;
                 $state.go('tab.atividades');
               }
 
@@ -1328,11 +1368,12 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
       };
     });
   })
-  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes) {
+  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams) {
 
     // $ionicLoading.show({
     //   template: 'A verificar o Mapa'
     // });
+    console.log("Mapa controller ready");
 
     $scope.$on('RI_FOUND', function (e) {
       console.log("tab mapa RI_FOUND refresh: %s", $rootScope.currentRI);
@@ -1371,7 +1412,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             console.log("in circle: %s", aCircles[f].nome);
             if (aCircles[f].locked)
               $rootScope.showAlert("A " + aCircles[f].descricao + " está por descobrir");
-            else $state.go("tab.regiao", {
+            else $state.go("tab.mapa", {
               RI: aCircles[f].nome
             });
           }
@@ -1460,8 +1501,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         //context.drawImage(image, 0, 0, canvas.width, canvas.height);
         //});
       };
-
-      createCircles();
+      console.log("Mapa antes dos circles", $stateParams);
+      if ($stateParams.RI == "ALL")
+        createCircles();
     })
   })
   .controller('DebugCtrl', function ($scope, $rootScope) {
@@ -1472,7 +1514,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
   })
   .controller('RegiaoCtrl', function ($scope, $rootScope) {
     // $scope.goBack = function(){
-    //   console.log("going back ######");
+      console.log("going RegiaoCtrl ######");
     //   $ionicHistory.goBack();
     // }
   })
@@ -1553,23 +1595,28 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
           }
         }
       })
+      // .state('tab.mapa', {
+      //   url: '/mapa',
+      //   views: {
+      //     'tab-mapa': {
+      //       // templateUrl: 'templates/tab-mapa.html',
+      //       templateUrl: 'templates/regioes/mapa.html',
+      //       controller: 'MapaCtrl'
+      //     }
+      //   }
+      // })
       .state('tab.mapa', {
-        url: '/mapa',
-        views: {
-          'tab-mapa': {
-            templateUrl: 'templates/tab-mapa.html',
-            controller: 'MapaCtrl'
-          }
-        }
-      })
-      .state('tab.regiao', {
         url: '/regiao/:RI/:PI',
         views: {
-          'tab-regiao': {
+          'tab-mapa': {
             templateUrl: function ($stateParams) {
               console.log("state params: ", $stateParams);
               // Here you can access to the url params with $stateParams
               // Just return the right url template according to the params
+              // if ((!$stateParams.RI)  || ($stateParams.RI=="ALL")) {
+              //   console.log('templates/regioes/mapa.html' + $stateParams.RI + '/' + $stateParams.PI + '.html');
+              //   return 'templates/regioes/ALL/ALL.html';
+              // }
               if (!$stateParams.PI) {
                 console.log(' returned: templates/regioes/' + $stateParams.RI + '.html');
                 return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.RI + '.html';
@@ -1579,7 +1626,15 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
                 return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.PI + '.html';
               }
             },
-            controller: 'RegiaoCtrl'
+            controller: 'MapaCtrl'
+              // function ($stateParams) {
+              // console.log("dynamic ctrl: ", $stateParams);
+              // if ($stateParams.RI=="ALL")
+              //   return 'MapaCtrl';
+              // else
+              //   return 'RegiaoCtrl';
+            // }
+              // 'RegiaoCtrl'
           }
         }
       })
@@ -1597,7 +1652,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         views: {
           'tab-game': {
             templateUrl: 'templates/tab-game.html',
-            controller: 'GalleryCtrl'
+            controller: 'GameCtrl'
           }
         }
       })
