@@ -1,0 +1,22 @@
+<ion-view view-title="Cards">
+  <ion-content padding="true" class="padding" scroll="false" on-swipe-left="swipeLeft()" on-swipe-right="swipeRight()">
+    <td-cards>
+      <td-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwipedLeft($index)"
+               on-swipe-right="cardSwipedRight($index)" on-partial-swipe="cardPartialSwipe(amt)"
+               class="card-{{$index}}">
+        <div class="image" ng-controller="CardCtrl">
+          <div class="no-text">Não</div>
+          <img ng-src="{{card.image}}">
+          <div class="yes-text">Sim</div>
+        </div>
+      </td-card>
+    </td-cards>
+    <div class="button-bar">
+      <button ng-click="startCards()" class="button button-block button-balanced">Start</button>
+      <button ng-click="stopCards()" class="button button-block button-energized">Stop</button>
+    </div>
+    <!--<button type="button" ng-click="startCards()" class="button button-block button-balanced APPcenter">Iniciar</button>-->
+    <!--</ion-pane>-->
+    <!--<div ng-controller="PopupCtrl"></div>-->
+  </ion-content>
+</ion-view>

@@ -87,7 +87,7 @@ cw = function (value) {
   console.log(value);
 };
 
-angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
 
   .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window) {
     $rootScope.APP = {
@@ -1377,12 +1377,39 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'starter.co
       };
     });
   })
-  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams) {
+  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $ionicSlideBoxDelegate) {
 
     // $ionicLoading.show({
     //   template: 'A verificar o Mapa'
     // });
     console.log("Mapa controller ready");
+
+    // $scope.next = function () {
+    //   $ionicSlideBoxDelegate.next();
+    // };
+    // $scope.previous = function () {
+    //   $ionicSlideBoxDelegate.previous();
+    // };
+    // $scope.disableSwipe = function() {
+    //   $ionicSlideBoxDelegate.enableSlide(false);
+    // };
+    // $scope.PI_slideChanged = function (index) {
+    //   $scope.slideIndex = index;
+    //   console.log("Index: " + index);
+    //   // if (index==1)
+    //   //   $scope.disableSwipe();
+    // };
+
+    $scope.swipeLeft = function () {
+      console.log("swype left");
+      $state.go("tab.tdcards", {
+        RI: $stateParams.RI,
+        PI: $stateParams.PI
+      });
+    };
+    $scope.swipeRight = function () {
+      console.log("swype right");
+    };
 
     $scope.$on('RI_FOUND', function (e) {
       console.log("tab mapa RI_FOUND refresh: %s", $rootScope.currentRI);
@@ -1598,6 +1625,99 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'starter.co
       $scope.slideIndex = index;
     };
   })
+  .directive('noScroll', function($document) {
+
+    return {
+      restrict: 'A',
+      link: function($scope, $element, $attr) {
+
+        $document.on('touchmove', function(e) {
+          e.preventDefault();
+        });
+      }
+    }
+  })
+  .controller('CardsCtrl', function($scope, TDCardDelegate, $ionicHistory, $stateParams) {
+    console.log('CARDS CTRL');
+
+    console.log("cards stateparams: ", $stateParams);
+
+    var stopped = true;
+
+    $scope.goBack = function() {
+      $ionicHistory.goBack();
+    };
+
+    $scope.swipeLeft = function () {
+      console.log("swype left", stopped);
+      if (stopped)
+        $scope.goBack();
+    };
+    $scope.swipeRight = function () {
+      console.log("swype right", stopped);
+      if (stopped)
+        $scope.goBack();
+    };
+
+    // var cardTypes = [
+    //   { image: 'img/ben.png' },
+    //   { image: 'img/mike.png' },
+    //   { image: 'img/perry.png' },
+    //   { image: 'img/max.png'}
+    // ];
+    var cardTypes = [
+      { image: 'img/cards/bolotas.jpeg' },
+      { image: 'img/cards/carangueijo.jpeg' },
+      { image: 'img/cards/cisne.jpeg' },
+      { image: 'img/cards/flor1.jpeg' },
+      { image: 'img/cards/flor2.jpeg' },
+      { image: 'img/cards/lagartixa.jpeg' },
+      { image: 'img/cards/passaro1.jpeg' },
+      { image: 'img/cards/patos.jpeg' }
+    ];
+
+    $scope.cards = [];
+    // $scope.cards = Array.prototype.slice.call(cardTypes, 0);
+
+    $scope.startCards = function () {
+      // $scope.disableSwipe();
+      stopped = false;
+      $scope.cards = Array.prototype.slice.call(cardTypes, 0);
+    };
+    $scope.stopCards = function () {
+      // $scope.disableSwipe();
+      $scope.cards = [];
+      stopped=true;
+    };
+    $scope.cardDestroyed = function(index) {
+      $scope.cards.splice(index, 1);
+    };
+    $scope.addCard = function() {
+      var newCard = cardTypes[Math.floor(Math.random() * (cardTypes.length-1))];
+      newCard.id = Math.random();
+      $scope.cards.push(angular.extend({}, newCard));
+    };
+    $scope.cardSwipedLeft = function(index) {
+      console.log('LEFT SWIPE');
+      $scope.addCard();
+    };
+    $scope.cardSwipedRight = function(index) {
+      console.log('RIGHT SWIPE');
+      $scope.addCard();
+    };
+
+  })
+
+  .controller('CardCtrl', function($scope) {
+    $scope.cardSwipedLeft = function(index) {
+      console.log('LEFT SWIPE');
+      $scope.addCard();
+    };
+    $scope.cardSwipedRight = function(index) {
+      console.log('RIGHT SWIPE');
+      $scope.addCard();
+    };
+  })
   .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
     // Ionic uses AngularUI Router which uses the concept of states
@@ -1700,6 +1820,17 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'starter.co
           'tab-camera': {
             templateUrl: 'templates/tab-camera.html',
             controller: 'CameraCtrl'
+          }
+        }
+      })
+      .state('tab.tdcards', {
+        url: '/tdcards/:RI/:PI/',
+        views: {
+          'tab-tdcards': {
+            templateUrl: function ($stateParams) {
+              return 'templates/tab-tdcards.html';
+            },
+            controller: 'CardsCtrl'
           }
         }
       })
