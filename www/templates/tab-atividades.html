@@ -1,7 +1,86 @@
 <ion-view view-title="Atividades">
-  <ion-content padding="true" class="padding">
-    <div class="APPcenter"><a class="button button-calm APPcenter" href="#/tab/mapa">Go To Mapa Tab</a>
-    </div>
-    <div ng-controller="PopupCtrl"></div>
+  <ion-content class="has-header has-tabs">
+
+    <div class="APPfull">
+      <div class="APPheader">
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
+        <img class="APPimg" src="img/snp_projeto_02.jpg">
+      </div>
+
+
+      <div class="APPmain">
+        <!--<ion-scroll direction="y">-->
+
+          <ion-list>
+            <!--<ion-item ng-repeat="item in items">-->
+              <!--Hello, {{item.id}}!-->
+            <!--</ion-item>-->
+            <ion-item ng-repeat="item in items"
+                      class="item-thumbnail-left">
+
+              <img ng-src="{{item.img}}">
+              <h2>{{item.title}}</h2>
+              <p class="textWrap">{{item.description}}</p>
+              <ion-option-button class="button-positive"
+                                 ng-click="share(item)">
+                Share
+              </ion-option-button>
+              <!--<ion-option-button class="button-info"-->
+                                 <!--ng-click="edit(item)">-->
+                <!--Edit-->
+              <!--</ion-option-button>-->
+              <!--<ion-delete-button class="ion-minus-circled"-->
+                                 <!--ng-click="items.splice($index, 1)">-->
+              <!--</ion-delete-button>-->
+              <!--<ion-reorder-button class="ion-navicon"-->
+                                  <!--on-reorder="reorderItem(item, $fromIndex, $toIndex)">-->
+              <!--</ion-reorder-button>-->
+
+            </ion-item>
+          </ion-list>
+
+          <!--<div class="list">-->
+          <!---->
+          <!--<ion-item class="item">-->
+          <!--hello-->
+          <!--</ion-item>-->
+
+          <!--<ion-item class="item">-->
+          <!--hello-->
+          <!--</ion-item>-->
+
+          <!--<ion-item class="item">-->
+          <!--hello-->
+          <!--</ion-item>-->
+          <!--<ion-item class="item">-->
+          <!--hello-->
+          <!--</ion-item>-->
+
+          <!--<ion-item class="item">-->
+          <!--hello-->
+          <!--</ion-item>-->
+
+          <!--<ion-item class="item">-->
+          <!--hello-->
+          <!--</ion-item>-->
+          <!--<ion-item class="item">-->
+          <!--hello-->
+          <!--</ion-item>-->
+
+          <!--<ion-item class="item">-->
+          <!--hello-->
+          <!--</ion-item>-->
+
+          <!--<ion-item class="item">-->
+          <!--hello-->
+          <!--</ion-item>-->
+
+          <!--</div>-->
+
+          <!--</div>-->
+        <!--</ion-scroll>-->
+      </div>
+
+      <div ng-controller="PopupCtrl"></div>
   </ion-content>
 </ion-view>

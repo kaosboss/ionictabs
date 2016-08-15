@@ -138,10 +138,37 @@
   background-position: center, center;
 }
 
-/*.wordwrap {*/
-  /*white-space: pre-wrap;      !* CSS3 *!*/
+.wordWrap {
+  white-space: normal;      /* CSS3 */
   /*white-space: -moz-pre-wrap; !* Firefox *!*/
   /*white-space: -pre-wrap;     !* Opera <7 *!*/
   /*white-space: -o-pre-wrap;   !* Opera 7 *!*/
   /*word-wrap: break-word;      !* IE *!*/
+  /*white-space: normal;*/
+}
+
+.APPheader {
+  height: 30%;
+}
+.APPmain {
+  height: 70%;
+}
+/*.APPmain .scroll-view {*/
+  /*!*position: static;*!*/
+  /*display: block;*/
+  /*overflow: hidden;*/
+  /*margin-top: -1px;*/
 /*}*/
+.APPmain .textWrap {
+  white-space: normal;
+}
+
+.APPfull {
+  width: 100%;
+  height: 100%;
+}
+
+.APPimg {
+  width: 100%;
+  height: 100%;
+}
