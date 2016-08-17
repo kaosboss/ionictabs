@@ -1728,16 +1728,16 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
     };
 
   })
-  // .controller('CardCtrl', function($scope) {
-  //   $scope.cardSwipedLeft = function(index) {
-  //     console.log('LEFT SWIPE');
-  //     $scope.addCard();
-  //   };
-  //   $scope.cardSwipedRight = function(index) {
-  //     console.log('RIGHT SWIPE');
-  //     $scope.addCard();
-  //   };
-  // })
+  .controller('CardCtrl', function($scope) {
+    // $scope.cardSwipedLeft = function(index) {
+    //   console.log('LEFT SWIPE');
+    //   $scope.addCard();
+    // };
+    // $scope.cardSwipedRight = function(index) {
+    //   console.log('RIGHT SWIPE');
+    //   $scope.addCard();
+    // };
+  })
   .controller('AccountCtrl', function ($rootScope, $scope, UserService) {
     $scope.BLE = true;
     $scope.enableBeacons = $rootScope.enableBeacons;
