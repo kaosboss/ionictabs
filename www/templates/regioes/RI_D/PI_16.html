@@ -119,7 +119,8 @@
 
     <ion-slide>
 
-      <ion-content padding="true" class="padding" scroll="false" ng-controller="CardsCtrl">
+      <!--<ion-content padding="true" class="padding" scroll="false" ng-controller="CardsCtrl">-->
+      <ion-content scroll="false" class="padding" ng-controller="CardsCtrl">
         <td-cards>
           <td-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwipedLeft($index)"
                    on-swipe-right="cardSwipedRight($index)" on-partial-swipe="cardPartialSwipe(amt)"
@@ -132,9 +133,32 @@
           </td-card>
         </td-cards>
         <div class="button-bar">
-          <button ng-click="startCards()" class="button button-block button-balanced">Start</button>
-          <button ng-click="stopCards()" class="button button-block button-energized">Stop</button>
+          <button ng-click="startCards()" class="button button-balanced">Start</button>
+          <button ng-click="stopCards()" class="button button-energized">Stop</button>
         </div>
+        <!--<div ng-controller="PopupCtrl"></div>-->
+      </ion-content>
+
+    </ion-slide>
+
+    <ion-slide>
+
+      <ion-content scroll="false" class="padding" ng-controller="BarCodeReaderController">
+        <!--<ion-list>-->
+          <!--<ion-item class="item">-->
+            <button ng-click="getBarcode()" class="button button-block button-calm">Scan Barcode <i class="icon ion-qr-scanner"></i></button>
+          <!--</ion-item>-->
+          <ion-list>
+          <ion-item class="item">
+            <p>Codigo: {{code}}</p>
+          </ion-item>
+          <ion-item class="item">
+            <p>Format: {{barcodeData.format}}</p>
+          </ion-item>
+          <ion-item class="item">
+            <p>hasCancelled: {{barcodeData.cancelled}}</p>
+          </ion-item>
+        <!--</ion-list>-->
         <!--<div ng-controller="PopupCtrl"></div>-->
       </ion-content>
 

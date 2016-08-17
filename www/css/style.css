@@ -182,7 +182,7 @@ td-cards {
 td-card {
   position: absolute;
   left: 50%;
-  margin-top: 80px;
+  margin-top: 50px;
   margin-bottom: 40px;
   margin-left: -150px;
   width: 300px;
@@ -277,14 +277,8 @@ td-card img {
   /*opacity: 1;*/
 /*}*/
 
-.container {
-  margin: 15% auto;
-  font-size: 24px;
-  position: relative;
-  width: 15em;
-}
-
 /* slidebox*/
+
 .slider{
   position: absolute !important;
   top: 0 ;
