@@ -276,3 +276,24 @@ td-card img {
   /*transform: rotate(0deg);*/
   /*opacity: 1;*/
 /*}*/
+
+.container {
+  margin: 15% auto;
+  font-size: 24px;
+  position: relative;
+  width: 15em;
+}
+
+/* slidebox*/
+.slider{
+  position: absolute !important;
+  top: 0 ;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.slider-pager {
+  top: initial;
+  bottom: 60px !important;
+}
