@@ -242,3 +242,37 @@ td-card img {
   transition: 0.2s opacity linear;
   opacity: 0;
 }
+
+/* animation */
+.item.list-item.ng-enter-stagger {
+  -webkit-transition-delay: 0.3s;
+  transition-delay: 0.3s;
+}
+
+.item.list-item.ng-enter {
+  transition: 0.25s linear all;
+  /*transform: rotate(50deg);*/
+  /*animation: slideInRight;*/
+  opacity: 0;
+}
+
+.item.list-item.ng-enter.ng-enter-active {
+  /*transform: rotate(0deg);*/
+  opacity: 1;
+}
+
+/*.item.chat-item.ng-enter-stagger {*/
+  /*-webkit-transition-delay: 0.3s;*/
+  /*transition-delay: 0.3s;*/
+/*}*/
+
+/*.item.chat-item.ng-enter {*/
+  /*transition: 0.25s linear all;*/
+  /*transform: rotate(50deg);*/
+  /*opacity: 0;*/
+/*}*/
+
+/*.item.chat-item.ng-enter.ng-enter-active {*/
+  /*transform: rotate(0deg);*/
+  /*opacity: 1;*/
+/*}*/

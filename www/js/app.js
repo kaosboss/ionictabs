@@ -87,11 +87,13 @@ cw = function (value) {
   console.log(value);
 };
 
-angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
 
   .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window) {
     $rootScope.APP = {
-      logged: false
+      logged: false,
+      user: {
+      }
     };
 
     if (ionic.Platform.platform() == "android")
@@ -129,6 +131,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contr
 
       cordova.plugins.BluetoothStatus.initPlugin();
       $rootScope.popupQueue = [];
+
       $rootScope.smallDevice = false;
       $rootScope.currentRI = "Sem região de interesse"
       $rootScope.showPopup = function (popup) {
@@ -190,7 +193,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contr
         $scope.checkNetwork = function () {
           $scope.netWork.type = $cordovaNetwork.getNetwork();
           $scope.netWork.isOnline = $cordovaNetwork.isOnline();
-          $rootScope.isOnline = $scope.netWork.isOnline;
+          $rootScope.isOnline = $cordovaNetwork.isOnline();
           $rootScope.netWorktype = $cordovaNetwork.getNetwork();
           $scope.netWork.isOffline = $cordovaNetwork.isOffline();
 
@@ -247,10 +250,10 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contr
             var currentPlatformVersion = ionic.Platform.version();
             var currentDevice = ionic.Platform.device();
 
-            if ((currentDevice.model.indexOf("iPhone4") != -1) || (currentDevice.model.indexOf("iPhone5") != -1)) {
-              $rootScope.smallDevice = true;
-              $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion + " Model: " + currentDevice.model);
-            }
+            // if ((currentDevice.model.indexOf("iPhone4") != -1) || (currentDevice.model.indexOf("iPhone5") != -1)) {
+            //   $rootScope.smallDevice = true;
+            //   $scope.showAlert("Got APP version: Installed v" + res.rows.item(0).value + "(" + dbres + ") PLAT: " + currentPlatform + " VER: " + currentPlatformVersion + " Model: " + currentDevice.model);
+            // }
 
             // $ionicLoading.hide();
             console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
@@ -260,9 +263,13 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contr
               console.log("GOT USER from user service", userInfo);
               if (userInfo.picture && userInfo.name && userInfo.picture) {
                 $rootScope.APP.logged = true;
+                $rootScope.APP.user.name = userInfo.name;
+                $rootScope.APP.user.email = userInfo.email;
+                $rootScope.APP.user.picture = userInfo.picture;
                 $scope.logged = true;
                 users.offline();
                 console.log("USER: LOGGED: true");
+                $scope.checkNetwork();
                 checkBT();
                 $state.go("tab.atividades");
               } else {
@@ -993,11 +1000,12 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contr
       if (!$scope.users) {
         $scope.users = users.init();
         $scope.users.$add(user);
-        $scope.users.offline();
+        // $scope.users.offline();
       } else {
         $scope.users.$add(user);
-        $scope.users.offline();
+        // $scope.users.offline();
       }
+      users.offline();
     };
 
     $ionicPlatform.ready(function () {
@@ -1054,11 +1062,10 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contr
                 console.log("GOT USER from user service", userInfo);
                 userInfo.picture = fileEntry.toURL();
                 $rootScope.APP.logged=true;
-                $rootScope.$broadcast('LOGGED_IN', {
-                  name: userInfo.name,
-                  email: userInfo.email,
-                  profile_photo: userInfo.picture
-                });
+                $rootScope.APP.user.name = userInfo.name;
+                $rootScope.APP.user.email = userInfo.email;
+                $rootScope.APP.user.picture = userInfo.picture;
+                $rootScope.$broadcast('LOGGED_IN');
                 UserService.setUser(userInfo);
               });
 
@@ -1281,7 +1288,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contr
                     $scope.profile_name = profileInfo.name;
                     $scope.profile_email = profileInfo.email;
                     // $scope.$apply();
-                    console.log("FB NAME2: %s pic: %s", profileInfo.name, profileInfo.picture);
+                    console.log("FB NAME2: %s pic: %s", profileInfo.name, $scope.profile_photo);
                     // $state.go('tab.camera');
                     $scope.Download("https://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large");
                     if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
@@ -1556,8 +1563,9 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contr
     //   $ionicHistory.goBack();
     // }
   })
-  .controller('AtividadesCtrl', function ($scope, $rootScope) {
+  .controller('AtividadesCtrl', function ($scope, $rootScope, $timeout) {
 
+    $scope.myItems = [];
     $scope.items = [
       { id: 0,
         img: 'img/atividades_arborismo.png',
@@ -1603,6 +1611,12 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contr
         description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
       }
     ];
+
+    $timeout(function() {
+      for(var i = 0; i < 5; i++){
+        $scope.myItems.push($scope.items[i]);
+      }
+    });
   })
   .controller('LoginCtrl', function ($scope, $rootScope) {
 
@@ -1717,6 +1731,52 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ionic.contr
       console.log('RIGHT SWIPE');
       $scope.addCard();
     };
+  })
+  .controller('AccountCtrl', function ($rootScope, $scope, UserService) {
+    $scope.BLE = true;
+    $scope.enableBeacons = $rootScope.enableBeacons;
+    $scope.profile_name = $rootScope.APP.user.name;
+    $scope.profile_email = $rootScope.APP.user.email;
+    $scope.profile_photo = $rootScope.APP.user.picture;
+
+    $scope.$on("LOGGED_IN", function (userInfo) {
+      console.log("AcountCTRL: logged_in event: ", userInfo);
+      $scope.profile_name = $rootScope.APP.user.name;
+      $scope.profile_email = $rootScope.APP.user.email;
+      $scope.profile_photo = $rootScope.APP.user.picture;
+    });
+
+    $scope.toggleChange = function () {
+      if (!noBLE) {
+        $rootScope.enableBeacons = !$rootScope.enableBeacons;
+        if ($rootScope.enableBeacons) {
+          $rootScope.beacons = {};
+          $rootScope.$broadcast('BEACONS_UPDATE');
+        }
+        console.log("enableBeacons new state: %s", $rootScope.enableBeacons);
+      }
+    };
+
+    // getProfile = function () {
+    //   var tempUser = UserService.getUser();
+    //   tempUser.then(function (res) {
+    //     var userInfo = JSON.parse(res || '{}')
+    //     console.log("Definicoes; GOT USER from user service", userInfo);
+    //     if (userInfo.picture && userInfo.name && userInfo.email) {
+    //       $scope.logged = true;
+    //       console.log("USER: LOGGED: true");
+    //       $scope.profile_name = userInfo.name;
+    //       $scope.profile_email = userInfo.email;
+    //       $scope.profile_photo = userInfo.picture;
+    //     } else {
+    //       $scope.logged = false;
+    //       console.log("USER: LOGGED: false");
+    //     }
+    //   });
+    // };
+
+    // getProfile();
+
   })
   .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
