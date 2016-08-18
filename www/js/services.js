@@ -234,10 +234,10 @@ angular.module('starter.services', [])
                     }
                     if (found) {
                       console.log("IBEACON: UPDATE: GOT regioes from cordova service to aCircles", aCircles);
+                      // $rootScope.regioes = aCircles;
                       $regioes.setRegioes(aCircles);
                     }
                 });
-
                 $rootScope.$broadcast('RI_FOUND');
                 console.log("Sending broadcast RI_FOUND");
 

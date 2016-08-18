@@ -1,5 +1,6 @@
 // Ionic Starter App
 // Ionic Starter App
+// Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
@@ -87,13 +88,12 @@ cw = function (value) {
   console.log(value);
 };
 
-angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
 
   .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window) {
     $rootScope.APP = {
       logged: false,
-      user: {
-      }
+      user: {}
     };
 
     if (ionic.Platform.platform() == "android")
@@ -257,6 +257,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
 
             // $ionicLoading.hide();
             console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
+            $scope.checkNetwork();
             var tempUser = UserService.getUser();
             tempUser.then(function (res) {
               var userInfo = JSON.parse(res || '{}')
@@ -269,20 +270,22 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
                 $scope.logged = true;
                 users.offline();
                 console.log("USER: LOGGED: true");
-                $scope.checkNetwork();
                 checkBT();
                 $state.go("tab.atividades");
               } else {
                 $rootScope.APP.logged = false;
                 $scope.logged = false;
                 console.log("USER: LOGGED: false");
-                checkBT();
                 $rootScope.enableBeacons = false;
-                $state.go("tab.login");
+                checkBT();
+                // setTimeout(function () {
+                //   $state.go("tab.login");
+                // }, 300)
               }
             });
 
           } else {
+            $scope.checkNetwork();
             $scope.showAlert("No results found, primeira utilizacao!");
             console.log("No results found, firsttime?");
 
@@ -371,87 +374,13 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
               }
             }
           }
-          // $scope.showBT(msg);
           console.log(msg);
-        };
-
-        // $scope.Download = function (imgurl) {
-        //
-        //   if ($scope.netWork.isOffline)
-        //     return;
-        //
-        //   if (!imgurl)
-        //     imgurl = document.getElementById("fb_photo");
-        //   console.log("IMG URL: %s", imgurl.src);
-        //
-        //   var url = imgurl.src;
-        //   var filename = url.split("/").pop();
-        //   var targetPath = cordova.file.documentsDirectory + filename;
-        //   var d = new Date();
-        //   var n = d.getTime();
-        //   //new file name
-        //   var newFileName = n + ".jpg";
-        //   console.log("DOC DIR: %s", cordova.file.documentsDirectory);
-        //
-        //   // $ionicLoading.show({
-        //   //   template: 'Logging in...'
-        //   // });
-        //
-        //   window.requestFileSystem(LocalFileSystem.PERSISTENT, 5 * 1024 * 1024, function (fs) {
-        //
-        //     console.log('file system open: ' + fs.name);
-        //
-        //     // Make sure you add the domain name to the Content-Security-Policy <meta> element.
-        //     // var url = 'http://cordova.apache.org/static/img/cordova_bot.png';
-        //     // Parameters passed to getFile create a new file or return the file if it already exists.
-        //
-        //     fs.root.getFile(newFileName, { create: true, exclusive: false }, function (fileEntry) {
-        //       // download(fileEntry, url, true);
-        //
-        //       $cordovaFileTransfer.download(url, fileEntry.toURL(), {}, true).then(function (result) {
-        //         console.log('Save file on ' + fileEntry.toURL() + ' success!');
-        //         $scope.note = 'Save file on ' + fileEntry.toURL() + ' success!';
-        //         $scope.profile_photo=fileEntry.toURL();
-        //         // $ionicLoading.hide();
-        //         var tempUser = UserService.getUser();
-        //         tempUser.then(function (res) {
-        //           var userInfo = JSON.parse(res || '{}')
-        //           console.log("GOT USER from user service", userInfo);
-        //           userInfo.picture = fileEntry.toURL();
-        //           UserService.setUser(userInfo);
-        //         });
-        //
-        //       }, function (error) {
-        //         $scope.note = 'Error Download file';
-        //       }, function (progress) {
-        //         $scope.downloadProgress = (progress.loaded / progress.total) * 100;
-        //       });
-        //
-        //     }, function () {
-        //       console.log("onErrorCreateFile");
-        //     });
-        //
-        //   }, function () {
-        //     console.log("onErrorLoadFs");
-        //   });
-        //
-        // };
-        // $timeout(checkBT, 3000);
-
+          if (($scope.logged == false) && (APPfirstTime == 0))
+            $state.go("tab.login");
+          // $scope.showBT(msg);
+        }
       }
     );
-
-    // });
-
-
-    // $scope.startBeaconScanning = function () {
-    //   $IbeaconScanner.startBeaconScan();
-    // };
-    //
-    // $scope.stopBeaconScanning = function () {
-    //   $IbeaconScanner.stopBeaconScan();
-    // };
-    //
 
     $scope.showBT = function (msg) {
       var alertPopup2 = $ionicPopup.alert({
@@ -756,7 +685,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
             // $scope.allImages.src = $scope.lastPhoto;
             // $scope.$apply();
           } else {
-            $scope.showAlert("No results found");
+            // $scope.showAlert("No results found");
             console.log("No results found");
           }
         }, function (err) {
@@ -1061,7 +990,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
                 $scope.authResponse = userInfo.authResponse;
                 console.log("GOT USER from user service", userInfo);
                 userInfo.picture = fileEntry.toURL();
-                $rootScope.APP.logged=true;
+                $rootScope.APP.logged = true;
                 $rootScope.APP.user.name = userInfo.name;
                 $rootScope.APP.user.email = userInfo.email;
                 $rootScope.APP.user.picture = userInfo.picture;
@@ -1207,12 +1136,12 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
 
             $ionicLoading.hide();
 
-            if (device.platform === 'Android') {
-              ionic.Platform.fullScreen();
-              if (window.StatusBar) {
-                return StatusBar.hide();
-              }
-            }
+            // if (device.platform === 'Android') {
+            //   ionic.Platform.fullScreen();
+            //   if (window.StatusBar) {
+            //     return StatusBar.hide();
+            //   }
+            // }
 
             // $state.go('tab.camera');
             $scope.Download("https://graph.facebook.com/" + authResponse.userID + "/picture?type=large");
@@ -1384,12 +1313,21 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
       };
     });
   })
-  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $ionicSlideBoxDelegate) {
+  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $ionicSlideBoxDelegate, $ionicHistory) {
 
     // $ionicLoading.show({
     //   template: 'A verificar o Mapa'
     // });
     console.log("Mapa controller ready");
+
+    $scope.count = 0;
+    $scope.start = 0;
+
+    $scope.init = function () {
+      console.log("slide box init");
+      $scope.slideIndex = 0;
+      $scope.start = 1;
+    };
 
     $scope.next = function () {
       $ionicSlideBoxDelegate.next();
@@ -1397,26 +1335,40 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
     $scope.previous = function () {
       $ionicSlideBoxDelegate.previous();
     };
-    $scope.disableSwipe = function() {
+    $scope.disableSwipe = function () {
       $ionicSlideBoxDelegate.enableSlide(false);
     };
     $scope.PI_slideChanged = function (index) {
       $scope.slideIndex = index;
       console.log("Index: " + index);
+      $scope.start = 0;
+      // $scope.count = 0;
       // if (index==2)
       //   $scope.disableSwipe();
     };
 
-    // $scope.swipeLeft = function () {
-    //   console.log("swype left");
-    //   $state.go("tab.tdcards", {
-    //     RI: $stateParams.RI,
-    //     PI: $stateParams.PI
-    //   });
-    // };
-    // $scope.swipeRight = function () {
-    //   console.log("swype right");
-    // };
+    $scope.goBack = function () {
+      $ionicHistory.goBack();
+    };
+
+    $scope.swipeLeft = function () {
+      console.log("swype left");
+      // $state.go("tab.tdcards", {
+      //   RI: $stateParams.RI,
+      //   PI: $stateParams.PI
+      // });
+    };
+    $scope.swipeRight = function () {
+      if (($scope.slideIndex == 0)) {
+        console.log("swype right", $scope.slideIndex, $scope.count, $scope.start);
+        // if (($scope.slideIndex == 0) && ($scope.count++ > 0)) {
+        if (($scope.count++ > 0) || ($scope.start == 1)) {
+          $scope.goBack();
+        } else {
+          console.log("skipped: swype right", $scope.slideIndex, $scope.count);
+        }
+      }
+    };
 
     $scope.$on('RI_FOUND', function (e) {
       console.log("tab mapa RI_FOUND refresh: %s", $rootScope.currentRI);
@@ -1427,12 +1379,12 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
     $ionicPlatform.ready(function () {
 
       console.log("Mapactrl ready");
-
+      $scope.aCircles = [];
       var canvas = document.getElementById('imageView');
       if (canvas) {
         var regioes = $regioes.getAllRegioesList();
         var context = canvas.getContext('2d');
-        var aCircles = [];
+
       }
 
       touchUp = function (e) {
@@ -1441,24 +1393,24 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
         // alert("clicked");
         //console.log(e);
 
-        for (var f = 0; f <= aCircles.length - 1; f++) {
+        for (var f = 0; f <= $scope.aCircles.length - 1; f++) {
 
-          var circleY = aCircles[f].centerY;
-          var circleX = aCircles[f].centerX;
-          var circleRadius = aCircles[f].radius;
+          var circleY = $scope.aCircles[f].centerY;
+          var circleX = $scope.aCircles[f].centerX;
+          var circleRadius = $scope.aCircles[f].radius;
           var y = e.offsetY - circleY;
           var x = e.offsetX - circleX;
           var dist = Math.sqrt(y * y + x * x);
-          //console.log("circle: %s dist: ", aCircles[f].nome, dist);
+          //console.log("circle: %s dist: ", $scope.aCircles[f].nome, dist);
           if (dist < circleRadius) {
             //go to google
-            $scope.nome = aCircles[f].nome;
-            $scope.locked = aCircles[f].locked;
-            console.log("in circle: %s", aCircles[f].nome);
-            if (aCircles[f].locked)
-              $rootScope.showAlert("A " + aCircles[f].descricao + " está por descobrir");
+            $scope.nome = $scope.aCircles[f].nome;
+            $scope.locked = $scope.aCircles[f].locked;
+            console.log("in circle: %s", $scope.aCircles[f].nome);
+            if ($scope.aCircles[f].locked)
+              $rootScope.showAlert("A " + $scope.aCircles[f].descricao + " está por descobrir");
             else $state.go("tab.mapa", {
-              RI: aCircles[f].nome
+              RI: $scope.aCircles[f].nome
             });
           }
         }
@@ -1467,15 +1419,15 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
       createCircles = function (nova_regiao) {
 
         $regioes.getRegioes().then(function (res) {
-          aCircles = JSON.parse(res || [{}]);
-          console.log("ceateCircles: GOT regioes from cordova service to aCircles", aCircles);
+          $scope.aCircles = JSON.parse(res || [{}]);
+          console.log("createCircles: GOT regioes from cordova service to aCircles", $scope.aCircles);
           drawImage();
         });
       };
 
       $scope.unlock_regiao = function () {
-        aCircles[3].locked = false;
-        $regioes.setRegioes(aCircles);
+        $scope.aCircles[3].locked = false;
+        $regioes.setRegioes($scope.aCircles);
         setTimeout(createCircles, 1000);
       };
 
@@ -1492,8 +1444,10 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
 
         if ($rootScope.currentRI) {
-          if (regioes[$rootScope.currentRI] == oCircle.nome)
+          if (regioes[$rootScope.currentRI] == oCircle.nome) {
             color = red;
+            oCircle.locked = false;
+          }
         }
 
         if (oCircle.locked)
@@ -1508,10 +1462,9 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
         context.stroke();
       };
 
-
       drawCircles = function () {
-        for (var f = 0; f <= aCircles.length - 1; f++) {
-          drawCircle(aCircles[f]);
+        for (var f = 0; f <= $scope.aCircles.length - 1; f++) {
+          drawCircle($scope.aCircles[f]);
         }
         // $ionicLoading.hide();
       };
@@ -1567,22 +1520,26 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
 
     $scope.myItems = [];
     $scope.items = [
-      { id: 0,
+      {
+        id: 0,
         img: 'img/atividades_arborismo.png',
         title: 'ARBORISMO',
         description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.'
       },
-      { id: 1,
+      {
+        id: 1,
         img: 'img/atividades_bicicletas-hover.png',
         title: 'BICICLETAS NO SNP',
         description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.'
       },
-      { id: 2,
+      {
+        id: 2,
         title: 'DESPORTO AQUÁTICO AVENTURA',
         description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
         img: 'img/actividades_aquaticas-hover.png'
       },
-      { id: 3,
+      {
+        id: 3,
         title: 'CAMPOS DE FÉRIAS',
         img: 'img/atividades_campo_ferias-hover.png',
         description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.'
@@ -1590,78 +1547,85 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
       // { id: 4,
       //   img: 'img/atividades_dormir_snp-hover.png'
       // },
-      { id: 5,
+      {
+        id: 5,
         title: 'FAUNA E FLORA',
         description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
         img: 'img/atividades_fauna_flora-hover.png'
       },
-      { id: 6,
+      {
+        id: 6,
         title: 'PAINTBALL',
         description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
         img: 'img/atividades_painball-hover.png'
       },
-      { id: 7,
+      {
+        id: 7,
         title: 'PERCURSOS PEDESTRES',
         description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
         img: 'img/atividades_percursos_pedestres-hover.png'
       },
-      { id: 8,
+      {
+        id: 8,
         img: 'img/atividades_tiro-hover.png',
         title: 'ATIVIDADES DE TIRO',
         description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
       }
     ];
 
-    $timeout(function() {
-      for(var i = 0; i < 5; i++){
+    $timeout(function () {
+      for (var i = 0; i < 5; i++) {
         $scope.myItems.push($scope.items[i]);
       }
     });
   })
-  .controller('LoginCtrl', function ($scope, $rootScope) {
-
+  .controller('LoginCtrl', function ($scope, $rootScope, $window) {
+    ionic.Platform.fullScreen();
+    if ($window.StatusBar) {
+      return $window.StatusBar.hide();
+    }
   })
   .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate) {
 
-    // Called to navigate to the main app
-    $scope.startApp = function () {
-      $state.go('tab.dash');
-    };
-    $scope.next = function () {
-      $ionicSlideBoxDelegate.next();
-    };
-    $scope.previous = function () {
-      $ionicSlideBoxDelegate.previous();
-    };
+  // Called to navigate to the main app
+  $scope.startApp = function () {
+    $state.go('tab.dash');
+  };
+  $scope.next = function () {
+    $ionicSlideBoxDelegate.next();
+  };
+  $scope.previous = function () {
+    $ionicSlideBoxDelegate.previous();
+  };
 
-    // Called each time the slide changes
-    $scope.slideChanged = function (index) {
-      $scope.slideIndex = index;
-    };
-  })
-  .directive('noScroll', function($document) {
+  // Called each time the slide changes
+  $scope.slideChanged = function (index) {
+    $scope.slideIndex = index;
+  };
+})
+  .directive('noScroll', function ($document) {
 
     return {
       restrict: 'A',
-      link: function($scope, $element, $attr) {
+      link: function ($scope, $element, $attr) {
 
-        $document.on('touchmove', function(e) {
+        $document.on('touchmove', function (e) {
           e.preventDefault();
         });
       }
     }
   })
-  .controller('CardsCtrl', function($scope, TDCardDelegate, $ionicHistory, $stateParams, $ionicSlideBoxDelegate) {
+  .controller('CardsCtrl', function ($scope, TDCardDelegate, $ionicHistory, $stateParams, $ionicSlideBoxDelegate) {
     console.log('CARDS CTRL');
 
     console.log("cards stateparams: ", $stateParams);
 
     var stopped = true;
 
-    $scope.disableSwipe = function() {
+    $scope.disableSwipe = function () {
       $ionicSlideBoxDelegate.enableSlide(false);
     };
-    $scope.enableSwipe = function() {
+    $scope.enableSwipe = function () {
       $ionicSlideBoxDelegate.enableSlide(true);
     };
 
@@ -1687,14 +1651,14 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
     //   { image: 'img/max.png'}
     // ];
     var cardTypes = [
-      { image: 'img/cards/bolotas.jpeg' },
-      { image: 'img/cards/carangueijo.jpeg' },
-      { image: 'img/cards/cisne.jpeg' },
-      { image: 'img/cards/flor1.jpeg' },
-      { image: 'img/cards/flor2.jpeg' },
-      { image: 'img/cards/lagartixa.jpeg' },
-      { image: 'img/cards/passaro1.jpeg' },
-      { image: 'img/cards/patos.jpeg' }
+      {image: 'img/cards/bolotas.jpeg'},
+      {image: 'img/cards/carangueijo.jpeg'},
+      {image: 'img/cards/cisne.jpeg'},
+      {image: 'img/cards/flor1.jpeg'},
+      {image: 'img/cards/flor2.jpeg'},
+      {image: 'img/cards/lagartixa.jpeg'},
+      {image: 'img/cards/passaro1.jpeg'},
+      {image: 'img/cards/patos.jpeg'}
     ];
 
     $scope.cards = [];
@@ -1708,27 +1672,27 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu','ngAnimate',
     $scope.stopCards = function () {
       $scope.enableSwipe();
       $scope.cards = [];
-      stopped=true;
+      stopped = true;
     };
-    $scope.cardDestroyed = function(index) {
+    $scope.cardDestroyed = function (index) {
       $scope.cards.splice(index, 1);
     };
-    $scope.addCard = function() {
-      var newCard = cardTypes[Math.floor(Math.random() * (cardTypes.length-1))];
+    $scope.addCard = function () {
+      var newCard = cardTypes[Math.floor(Math.random() * (cardTypes.length - 1))];
       newCard.id = Math.random();
       $scope.cards.push(angular.extend({}, newCard));
     };
-    $scope.cardSwipedLeft = function(index) {
+    $scope.cardSwipedLeft = function (index) {
       console.log('LEFT SWIPE');
       $scope.addCard();
     };
-    $scope.cardSwipedRight = function(index) {
+    $scope.cardSwipedRight = function (index) {
       console.log('RIGHT SWIPE');
       $scope.addCard();
     };
 
   })
-  .controller('CardCtrl', function($scope) {
+  .controller('CardCtrl', function ($scope) {
     // $scope.cardSwipedLeft = function(index) {
     //   console.log('LEFT SWIPE');
     //   $scope.addCard();

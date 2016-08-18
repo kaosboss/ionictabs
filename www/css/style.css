@@ -51,6 +51,12 @@
   margin-right: auto;
   display: block;
 }
+.card, .list-inset {
+  overflow: hidden;
+  margin: 30px 10px;
+  border-radius: 2px;
+  background-color: #fff;
+}
 
 /*.slider-pager {*/
   /*position: absolute;*/
