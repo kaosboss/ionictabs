@@ -1327,6 +1327,9 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
     $scope.start = 0;
 
     $scope.init = function (PI) {
+      if (!PI)
+        return;
+
       console.log("slide box init");
       $scope.slideIndex = 0;
       $scope.start = 1;
@@ -1634,21 +1637,6 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
       $ionicSlideBoxDelegate.enableSlide(true);
     };
 
-    // $scope.goBack = function() {
-    //   $ionicHistory.goBack();
-    // };
-    //
-    // $scope.swipeLeft = function () {
-    //   console.log("swype left", stopped);
-    //   if (stopped)
-    //     $scope.goBack();
-    // };
-    // $scope.swipeRight = function () {
-    //   console.log("swype right", stopped);
-    //   if (stopped)
-    //     $scope.goBack();
-    // };
-
     // var cardTypes = [
     //   { image: 'img/ben.png' },
     //   { image: 'img/mike.png' },
@@ -1664,34 +1652,67 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
 
     //$scope.cardTypes = [];
     // $scope.cards = Array.prototype.slice.call(cardTypes, 0);
+$scope.init = function (PI) {
+  console.log("cards init: ", PI);
+  perguntas.init(PI);
+};
 
     $scope.startCards = function () {
       cardTypes = perguntas.getTdcards();
       $scope.disableSwipe();
       stopped = false;
       console.log("starting cards: ", cardTypes);
-      $scope.cards = Array.prototype.slice.call(cardTypes, 0);
+      //$scope.cards = Array.prototype.slice.call(cardTypes, 0);
+      $scope.cards = Array.prototype.slice.call(cardTypes);
     };
     $scope.stopCards = function () {
       $scope.enableSwipe();
       $scope.cards = [];
+      cardTypes = [];
       stopped = true;
     };
     $scope.cardDestroyed = function (index) {
+      console.log("card destroyed");
       $scope.cards.splice(index, 1);
+      $scope.addCard();
     };
     $scope.addCard = function () {
       var newCard = cardTypes[Math.floor(Math.random() * (cardTypes.length - 1))];
       newCard.id = Math.random();
-      $scope.cards.push(angular.extend({}, newCard));
+      $scope.cards.unshift(angular.extend({}, newCard));
     };
     $scope.cardSwipedLeft = function (index) {
-      console.log('LEFT SWIPE');
-      $scope.addCard();
+      //console.log('LEFT SWIPE', index);
+      if ($scope.cards[index].resposta == false)
+        console.log('You are right!', index);
+      else
+        console.log('You are Wrong!', index);
+      //$scope.addCard();
     };
     $scope.cardSwipedRight = function (index) {
-      console.log('RIGHT SWIPE');
-      $scope.addCard();
+      //console.log('RIGHT SWIPE', index);
+      if ($scope.cards[index].resposta == true)
+        console.log('You are right!', index);
+      else
+        console.log('You are Wrong!', index);
+      //$scope.addCard();
+    };
+
+    $scope.transitionRight = function(index) {
+      //console.log('card removed to the right', index);
+      if ($scope.cards[index].resposta == true)
+        console.log('You are right!', index);
+      else
+        console.log('You are Wrong!', index);
+      //$scope.addCard();
+    };
+    $scope.transitionLeft = function(index) {
+      //console.log('card removed to the left', index);
+      if ($scope.cards[index].resposta == false)
+        console.log('You are right!', index);
+      else
+        console.log('You are Wrong!', index);
+      //$scope.addCard();
     };
 
   })
@@ -1856,17 +1877,17 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
           }
         }
       })
-      // .state('tab.tdcards', {
-      //   url: '/tdcards/:RI/:PI/',
-      //   views: {
-      //     'tab-tdcards': {
-      //       templateUrl: function ($stateParams) {
-      //         return 'templates/tab-tdcards.html';
-      //       },
-      //       controller: 'CardsCtrl'
-      //     }
-      //   }
-      // })
+      .state('tab.tdcards', {
+        url: '/tdcards/:RI/',
+        views: {
+          'tab-tdcards': {
+            templateUrl: function ($stateParams) {
+              return 'templates/tab-tdcards.html';
+            },
+            controller: 'CardsCtrl'
+          }
+        }
+      })
       .state('tab.game', {
         url: '/game',
         views: {

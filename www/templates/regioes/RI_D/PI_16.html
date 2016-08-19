@@ -1,6 +1,7 @@
 <ion-view view-title="Ponto de interesse 16">
 
-  <ion-slide-box on-slide-changed="PI_slideChanged(index)" on-swipe-left="swipeLeft()" on-swipe-right="swipeRight()">
+  <ion-slide-box on-slide-changed="PI_slideChanged(index)">
+    <!--<ion-slide-box on-slide-changed="PI_slideChanged(index)" on-swipe-left="swipeLeft()" on-swipe-right="swipeRight()">-->
     <ion-slide ng-init='init("PI_16")'>
 
     </ion-slide>
@@ -117,12 +118,16 @@
 
         <!--<div ng-controller="PopupCtrl"></div>-->
       </ion-content>
-
+      <!--on-swipe-left="cardSwipedLeft($index)"-->
+      <!--on-swipe-right="cardSwipedRight($index)"-->
+      <!--on-destroy="cardDestroyed($index)"-->
       <!--<ion-content padding="true" class="padding" scroll="false" ng-controller="CardsCtrl">-->
       <ion-content scroll="false" class="padding" ng-controller="CardsCtrl">
         <td-cards>
-          <td-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwipedLeft($index)"
-                   on-swipe-right="cardSwipedRight($index)" on-partial-swipe="cardPartialSwipe(amt)"
+          <td-card ng-repeat="card in cards"
+                   on-transition-left="transitionLeft($index)"
+                   on-transition-right="transitionRight($index)"
+                   on-destroy="cardDestroyed($index)"
                    class="card-{{$index}}">
             <div class="image" ng-controller="CardCtrl">
               <div class="no-text">Não</div>
