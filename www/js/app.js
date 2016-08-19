@@ -16,72 +16,72 @@ var enableBeacons = false;
 var initialOutput = "";
 var debug = 0;
 var noBLE = 1;
-var aCircles_inicial = [
-  {
-    nome: "RI_A",
-    descricao: "Região de interesse A",
-    centerX: 273,
-    centerY: 105,
-    radius: 20,
-    locked: false
-  },
-  {
-    nome: "RI_B",
-    descricao: "Região de interesse B",
-    centerX: 230,
-    centerY: 95,
-    radius: 20,
-    locked: false
-  },
-  {
-    nome: "RI_C",
-    descricao: "Região de interesse C",
-    centerX: 187,
-    centerY: 88,
-    radius: 22,
-    locked: false
-  },
-  {
-    nome: "RI_D",
-    descricao: "Região de interesse D",
-    centerX: 135,
-    centerY: 70,
-    radius: 32,
-    locked: true
-  },
-  {
-    nome: "RI_E",
-    descricao: "Região de interesse E",
-    centerX: 53,
-    centerY: 50,
-    radius: 36,
-    locked: true
-  },
-  {
-    nome: "RI_F",
-    descricao: "Região de interesse F",
-    centerX: 75,
-    centerY: 110,
-    radius: 31,
-    locked: true
-  },
-  {
-    nome: "RI_G",
-    descricao: "Região de interesse G",
-    centerX: 178,
-    centerY: 125,
-    radius: 20,
-    locked: true
-  },
-  {
-    nome: "RI_H",
-    descricao: "Região de interesse H",
-    centerX: 225,
-    centerY: 125,
-    radius: 20,
-    locked: true
-  }
-];
+// var aCircles_inicial = [
+//   {
+//     nome: "RI_A",
+//     descricao: "Região de interesse A",
+//     centerX: 273,
+//     centerY: 105,
+//     radius: 20,
+//     locked: false
+//   },
+//   {
+//     nome: "RI_B",
+//     descricao: "Região de interesse B",
+//     centerX: 230,
+//     centerY: 95,
+//     radius: 20,
+//     locked: false
+//   },
+//   {
+//     nome: "RI_C",
+//     descricao: "Região de interesse C",
+//     centerX: 187,
+//     centerY: 88,
+//     radius: 22,
+//     locked: false
+//   },
+//   {
+//     nome: "RI_D",
+//     descricao: "Região de interesse D",
+//     centerX: 135,
+//     centerY: 70,
+//     radius: 32,
+//     locked: true
+//   },
+//   {
+//     nome: "RI_E",
+//     descricao: "Região de interesse E",
+//     centerX: 53,
+//     centerY: 50,
+//     radius: 36,
+//     locked: true
+//   },
+//   {
+//     nome: "RI_F",
+//     descricao: "Região de interesse F",
+//     centerX: 75,
+//     centerY: 110,
+//     radius: 31,
+//     locked: true
+//   },
+//   {
+//     nome: "RI_G",
+//     descricao: "Região de interesse G",
+//     centerX: 178,
+//     centerY: 125,
+//     radius: 20,
+//     locked: true
+//   },
+//   {
+//     nome: "RI_H",
+//     descricao: "Região de interesse H",
+//     centerX: 225,
+//     centerY: 125,
+//     radius: 20,
+//     locked: true
+//   }
+// ];
 
 cw = function (value) {
   initialOutput += value + '\n';
@@ -158,7 +158,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
     });
   })
   // .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $ionicLoading) {
-  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $state) {
+  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $state, perguntas) {
 
     dbres = 0;
     if (debug) alert("start");
@@ -314,7 +314,10 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
               alert(err);
             });
 
-            $regioes.setRegioes(aCircles_inicial);
+            perguntas.getRegioesInicio().then(function (res) {
+              $regioes.setRegioes(res);
+            });
+
             $rootScope.enableBeacons = false;
             checkBT();
             $state.go("tab.intro");
@@ -1313,7 +1316,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
       };
     });
   })
-  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $ionicSlideBoxDelegate, $ionicHistory) {
+  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $ionicSlideBoxDelegate, $ionicHistory, perguntas) {
 
     // $ionicLoading.show({
     //   template: 'A verificar o Mapa'
@@ -1323,10 +1326,12 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
     $scope.count = 0;
     $scope.start = 0;
 
-    $scope.init = function () {
+    $scope.init = function (PI) {
       console.log("slide box init");
       $scope.slideIndex = 0;
       $scope.start = 1;
+      if (!$scope.perguntas)
+        perguntas.init(PI);
     };
 
     $scope.next = function () {
@@ -1615,7 +1620,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
       }
     }
   })
-  .controller('CardsCtrl', function ($scope, TDCardDelegate, $ionicHistory, $stateParams, $ionicSlideBoxDelegate) {
+  .controller('CardsCtrl', function ($scope, TDCardDelegate, $ionicHistory, $stateParams, $ionicSlideBoxDelegate, perguntas) {
     console.log('CARDS CTRL');
 
     console.log("cards stateparams: ", $stateParams);
@@ -1650,23 +1655,21 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
     //   { image: 'img/perry.png' },
     //   { image: 'img/max.png'}
     // ];
-    var cardTypes = [
-      {image: 'img/cards/bolotas.jpeg'},
-      {image: 'img/cards/carangueijo.jpeg'},
-      {image: 'img/cards/cisne.jpeg'},
-      {image: 'img/cards/flor1.jpeg'},
-      {image: 'img/cards/flor2.jpeg'},
-      {image: 'img/cards/lagartixa.jpeg'},
-      {image: 'img/cards/passaro1.jpeg'},
-      {image: 'img/cards/patos.jpeg'}
-    ];
+    var cardTypes = [];
+    //$scope.cardTypes = [];
+    //perguntas.getTdcards().then(function (res) {
+     // cardTypes = res;
+    //});
+      //.$state.value;
 
-    $scope.cards = [];
+    //$scope.cardTypes = [];
     // $scope.cards = Array.prototype.slice.call(cardTypes, 0);
 
     $scope.startCards = function () {
+      cardTypes = perguntas.getTdcards();
       $scope.disableSwipe();
       stopped = false;
+      console.log("starting cards: ", cardTypes);
       $scope.cards = Array.prototype.slice.call(cardTypes, 0);
     };
     $scope.stopCards = function () {

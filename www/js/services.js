@@ -738,6 +738,62 @@ angular.module('starter.services', [])
       getAllRegioesList: getAllRegioesList
     }
   })
+  .factory('perguntas', function($http, $rootScope) {
+
+    var perguntas = [];
+    var regioes_inicio = [];
+    var tdcards = [];
+    var url = "";
+
+    init = function (PI) {
+
+      url = "data/" + PI + "/tdcards.json";
+      $http.get(url).then(function(response){
+        $rootScope.tdcards = response.data;
+        console.log("response preload tdcards: ", $rootScope.tdcards);
+
+        //  return tdcards;
+      });
+
+      url = "data/" + PI + "/verdade_mentira.json";
+      $http.get(url).then(function(response){
+        $rootScope.perguntas = response.data;
+        console.log("response preload verdade mentira: ", $rootScope.perguntas);
+        //  return perguntas;
+      });
+    };
+
+    // if (device.platform === 'Android') {
+    //   url = "/android_asset/www/" + url;
+    // }
+
+    return {
+      init: init,
+
+      getPerguntas: function(){
+        if (($rootScope.perguntas) && perguntas.length >0)
+          return $rootScope.perguntas;
+      },
+      getRegioesInicio: function(){
+        url = "data/regioes_inicio.json";
+        if (regioes_inicio.length >0)
+          return regioes_inicio;
+        return $http.get(url).then(function(response){
+          console.log("response xxx regios inicio: ", response.data);
+          regioes_inicio = response.data;
+          //$regioes.setRegioes(response.data);
+          return regioes_inicio;
+        });
+
+      },
+      getTdcards: function(){
+        console.log("factory: tdcards: ", $rootScope.tdcards);
+        if (($rootScope.tdcards) && $rootScope.tdcards.length >0) {
+          return $rootScope.tdcards;
+        }
+      }
+    }
+  })
   .factory('Chats', function () {
     // Might use a resource here that returns a JSON array
 
