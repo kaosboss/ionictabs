@@ -88,7 +88,7 @@ cw = function (value) {
   console.log(value);
 };
 
-angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
 
   .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window) {
     $rootScope.APP = {
@@ -190,6 +190,10 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
         $window.document.addEventListener("resume", function (event) {
           // $rootScope.$broadcast('cordovaResumeEvent');
           console.log('run() -> cordovaResumeEvent');
+          //   ionic.Platform.fullScreen();
+          //   if (window.StatusBar) {
+          //     return StatusBar.hide();
+          //   }
         });
 
         $scope.checkNetwork = function () {
@@ -316,9 +320,12 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
               alert(err);
             });
 
-            perguntas.getRegioesInicio().then(function (res) {
-              $regioes.setRegioes(res);
-            });
+            if (!$rootScope.regioes_inicio)
+              perguntas.getRegioesInicio().then(function (res) {
+                $regioes.setRegioes(res);
+              });
+            else
+              $regioes.setRegioes($rootScope.regioes_inicio);
 
             $rootScope.enableBeacons = false;
             checkBT();
@@ -816,8 +823,88 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
       // }
     }, false);
   })
-  .controller("BarCodeReaderController", function ($rootScope, $scope, $cordovaBarcodeScanner) {
+  .controller("BarCodeReaderController", function ($rootScope, $scope, $cordovaBarcodeScanner, $ionicSlideBoxDelegate, perguntas, $stateParams, $timeout) {
     console.log("ionic controller BarCodeReaderController ready");
+
+    var stopped = true;
+    var score = 0;
+    $scope.PIs = [];
+    $scope.startted = false;
+    // $scope.cat1 = true;
+    $scope.view = {
+      buttonClass: "",
+      buttonStart: "",
+    };
+
+    checkQR = function (BCD) {
+      if (BCD == "")
+        return;
+
+      var res = BCD.text.split(" ");
+      console.log(res);
+      if ((res[0]) && (res[1])){
+        if (res[0] == $stateParams.PI) {
+          score += 20;
+          for (var f = 0; f < $scope.PIs.length; f++) {
+            if ($scope.PIs[f].descricao == res[1])
+              $scope.PIs[f].score += 20;
+          }
+          if ($scope.view.buttonClass != "animated tada balanced")
+            $scope.view = {
+              buttonClass: "animated tada balanced",
+              buttonStart: score
+            };
+          else {
+            console.log("previous equal ######");
+
+            $scope.view = {
+              buttonClass: "balanced myanimated mytada",
+              buttonStart: score
+            };
+          }
+        }
+      } else {
+        console.log("QR code not found in regiao: ", BCD);
+      }
+
+    };
+
+    $scope.disableSwipe = function () {
+      $ionicSlideBoxDelegate.enableSlide(false);
+    };
+    $scope.enableSwipe = function () {
+      $ionicSlideBoxDelegate.enableSlide(true);
+    };
+
+    $scope.startQR = function () {
+      $scope.disableSwipe();
+      stopped = false;
+      score = 0;
+      $scope.view = {
+        buttonClass: "",
+        buttonStart: score
+      };
+      $scope.startted = true;
+      var tempPIs = perguntas.getPIs($stateParams.RI);
+      console.log("starting QR caça: ", tempPIs);
+
+      $timeout(function () {
+        for (f = 0; f < tempPIs.length; f++) {
+          // for (var f = 0; f < 15; f++) {
+          tempPIs[f].score = 0;
+          $scope.PIs.push(tempPIs[f]);
+        }
+      });
+    };
+
+    $scope.stopQR = function () {
+      $scope.enableSwipe();
+      stopped = true;
+      console.log("atopped QR caça: ");
+      $scope.startted = false;
+      $scope.PIs = [];
+    };
+
     $scope.getBarcode = function () {
       console.log("Calling scanbarcode");
       $rootScope.deviceBUSY = 1;
@@ -834,6 +921,11 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
           $scope.code = barcodeData.text;
           $scope.barcodeData = barcodeData;
           $rootScope.deviceBUSY = 0;
+
+          checkQR(barcodeData);
+          // $rootScope.$broadcast("QR_CODE_SCAN", {
+          //   barcodeData: barcodeData
+          // });
           // $scope.$apply();
         }, function (error) {
           // An error occurred
@@ -1328,6 +1420,10 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
     $scope.count = 0;
     $scope.start = 0;
 
+    $scope.$on('QR_CODE_SCAN', function (e, args) {
+      console.log("tab mapa QR_CODE_SCAN scandata: %", args.barcodeData);
+    });
+
     $scope.init = function (PI) {
       if (!PI)
         return;
@@ -1633,6 +1729,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
     var stopped = true;
     var score = 0;
     $scope.startted = false;
+    $scope.cat1 = true;
     $scope.view = {
       buttonClass: "",
       buttonStart: "Iniciar",
@@ -1656,10 +1753,15 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
 
     $scope.init = function (PI) {
       console.log("cards init: ", PI);
-      perguntas.init(PI);
+      // perguntas.init(PI);
     };
 
-    $scope.startCards = function () {
+    $scope.startCards = function (cat2) {
+      console.log("cat2: ", cat2);
+      if (cat2 == 2)
+        $scope.cat1 = false;
+      else $scope.cat1 = true;
+
       score = 0;
       $scope.view = {
         buttonClass: "",
@@ -1670,7 +1772,13 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
       // $scope.view.buttonClass = "button";
       // $scope.view.score = 0;
       // $scope.view.buttonStart = "Score " + $scope.view.score;
-      cardTypes = perguntas.getTdcards();
+      if ($scope.cat1)
+        cardTypes = perguntas.getTdcards();
+      else
+        cardTypes = perguntas.getPerguntas();
+
+      console.log("carTypes: cat1: %s", $scope.cat1, cardTypes);
+
       $scope.disableSwipe();
       stopped = false;
       console.log("starting cards: ", cardTypes);
@@ -1680,7 +1788,11 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
       // $scope.cards = Array.prototype.slice.call(cardTypes, Math.floor(Math.random() * (cardTypes.length - 1)), 1);
       console.log("#### acrds in scope: ", $scope.cards);
       $scope.addCard();
-      $scope.addCard();
+      // if ($scope.cat1) {
+      setTimeout(function () {
+        $scope.addCard();
+      }, 300);
+      // }
     };
     $scope.stopCards = function () {
       $scope.view = {
@@ -1781,9 +1893,9 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
         else {
           console.log("previous equal ######");
           $scope.view = {
-          buttonClass: "balanced myanimated mytada",
-          buttonStart: score
-        };
+            buttonClass: "balanced myanimated mytada",
+            buttonStart: score
+          };
         }
 
         // $scope.view.buttonClass = "button button-balanced";

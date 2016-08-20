@@ -1,50 +1,62 @@
 [
   {
-    "pergunta": "Os pombos correio conseguem voltar para casa porque têm saudades?",
-    "resposta": "Não"
+    "pergunta": "os pombos correio conseguem voltar para casa porque têm saudades?",
+    "resposta": false,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "Os pombos correio conseguem voltar para casa porque têm um sistema interno de orientação?",
-    "resposta": "Sim"
+    "pergunta": "os pombos correio conseguem voltar para casa porque têm um sistema interno de orientação?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "Os pombos correio foram utilizados na guerra?",
-    "resposta": "Sim"
+    "pergunta": "os pombos correio foram utilizados na guerra?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "Os pombos vivem, em média, 15 anos?",
-    "resposta": "Sim"
+    "pergunta": "os pombos vivem, em média, 15 anos?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "Os antigos egípcios já utilizavam pombos-correio?",
-    "resposta": "Sim"
+    "pergunta": "os antigos egípcios já utilizavam pombos-correio?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "Existem mais de 300 espécies de pombos (aves da ordem dos Columbiformes)?",
-    "resposta": "Sim"
+    "pergunta": "existem mais de 300 espécies de pombos (aves da ordem dos Columbiformes)?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "Na década de 70, a CIA criou pombos com câmeras fotográficas presas ao peito para espionar o território inimigo?",
-    "resposta": "Sim"
+    "pergunta": "na década de 70, a CIA criou pombos com câmeras fotográficas presas ao peito para espionar o território inimigo?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "A arte de criar pombos-correio é chamada de columbofilia?",
-    "resposta": "Sim"
+    "pergunta": "a arte de criar pombos-correio é chamada de columbofilia?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "columbus é pombo em latim?",
-    "resposta": "Sim"
+    "pergunta": "a palavra columbus é pombo em latim?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "As mais antigas imagens de pombos já encontrados datam há mais de três mil anos antes de Cristo?",
-    "resposta": "Sim"
+    "pergunta": "as mais antigas imagens de pombos já encontrados datam há mais de três mil anos antes de Cristo?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "Os pombos possuem excelente visão e podem ver cores?",
-    "resposta": "Sim"
+    "pergunta": "os pombos possuem excelente visão e podem ver cores?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   },
   {
-    "pergunta": "Os pombos conseguem ver a luz ultravioleta que os seres humanos não podem ver?",
-    "resposta": "Sim"
+    "pergunta": "os pombos conseguem ver a luz ultravioleta que os seres humanos não podem ver?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
   }
 ]

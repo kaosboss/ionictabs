@@ -765,6 +765,15 @@ angular.module('starter.services', [])
         console.log("response preload verdade mentira: ", $rootScope.perguntas);
         //  return perguntas;
       });
+
+      url = "data/regioes_inicio.json";
+      $http.get(url).then(function (response) {
+        console.log("response xxx regios inicio: ", response.data);
+        $rootScope.regioes_inicio = response.data;
+        //$regioes.setRegioes(response.data);
+        // return regioes_inicio;
+      });
+
     };
 
     // if (device.platform === 'Android') {
@@ -775,25 +784,34 @@ angular.module('starter.services', [])
       init: init,
 
       getPerguntas: function () {
-        if (($rootScope.perguntas) && perguntas.length > 0)
+        if (($rootScope.perguntas) && ($rootScope.perguntas.length > 0))
           return $rootScope.perguntas;
       },
       getRegioesInicio: function () {
+        if (($rootScope.regioes_inicio) && ($rootScope.regioes_inicio.length > 0))
+          return $rootScope.regioes_inicio;
+
         url = "data/regioes_inicio.json";
-        if (regioes_inicio.length > 0)
-          return regioes_inicio;
         return $http.get(url).then(function (response) {
           console.log("response xxx regios inicio: ", response.data);
           regioes_inicio = response.data;
           //$regioes.setRegioes(response.data);
           return regioes_inicio;
         });
-
       },
       getTdcards: function () {
         console.log("factory: tdcards: ", $rootScope.tdcards);
         if (($rootScope.tdcards) && $rootScope.tdcards.length > 0) {
           return $rootScope.tdcards;
+        }
+      },
+      getPIs: function (RI) {
+        if (!$rootScope.regioes_inicio)
+          return [];
+
+        for (var f=0; f<$rootScope.regioes_inicio.length; f++) {
+          if ($rootScope.regioes_inicio[f].nome == RI)
+            return $rootScope.regioes_inicio[f].PIs;
         }
       }
     }

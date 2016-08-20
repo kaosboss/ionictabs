@@ -244,6 +244,26 @@ td-card img {
   opacity: 0;
 }
 
+.td-text {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  /*font-size: 30px;*/
+  /*color: rgb(255, 115, 115);*/
+  /*color: black;*/
+  opacity: 1;
+  /*padding-left: 15px;*/
+  /*#cssDisplay {*/
+  /*background-color: #94D1FF;*/
+  color: #000000;
+  padding: 15px;
+  font-family: 'trebuchet ms', serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  text-align: justify;
+}
+
 .fade {
   -webkit-transition: 0.2s opacity linear;
   transition: 0.2s opacity linear;
@@ -251,38 +271,61 @@ td-card img {
 }
 
 /* animation */
-.item.list-item.ng-enter-stagger {
-  -webkit-transition-delay: 0.3s;
-  transition-delay: 0.3s;
-}
-
-.item.list-item.ng-enter {
-  transition: 0.25s linear all;
-  /*transform: rotate(50deg);*/
-  /*animation: slideInRight;*/
-  opacity: 0;
-}
-
-.item.list-item.ng-enter.ng-enter-active {
-  /*transform: rotate(0deg);*/
-  opacity: 1;
-}
-
-/*.item.chat-item.ng-enter-stagger {*/
+/*.item.list-item.ng-enter-stagger {*/
   /*-webkit-transition-delay: 0.3s;*/
   /*transition-delay: 0.3s;*/
 /*}*/
 
-/*.item.chat-item.ng-enter {*/
+/*.item.list-item.ng-enter {*/
   /*transition: 0.25s linear all;*/
-  /*transform: rotate(50deg);*/
+  /*!*transform: rotate(50deg);*!*/
+  /*!*animation: slideInRight;*!*/
   /*opacity: 0;*/
 /*}*/
 
-/*.item.chat-item.ng-enter.ng-enter-active {*/
+/*.item.list-item.ng-enter.ng-enter-active {*/
+  /*!*transform: rotate(0deg);*!*/
+  /*opacity: 1;*/
+/*}*/
+
+.chat-item.ng-enter-stagger {
+  -webkit-transition-delay: 0.2s;
+  transition-delay: 0.2s;
+}
+
+.chat-item.ng-enter {
+  /*-webkit-animation: fadeInLeft 1s;*/
+  /*animation: fadeInLeft 1s;*/
+
+  transition: 0.5s linear all;
+  transform: rotate(50deg);
+  opacity: 0;
+}
+
+.chat-item.ng-enter.ng-enter-active {
+  transform: rotate(0deg);
+  opacity: 1;
+}
+
+.qr-item.ng-enter-stagger {
+  -webkit-animation-delay:200ms;
+  animation-delay:200ms;
+
+  /* override to make sure it's not inherited from other styles */
+  -webkit-animation-duration:0;
+  animation-duration:0;
+}
+
+.qr-item.ng-enter {
+  -webkit-animation: fadeInRight 1s;
+  animation: fadeInRight 1s;
+}
+
+/*.qr-item.ng-enter.ng-enter-active {*/
   /*transform: rotate(0deg);*/
   /*opacity: 1;*/
 /*}*/
+
 
 /* slidebox*/
 

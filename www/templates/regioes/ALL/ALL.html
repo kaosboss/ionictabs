@@ -1,19 +1,19 @@
 <ion-view view-title="Mapa">
-  <ion-content padding="true" class="padding">
+  <ion-content padding="true" class="padding" scroll="true" direction="y">
     <ion-item class="item">
       <button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>
     </ion-item>
     <canvas id="imageView"></canvas>
     <ion-item class="item">
       <p>Nome Região de interesse: {{nome}}</p>
-    </ion-item>
-    <ion-item class="item">
+    <!--</ion-item>-->
+    <!--<ion-item class="item">-->
       <p>Região desbloqueada: {{locked}}</p>
     </ion-item>
-    <ion-item class="item">
-      <!--<button type="button" ng-click="unlock_regiao()" class="button button-balanced APPcenter">Desbloquear Regiao D</button>-->
+    <!--<ion-item class="item">-->
       <a class="button button-block button-calm" href="#/tab/regiao/RI_D/PI_16">Regiao D-PI 16</a>
-    </ion-item>
+    <button type="button" ng-click="unlock_regiao()" class="button button-balanced APPcenter">Desbloquear Regiao D</button>
+    <!--</ion-item>-->
     <div ng-controller="PopupCtrl"></div>
   </ion-content>
 </ion-view>

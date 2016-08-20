@@ -29,7 +29,21 @@
     "centerX": 135,
     "centerY": 70,
     "radius": 32,
-    "locked": true
+    "locked": true,
+    "PIs": [
+      {
+        "nome": "PI_16",
+        "descricao": "Eucaliptal"
+      },
+      {
+        "nome": "PI_17",
+        "descricao": "Nascente"
+      },
+      {
+        "nome": "PI_18",
+        "descricao": "Charca"
+      }
+    ]
   },
   {
     "nome": "RI_E",
@@ -37,7 +51,29 @@
     "centerX": 53,
     "centerY": 50,
     "radius": 36,
-    "locked": true
+    "locked": true,
+    "PIs": [
+      {
+        "nome": "PI_19",
+        "descricao": "Sobreiral"
+      },
+      {
+        "nome": "PI_20",
+        "descricao": "Alfarrobeira"
+      },
+      {
+        "nome": "PI_21",
+        "descricao": "Charca"
+      },
+      {
+        "nome": "PI_22",
+        "descricao": "Pinheiro bravo"
+      },
+      {
+        "nome": "PI_23",
+        "descricao": "Marmeleiros"
+      }
+    ]
   },
   {
     "nome": "RI_F",

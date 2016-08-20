@@ -122,63 +122,192 @@
       <!--on-swipe-right="cardSwipedRight($index)"-->
       <!--on-destroy="cardDestroyed($index)"-->
       <!--<ion-content padding="true" class="padding" scroll="false" ng-controller="CardsCtrl">-->
-      <ion-content scroll="false" ng-controller="CardsCtrl">
-        <div ng-if="!startted">
-          <h4 align="center" style="color: #444;">Que animais vivem no SNP?</h4>
-          <br>
-          <h5 align="center" style="color: #444;">Ganhas 5 pontos por cada resposta certa e perdes 15 por cada errada, vamos testar os teus conhecimentos</h5>
-        </div>
+      <ion-content scroll="false" class="padding" ng-controller="CardsCtrl">
+
         <td-cards>
           <td-card ng-repeat="card in cards"
                    on-transition-left="transitionLeft($index)"
                    on-transition-right="transitionRight($index)"
                    on-destroy="cardDestroyed($index)"
                    class="card-{{$index}}">
+
             <div class="image" ng-controller="CardCtrl">
+
               <div class="no-text">Não</div>
-              <img ng-src="{{card.image}}">
               <div class="yes-text">Sim</div>
+
+              <div ng-if="cat1">
+                <!--<div class="no-text">Não</div>-->
+                <img ng-src="{{card.image}}">
+                <!--<div class="yes-text">Sim</div>-->
+              </div>
+
+              <div ng-if="!cat1">
+                <!--<div class="no-text">Não</div>-->
+                <div class="td-text" align="justify">
+                  <br>
+                  <br>
+                  É verdade que {{card.pergunta}}
+                </div>
+                <img ng-src="{{card.image}}">
+                <!--<div class="yes-text">Sim</div>-->
+              </div>
+
             </div>
+
           </td-card>
         </td-cards>
-        <div class="button-bar">
-          <!--<button ng-click="startCards()" class="button" ng-class="view.buttonClass">{{view.buttonStart}}</button>-->
-          <button ng-if="!startted" ng-click="startCards()" class="button button-balanced">Vamos
-            descobrir
+
+        <div ng-if="!startted">
+          <!--<div>-->
+          <h4 align="center" style="color: #444;">Que animais vivem no SNP?</h4>
+          <!--<br>-->
+          <h5 align="center" style="color: #444;">Ganhas 5 pontos por cada resposta certa e perdes 15 por cada errada,
+            vamos testar os teus conhecimentos</h5>
+          <!--</div>-->
+
+          <button ng-click="startCards()" class="button button-balanced APPcenter">Vamos descobrir</button>
+
+          <br>
+          <h4 align="center" style="color: #444;">Verdade ou mentira?</h4>
+          <h5 align="center" style="color: #444;">Ganhas 5 pontos por cada resposta certa e perdes 15 por cada errada,
+            vamos testar os teus conhecimentos</h5>
+
+          <button ng-click='startCards(2)' class="button button-balanced APPcenter">Vamos descobrir
           </button>
-          <!--<button round="" class="disable-hover button button-default button-round" ng-reflect-round=""><span class="button-inner">Round Button</span><ion-button-effect></ion-button-effect></button>-->
-          <div ng-if="startted" class="score" ng-class="view.buttonClass">
+        </div>
+
+        <div ng-if="startted" class="button-bar">
+          <div class="score" ng-class="view.buttonClass">
             <span>Score {{view.buttonStart}}</span>
           </div>
-          <div ng-if="startted" class="score energized">
+          <div class="score energized">
             <span ng-click="stopCards()">Stop</span>
           </div>
-          <!--<button ng-click="stopCards()" class="button button-energized">Stop</button>-->
         </div>
+
         <!--<div ng-controller="PopupCtrl"></div>-->
       </ion-content>
 
     </ion-slide>
 
-    <ion-slide>
+    <ion-slide ng-controller="BarCodeReaderController">
+      <!--<ion-floating-button ng-if="startted" class="animated bounce" click="takePicture()" has-footer="true" button-color="#2AC9AA" icon="ion-qr-scanner" iconColor="#fff">-->
+      <!--</ion-floating-button>-->
 
-      <ion-content scroll="false" class="padding" ng-controller="BarCodeReaderController">
+      <ion-content scroll="true" direction="y" class="padding" ng-controller="BarCodeReaderController">
+
         <!--<ion-list>-->
         <!--<ion-item class="item">-->
-        <button ng-click="getBarcode()" class="button button-block button-calm">Scan Barcode <i
-          class="icon ion-qr-scanner"></i></button>
+        <!--<button ng-controller="BarCodeReaderController" ng-click="getBarcode()" class="button button-block button-calm">Scan Barcode <i-->
+        <!--class="icon ion-qr-scanner"></i>-->
+        <!--</button>-->
         <!--</ion-item>-->
-        <ion-list>
-          <ion-item class="item">
-            <p>Codigo: {{code}}</p>
-          </ion-item>
-          <ion-item class="item">
-            <p>Format: {{barcodeData.format}}</p>
-          </ion-item>
-          <ion-item class="item">
-            <p>hasCancelled: {{barcodeData.cancelled}}</p>
-          </ion-item>
-          <!--</ion-list>-->
+        <div ng-if="!startted">
+          <!--<div>-->
+          <h4 align="center" style="color: #444;">Caça ao código QR?</h4>
+          <!--<br>-->
+          <h5 align="center" style="color: #444;">Ganhas 20 pontos por cada código QR encontrado,
+            vamos à caça?</h5>
+          <!--</div>-->
+
+          <button ng-click="startQR()" class="button button-balanced APPcenter">Vamos!</button>
+        </div>
+
+        <div ng-if="startted" class="button-bar">
+          <div class="score" ng-class="view.buttonClass">
+            <span>Score {{view.buttonStart}}</span>
+          </div>
+          <div class="score energized">
+            <span ng-click="stopQR()">Stop</span>
+          </div>
+        </div>
+
+        <div ng-if="startted">
+          <!--<ion-list>-->
+          <!--<ion-item class="item">-->
+            <!--<p>Codigo: {{code}}</p>-->
+          <!--</ion-item>-->
+          <!--<ion-item class="item">-->
+            <!--<p>Format: {{barcodeData.format}}</p>-->
+          <!--</ion-item>-->
+          <!--<ion-item class="item">-->
+            <!--<p>hasCancelled: {{barcodeData.cancelled}}</p>-->
+          <!--</ion-item>-->
+
+          <!--<ion-list>-->
+            <!--&lt;!&ndash;<ion-item ng-repeat="item in items">&ndash;&gt;-->
+            <!--&lt;!&ndash;Hello, {{item.id}}!&ndash;&gt;-->
+            <!--&lt;!&ndash;</ion-item>&ndash;&gt;-->
+            <!--<ion-item ng-repeat="PI in PIs"-->
+                      <!--class="animated chat-item item">-->
+
+              <!--&lt;!&ndash;<img ng-src="{{item.img}}">&ndash;&gt;-->
+              <!--<h2>{{PI.nome}}</h2>-->
+              <!--<p class="textWrap">{{PI.descricao}}</p>-->
+
+            <!--</ion-item>-->
+        <!--</ion-list>-->
+          <!--<div class="list card animated bounceInLeft">-->
+            <!--<div class="item item-divider">Recent Updates</div>-->
+            <!--<div class="item item-body">-->
+              <!--<div>-->
+                <!--There is a fire in <b>sector 3</b>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="list card animated bounceInRight">-->
+            <!--<div class="item item-divider">Health</div>-->
+            <!--<div class="item item-body">-->
+              <!--<div>-->
+                <!--You ate an apple today!-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="list card animated infinite tada">-->
+            <!--<div class="item item-divider">Upcoming</div>-->
+            <!--<div class="item item-body">-->
+              <!--<div>-->
+                <!--You have <b>29</b> meetings on your calendar tomorrow.-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+          <br>
+          <button ng-click="getBarcode()" class="button button-calm APPcenter">Caça QRode <i
+          class="icon ion-qr-scanner"></i>
+            </button>
+<br>
+          <ion-list>
+            <!--<ion-item ng-repeat="item in items">-->
+            <!--Hello, {{item.id}}!-->
+            <!--</ion-item>-->
+            <ion-item ng-repeat="item in PIs"
+                      class="">
+
+              <!--<img ng-src="{{item.img}}">-->
+              <!--<h2 align="center">{{item.nome}}</h2>-->
+              <!--<p class="textWrap">{{item.description}}</p>-->
+              <!--<h4 align="center" class="textWrap">{{item.descricao}} Score: {{item.score}}</h4>-->
+              <h4 align="center" style="width: 100%" class="">{{item.descricao}} Score: {{item.score}}</h4>
+
+              <!--<ion-option-button class="button-info"-->
+              <!--ng-click="edit(item)">-->
+              <!--Edit-->
+              <!--</ion-option-button>-->
+              <!--<ion-delete-button class="ion-minus-circled"-->
+              <!--ng-click="items.splice($index, 1)">-->
+              <!--</ion-delete-button>-->
+              <!--<ion-reorder-button class="ion-navicon"-->
+              <!--on-reorder="reorderItem(item, $fromIndex, $toIndex)">-->
+              <!--</ion-reorder-button>-->
+
+            </ion-item>
+          </ion-list>
+
+        </div>
+
+
+
           <!--<div ng-controller="PopupCtrl"></div>-->
       </ion-content>
 

@@ -16,11 +16,12 @@
               <!--Hello, {{item.id}}!-->
             <!--</ion-item>-->
             <ion-item ng-repeat="item in myItems"
-                      class="animated slideInRight list-item item-thumbnail-left">
+                      class="qr-item item-thumbnail-left">
 
               <img ng-src="{{item.img}}">
               <h2>{{item.title}}</h2>
-              <p class="textWrap">{{item.description}}</p>
+              <!--<p class="textWrap">{{item.description}}</p>-->
+              <h4 class="textWrap">{{item.description}}</h4>
               <ion-option-button class="button-positive"
                                  ng-click="share(item)">
                 Share
