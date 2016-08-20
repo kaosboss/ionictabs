@@ -4,9 +4,9 @@
     <!--<ion-slide-box on-slide-changed="PI_slideChanged(index)" on-swipe-left="swipeLeft()" on-swipe-right="swipeRight()">-->
     <ion-slide ng-init='init("PI_16")'>
 
-    </ion-slide>
+      <!--</ion-slide>-->
 
-    <ion-slide>
+      <!--<ion-slide>-->
 
       <ion-content scroll="true" direction="y">
         <div class="list card" ng-controller="MapaCtrl">
@@ -68,52 +68,52 @@
       <ion-content scroll="true" direction="y">
         <!--<div class="list card" ng-controller="MapaCtrl" on-swipe-left="swipeLeft()" on-swipe-right="swipeRight()">-->
 
-          <!--<div class="item item-avatar">-->
-            <!--<img src="img/galo_avatar.jpg">-->
+        <!--<div class="item item-avatar">-->
+        <!--<img src="img/galo_avatar.jpg">-->
 
-            <!--<h4>Galo Pantufas</h4>-->
-            <!--<h5>As galinhas domésticas não costumam voar</h5>-->
-            <!--<h5>enquanto as selvagens podem voar por </h5>-->
-            <!--<h5>curtas distâncias.</h5>-->
-          <!--</div>-->
+        <!--<h4>Galo Pantufas</h4>-->
+        <!--<h5>As galinhas domésticas não costumam voar</h5>-->
+        <!--<h5>enquanto as selvagens podem voar por </h5>-->
+        <!--<h5>curtas distâncias.</h5>-->
+        <!--</div>-->
 
-          <!--<div class="item item-body">-->
+        <!--<div class="item item-body">-->
 
-            <!--<img class="full-image" src="img/pigeon.jpg">-->
+        <!--<img class="full-image" src="img/pigeon.jpg">-->
 
-            <!--<p align="justify">-->
-              <!--O pombo-correio é uma variedade domesticada do pombo-comum ou pombo-das-rochas (Columba livia). Foi-->
-              <!--escolhido-->
-              <!--porque, como todo pombo retorna geralmente a seu próprio ninho e a sua própria mãe, era relativamente-->
-              <!--fácil-->
-              <!--produzir seletivamente os pássaros que encontravam repetidamente o caminho de volta em longas distâncias.-->
-            <!--</p>-->
+        <!--<p align="justify">-->
+        <!--O pombo-correio é uma variedade domesticada do pombo-comum ou pombo-das-rochas (Columba livia). Foi-->
+        <!--escolhido-->
+        <!--porque, como todo pombo retorna geralmente a seu próprio ninho e a sua própria mãe, era relativamente-->
+        <!--fácil-->
+        <!--produzir seletivamente os pássaros que encontravam repetidamente o caminho de volta em longas distâncias.-->
+        <!--</p>-->
 
-            <!--<p align="justify">Essa espécie foi muito usada durante a Segunda Guerra Mundial para o envio de mensagens e-->
-              <!--documentos.</p>-->
+        <!--<p align="justify">Essa espécie foi muito usada durante a Segunda Guerra Mundial para o envio de mensagens e-->
+        <!--documentos.</p>-->
 
-            <!--<p align="justify">Os pombos-correios foram usados para carregar mensagens escritas em papel claro fino (tal-->
-              <!--como o papel de cigarro) em um tubo pequeno unido a um pé; por isso o nome de pombo-correio.</p>-->
+        <!--<p align="justify">Os pombos-correios foram usados para carregar mensagens escritas em papel claro fino (tal-->
+        <!--como o papel de cigarro) em um tubo pequeno unido a um pé; por isso o nome de pombo-correio.</p>-->
 
-            <!--<p>-->
-              <!--<a href="#" class="subdued">1 Like</a>-->
-              <!--<a href="#" class="subdued">5 Comments</a>-->
-            <!--</p>-->
-          <!--</div>-->
-          <!--<div class="item tabs tabs-secondary tabs-icon-left">-->
-            <!--<a class="tab-item" href="#">-->
-              <!--<i class="icon ion-thumbsup"></i>-->
-              <!--Like-->
-            <!--</a>-->
-            <!--<a class="tab-item" href="#">-->
-              <!--<i class="icon ion-chatbox"></i>-->
-              <!--Comment-->
-            <!--</a>-->
-            <!--<a class="tab-item" href="#">-->
-              <!--<i class="icon ion-share"></i>-->
-              <!--Share-->
-            <!--</a>-->
-          <!--</div>-->
+        <!--<p>-->
+        <!--<a href="#" class="subdued">1 Like</a>-->
+        <!--<a href="#" class="subdued">5 Comments</a>-->
+        <!--</p>-->
+        <!--</div>-->
+        <!--<div class="item tabs tabs-secondary tabs-icon-left">-->
+        <!--<a class="tab-item" href="#">-->
+        <!--<i class="icon ion-thumbsup"></i>-->
+        <!--Like-->
+        <!--</a>-->
+        <!--<a class="tab-item" href="#">-->
+        <!--<i class="icon ion-chatbox"></i>-->
+        <!--Comment-->
+        <!--</a>-->
+        <!--<a class="tab-item" href="#">-->
+        <!--<i class="icon ion-share"></i>-->
+        <!--Share-->
+        <!--</a>-->
+        <!--</div>-->
         <!--</div>-->
 
         <!--<div ng-controller="PopupCtrl"></div>-->
@@ -122,7 +122,12 @@
       <!--on-swipe-right="cardSwipedRight($index)"-->
       <!--on-destroy="cardDestroyed($index)"-->
       <!--<ion-content padding="true" class="padding" scroll="false" ng-controller="CardsCtrl">-->
-      <ion-content scroll="false" class="padding" ng-controller="CardsCtrl">
+      <ion-content scroll="false" ng-controller="CardsCtrl">
+        <div ng-if="!startted">
+          <h4 align="center" style="color: #444;">Que animais vivem no SNP?</h4>
+          <br>
+          <h5 align="center" style="color: #444;">Ganhas 5 pontos por cada resposta certa e perdes 15 por cada errada, vamos testar os teus conhecimentos</h5>
+        </div>
         <td-cards>
           <td-card ng-repeat="card in cards"
                    on-transition-left="transitionLeft($index)"
@@ -137,8 +142,18 @@
           </td-card>
         </td-cards>
         <div class="button-bar">
-          <button ng-click="startCards()" class="button button-balanced">Start</button>
-          <button ng-click="stopCards()" class="button button-energized">Stop</button>
+          <!--<button ng-click="startCards()" class="button" ng-class="view.buttonClass">{{view.buttonStart}}</button>-->
+          <button ng-if="!startted" ng-click="startCards()" class="button button-balanced">Vamos
+            descobrir
+          </button>
+          <!--<button round="" class="disable-hover button button-default button-round" ng-reflect-round=""><span class="button-inner">Round Button</span><ion-button-effect></ion-button-effect></button>-->
+          <div ng-if="startted" class="score" ng-class="view.buttonClass">
+            <span>Score {{view.buttonStart}}</span>
+          </div>
+          <div ng-if="startted" class="score energized">
+            <span ng-click="stopCards()">Stop</span>
+          </div>
+          <!--<button ng-click="stopCards()" class="button button-energized">Stop</button>-->
         </div>
         <!--<div ng-controller="PopupCtrl"></div>-->
       </ion-content>
@@ -149,10 +164,11 @@
 
       <ion-content scroll="false" class="padding" ng-controller="BarCodeReaderController">
         <!--<ion-list>-->
-          <!--<ion-item class="item">-->
-            <button ng-click="getBarcode()" class="button button-block button-calm">Scan Barcode <i class="icon ion-qr-scanner"></i></button>
-          <!--</ion-item>-->
-          <ion-list>
+        <!--<ion-item class="item">-->
+        <button ng-click="getBarcode()" class="button button-block button-calm">Scan Barcode <i
+          class="icon ion-qr-scanner"></i></button>
+        <!--</ion-item>-->
+        <ion-list>
           <ion-item class="item">
             <p>Codigo: {{code}}</p>
           </ion-item>
@@ -162,8 +178,8 @@
           <ion-item class="item">
             <p>hasCancelled: {{barcodeData.cancelled}}</p>
           </ion-item>
-        <!--</ion-list>-->
-        <!--<div ng-controller="PopupCtrl"></div>-->
+          <!--</ion-list>-->
+          <!--<div ng-controller="PopupCtrl"></div>-->
       </ion-content>
 
     </ion-slide>

@@ -223,20 +223,20 @@ angular.module('starter.services', [])
               if ($rootScope.enableBeacons) {
                 var regioes = $regioes.getAllRegioesList();
                 $regioes.getRegioes().then(function (res) {
-                  var found=false;
+                  var found = false;
                   var aCircles = JSON.parse(res || [{}]);
                   console.log("IBEACON: GOT regioes from cordova service to aCircles", aCircles);
-                    for (var f = 0; f <= aCircles.length - 1; f++) {
-                      if (aCircles[f].nome == regioes[$rootScope.currentRI]) {
-                        aCircles[f].locked = false;
-                        found = true;
-                      }
+                  for (var f = 0; f <= aCircles.length - 1; f++) {
+                    if (aCircles[f].nome == regioes[$rootScope.currentRI]) {
+                      aCircles[f].locked = false;
+                      found = true;
                     }
-                    if (found) {
-                      console.log("IBEACON: UPDATE: GOT regioes from cordova service to aCircles", aCircles);
-                      // $rootScope.regioes = aCircles;
-                      $regioes.setRegioes(aCircles);
-                    }
+                  }
+                  if (found) {
+                    console.log("IBEACON: UPDATE: GOT regioes from cordova service to aCircles", aCircles);
+                    // $rootScope.regioes = aCircles;
+                    $regioes.setRegioes(aCircles);
+                  }
                 });
                 $rootScope.$broadcast('RI_FOUND');
                 console.log("Sending broadcast RI_FOUND");
@@ -461,6 +461,10 @@ angular.module('starter.services', [])
     };
 
     execute = function (db, query, binding) {
+      if (db == null) {
+        var q = $q.defer();
+        return q.promise;
+      }
       var q = $q.defer();
       db.transaction(function (tx) {
         tx.executeSql(query, binding, function (tx, result) {
@@ -624,7 +628,7 @@ angular.module('starter.services', [])
             console.error(err);
             return 0;
           });
-        break;
+          break;
 
         case "regioes":
           var query = "update regioes set value=? where name=?";
@@ -738,7 +742,7 @@ angular.module('starter.services', [])
       getAllRegioesList: getAllRegioesList
     }
   })
-  .factory('perguntas', function($http, $rootScope) {
+  .factory('perguntas', function ($http, $rootScope) {
 
     var perguntas = [];
     var regioes_inicio = [];
@@ -748,7 +752,7 @@ angular.module('starter.services', [])
     init = function (PI) {
 
       url = "data/" + PI + "/tdcards.json";
-      $http.get(url).then(function(response){
+      $http.get(url).then(function (response) {
         $rootScope.tdcards = response.data;
         console.log("response preload tdcards: ", $rootScope.tdcards);
 
@@ -756,7 +760,7 @@ angular.module('starter.services', [])
       });
 
       url = "data/" + PI + "/verdade_mentira.json";
-      $http.get(url).then(function(response){
+      $http.get(url).then(function (response) {
         $rootScope.perguntas = response.data;
         console.log("response preload verdade mentira: ", $rootScope.perguntas);
         //  return perguntas;
@@ -770,15 +774,15 @@ angular.module('starter.services', [])
     return {
       init: init,
 
-      getPerguntas: function(){
-        if (($rootScope.perguntas) && perguntas.length >0)
+      getPerguntas: function () {
+        if (($rootScope.perguntas) && perguntas.length > 0)
           return $rootScope.perguntas;
       },
-      getRegioesInicio: function(){
+      getRegioesInicio: function () {
         url = "data/regioes_inicio.json";
-        if (regioes_inicio.length >0)
+        if (regioes_inicio.length > 0)
           return regioes_inicio;
-        return $http.get(url).then(function(response){
+        return $http.get(url).then(function (response) {
           console.log("response xxx regios inicio: ", response.data);
           regioes_inicio = response.data;
           //$regioes.setRegioes(response.data);
@@ -786,9 +790,9 @@ angular.module('starter.services', [])
         });
 
       },
-      getTdcards: function(){
+      getTdcards: function () {
         console.log("factory: tdcards: ", $rootScope.tdcards);
-        if (($rootScope.tdcards) && $rootScope.tdcards.length >0) {
+        if (($rootScope.tdcards) && $rootScope.tdcards.length > 0) {
           return $rootScope.tdcards;
         }
       }

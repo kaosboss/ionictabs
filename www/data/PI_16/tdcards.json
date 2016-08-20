@@ -9,7 +9,7 @@
   },
   {
     "image": "img/cards/cisne.jpeg",
-    "resposta": false
+    "resposta": true
   },
   {
     "image": "img/cards/flor1.jpeg",
@@ -21,7 +21,7 @@
   },
   {
     "image": "img/cards/lagartixa.jpeg",
-    "resposta": false
+    "resposta": true
   },
   {
     "image": "img/cards/passaro1.jpeg",
@@ -30,5 +30,73 @@
   {
     "image": "img/cards/patos.jpeg",
     "resposta": true
+  },
+  {
+    "image": "img/cards/cabra.jpg",
+    "resposta": true
+  },
+  {
+    "image": "img/cards/cao.jpg",
+    "resposta": true
+  },
+  {
+    "image": "img/cards/chita.jpg",
+    "resposta": false
+  },
+  {
+    "image": "img/cards/coelho.jpg",
+    "resposta": true
+  },
+  {
+    "image": "img/cards/esquilo.jpg",
+    "resposta": false
+  },
+  {
+    "image": "img/cards/galinha.jpg",
+    "resposta": true
+  },
+  {
+    "image": "img/cards/galo2.jpg",
+    "resposta": true
+  },
+  {
+    "image": "img/cards/javali.jpg",
+    "resposta": true
+  },
+  {
+    "image": "img/cards/lobo.jpg",
+    "resposta": false
+  },
+  {
+    "image": "img/cards/ovelha.jpg",
+    "resposta": true
+  },
+  {
+    "image": "img/cards/papagaio.jpg",
+    "resposta": false
+  },
+  {
+    "image": "img/cards/pombo.jpg",
+    "resposta": true
+  },
+  {
+    "image": "img/cards/raposa.jpg",
+    "resposta": false
+  },
+  {
+    "image": "img/cards/touro.jpg",
+    "resposta": false
+  },
+  {
+    "image": "img/cards/vaca.jpg",
+    "resposta": true
+  },
+  {
+    "image": "img/cards/veado.jpg",
+    "resposta": false
+  },
+  {
+    "image": "img/cards/zebra.jpg",
+    "resposta": false
   }
 ]

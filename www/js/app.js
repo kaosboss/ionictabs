@@ -129,7 +129,9 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
         cordova.plugins.Keyboard.disableScroll(true);
       }
 
-      cordova.plugins.BluetoothStatus.initPlugin();
+      if (typeof cordova !== 'undefined')
+        cordova.plugins.BluetoothStatus.initPlugin();
+
       $rootScope.popupQueue = [];
 
       $rootScope.smallDevice = false;
@@ -1359,24 +1361,24 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
       $ionicHistory.goBack();
     };
 
-    $scope.swipeLeft = function () {
-      console.log("swype left");
-      // $state.go("tab.tdcards", {
-      //   RI: $stateParams.RI,
-      //   PI: $stateParams.PI
-      // });
-    };
-    $scope.swipeRight = function () {
-      if (($scope.slideIndex == 0)) {
-        console.log("swype right", $scope.slideIndex, $scope.count, $scope.start);
-        // if (($scope.slideIndex == 0) && ($scope.count++ > 0)) {
-        if (($scope.count++ > 0) || ($scope.start == 1)) {
-          $scope.goBack();
-        } else {
-          console.log("skipped: swype right", $scope.slideIndex, $scope.count);
-        }
-      }
-    };
+    // $scope.swipeLeft = function () {
+    //   console.log("swype left");
+    //   // $state.go("tab.tdcards", {
+    //   //   RI: $stateParams.RI,
+    //   //   PI: $stateParams.PI
+    //   // });
+    // };
+    // $scope.swipeRight = function () {
+    //   if (($scope.slideIndex == 0)) {
+    //     console.log("swype right", $scope.slideIndex, $scope.count, $scope.start);
+    //     // if (($scope.slideIndex == 0) && ($scope.count++ > 0)) {
+    //     if (($scope.count++ > 0) || ($scope.start == 1)) {
+    //       $scope.goBack();
+    //     } else {
+    //       console.log("skipped: swype right", $scope.slideIndex, $scope.count);
+    //     }
+    //   }
+    // };
 
     $scope.$on('RI_FOUND', function (e) {
       console.log("tab mapa RI_FOUND refresh: %s", $rootScope.currentRI);
@@ -1595,22 +1597,22 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
   })
   .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate) {
 
-  // Called to navigate to the main app
-  $scope.startApp = function () {
-    $state.go('tab.dash');
-  };
-  $scope.next = function () {
-    $ionicSlideBoxDelegate.next();
-  };
-  $scope.previous = function () {
-    $ionicSlideBoxDelegate.previous();
-  };
+    // Called to navigate to the main app
+    $scope.startApp = function () {
+      $state.go('tab.dash');
+    };
+    $scope.next = function () {
+      $ionicSlideBoxDelegate.next();
+    };
+    $scope.previous = function () {
+      $ionicSlideBoxDelegate.previous();
+    };
 
-  // Called each time the slide changes
-  $scope.slideChanged = function (index) {
-    $scope.slideIndex = index;
-  };
-})
+    // Called each time the slide changes
+    $scope.slideChanged = function (index) {
+      $scope.slideIndex = index;
+    };
+  })
   .directive('noScroll', function ($document) {
 
     return {
@@ -1629,6 +1631,13 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
     console.log("cards stateparams: ", $stateParams);
 
     var stopped = true;
+    var score = 0;
+    $scope.startted = false;
+    $scope.view = {
+      buttonClass: "",
+      buttonStart: "Iniciar",
+    };
+    $scope.cards = [];
 
     $scope.disableSwipe = function () {
       $ionicSlideBoxDelegate.enableSlide(false);
@@ -1644,28 +1653,45 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ngAnimate'
     //   { image: 'img/max.png'}
     // ];
     var cardTypes = [];
-    //$scope.cardTypes = [];
-    //perguntas.getTdcards().then(function (res) {
-     // cardTypes = res;
-    //});
-      //.$state.value;
 
-    //$scope.cardTypes = [];
-    // $scope.cards = Array.prototype.slice.call(cardTypes, 0);
-$scope.init = function (PI) {
-  console.log("cards init: ", PI);
-  perguntas.init(PI);
-};
+    $scope.init = function (PI) {
+      console.log("cards init: ", PI);
+      perguntas.init(PI);
+    };
 
     $scope.startCards = function () {
+      score = 0;
+      $scope.view = {
+        buttonClass: "",
+        buttonStart: score
+      };
+      $scope.startted = true;
+
+      // $scope.view.buttonClass = "button";
+      // $scope.view.score = 0;
+      // $scope.view.buttonStart = "Score " + $scope.view.score;
       cardTypes = perguntas.getTdcards();
       $scope.disableSwipe();
       stopped = false;
       console.log("starting cards: ", cardTypes);
       //$scope.cards = Array.prototype.slice.call(cardTypes, 0);
-      $scope.cards = Array.prototype.slice.call(cardTypes);
+      // cardTypes.push(angular.extend({},cardTypes[Math.floor(Math.random() * (cardTypes.length - 1))]));
+      // $scope.cards.unshift(angular.extend({}, newCard));
+      // $scope.cards = Array.prototype.slice.call(cardTypes, Math.floor(Math.random() * (cardTypes.length - 1)), 1);
+      console.log("#### acrds in scope: ", $scope.cards);
+      $scope.addCard();
+      $scope.addCard();
     };
     $scope.stopCards = function () {
+      $scope.view = {
+        // score: 0,
+        buttonClass: "balanced",
+        buttonStart: "Iniciar"
+      };
+      $scope.startted = false;
+      // $scope.view.buttonStart = "Iniciar";
+      // $scope.view.buttonClass = "button button-balanced";
+
       $scope.enableSwipe();
       $scope.cards = [];
       cardTypes = [];
@@ -1681,37 +1707,99 @@ $scope.init = function (PI) {
       newCard.id = Math.random();
       $scope.cards.unshift(angular.extend({}, newCard));
     };
-    $scope.cardSwipedLeft = function (index) {
-      //console.log('LEFT SWIPE', index);
-      if ($scope.cards[index].resposta == false)
-        console.log('You are right!', index);
-      else
-        console.log('You are Wrong!', index);
-      //$scope.addCard();
-    };
-    $scope.cardSwipedRight = function (index) {
-      //console.log('RIGHT SWIPE', index);
-      if ($scope.cards[index].resposta == true)
-        console.log('You are right!', index);
-      else
-        console.log('You are Wrong!', index);
-      //$scope.addCard();
-    };
 
-    $scope.transitionRight = function(index) {
+    // $scope.cardSwipedLeft = function (index) {
+    //   //console.log('LEFT SWIPE', index);
+    //   if ($scope.cards[index].resposta == false) {
+    //     console.log('You are right!', index);
+    //     $scope.view.buttonClass = "button button-balanced";
+    //   } else {
+    //     console.log('You are Wrong!', index);
+    //     $scope.view.buttonClass = "button button-assertive";
+    //   }
+    //   //$scope.addCard();
+    // };
+    // $scope.cardSwipedRight = function (index) {
+    //   //console.log('RIGHT SWIPE', index);
+    //   if ($scope.cards[index].resposta == true) {
+    //     console.log('You are right!', index);
+    //     $scope.view.buttonClass = "button button-balanced";
+    //   }
+    //   else {
+    //     console.log('You are Wrong!', index);
+    //     $scope.view.buttonClass = "button button-assertive";
+    //   }
+    //   //$scope.addCard();
+    // };
+
+    $scope.transitionRight = function (index) {
       //console.log('card removed to the right', index);
-      if ($scope.cards[index].resposta == true)
+      if ($scope.cards[index].resposta == true) {
         console.log('You are right!', index);
-      else
+        score += 5;
+        if ($scope.view.buttonClass != "animated tada balanced")
+          $scope.view = {
+            buttonClass: "animated tada balanced",
+            buttonStart: score
+          };
+        else {
+          console.log("previous equal ######");
+
+          $scope.view = {
+            buttonClass: "balanced myanimated mytada",
+            buttonStart: score
+          };
+        }
+
+        // $scope.view.buttonClass = "button button-balanced";
+        // $scope.view.score += 5;
+        // $scope.view.buttonStart = "Score " + $scope.view.score;
+      }
+      else {
         console.log('You are Wrong!', index);
+        score -= 15;
+        $scope.view = {
+          buttonClass: "assertive",
+          buttonStart: score
+        };
+        // $scope.view.buttonClass = "button button-assertive";
+        // $scope.view.score -= 15;
+        // $scope.view.buttonStart = "Score " + $scope.view.score;
+      }
       //$scope.addCard();
     };
-    $scope.transitionLeft = function(index) {
+    $scope.transitionLeft = function (index) {
       //console.log('card removed to the left', index);
-      if ($scope.cards[index].resposta == false)
+      if ($scope.cards[index].resposta == false) {
         console.log('You are right!', index);
-      else
+        score += 5;
+        if ($scope.view.buttonClass != "animated tada balanced")
+          $scope.view = {
+            buttonClass: "animated tada balanced",
+            buttonStart: score
+          };
+        else {
+          console.log("previous equal ######");
+          $scope.view = {
+          buttonClass: "balanced myanimated mytada",
+          buttonStart: score
+        };
+        }
+
+        // $scope.view.buttonClass = "button button-balanced";
+        // $scope.view.score += 5;
+        // $scope.view.buttonStart = "Score " + $scope.view.score;
+      } else {
         console.log('You are Wrong!', index);
+        score -= 15;
+        $scope.view = {
+          buttonClass: "assertive",
+          buttonStart: score
+        };
+        // $scope.view.buttonClass = "button button-assertive";
+        // $scope.view.score -= 15;
+        // $scope.view.buttonStart = "Score " + $scope.view.score;
+      }
       //$scope.addCard();
     };
 
@@ -1877,17 +1965,17 @@ $scope.init = function (PI) {
           }
         }
       })
-      .state('tab.tdcards', {
-        url: '/tdcards/:RI/',
-        views: {
-          'tab-tdcards': {
-            templateUrl: function ($stateParams) {
-              return 'templates/tab-tdcards.html';
-            },
-            controller: 'CardsCtrl'
-          }
-        }
-      })
+      // .state('tab.tdcards', {
+      //   url: '/tdcards/:RI/',
+      //   views: {
+      //     'tab-tdcards': {
+      //       templateUrl: function ($stateParams) {
+      //         return 'templates/tab-tdcards.html';
+      //       },
+      //       controller: 'CardsCtrl'
+      //     }
+      //   }
+      // })
       .state('tab.game', {
         url: '/game',
         views: {

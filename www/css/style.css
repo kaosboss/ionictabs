@@ -298,3 +298,53 @@ td-card img {
   top: initial;
   bottom: 60px !important;
 }
+
+/* SCORE */
+
+.score {
+  width: 50%;
+  margin-top: 15px;
+  margin-bottom: auto;
+  /* margin-left: auto; */
+  /* margin-right: auto; */
+  text-align: center;
+}
+
+.myanimated {
+  -webkit-animation-duration: 0.99s;
+  animation-duration: 0.99s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@keyframes mytada {
+  from {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+
+  10%, 20% {
+    -webkit-transform: scale3d(.9, .9, .9) rotate3d(0, 0, 1, -3deg);
+    transform: scale3d(.9, .9, .9) rotate3d(0, 0, 1, -3deg);
+  }
+
+  30%, 50%, 70%, 90% {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg);
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg);
+  }
+
+  40%, 60%, 80% {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg);
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg);
+  }
+
+  to {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.mytada {
+  -webkit-animation-name: mytada;
+  animation-name: mytada;
+}
