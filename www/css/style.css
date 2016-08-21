@@ -246,7 +246,7 @@ td-card img {
 
 .td-text {
   position: absolute;
-  top: 10px;
+  top: 120px;
   right: 10px;
   /*font-size: 30px;*/
   /*color: rgb(255, 115, 115);*/
@@ -308,17 +308,17 @@ td-card img {
 }
 
 .qr-item.ng-enter-stagger {
-  -webkit-animation-delay:200ms;
-  animation-delay:200ms;
+  -webkit-animation-delay:180ms;
+  animation-delay:180ms;
 
   /* override to make sure it's not inherited from other styles */
-  -webkit-animation-duration:0;
-  animation-duration:0;
+  /*-webkit-animation-duration:0;*/
+  /*animation-duration:0;*/
 }
 
 .qr-item.ng-enter {
-  -webkit-animation: fadeInRight 1s;
-  animation: fadeInRight 1s;
+  -webkit-animation: fadeInRight 1.5s;
+  animation: fadeInRight 1.5s;
 }
 
 /*.qr-item.ng-enter.ng-enter-active {*/
@@ -351,6 +351,7 @@ td-card img {
   /* margin-left: auto; */
   /* margin-right: auto; */
   text-align: center;
+  font-size: x-large;
 }
 
 .myanimated {
@@ -390,4 +391,47 @@ td-card img {
 .mytada {
   -webkit-animation-name: mytada;
   animation-name: mytada;
+}
+
+/*  */
+
+/*
+  We're using CSS transitions for when
+  the enter and move events are triggered
+  for the element that has the .repeated-item
+  class
+*/
+.repeated-item.ng-enter, .repeated-item.ng-move {
+  transition: all 0.5s linear;
+  opacity: 0;
+}
+
+/*
+ The ng-enter-active and ng-move-active
+ are where the transition destination properties
+ are set so that the animation knows what to
+ animate.
+*/
+.repeated-item.ng-enter.ng-enter-active,
+.repeated-item.ng-move.ng-move-active {
+  opacity: 1;
+}
+
+.repeated-item.ng-enter-stagger {
+  -webkit-animation-delay:180ms;
+  animation-delay:180ms;
+}
+
+/*
+  We're using CSS keyframe animations for when
+  the leave event is triggered for the element
+  that has the .repeated-item class
+*/
+.repeated-item.ng-leave {
+  animation: 0.5s my_animation;
+}
+
+@keyframes my_animation {
+  from { opacity:1; }
+  to { opacity:0; }
 }

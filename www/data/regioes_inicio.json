@@ -32,14 +32,17 @@
     "locked": true,
     "PIs": [
       {
+        "id": 16,
         "nome": "PI_16",
         "descricao": "Eucaliptal"
       },
       {
+        "id": 17,
         "nome": "PI_17",
         "descricao": "Nascente"
       },
       {
+        "id": 18,
         "nome": "PI_18",
         "descricao": "Charca"
       }
@@ -54,22 +57,27 @@
     "locked": true,
     "PIs": [
       {
+        "id": 19,
         "nome": "PI_19",
         "descricao": "Sobreiral"
       },
       {
+        "id": 20,
         "nome": "PI_20",
         "descricao": "Alfarrobeira"
       },
       {
+        "id": 21,
         "nome": "PI_21",
         "descricao": "Charca"
       },
       {
+        "id": 22,
         "nome": "PI_22",
         "descricao": "Pinheiro bravo"
       },
       {
+        "id": 23,
         "nome": "PI_23",
         "descricao": "Marmeleiros"
       }

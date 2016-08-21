@@ -191,8 +191,8 @@
 
     </ion-slide>
 
-    <ion-slide ng-controller="BarCodeReaderController">
-      <!--<ion-floating-button ng-if="startted" class="animated bounce" click="takePicture()" has-footer="true" button-color="#2AC9AA" icon="ion-qr-scanner" iconColor="#fff">-->
+    <ion-slide>
+      <!--<ion-floating-button ng-if="showQR" class="animated bounce" click="getBarcode()" has-footer="true" button-color="#2AC9AA" icon="ion-qr-scanner" iconColor="#fff">-->
       <!--</ion-floating-button>-->
 
       <ion-content scroll="true" direction="y" class="padding" ng-controller="BarCodeReaderController">
@@ -281,8 +281,8 @@
             <!--<ion-item ng-repeat="item in items">-->
             <!--Hello, {{item.id}}!-->
             <!--</ion-item>-->
-            <ion-item ng-repeat="item in PIs"
-                      class="">
+            <ion-item id="PI_{{item.id}}"  ng-click="listClick($index)" ng-repeat="item in PIs"
+                      class="repeated-item">
 
               <!--<img ng-src="{{item.img}}">-->
               <!--<h2 align="center">{{item.nome}}</h2>-->

@@ -836,18 +836,31 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
       buttonStart: "",
     };
 
+    listClick = function (index) {
+      var card = $scope.PIs.splice(index, 1);
+      console.log("clicked card: ", card);
+      // var elem = document.getElementById("PI_" + card.id);
+      // if (elem) {
+      //   elem.classList.add("animated", "bounce");
+      // }
+    };
+
     checkQR = function (BCD) {
       if (BCD == "")
         return;
 
       var res = BCD.text.split(" ");
+      var id = null;
+
       console.log(res);
-      if ((res[0]) && (res[1])){
+      if ((res[0]) && (res[1])) {
         if (res[0] == $stateParams.PI) {
           score += 20;
           for (var f = 0; f < $scope.PIs.length; f++) {
-            if ($scope.PIs[f].descricao == res[1])
+            if ($scope.PIs[f].descricao == res[1]) {
               $scope.PIs[f].score += 20;
+              id = $scope.PIs[f].id;
+            }
           }
           if ($scope.view.buttonClass != "animated tada balanced")
             $scope.view = {
@@ -862,6 +875,15 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
               buttonStart: score
             };
           }
+
+          var elem = document.getElementById("PI_" + id);
+          if (elem) {
+            elem.classList.add("animated", "tada");
+            $timeout(function () {
+              elem.classList.remove("animated", "tada");
+            }, 1000);
+          }
+
         }
       } else {
         console.log("QR code not found in regiao: ", BCD);
@@ -878,6 +900,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
 
     $scope.startQR = function () {
       $scope.disableSwipe();
+      // $rootScope.$broadcast('QR_CODE_SCAN', { showQR: true });
       stopped = false;
       score = 0;
       $scope.view = {
@@ -894,10 +917,11 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
           tempPIs[f].score = 0;
           $scope.PIs.push(tempPIs[f]);
         }
-      });
+      }, 500);
     };
 
     $scope.stopQR = function () {
+      // $rootScope.$broadcast('QR_CODE_SCAN', { showQR: false });
       $scope.enableSwipe();
       stopped = true;
       console.log("atopped QR caça: ");
@@ -923,9 +947,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
           $rootScope.deviceBUSY = 0;
 
           checkQR(barcodeData);
-          // $rootScope.$broadcast("QR_CODE_SCAN", {
-          //   barcodeData: barcodeData
-          // });
+
           // $scope.$apply();
         }, function (error) {
           // An error occurred
@@ -1419,10 +1441,14 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
 
     $scope.count = 0;
     $scope.start = 0;
+    $scope.showQR = false;
 
-    $scope.$on('QR_CODE_SCAN', function (e, args) {
-      console.log("tab mapa QR_CODE_SCAN scandata: %", args.barcodeData);
-    });
+    // $scope.$on('QR_CODE_SCAN', function (e, args) {
+    //   console.log("tab mapa QR_CODE_SCAN", args);
+    //   $scope.showQR = args.showQR;
+    //
+    //   // console.log("tab mapa QR_CODE_SCAN scandat", args.barcodeData);
+    // });
 
     $scope.init = function (PI) {
       if (!PI)

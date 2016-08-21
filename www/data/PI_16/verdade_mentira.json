@@ -58,5 +58,25 @@
     "pergunta": "os pombos conseguem ver a luz ultravioleta que os seres humanos não podem ver?",
     "resposta": true,
     "image": "img/cards/td-blank.jpg"
+  },
+  {
+    "pergunta": "os pombos conseguem ver raios-x?",
+    "resposta": false,
+    "image": "img/cards/td-blank.jpg"
+  },
+  {
+    "pergunta": "os pombos conseguem ver a luz ultravioleta que os seres humanos não podem ver?",
+    "resposta": true,
+    "image": "img/cards/td-blank.jpg"
+  },
+  {
+    "pergunta": "os pombos não se habituam ao ser Humano?",
+    "resposta": false,
+    "image": "img/cards/td-blank.jpg"
+  },
+  {
+    "pergunta": "os pombos não gostam de milho.",
+    "resposta": false,
+    "image": "img/cards/td-blank.jpg"
   }
 ]
