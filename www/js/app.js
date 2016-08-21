@@ -551,7 +551,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
             type: 'button-positive',
             onTap: function (e) {
               console.log("Confirmed navigation to region");
-              $state.go("tab.regiao", {
+              $state.go("tab.mapa", {
                 RI: $regioes.convertRegiaoLongToShort($scope.currentRI)
               });
               return 1;
