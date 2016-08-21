@@ -749,9 +749,9 @@ angular.module('starter.services', [])
     var tdcards = [];
     var url = "";
 
-    init = function (PI) {
+    init = function (RI, PI) {
 
-      url = "data/" + PI + "/tdcards.json";
+      url = "data/" + RI + "/" + PI + "/tdcards.json";
       $http.get(url).then(function (response) {
         $rootScope.tdcards = response.data;
         console.log("response preload tdcards: ", $rootScope.tdcards);
@@ -759,7 +759,7 @@ angular.module('starter.services', [])
         //  return tdcards;
       });
 
-      url = "data/" + PI + "/verdade_mentira.json";
+      url = "data/" + RI + "/" + PI + "/verdade_mentira.json";
       $http.get(url).then(function (response) {
         $rootScope.perguntas = response.data;
         console.log("response preload verdade mentira: ", $rootScope.perguntas);

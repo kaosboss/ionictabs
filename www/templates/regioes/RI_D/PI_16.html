@@ -1,11 +1,10 @@
-<ion-view view-title="Ponto de interesse 16">
+<ion-view view-title="Ponto de interesse {{PI}}">
 
   <ion-slide-box on-slide-changed="PI_slideChanged(index)">
     <!--<ion-slide-box on-slide-changed="PI_slideChanged(index)" on-swipe-left="swipeLeft()" on-swipe-right="swipeRight()">-->
-    <ion-slide ng-init='init("PI_16")'>
+    <ion-slide ng-init='init()'>
 
       <!--</ion-slide>-->
-
       <!--<ion-slide>-->
 
       <ion-content scroll="true" direction="y">
@@ -36,8 +35,7 @@
               documentos.</p>
 
             <p align="justify">Os pombos-correios foram usados para carregar mensagens escritas em papel claro fino (tal
-              como o papel de cigarro) em um tubo pequeno unido a um pé; por isso o nome de pombo-correio.</p>
-
+              como o papel de cigarro) em um tubo pequeno unido a um pé; por isso o nome de pombo-correio.</p
             <p>
               <a href="#" class="subdued">1 Like</a>
               <a href="#" class="subdued">5 Comments</a>
@@ -65,63 +63,6 @@
 
     <ion-slide>
 
-      <ion-content scroll="true" direction="y">
-        <!--<div class="list card" ng-controller="MapaCtrl" on-swipe-left="swipeLeft()" on-swipe-right="swipeRight()">-->
-
-        <!--<div class="item item-avatar">-->
-        <!--<img src="img/galo_avatar.jpg">-->
-
-        <!--<h4>Galo Pantufas</h4>-->
-        <!--<h5>As galinhas domésticas não costumam voar</h5>-->
-        <!--<h5>enquanto as selvagens podem voar por </h5>-->
-        <!--<h5>curtas distâncias.</h5>-->
-        <!--</div>-->
-
-        <!--<div class="item item-body">-->
-
-        <!--<img class="full-image" src="img/pigeon.jpg">-->
-
-        <!--<p align="justify">-->
-        <!--O pombo-correio é uma variedade domesticada do pombo-comum ou pombo-das-rochas (Columba livia). Foi-->
-        <!--escolhido-->
-        <!--porque, como todo pombo retorna geralmente a seu próprio ninho e a sua própria mãe, era relativamente-->
-        <!--fácil-->
-        <!--produzir seletivamente os pássaros que encontravam repetidamente o caminho de volta em longas distâncias.-->
-        <!--</p>-->
-
-        <!--<p align="justify">Essa espécie foi muito usada durante a Segunda Guerra Mundial para o envio de mensagens e-->
-        <!--documentos.</p>-->
-
-        <!--<p align="justify">Os pombos-correios foram usados para carregar mensagens escritas em papel claro fino (tal-->
-        <!--como o papel de cigarro) em um tubo pequeno unido a um pé; por isso o nome de pombo-correio.</p>-->
-
-        <!--<p>-->
-        <!--<a href="#" class="subdued">1 Like</a>-->
-        <!--<a href="#" class="subdued">5 Comments</a>-->
-        <!--</p>-->
-        <!--</div>-->
-        <!--<div class="item tabs tabs-secondary tabs-icon-left">-->
-        <!--<a class="tab-item" href="#">-->
-        <!--<i class="icon ion-thumbsup"></i>-->
-        <!--Like-->
-        <!--</a>-->
-        <!--<a class="tab-item" href="#">-->
-        <!--<i class="icon ion-chatbox"></i>-->
-        <!--Comment-->
-        <!--</a>-->
-        <!--<a class="tab-item" href="#">-->
-        <!--<i class="icon ion-share"></i>-->
-        <!--Share-->
-        <!--</a>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div ng-controller="PopupCtrl"></div>-->
-      </ion-content>
-      <!--on-swipe-left="cardSwipedLeft($index)"-->
-      <!--on-swipe-right="cardSwipedRight($index)"-->
-      <!--on-destroy="cardDestroyed($index)"-->
-      <!--<ion-content padding="true" class="padding" scroll="false" ng-controller="CardsCtrl">-->
       <ion-content scroll="false" class="padding" ng-controller="CardsCtrl">
 
         <td-cards>
@@ -159,12 +100,9 @@
         </td-cards>
 
         <div ng-if="!startted">
-          <!--<div>-->
           <h4 align="center" style="color: #444;">Que animais vivem no SNP?</h4>
-          <!--<br>-->
           <h5 align="center" style="color: #444;">Ganhas 5 pontos por cada resposta certa e perdes 15 por cada errada,
             vamos testar os teus conhecimentos</h5>
-          <!--</div>-->
 
           <button ng-click="startCards()" class="button button-balanced APPcenter">Vamos descobrir</button>
 
@@ -195,21 +133,12 @@
       <!--<ion-floating-button ng-if="showQR" class="animated bounce" click="getBarcode()" has-footer="true" button-color="#2AC9AA" icon="ion-qr-scanner" iconColor="#fff">-->
       <!--</ion-floating-button>-->
 
-      <ion-content scroll="true" direction="y" class="padding" ng-controller="BarCodeReaderController">
+      <ion-content class="QRcode" scroll="true" direction="y" class="padding" ng-controller="BarCodeReaderController">
 
-        <!--<ion-list>-->
-        <!--<ion-item class="item">-->
-        <!--<button ng-controller="BarCodeReaderController" ng-click="getBarcode()" class="button button-block button-calm">Scan Barcode <i-->
-        <!--class="icon ion-qr-scanner"></i>-->
-        <!--</button>-->
-        <!--</ion-item>-->
         <div ng-if="!startted">
-          <!--<div>-->
           <h4 align="center" style="color: #444;">Caça ao código QR?</h4>
-          <!--<br>-->
           <h5 align="center" style="color: #444;">Ganhas 20 pontos por cada código QR encontrado,
             vamos à caça?</h5>
-          <!--</div>-->
 
           <button ng-click="startQR()" class="button button-balanced APPcenter">Vamos!</button>
         </div>
@@ -223,92 +152,26 @@
           </div>
         </div>
 
-        <div ng-if="startted">
-          <!--<ion-list>-->
-          <!--<ion-item class="item">-->
-            <!--<p>Codigo: {{code}}</p>-->
-          <!--</ion-item>-->
-          <!--<ion-item class="item">-->
-            <!--<p>Format: {{barcodeData.format}}</p>-->
-          <!--</ion-item>-->
-          <!--<ion-item class="item">-->
-            <!--<p>hasCancelled: {{barcodeData.cancelled}}</p>-->
-          <!--</ion-item>-->
+        <div class="QRList" ng-if="startted">
 
-          <!--<ion-list>-->
-            <!--&lt;!&ndash;<ion-item ng-repeat="item in items">&ndash;&gt;-->
-            <!--&lt;!&ndash;Hello, {{item.id}}!&ndash;&gt;-->
-            <!--&lt;!&ndash;</ion-item>&ndash;&gt;-->
-            <!--<ion-item ng-repeat="PI in PIs"-->
-                      <!--class="animated chat-item item">-->
-
-              <!--&lt;!&ndash;<img ng-src="{{item.img}}">&ndash;&gt;-->
-              <!--<h2>{{PI.nome}}</h2>-->
-              <!--<p class="textWrap">{{PI.descricao}}</p>-->
-
-            <!--</ion-item>-->
-        <!--</ion-list>-->
-          <!--<div class="list card animated bounceInLeft">-->
-            <!--<div class="item item-divider">Recent Updates</div>-->
-            <!--<div class="item item-body">-->
-              <!--<div>-->
-                <!--There is a fire in <b>sector 3</b>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="list card animated bounceInRight">-->
-            <!--<div class="item item-divider">Health</div>-->
-            <!--<div class="item item-body">-->
-              <!--<div>-->
-                <!--You ate an apple today!-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="list card animated infinite tada">-->
-            <!--<div class="item item-divider">Upcoming</div>-->
-            <!--<div class="item item-body">-->
-              <!--<div>-->
-                <!--You have <b>29</b> meetings on your calendar tomorrow.-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
           <br>
           <button ng-click="getBarcode()" class="button button-calm APPcenter">Caça QRode <i
-          class="icon ion-qr-scanner"></i>
-            </button>
-<br>
+            class="icon ion-qr-scanner"></i>
+          </button>
+          <br>
           <ion-list>
-            <!--<ion-item ng-repeat="item in items">-->
-            <!--Hello, {{item.id}}!-->
-            <!--</ion-item>-->
+
             <ion-item id="PI_{{item.id}}"  ng-click="listClick($index)" ng-repeat="item in PIs"
-                      class="repeated-item">
+                      class="animated fadeInLeft">
 
-              <!--<img ng-src="{{item.img}}">-->
-              <!--<h2 align="center">{{item.nome}}</h2>-->
-              <!--<p class="textWrap">{{item.description}}</p>-->
-              <!--<h4 align="center" class="textWrap">{{item.descricao}} Score: {{item.score}}</h4>-->
               <h4 align="center" style="width: 100%" class="">{{item.descricao}} Score: {{item.score}}</h4>
-
-              <!--<ion-option-button class="button-info"-->
-              <!--ng-click="edit(item)">-->
-              <!--Edit-->
-              <!--</ion-option-button>-->
-              <!--<ion-delete-button class="ion-minus-circled"-->
-              <!--ng-click="items.splice($index, 1)">-->
-              <!--</ion-delete-button>-->
-              <!--<ion-reorder-button class="ion-navicon"-->
-              <!--on-reorder="reorderItem(item, $fromIndex, $toIndex)">-->
-              <!--</ion-reorder-button>-->
 
             </ion-item>
           </ion-list>
 
         </div>
 
-
-
-          <!--<div ng-controller="PopupCtrl"></div>-->
+        <!--<div ng-controller="PopupCtrl"></div>-->
       </ion-content>
 
     </ion-slide>

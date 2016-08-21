@@ -1442,6 +1442,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
     $scope.count = 0;
     $scope.start = 0;
     $scope.showQR = false;
+    $scope.PI = $stateParams.PI.replace("PI_", "");
 
     // $scope.$on('QR_CODE_SCAN', function (e, args) {
     //   console.log("tab mapa QR_CODE_SCAN", args);
@@ -1449,8 +1450,15 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
     //
     //   // console.log("tab mapa QR_CODE_SCAN scandat", args.barcodeData);
     // });
+    $scope.$on("$ionicView.beforeEnter", function (event, data) {
+      console.log("State $ionicView.beforeEnter Params: ", data);
+      if ($stateParams.PI)
+        perguntas.init($stateParams.RI, $stateParams.PI);
+    });
 
-    $scope.init = function (PI) {
+    $scope.init = function () {
+      var RI = $stateParams.RI;
+      var PI = $stateParams.PI;
       if (!PI)
         return;
 
@@ -1458,7 +1466,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
       $scope.slideIndex = 0;
       $scope.start = 1;
       if (!$scope.perguntas)
-        perguntas.init(PI);
+        perguntas.init(RI, PI);
     };
 
     $scope.next = function () {
