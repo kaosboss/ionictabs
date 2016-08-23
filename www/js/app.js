@@ -88,15 +88,20 @@ cw = function (value) {
   console.log(value);
 };
 
-angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline', 'angular-scroll-animate', 'ion-floating-menu', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCacheFactory', 'angular-timeline', 'ngImageAppear', 'angular-scroll-animate', 'ion-floating-menu', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
 
-  .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window) {
+  .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window, $ImageCacheFactory) {
     $rootScope.APP = {
       logged: false,
       user: {
-        picture: 'img/SNP.jpg'
+        picture: 'img/SNP_small.jpg'
       }
     };
+    var preLoadImages = [ 'img/atividades_quinta_pedagogica_small.jpg', 'img/snp_projeto_02_small.jpg'];
+
+    $ImageCacheFactory.Cache(preLoadImages).then(function(){
+      console.warn("done preloading!");
+    });
 
     if (ionic.Platform.platform() == "android")
       $ionicPlatform.registerBackButtonAction(function (e) {
@@ -165,6 +170,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
   .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $state, perguntas) {
 
     dbres = 0;
+    var query = "";
     if (debug) alert("start");
 
     $scope.logged = $rootScope.APP.logged;
@@ -233,24 +239,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
           console.log("DB", db);
           $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `info` ( `name`	TEXT,	`value`	TEXT)", []).then(function (res) {
             // alert("OK onDB create");
-            cw("Table info");
+            cw("Table info", res);
           }, function (err) {
             alert(err);
           });
           $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (`IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT)", []).then(function (res) {
-            cw("Table journal");
+            cw("Table journal", res);
           }, function (err) {
             alert(err);
           });
           $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `regioes` ( `name`	TEXT,	`value`	TEXT)", []).then(function (res) {
-            cw("Table regioes");
+            cw("Table regioes", res);
           }, function (err) {
             alert(err);
           });
         }
         dbres = 1;
 
-        var query = "select value from info where name=?";
+        query = "select value from info where name=?";
         $cordovaSQLite.execute(db, query, ["APP"]).then(function (res) {
           if (res.rows.length > 0) {
             // var message = "SELECTED -> " + res.rows.item(0).value;
@@ -297,7 +303,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
             $scope.showAlert("No results found, primeira utilizacao!");
             console.log("No results found, firsttime?");
 
-            var query = "INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ")";
+            query = "INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ")";
             $cordovaSQLite.execute(db, query, []).then(function (res) {
               // var message = "INSERT ID -> " + res.insertId;
               // console.log(message);
@@ -310,7 +316,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
               alert(err);
             });
 
-            var query = "INSERT INTO `info` (name,value) VALUES ('APPtutorial', 'Sim')";
+            query = "INSERT INTO `info` (name,value) VALUES ('APPtutorial', 'Sim')";
             $cordovaSQLite.execute(db, query, []).then(function (res) {
               var message = "INSERT ID -> " + res.insertId;
               // console.log(message);
@@ -579,18 +585,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
       }, 10000);
     };
 
-    // An alert dialog
-    // $scope.showAlert = function () {
-    //   var alertPopup = $ionicPopup.alert({
-    //     title: 'Don\'t eat that!',
-    //     template: 'It might taste good'
-    //   });
-    //
-    //   alertPopup.then(function (res) {
-    //     console.log('Thank you for not eating my delicious ice cream cone');
-    //   });
-    // };
-
     $scope.$on('RI_FOUND', function (e) {
       // do something
       // console.log("POPUP controller scope.on RI_FOUND, enter.");
@@ -611,7 +605,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
                                       $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate,
                                       $window, $document, $q) {
 
-
+    var query = "";
     var lorem = "Aqui está a familia Ramos num Domingo muito divertido e diferente!";
 
     $scope.side = 'left';
@@ -624,7 +618,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
       title: 'Quinta Pedagógica',
       when: 'à 5 minutos',
 
-      contentHtml: '<img class="img-responsive" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
+      contentHtml: '<img ng-image-appear placeholder class="img-responsive" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
     }, {
       badgeClass: 'bg-positive',
       // badgeIconClass : 'ion-gear-b',
@@ -632,18 +626,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
       title: 'Descoberta!',
       when: 'à 12 minutos',
       titleContentHtml: '',
-      contentHtml: '<img class="img-responsive" src="img/snp_projeto_02_small.jpg"><p>Encontraste a região da Chacra</p>',
+      contentHtml: '<img ng-image-appear placeholder class="img-responsive" src="img/snp_projeto_02_small.jpg"><p>Encontraste a região da Chacra</p>',
       footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
     }
-    // , {
-    //   image: "img/atividades_quinta_pedagogica.jpg",
-    //   badgeClass: 'bg-balanced',
-    //   // badgeIconClass : 'ion-person',
-    //   title: 'Foto - Album',
-    //   titleContentHtml: '<img class="img-responsive" src="img/atividades_quinta_pedagogica.jpg">',
-    //   contentHtml: lorem,
-    //   // footerContentHtml : '<a href="">Continue Reading</a>'
-    // }
+      // , {
+      //   image: "img/atividades_quinta_pedagogica.jpg",
+      //   badgeClass: 'bg-balanced',
+      //   // badgeIconClass : 'ion-person',
+      //   title: 'Foto - Album',
+      //   titleContentHtml: '<img class="img-responsive" src="img/atividades_quinta_pedagogica.jpg">',
+      //   contentHtml: lorem,
+      //   // footerContentHtml : '<a href="">Continue Reading</a>'
+      // }
     ];
 
     $scope.addEvent = function (img, thumb) {
@@ -795,7 +789,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
       console.log("camera controller ready 1");
       $ionicPlatform.ready(function () {
         console.log("retrieving last pic");
-        var query = "select * from journal";
+        query = "select * from journal";
         $cordovaSQLite.execute(db, query, []).then(function (res) {
           if (res.rows.length > 0) {
             var message = "SELECTED -> " + res.rows.item(res.rows.length - 1).IMG;
@@ -808,7 +802,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
 
             console.log(message, res);
             $scope.lastPhoto = res.rows.item(res.rows.length - 1).IMG;
-            // $scope.addEvent($scope.lastPhoto);
+            $scope.lastPhoto_thumb = res.rows.item(res.rows.length - 1).thumbnail_data;
+            $scope.addEvent($scope.lastPhoto, $scope.lastPhoto_thumb);
             // $scope.allImages.src = $scope.lastPhoto;
             // $scope.$apply();
           } else {
@@ -820,23 +815,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
           console.error(err);
         });
       });
-      // $scope.getPhoto = function () {
-      //   var options = {
-      //     destinationType: Camera.DestinationType.FILE_URI,
-      //     sourceType: Camera.PictureSourceType.CAMERA,
-      //     // targetWidth: 100,
-      //     // targetHeight: 100,
-      //     // encodingType: 0,
-      //   };
-      //
-      //   $cordovaCamera.getPicture(options).then(function (imageURI) {
-      //     console.log(imageURI);
-      //     $scope.lastPhoto = imageURI;
-      //     $scope.$apply();
-      //   }, function (err) {
-      //     console.log("ERROR: getPicture", err);
-      //   });
-      //
 
       function movePic(file) {
         // window.resolveLocalFileSystemURI(file, resolveOnSuccess, resOnError);
@@ -880,7 +858,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
 
           $scope.addEvent(entry.toURL(), "data:image/png;base64," + res.imageData);
 
-          var query = "INSERT INTO `journal` (IMG,caption, thumbnail_data) VALUES (?,?,?)";
+          query = "INSERT INTO `journal` (IMG,caption, thumbnail_data) VALUES (?,?,?)";
           $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
             var message = "INSERT ID -> " + res.insertId;
             console.log(message);
@@ -910,7 +888,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
           encodingType: 0,
           targetWidth: 640,
           targetHeight: 480,
-          correctOrientation: true
+          correctOrientation: true,
+          saveToPhotoAlbum: true
         });
 
         function onSuccess(imageURI) {
@@ -1071,26 +1050,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
           console.error("Failed QR coe scan!", error)
           $rootScope.deviceBUSY = 0;
         });
-      // cordova.plugins.barcodeScanner.scan(
-      //   function (result) {
-      //     $scope.code = result.text;
-      //     $scope.$apply();
-      //     console.debug("Código lido\n" +
-      //       "Resultado: " + result.text + "\n" +
-      //       "Formato: " + result.format + "\n" +
-      //       "Cancelado: " + result.cancelled);
-      //   },
-      //   function (error) {
-      //     console.error("Scanning failed: " + error);
-      //   },
-      //   {
-      //     "preferFrontCamera" : true, // iOS and Android
-      //     "showFlipCameraButton" : true, // iOS and Android
-      //     "prompt" : "Coloque um código barras dentro da área", // supported on Android only
-      //     "formats" : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-      //     "orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
-      //   }
-      // );
+
     };
 
   })
@@ -1114,10 +1074,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
     $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
       $scope.app.tutorial = res;
     });
-    // $cordovaSQLite.updateValueToDB("info", ["Sim", "APPtutorial"]).then(function (res) {
-    //   // console.log("Client side, returned update", res);
-    // });
-    // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) { $scope.app.tutorial = res; });
 
     $scope.isTutorial = function () {
       console.log("ionic controller SQLliteController isTutotial");
@@ -1265,7 +1221,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
             $scope.fb.loggedIN = false;
             // This method is to get the user profile info from the facebook api
           }
-
         }
       );
 
@@ -1310,28 +1265,28 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
         return info.promise;
       };
 
-      $scope.getFriends = function () {
-        getFacebookProfileFriends()
-          .then(function (profileInfo) {
-
-            console.log("Profile friends res: ", profileInfo)
-
-            // if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
-            //   $rootScope.APP.logged = true;
-            //   $scope.addUser({
-            //     nome: profileInfo.name,
-            //     email: profileInfo.email,
-            //     platform: ionic.Platform.platform(),
-            //     version: ionic.Platform.version(),
-            //     timestamp: Date.now(),
-            //     data: Date().toLocaleLowerCase()
-            //   })
-            // }
-          }, function (fail) {
-            // Fail get profile info
-            console.log('profile friends fail', fail);
-          });
-      }
+      // $scope.getFriends = function () {
+      //   getFacebookProfileFriends()
+      //     .then(function (profileInfo) {
+      //
+      //       console.log("Profile friends res: ", profileInfo)
+      //
+      //       // if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
+      //       //   $rootScope.APP.logged = true;
+      //       //   $scope.addUser({
+      //       //     nome: profileInfo.name,
+      //       //     email: profileInfo.email,
+      //       //     platform: ionic.Platform.platform(),
+      //       //     version: ionic.Platform.version(),
+      //       //     timestamp: Date.now(),
+      //       //     data: Date().toLocaleLowerCase()
+      //       //   })
+      //       // }
+      //     }, function (fail) {
+      //       // Fail get profile info
+      //       console.log('profile friends fail', fail);
+      //     });
+      // };
 
 
       var fbLoginSuccess = function (response) {
@@ -1607,25 +1562,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
     $scope.goBack = function () {
       $ionicHistory.goBack();
     };
-
-    // $scope.swipeLeft = function () {
-    //   console.log("swype left");
-    //   // $state.go("tab.tdcards", {
-    //   //   RI: $stateParams.RI,
-    //   //   PI: $stateParams.PI
-    //   // });
-    // };
-    // $scope.swipeRight = function () {
-    //   if (($scope.slideIndex == 0)) {
-    //     console.log("swype right", $scope.slideIndex, $scope.count, $scope.start);
-    //     // if (($scope.slideIndex == 0) && ($scope.count++ > 0)) {
-    //     if (($scope.count++ > 0) || ($scope.start == 1)) {
-    //       $scope.goBack();
-    //     } else {
-    //       console.log("skipped: swype right", $scope.slideIndex, $scope.count);
-    //     }
-    //   }
-    // };
 
     $scope.$on('RI_FOUND', function (e) {
       console.log("tab mapa RI_FOUND refresh: %s", $rootScope.currentRI);
@@ -2102,26 +2038,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
       }
     };
 
-    // getProfile = function () {
-    //   var tempUser = UserService.getUser();
-    //   tempUser.then(function (res) {
-    //     var userInfo = JSON.parse(res || '{}')
-    //     console.log("Definicoes; GOT USER from user service", userInfo);
-    //     if (userInfo.picture && userInfo.name && userInfo.email) {
-    //       $scope.logged = true;
-    //       console.log("USER: LOGGED: true");
-    //       $scope.profile_name = userInfo.name;
-    //       $scope.profile_email = userInfo.email;
-    //       $scope.profile_photo = userInfo.picture;
-    //     } else {
-    //       $scope.logged = false;
-    //       console.log("USER: LOGGED: false");
-    //     }
-    //   });
-    // };
-
-    // getProfile();
-
   })
   .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
@@ -2192,12 +2108,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
           'tab-mapa': {
             templateUrl: function ($stateParams) {
               console.log("state params: ", $stateParams);
-              // Here you can access to the url params with $stateParams
-              // Just return the right url template according to the params
-              // if ((!$stateParams.RI)  || ($stateParams.RI=="ALL")) {
-              //   console.log('templates/regioes/mapa.html' + $stateParams.RI + '/' + $stateParams.PI + '.html');
-              //   return 'templates/regioes/ALL/ALL.html';
-              // }
               if (!$stateParams.PI) {
                 console.log(' returned: templates/regioes/' + $stateParams.RI + '.html');
                 return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.RI + '.html';
@@ -2208,14 +2118,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
               }
             },
             controller: 'MapaCtrl'
-            // function ($stateParams) {
-            // console.log("dynamic ctrl: ", $stateParams);
-            // if ($stateParams.RI=="ALL")
-            //   return 'MapaCtrl';
-            // else
-            //   return 'RegiaoCtrl';
-            // }
-            // 'RegiaoCtrl'
           }
         }
       })
@@ -2286,16 +2188,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline'
           }
         }
       })
-
-      .state('tab.chats', {
-        url: '/chats',
-        views: {
-          'tab-chats': {
-            templateUrl: 'templates/tab-chats.html',
-            controller: 'ChatsCtrl'
-          }
-        }
-      })
+      // .state('tab.chats', {
+      //   url: '/chats',
+      //   views: {
+      //     'tab-chats': {
+      //       templateUrl: 'templates/tab-chats.html',
+      //       controller: 'ChatsCtrl'
+      //     }
+      //   }
+      // })
       .state('tab.chat-detail', {
         url: '/chats/:chatId',
         views: {

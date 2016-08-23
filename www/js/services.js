@@ -169,21 +169,6 @@ angular.module('starter.services', [])
 
     var sendUpdates = false;
 
-    // checkBLE = function () {
-    //   if ($window.device.model.indexOf("iPhone4") == -1)
-    //     return true;
-    // };
-
-    // if ($window.device.model.indexOf("iPhone4") != -1) {
-    //   cw("Factory: NO BLE support found!");
-    //   $rootScope.enableBeacons=false;
-    //   return {
-    //     sendUpdates: function (updates) {
-    //       sendUpdates = updates;
-    //     },
-    //     checkBLE: checkBLE
-    //   }
-    // } else cw("Factory: BLE support found!");
     isScanning = function () {
       return scanning;
     };
@@ -755,7 +740,6 @@ angular.module('starter.services', [])
       $http.get(url).then(function (response) {
         $rootScope.tdcards = response.data;
         console.log("response preload tdcards: ", $rootScope.tdcards);
-
         //  return tdcards;
       });
 
@@ -766,13 +750,16 @@ angular.module('starter.services', [])
         //  return perguntas;
       });
 
-      url = "data/regioes_inicio.json";
-      $http.get(url).then(function (response) {
-        console.log("response xxx regios inicio: ", response.data);
-        $rootScope.regioes_inicio = response.data;
-        //$regioes.setRegioes(response.data);
-        // return regioes_inicio;
-      });
+      if (regioes_inicio.length == 0) {
+        url = "data/regioes_inicio.json";
+        $http.get(url).then(function (response) {
+          console.log("response xxx regios inicio: ", response.data);
+          $rootScope.regioes_inicio = response.data;
+          regioes_inicio = response.data;
+          //$regioes.setRegioes(response.data);
+          // return regioes_inicio;
+        });
+      } else console.warn("#### cache regioes hit #####");
 
     };
 
@@ -807,60 +794,62 @@ angular.module('starter.services', [])
       },
       getPIs: function (RI) {
         if (!$rootScope.regioes_inicio)
+        //if (!regioes_inicio)
           return [];
 
-        for (var f=0; f<$rootScope.regioes_inicio.length; f++) {
+        for (var f = 0; f < $rootScope.regioes_inicio.length; f++) {
           if ($rootScope.regioes_inicio[f].nome == RI)
             return $rootScope.regioes_inicio[f].PIs;
         }
       }
     }
-  })
-  .factory('Chats', function () {
-    // Might use a resource here that returns a JSON array
-
-    // Some fake testing data
-    var chats = [{
-      id: 0,
-      name: 'Ben Sparrow',
-      lastText: 'You on your way?',
-      face: 'img/ben.png'
-    }, {
-      id: 1,
-      name: 'Max Lynx',
-      lastText: 'Hey, it\'s me',
-      face: 'img/max.png'
-    }, {
-      id: 2,
-      name: 'Adam Bradleyson',
-      lastText: 'I should buy a boat',
-      face: 'img/adam.jpg'
-    }, {
-      id: 3,
-      name: 'Perry Governor',
-      lastText: 'Look at my mukluks!',
-      face: 'img/perry.png'
-    }, {
-      id: 4,
-      name: 'Mike Harrington',
-      lastText: 'This is wicked good ice cream.',
-      face: 'img/mike.png'
-    }];
-
-    return {
-      all: function () {
-        return chats;
-      },
-      remove: function (chat) {
-        chats.splice(chats.indexOf(chat), 1);
-      },
-      get: function (chatId) {
-        for (var i = 0; i < chats.length; i++) {
-          if (chats[i].id === parseInt(chatId)) {
-            return chats[i];
-          }
-        }
-        return null;
-      }
-    };
   });
+
+  // .factory('Chats', function () {
+  //   // Might use a resource here that returns a JSON array
+  //
+  //   // Some fake testing data
+  //   var chats = [{
+  //     id: 0,
+  //     name: 'Ben Sparrow',
+  //     lastText: 'You on your way?',
+  //     face: 'img/ben.png'
+  //   }, {
+  //     id: 1,
+  //     name: 'Max Lynx',
+  //     lastText: 'Hey, it\'s me',
+  //     face: 'img/max.png'
+  //   }, {
+  //     id: 2,
+  //     name: 'Adam Bradleyson',
+  //     lastText: 'I should buy a boat',
+  //     face: 'img/adam.jpg'
+  //   }, {
+  //     id: 3,
+  //     name: 'Perry Governor',
+  //     lastText: 'Look at my mukluks!',
+  //     face: 'img/perry.png'
+  //   }, {
+  //     id: 4,
+  //     name: 'Mike Harrington',
+  //     lastText: 'This is wicked good ice cream.',
+  //     face: 'img/mike.png'
+  //   }];
+  //
+  //   return {
+  //     all: function () {
+  //       return chats;
+  //     },
+  //     remove: function (chat) {
+  //       chats.splice(chats.indexOf(chat), 1);
+  //     },
+  //     get: function (chatId) {
+  //       for (var i = 0; i < chats.length; i++) {
+  //         if (chats[i].id === parseInt(chatId)) {
+  //           return chats[i];
+  //         }
+  //       }
+  //       return null;
+  //     }
+  //   };
+  // });

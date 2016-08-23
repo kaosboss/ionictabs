@@ -15,12 +15,12 @@ angular.module('starter.controllers', [])
 //   };
 // })
 
-  .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
-    $scope.chat = Chats.get($stateParams.chatId);
-  })
+  // .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
+  //   $scope.chat = Chats.get($stateParams.chatId);
+  // })
   // .module('timeLine.controllers', [])
   .controller('timeLineCtrl', function ($rootScope, $document, $timeout, $scope, $ionicScrollDelegate) {
-    console.log("");
+    console.log("timeline ctrl ready");
     //})
 
     //var ExampleCtrl = function($rootScope, $document, $timeout, $scope) {
