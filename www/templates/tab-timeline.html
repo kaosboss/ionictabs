@@ -1,0 +1,54 @@
+<ion-view view-title="Journal" ng-controller="CameraCtrl">
+  <ion-floating-button class="animated bounce" click="takePicture()" has-footer="true" button-color="#2AC9AA"
+                       icon="ion-camera" iconColor="#fff">
+  </ion-floating-button>
+  <ion-content class="padding has-tabs" overflow-scroll="false">
+    <div class="container-fluid">
+      <!--<h1 class="text-center">Ionic Timeline</h1>-->
+      <!--<div class="text-center">-->
+      <!--<button ng-click="defaultAlign()" class="button button-positive button-small">Alternate Sides</button>-->
+      <!--<button ng-click="leftAlign()" class="button button-positive button-small">Left Side</button>-->
+      <!--<button ng-click="rightAlign()" class="button button-positive button-small">Right Side</button>-->
+      <!--<button ng-click="rePerformAnimation()" class="button button-positive button-small">Animate</button>-->
+      <!--</div>-->
+      <!--<div class="text-center padding">-->
+        <!--<button ng-click="addEvent()" class="button button-positive button-small">Add New Event</button>-->
+      <!--</div>-->
+      <!--<br/>-->
+      <!--<br/>-->
+      <timeline side="{{side}}">
+        <!-- can also hard-code to side="left" or side="right" -->
+        <timeline-event ng-repeat="event in events" side="{{side}}">
+          <!-- uses angular-scroll-animate to give it some pop -->
+          <timeline-badge class="tm tm-scroll {{event.badgeClass ? event.badgeClass : 'bg-dark' }} timeline-hidden"
+                          when-visible="animateElementIn" when-not-visible="animateElementOut">
+            <i ng-if="event.badgeIconClass" class="glyphicon {{event.badgeIconClass}}"></i>
+            <img ng-if="!event.badgeIconClass" class="userAvatar" ng-src="{{$root.APP.user.picture}}">
+
+          </timeline-badge>
+
+          <!-- uses angular-scroll-animate to give it some pop -->
+          <timeline-panel class="{{event.badgeClass}} tm timeline-hidden"
+                          when-visible="animateElementIn" when-not-visible="animateElementOut">
+            <timeline-heading>
+              <h4>{{event.title}}</h4>
+
+              <p ng-if="event.when">
+                <small class="text-muted"><i class="glyphicon glyphicon-time"></i>{{event.when}}</small>
+              </p>
+              <p ng-if="event.image" ng-click="showImages($index)" ng-bind-html="event.titleContentHtml">
+              </p>
+            </timeline-heading>
+            <p ng-bind-html="event.contentHtml"></p>
+            <timeline-footer ng-if="event.footerContentHtml">
+              <span ng-bind-html="event.footerContentHtml"></span>
+            </timeline-footer>
+          </timeline-panel>
+        </timeline-event>
+      </timeline>
+    </div>
+  </ion-content>
+
+</ion-view>
+
+

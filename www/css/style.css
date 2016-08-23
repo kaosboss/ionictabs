@@ -440,6 +440,47 @@ td-card img {
 
 /*}*/
 
+
+/* a list items da caça ao qr */
+
 .QRcode.QRlist {
   margin-bottom: 30px;
+}
+
+ /*  avatar  */
+
+.tm.tm-scroll.mascoteAvatar {
+  /* This image is 687 wide by 1024 tall, similar to your aspect ratio */
+  background-image: url('../img/cards/galo2.jpg');
+
+  /* make a square container */
+  width: 50px;
+  height: 50px;
+
+  /* fill the container, preserving aspect ratio, and cropping to fit */
+  background-size: cover;
+
+  /* center the image vertically and horizontally */
+  background-position: center;
+
+  /* round the edges to a circle with border radius 1/2 container size */
+  border-radius: 50%;
+}
+
+.userAvatar {
+  /* This image is 687 wide by 1024 tall, similar to your aspect ratio */
+  background-image: url('../img/cards/td-blank.jpg');
+
+  /* make a square container */
+  width: 50px;
+  height: 50px;
+
+  /* fill the container, preserving aspect ratio, and cropping to fit */
+  background-size: cover;
+
+  /* center the image vertically and horizontally */
+  background-position: center;
+
+  /* round the edges to a circle with border radius 1/2 container size */
+  border-radius: 50%;
 }

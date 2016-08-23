@@ -88,12 +88,14 @@ cw = function (value) {
   console.log(value);
 };
 
-angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'angular-timeline', 'angular-scroll-animate', 'ion-floating-menu', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
 
   .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window) {
     $rootScope.APP = {
       logged: false,
-      user: {}
+      user: {
+        picture: 'img/SNP.jpg'
+      }
     };
 
     if (ionic.Platform.platform() == "android")
@@ -603,15 +605,127 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
     //   $scope.showConfirm();
     // }, 4000);
   })
-  .controller('CameraCtrl', function ($rootScope, $scope, $cordovaCamera, $cordovaDevice, $cordovaSQLite, $ionicPlatform, $ionicPopup, $timeout, $ionicBackdrop, $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate, $window, $q) {
+  .controller('CameraCtrl', function ($rootScope, $scope, $cordovaCamera,
+                                      $cordovaDevice, $cordovaSQLite, $ionicPlatform,
+                                      $ionicPopup, $timeout, $ionicBackdrop,
+                                      $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate,
+                                      $window, $document, $q) {
 
-    // $scope.lastPhoto ="";
+
+    var lorem = "Aqui está a familia Ramos num Domingo muito divertido e diferente!";
+
+    $scope.side = 'left';
+
+    $scope.events = [{
+      badgeClass: 'mascoteAvatar',
+      badgeIconClass: 'bg-dark',
+      // badgeIconClass : 'ion-ionic',
+      // badgeIconClass : 'avatar',
+      title: 'Quinta Pedagógica',
+      when: 'à 5 minutos',
+
+      contentHtml: '<img class="img-responsive" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
+    }, {
+      badgeClass: 'bg-positive',
+      // badgeIconClass : 'ion-gear-b',
+      badgeIconClass: '',
+      title: 'Descoberta!',
+      when: 'à 12 minutos',
+      titleContentHtml: '',
+      contentHtml: '<img class="img-responsive" src="img/snp_projeto_02_small.jpg"><p>Encontraste a região da Chacra</p>',
+      footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
+    }
+    // , {
+    //   image: "img/atividades_quinta_pedagogica.jpg",
+    //   badgeClass: 'bg-balanced',
+    //   // badgeIconClass : 'ion-person',
+    //   title: 'Foto - Album',
+    //   titleContentHtml: '<img class="img-responsive" src="img/atividades_quinta_pedagogica.jpg">',
+    //   contentHtml: lorem,
+    //   // footerContentHtml : '<a href="">Continue Reading</a>'
+    // }
+    ];
+
+    $scope.addEvent = function (img, thumb) {
+      if (img) {
+        $scope.events.push({
+          image: thumb,
+          image_src: img,
+          badgeClass: 'bg-royal',
+          // badgeIconClass : 'ion-checkmark',
+          title: 'Foto - Album',
+          titleContentHtml: '<img class="img-responsive" src="' + thumb + '">',
+          when: 'Agora mesmo na ' + $rootScope.currentRI,
+          contentHtml: lorem
+        });
+      } else
+        $scope.events.push({
+          image: false,
+          badgeClass: 'bg-royal',
+          // badgeIconClass : 'ion-checkmark',
+          title: 'First heading',
+          when: '3 hours ago via Twitter',
+          content: 'Some awesome content.'
+        });
+      $ionicScrollDelegate.resize();
+
+    };
+    // optional: not mandatory (uses angular-scroll-animate)
+    $scope.animateElementIn = function ($el) {
+      $el.removeClass('timeline-hidden');
+      $el.addClass('bounce-in');
+    };
+
+    // optional: not mandatory (uses angular-scroll-animate)
+    $scope.animateElementOut = function ($el) {
+      $el.addClass('timeline-hidden');
+      $el.removeClass('bounce-in');
+    };
+
+    $scope.reExecuteAnimation = function () {
+      TM = document.getElementsByClassName('tm');
+      for (var i = 0; i < TM.length; i++) {
+        removeAddClass(TM[i], 'bounce-in');
+      }
+    }
+
+    $scope.rePerformAnimation = function () {
+      $scope.reExecuteAnimation();
+    };
+
+    $scope.leftAlign = function () {
+      $scope.side = 'left';
+      $ionicScrollDelegate.resize();
+
+      $scope.reExecuteAnimation();
+    };
+
+    $scope.rightAlign = function () {
+      $scope.side = 'right';
+      $ionicScrollDelegate.resize();
+
+      $scope.reExecuteAnimation();
+    };
+
+    $scope.defaultAlign = function () {
+      $scope.side = '';
+      $ionicScrollDelegate.resize();
+
+      $scope.reExecuteAnimation();
+      // or 'alternate'
+    };
+
+    // camera ctrl
+
     $scope.allImages = [];
 
     $scope.zoomMin = 1;
 
     $scope.showImages = function (index) {
-      $scope.activeSlide = index;
+      console.log("clicked img in journal", index);
+      $scope.activeSlide = 0;
+      $scope.activeIMG = $scope.events[index].image_src;
+      console.log("clicked image: ", $scope.activeIMG);
       $scope.showModal('templates/gallery-zoomview.html');
     };
 
@@ -694,6 +808,7 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
 
             console.log(message, res);
             $scope.lastPhoto = res.rows.item(res.rows.length - 1).IMG;
+            // $scope.addEvent($scope.lastPhoto);
             // $scope.allImages.src = $scope.lastPhoto;
             // $scope.$apply();
           } else {
@@ -762,6 +877,8 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
             img: entry.toURL()
           });
           // $scope.$apply();
+
+          $scope.addEvent(entry.toURL(), "data:image/png;base64," + res.imageData);
 
           var query = "INSERT INTO `journal` (IMG,caption, thumbnail_data) VALUES (?,?,?)";
           $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
@@ -2106,8 +2223,10 @@ angular.module('starter', ['ionic', 'firebase', 'ion-floating-menu', 'ionic.cont
         url: '/camera',
         views: {
           'tab-camera': {
-            templateUrl: 'templates/tab-camera.html',
+            // templateUrl: 'templates/tab-camera.html',
+            templateUrl: 'templates/tab-timeline.html',
             controller: 'CameraCtrl'
+            // controller: 'timeLineCtrl'
           }
         }
       })

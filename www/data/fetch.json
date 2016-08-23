@@ -1,0 +1,163 @@
+{
+    "cordova-plugin-console": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-console"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-splashscreen": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-splashscreen"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-statusbar": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-statusbar"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "ionic-plugin-keyboard": {
+        "source": {
+            "type": "registry",
+            "id": "ionic-plugin-keyboard"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-compat": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-compat"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "phonegap-plugin-barcodescanner": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phonegap/phonegap-plugin-barcodescanner",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-file": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-file"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-device": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-device"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-sqlite-storage": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-sqlite-storage"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "com.unarin.cordova.beacon": {
+        "source": {
+            "type": "registry",
+            "id": "com.unarin.cordova.beacon"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-app-name": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-app-name"
+        },
+        "is_top_level": true,
+        "variables": {
+            "APP_NAME": "SNP - Quinta Pedagogica"
+        }
+    },
+    "org.wbt11a.nativecamera": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/wbt11a/cordova-plugin-wezka-nativecamera",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-facebook4": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-facebook4"
+        },
+        "is_top_level": true,
+        "variables": {
+            "APP_ID": "1715405198723228",
+            "APP_NAME": "SNP - Quinta Pedagogica"
+        }
+    },
+    "cordova-plugin-bluetooth-status": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-bluetooth-status"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-network-information": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-network-information"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-file-transfer": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-file-transfer"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-x-toast": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "com.raananw.imageResizerTT": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/timkalinowski/PhoneGap-Image-Resizer",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    }
+}
