@@ -2,16 +2,18 @@
   <ion-content scroll="false" class="padding has-tabs has-header">
     <ion-slide-box on-slide-changed="slideChanged(index)">
       <ion-slide>
-        <h3 align="center">Bem vindo ao SNP</h3>
-        <div id="logo">
-          <img src="img/SNP.jpg" style="width:200px;height:200px;margin:auto;display:block">
-          <!--<img src="img/SNP.jpg">-->
-        </div>
-        <p align="center">
-          Obrigado por instalares a aplicação da Quinta Pedagógica
-        </p>
-        <p>
-        </p>
+        <ion-content class="has-tabs has-header padding">
+          <h3 align="center">Bem vindo ao SNP</h3>
+          <div id="logo">
+            <img src="img/SNP.jpg" style="width:200px;height:200px;margin:auto;display:block">
+            <!--<img src="img/SNP.jpg">-->
+          </div>
+          <p class="APPcenter">
+            Obrigado por instalares a aplicação da Quinta Pedagógica
+          </p>
+          <p>
+          </p>
+        </ion-content>
       </ion-slide>
       <ion-slide>
         <h3 align="center">Descrição slide 2</h3>
@@ -51,8 +53,7 @@
           </ol>
         </div>
         <a class="button button-calm APPcenter" ng-hide=$root.APP.logged href="#/tab/login">Concluido - Login</a>
-        <a class="button button-calm APPcenter" ng-show=$root.APP.logged href="#/tab/atividades">Concluido -
-          Atividades</a>
+        <a class="button button-calm APPcenter" ng-show=$root.APP.logged href="#/tab/dash">Concluido - HomePage</a>
       </ion-slide>
     </ion-slide-box>
   </ion-content>

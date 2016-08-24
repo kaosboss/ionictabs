@@ -23,14 +23,7 @@
           <timeline-badge class="tm tm-scroll {{event.badgeClass ? event.badgeClass : 'bg-dark' }} timeline-hidden"
                           when-visible="animateElementIn" when-not-visible="animateElementOut">
             <i ng-if="event.badgeIconClass" class="glyphicon {{event.badgeIconClass}}"></i>
-            <img ng-if="!event.badgeIconClass" class="userAvatar" ng-src="{{$root.APP.user.picture}}"
-                 ng-image-appear
-                 responsive
-                 transition-duration="1s"
-                 animation="fillIn"
-                 animation-duration="1s"
-                 easing="ease-out"
-            >
+            <img ng-if="!event.badgeIconClass" class="userAvatar" ng-src="{{$root.APP.user.picture}}">
 
           </timeline-badge>
 

@@ -97,9 +97,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         picture: 'img/SNP_small.jpg'
       }
     };
-    var preLoadImages = [ 'img/atividades_quinta_pedagogica_small.jpg', 'img/snp_projeto_02_small.jpg'];
+    var preLoadImages = ['img/atividades_quinta_pedagogica_small.jpg', 'img/snp_projeto_02_small.jpg'];
 
-    $ImageCacheFactory.Cache(preLoadImages).then(function(){
+    $ImageCacheFactory.Cache(preLoadImages).then(function () {
       console.warn("done preloading!");
     });
 
@@ -167,7 +167,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     });
   })
   // .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $ionicLoading) {
-  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $state, perguntas) {
+  .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout,
+                                    $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork,
+                                    UserService, users, $regioes, $state, perguntas, $ionicLoading) {
 
     dbres = 0;
     var query = "";
@@ -183,9 +185,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       offLineState: ""
     };
 
-    // $ionicLoading.show({
-    //   template: 'A carregar...'
-    // });
+    if (cordova != null)
+      $ionicLoading.show({
+        template: 'A carregar...'
+      });
 
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
@@ -229,7 +232,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             $rootScope.showAlert("NetWork OFFLINE");
           });
         };
-        // $scope.checkNetwork();
+        $scope.checkNetwork();
         // cordova.plugins.BluetoothStatus.initPlugin();
         // db = $rootScope.db = $window.sqlitePlugin.openDatabase({name: "snpquinta.db", location: "default"});
         db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
@@ -271,7 +274,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
             // $ionicLoading.hide();
             console.log("Got APP version: Installed v" + res.rows.item(0).value + "PLAT: " + currentPlatform + " VER: " + currentPlatformVersion);
-            $scope.checkNetwork();
+            // $scope.checkNetwork();
+
             var tempUser = UserService.getUser();
             tempUser.then(function (res) {
               var userInfo = JSON.parse(res || '{}')
@@ -284,22 +288,21 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 $scope.logged = true;
                 users.offline();
                 console.log("USER: LOGGED: true");
-                checkBT();
-                $state.go("tab.atividades");
+                // $state.go("tab.atividades");
               } else {
                 $rootScope.APP.logged = false;
                 $scope.logged = false;
                 console.log("USER: LOGGED: false");
                 $rootScope.enableBeacons = false;
-                checkBT();
                 // setTimeout(function () {
                 //   $state.go("tab.login");
                 // }, 300)
               }
+              checkBT();
             });
 
           } else {
-            $scope.checkNetwork();
+            // $scope.checkNetwork();
             $scope.showAlert("No results found, primeira utilizacao!");
             console.log("No results found, firsttime?");
 
@@ -328,25 +331,30 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               alert(err);
             });
 
-            if (!$rootScope.regioes_inicio)
-              perguntas.getRegioesInicio().then(function (res) {
-                $regioes.setRegioes(res);
-              });
-            else
-              $regioes.setRegioes($rootScope.regioes_inicio);
+            perguntas.getRegioesInicio().then(function (res) {
+              $regioes.setRegioes(res);
+            });
+
+            if (cordova != null)
+              $ionicLoading.hide();
 
             $rootScope.enableBeacons = false;
             checkBT();
+
             $state.go("tab.intro");
 
           }
         }, function (err) {
+          if (cordova != null)
+            $ionicLoading.hide();
           alert(err);
           console.error("ERROR ON get app version", err);
         });
 
         checkBT = function () {
           var msg = "Has BT: " + cordova.plugins.BluetoothStatus.hasBT + " Has BLE: " + cordova.plugins.BluetoothStatus.hasBTLE + " isBTenable: " + cordova.plugins.BluetoothStatus.BTenabled;
+          if (cordova != null)
+            $ionicLoading.hide();
 
           if (cordova.plugins.BluetoothStatus.hasBTLE) {
             noBLE = 0;
@@ -395,8 +403,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             }
           }
           console.log(msg);
-          if (($scope.logged == false) && (APPfirstTime == 0))
-            $state.go("tab.login");
+          // if (($scope.logged == false) && (APPfirstTime == 0))
+          // $state.go("tab.login");
+          // $scope.showBT("Faça login no FB");
           // $scope.showBT(msg);
         }
       }
@@ -429,8 +438,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       alertPopup.then(function (res) {
         console.log('OK on APP version');
-        checkBT();
-        $scope.checkNetwork();
+        // checkBT();
+        // $scope.checkNetwork();
       });
 
       $timeout(function () {
@@ -603,10 +612,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                                       $cordovaDevice, $cordovaSQLite, $ionicPlatform,
                                       $ionicPopup, $timeout, $ionicBackdrop,
                                       $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate,
-                                      $window, $document, $q) {
+                                      $window, $document, $q, $ionicLoading) {
 
     var query = "";
     var lorem = "Aqui está a familia Ramos num Domingo muito divertido e diferente!";
+    var d = new Date();
+    var n = d.getTime();
+    var newFileName = n + ".jpg";
+    var myFolderApp = "images";
+    var myRootFolderApp = $rootScope.albumFolder || "SNP-Quinta";
 
     $scope.side = 'left';
 
@@ -648,7 +662,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           badgeClass: 'bg-royal',
           // badgeIconClass : 'ion-checkmark',
           title: 'Foto - Album',
-          titleContentHtml: '<img class="img-responsive" src="' + thumb + '">',
+          titleContentHtml: '<img ng-image-appear placeholder class="img-responsive" src="' + thumb + '">',
           when: 'Agora mesmo na ' + $rootScope.currentRI,
           contentHtml: lorem
         });
@@ -823,30 +837,56 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
 //Callback function when the file system uri has been resolved
       function resolveOnSuccess(entry) {
-        var d = new Date();
-        var n = d.getTime();
-        //new file name
-        var newFileName = n + ".jpg";
-        var myFolderApp = "images";
 
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
-            //The folder is created if doesn't exist
+
+            myFolderApp = "images";
             fileSys.root.getDirectory(myFolderApp,
               {create: true, exclusive: false},
               function (directory) {
-                entry.moveTo(directory, newFileName, successMove, resOnError);
+                entry.copyTo(directory, newFileName, successMove, resOnError);
               },
-              resOnError);
+              resGetDirImagesOnError);
+
           },
           resOnError);
       }
 
+      function successCopy(entry) {
+        console.log("Android: Success copied file, new URL: %s", entry.toURL(), entry);
+
+        if (device.platform === 'Android') {
+          cordova.plugins.MediaScannerPlugin.scanFile(entry.toURL(),
+            function (res) {
+              console.warn("succes in add file to media scannner", res);
+            }, function (err) {
+              console.error("Error add file to media scannner", err);
+            });
+        }
+      }
+
 //Callback function when the file has been moved successfully - inserting the complete path
       function successMove(entry) {
+
+        if (device.platform === 'Android') {
+          console.warn("checking for dir " + cordova.file.externalRootDirectory);
+          window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function (fileEntry) {
+
+            // console.warn("file entry: ", fileEntry);
+            console.warn("file entry full + app: ", fileEntry.toURL() + myRootFolderApp);
+
+            fileEntry.filesystem.root.getDirectory(myRootFolderApp,
+              {create: true, exclusive: false},
+              function (directory) {
+                entry.copyTo(directory, newFileName, successCopy, resDirOnError);
+              },
+              resGetdirOnError);
+          });
+        }
         //I do my insert with "entry.fullPath" as for the path
         $scope.lastPhoto = entry.toURL();
 
-        console.log("Success moved file, new URL: %s", entry.toURL());
+        console.log("Success moved file, new URL: %s", entry.toURL(), entry.fullPath);
 
         resizeImage(entry.toURL()).then(function (res) {
           console.log("RESize RES: ", res);
@@ -855,6 +895,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             img: entry.toURL()
           });
           // $scope.$apply();
+          $ionicLoading.hide();
 
           $scope.addEvent(entry.toURL(), "data:image/png;base64," + res.imageData);
 
@@ -871,20 +912,44 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         });
       }
 
+      function resDirOnError(error) {
+        console.log("DIR ERROR", error, error.code);
+        $rootScope.deviceBUSY = 0;
+      }
+
+      function resGetdirOnError(error) {
+        console.log("GET DIR ERROR", error, error.code);
+        $rootScope.deviceBUSY = 0;
+      }
+
+      function resGetDirImagesOnError(error) {
+        console.log("GET DIR images ERROR", error, error.code);
+        $rootScope.deviceBUSY = 0;
+      }
+
       function resOnError(error) {
-        console.log(error, error.code);
+        console.log("COPY ERROR: ", error, error.code);
         $rootScope.deviceBUSY = 0;
       }
 
       $scope.takePicture = function () {
         console.log("take picture ready");
+
         $rootScope.deviceBUSY = 1;
         if ($scope.takingPicture)
           return;
         $scope.takingPicture = 1;
+
+        if (device.platform === 'iOS') {
+          $ionicLoading.show({
+            template: 'Tirar Fotografia'
+          });
+        }
+
         navigator.camera.getPicture(onSuccess, onFail, {
           quality: 75,
-          destinationType: Camera.DestinationType.FILE_URI,
+          // destinationType: Camera.DestinationType.FILE_URI,
+          destinationType: Camera.DestinationType.NATIVE_URI,
           encodingType: 0,
           targetWidth: 640,
           targetHeight: 480,
@@ -893,7 +958,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         });
 
         function onSuccess(imageURI) {
+
+          if (device.platform === 'iOS') {
+            $ionicLoading.hide();
+          }
+
           console.log(imageURI);
+          $ionicLoading.show({
+            template: 'A gravar'
+          });
           $scope.takingPicture = 0;
           // $scope.lastPhoto = imageURI;
           // $scope.$apply();
@@ -903,6 +976,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         function onFail(message) {
           console.error('Failed because: ' + message);
           $scope.takingPicture = 0;
+          $ionicLoading.hide();
         }
       };
 

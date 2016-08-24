@@ -337,10 +337,10 @@ td-card img {
   right: 0;
 }
 
-.slider-pager {
-  top: initial;
-  bottom: 60px !important;
-}
+/*.slider-pager {*/
+  /*top: initial;*/
+  /*bottom: 60px !important;*/
+/*}*/
 
 /* SCORE */
 
@@ -469,7 +469,7 @@ td-card img {
 
 .userAvatar {
   /* This image is 687 wide by 1024 tall, similar to your aspect ratio */
-  background-image: url('../img/cards/td-blank.jpg');
+  background-image: url('../img/SNP_small.jpg');
 
   /* make a square container */
   width: 50px;
