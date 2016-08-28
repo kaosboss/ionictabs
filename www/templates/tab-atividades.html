@@ -15,7 +15,7 @@
             <!--<ion-item ng-repeat="item in items">-->
               <!--Hello, {{item.id}}!-->
             <!--</ion-item>-->
-            <ion-item ng-repeat="item in myItems"
+            <ion-item ng-click="goAtividadesDetalhe(item)" ng-repeat="item in myItems"
                       class="repeated-item item-thumbnail-left">
 
               <img ng-src="{{item.img}}">

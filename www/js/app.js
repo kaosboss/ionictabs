@@ -97,7 +97,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         picture: 'img/SNP_small.jpg'
       }
     };
-    var preLoadImages = ['img/atividades_quinta_pedagogica_small.jpg', 'img/snp_projeto_02_small.jpg'];
+    var preLoadImages = ['img/atividades_quinta_pedagogica_small.jpg', 'img/SNP_background_intro.jpg', 'img/snp_projeto_02_small.jpg'];
 
     $ImageCacheFactory.Cache(preLoadImages).then(function () {
       console.warn("done preloading!");
@@ -1590,7 +1590,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               })
             }
             $rootScope.enableBeacons = true;
-            $state.go("tab.atividades");
+            $state.go("tab.dash");
           }, function (fail) {
             // Fail get profile info
             console.log('profile info fail', fail);
@@ -1666,7 +1666,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                     }
                     $rootScope.showAlert("Facebook Logged IN com o nome: " + profileInfo.name + " email: " + profileInfo.email);
                     $rootScope.enableBeacons = true;
-                    $state.go("tab.atividades");
+                    $state.go("tab.dash");
 
                   }, function (fail) {
                     // Fail get profile info
@@ -1679,7 +1679,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 $rootScope.console.log("FB NAME: %s pic: %s", user.name, user.picture);
                 $scope.$apply();
                 $rootScope.enableBeacons = true;
-                $state.go('tab.atividades');
+                $state.go('tab.dash');
               }
 
             });
@@ -1736,7 +1736,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             facebookConnectPlugin.logout(function () {
                 $ionicLoading.hide();
                 $rootScope.showAlert("Facebook Logged OUT!");
-                $state.go('tab.atividades');
+                $state.go('tab.dash');
               },
               function (fail) {
                 $ionicLoading.hide();
@@ -1952,69 +1952,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     //   $ionicHistory.goBack();
     // }
   })
-  .controller('AtividadesCtrl', function ($scope, $rootScope, $timeout) {
-
-    $scope.myItems = [];
-    $scope.items = [
-      {
-        id: 0,
-        img: 'img/atividades_arborismo.png',
-        title: 'ARBORISMO',
-        description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.'
-      },
-      {
-        id: 1,
-        img: 'img/atividades_bicicletas-hover.png',
-        title: 'BICICLETAS NO SNP',
-        description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.'
-      },
-      {
-        id: 2,
-        title: 'DESPORTO AQUÁTICO AVENTURA',
-        description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
-        img: 'img/actividades_aquaticas-hover.png'
-      },
-      {
-        id: 3,
-        title: 'CAMPOS DE FÉRIAS',
-        img: 'img/atividades_campo_ferias-hover.png',
-        description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.'
-      },
-      // { id: 4,
-      //   img: 'img/atividades_dormir_snp-hover.png'
-      // },
-      {
-        id: 5,
-        title: 'FAUNA E FLORA',
-        description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
-        img: 'img/atividades_fauna_flora-hover.png'
-      },
-      {
-        id: 6,
-        title: 'PAINTBALL',
-        description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
-        img: 'img/atividades_painball-hover.png'
-      },
-      {
-        id: 7,
-        title: 'PERCURSOS PEDESTRES',
-        description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
-        img: 'img/atividades_percursos_pedestres-hover.png'
-      },
-      {
-        id: 8,
-        img: 'img/atividades_tiro-hover.png',
-        title: 'ATIVIDADES DE TIRO',
-        description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
-      }
-    ];
-
-    $timeout(function () {
-      for (var i = 0; i < 5; i++) {
-        $scope.myItems.push($scope.items[i]);
-      }
-    });
-  })
+  // .controller('AtividadesCtrl', function ($scope, $rootScope, $timeout) {
+  //
+  //
+  // })
   .controller('LoginCtrl', function ($scope, $rootScope, $window) {
     // ionic.Platform.fullScreen();
     // if ($window.StatusBar) {
@@ -2289,6 +2230,84 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
   })
+  .controller('SNPCtrl', function ($scope, $state, $timeout) {
+
+    $scope.goAtividades = function () {
+      console.log("Go Atividades");
+      $state.go("tab.snp", {
+        AT: "ALL"
+      });
+    };
+
+    $scope.goAtividadesDetalhe = function (item) {
+      console.log("Go Atividades detalhe ", item);
+      $state.go("tab.snp", {
+        AT: "atividades",
+        ATD: "arborismo"
+      });
+    }
+
+    $scope.myItems = [];
+    $scope.items = [
+      {
+        id: 0,
+        img: 'img/atividades_arborismo.png',
+        title: 'ARBORISMO',
+        description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.'
+      },
+      {
+        id: 1,
+        img: 'img/atividades_bicicletas-hover.png',
+        title: 'BICICLETAS NO SNP',
+        description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.'
+      },
+      {
+        id: 2,
+        title: 'DESPORTO AQUÁTICO AVENTURA',
+        description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
+        img: 'img/actividades_aquaticas-hover.png'
+      },
+      {
+        id: 3,
+        title: 'CAMPOS DE FÉRIAS',
+        img: 'img/atividades_campo_ferias-hover.png',
+        description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.'
+      },
+      // { id: 4,
+      //   img: 'img/atividades_dormir_snp-hover.png'
+      // },
+      {
+        id: 5,
+        title: 'FAUNA E FLORA',
+        description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
+        img: 'img/atividades_fauna_flora-hover.png'
+      },
+      {
+        id: 6,
+        title: 'PAINTBALL',
+        description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
+        img: 'img/atividades_painball-hover.png'
+      },
+      {
+        id: 7,
+        title: 'PERCURSOS PEDESTRES',
+        description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
+        img: 'img/atividades_percursos_pedestres-hover.png'
+      },
+      {
+        id: 8,
+        img: 'img/atividades_tiro-hover.png',
+        title: 'ATIVIDADES DE TIRO',
+        description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
+      }
+    ];
+
+    $timeout(function () {
+      for (var i = 0; i < 5; i++) {
+        $scope.myItems.push($scope.items[i]);
+      }
+    });
+  })
   .directive('expandingTextarea', function () {
     return {
       restrict: 'A',
@@ -2354,15 +2373,34 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           }
         }
       })
-      .state('tab.atividades', {
-        url: '/atividades',
+      .state('tab.snp', {
+        url: '/snp/:AT/:ATD',
         views: {
-          'tab-atividades': {
-            templateUrl: 'templates/tab-atividades.html',
-            controller: 'AtividadesCtrl'
+          'tab-snp': {
+            // templateUrl: 'templates/tab-snp.html',
+            templateUrl: function ($stateParams) {
+              console.log("state params: ", $stateParams);
+              if ($stateParams.AT == "SNP")
+                return 'templates/tab-snp.html';
+
+              if ($stateParams.AT == "ALL")
+                return 'templates/tab-atividades.html';
+
+              return 'templates/atividades/' + $stateParams.ATD + '.html';
+            },
+            controller: 'SNPCtrl'
           }
         }
       })
+      // .state('tab.atividades', {
+      //   url: '/atividades',
+      //   views: {
+      //     'tab-atividades': {
+      //       templateUrl: 'templates/tab-atividades.html',
+      //       controller: 'AtividadesCtrl'
+      //     }
+      //   }
+      // })
       .state('tab.login', {
         url: '/login',
         views: {
