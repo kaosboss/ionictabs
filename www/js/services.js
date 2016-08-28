@@ -629,6 +629,21 @@ angular.module('starter.services', [])
             return 0;
           });
           break;
+
+        case "journal":
+          var query = "update journal set caption=? where id=?";
+          return this.execute(db, query, binding).then(function (res) {
+            result = res;
+            console.log("UPDATED DB, binding: %s", binding.toString());
+            if (!res.rowsAffected)
+              console.warn("ALERT: Update db got 0 affected rows");
+            return res;
+          }, function (err) {
+            // alert(err);
+            console.error(err);
+            return 0;
+          });
+          break;
       }
     };
 
@@ -787,6 +802,52 @@ angular.module('starter.services', [])
             return regioes_inicio[f].PIs;
         }
       }
+    }
+  })
+  .factory("blob", function () {
+
+    var thumb_file = "";
+
+    function getThumbFile() {
+      return thumb_file;
+    }
+
+    function b64toBlob(b64Data, contentType, sliceSize) {
+      contentType = contentType || '';
+      sliceSize = sliceSize || 512;
+
+      var byteCharacters = atob(b64Data);
+      var byteArrays = [];
+
+      for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        var byteArray = new Uint8Array(byteNumbers);
+
+        byteArrays.push(byteArray);
+      }
+
+      var blob = new Blob(byteArrays, {type: contentType});
+      return blob;
+    }
+
+    /**
+     * Create a Image file according to its database64 content only.
+     *
+     * @param folderpath {String} The folder where the file will be created
+     * @param filename {String} The name of the file that will be created
+     * @param content {Base64 String} Important : The content can't contain the following string (data:image/png[or any other format];base64,). Only the base64 string is expected.
+     */
+
+    return {
+      // savebase64AsImageFile: savebase64AsImageFile,
+      getThumbFile: getThumbFile,
+      b64toBlob: b64toBlob
     }
   });
 

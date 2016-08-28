@@ -1,4 +1,4 @@
-<ion-view view-title="Journal" ng-controller="CameraCtrl">
+<ion-view view-title="Journal">
   <ion-floating-button class="animated bounce" click="takePicture()" has-footer="true" button-color="#2AC9AA"
                        icon="ion-camera" iconColor="#fff">
   </ion-floating-button>
@@ -12,7 +12,7 @@
       <!--<button ng-click="rePerformAnimation()" class="button button-positive button-small">Animate</button>-->
       <!--</div>-->
       <!--<div class="text-center padding">-->
-        <!--<button ng-click="addEvent()" class="button button-positive button-small">Add New Event</button>-->
+      <!--<button ng-click="addEvent()" class="button button-positive button-small">Add New Event</button>-->
       <!--</div>-->
       <!--<br/>-->
       <!--<br/>-->
@@ -31,12 +31,16 @@
           <timeline-panel class="{{event.badgeClass}} tm timeline-hidden"
                           when-visible="animateElementIn" when-not-visible="animateElementOut">
             <timeline-heading>
-              <h4>{{event.title}}</h4>
+
+              <div class="row">
+                <div><h4>{{event.title}}</h4></div>
+                <div ng-if="event.image_src"><i ng-click="showCaption($index)" class = "icon icon ion-edit img-thumbnail"></i></div>
+              </div>
 
               <p ng-if="event.when">
                 <small class="text-muted"><i class="glyphicon glyphicon-time"></i>{{event.when}}</small>
               </p>
-              <p ng-if="event.image" ng-click="showImages($index)" ng-bind-html="event.titleContentHtml">
+              <p ng-if="event.image_src" ng-click="showImages($index)" ng-bind-html="event.titleContentHtml">
               </p>
             </timeline-heading>
             <p ng-bind-html="event.contentHtml"></p>

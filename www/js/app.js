@@ -158,12 +158,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $rootScope.$broadcast("SHOW_POPUP");
       };
 
-      ionic.Platform.fullScreen();
-      if ($window.StatusBar) {
-        return $window.StatusBar.hide();
+      // ionic.Platform.isFullScreen = true;
+      // ionic.Platform.fullScreen();
+
+      // if ($window.StatusBar) {
+      //   return $window.StatusBar.hide();
+
         // org.apache.cordova.statusbar required
         // StatusBar.styleDefault();
-      }
+      // }
     });
   })
   // .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $ionicLoading) {
@@ -246,7 +249,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           }, function (err) {
             alert(err);
           });
-          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (`IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT)", []).then(function (res) {
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (id integer primary key autoincrement, `IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT)", []).then(function (res) {
             cw("Table journal", res);
           }, function (err) {
             alert(err);
@@ -612,19 +615,93 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                                       $cordovaDevice, $cordovaSQLite, $ionicPlatform,
                                       $ionicPopup, $timeout, $ionicBackdrop,
                                       $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate,
-                                      $window, $document, $q, $ionicLoading) {
+                                      $window, $document, $q, $ionicLoading, blob) {
 
     var query = "";
     var lorem = "Aqui está a familia Ramos num Domingo muito divertido e diferente!";
-    var d = new Date();
-    var n = d.getTime();
-    var newFileName = n + ".jpg";
+
     var myFolderApp = "images";
     var myRootFolderApp = $rootScope.albumFolder || "SNP-Quinta";
 
+    // $ionicModal.fromTemplateUrl('templates/template_caption.html', {
+    //   scope: $scope,
+    //   animation: 'fade-in'
+    // }).then(function(modal) {
+    //   $scope.modal = modal;
+    // });
+
+    $scope.showCaption = function(index) {
+
+      console.warn("showcaption index: ", index);
+
+      var id = "";
+      $scope.data = {};
+
+      if (index!=null) {
+        id = $scope.events[index].id;
+        $scope.data.caption = $scope.events[index].contentHtml;
+      }
+      else{
+        id = $scope.captureImageId;
+        $scope.data.caption = "";
+      }
+
+      // An elaborate, custom popup
+      var caption = $ionicPopup.show({
+        template: '<textarea ng-model="data.caption" name="Text1" rows="2"></textarea>',
+        title: 'Comentário',
+        subTitle: 'Adicione uma descrição à foto',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancelar' },
+          {
+            text: '<b>Guardar</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$scope.data.caption) {
+                e.preventDefault();
+              } else {
+                return $scope.data.caption;
+              }
+            }
+          }
+        ]
+      });
+
+      caption.then(function(res) {
+        if (device.platform === 'Android') {
+        //
+          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        //   ionic.Platform.fullScreen();
+        //   if ($window.StatusBar)
+        //     return $window.StatusBar.hide();
+        }
+        console.log('Tapped! ID: %s', id, res);
+        $scope.events[id].contentHtml = res;
+        $cordovaSQLite.updateValueToDB("journal", [res, id]).then(function (res) {
+          if (!res.rowsAffected)
+            console.warn("ALERT: Update db got 0 affected rows");
+          // console.log("Client side, returned update", res);
+        });
+      });
+
+      // $timeout(function() {
+      //   caption.close();
+      // }, 10000);
+    };
+
+    $scope.createContact = function(caption, id) {
+      // $scope.contacts.push({ name: u.firstName + ' ' + u.lastName });
+      console.log("New caption: %s for id: %s", caption, id);
+      $scope.modal.hide();
+    };
+
     $scope.side = 'left';
+    $scope.images = {
+    };
 
     $scope.events = [{
+      id: 0,
       badgeClass: 'mascoteAvatar',
       badgeIconClass: 'bg-dark',
       // badgeIconClass : 'ion-ionic',
@@ -632,17 +709,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       title: 'Quinta Pedagógica',
       when: 'à 5 minutos',
 
-      contentHtml: '<img ng-image-appear placeholder class="img-responsive" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
-    }, {
-      badgeClass: 'bg-positive',
-      // badgeIconClass : 'ion-gear-b',
-      badgeIconClass: '',
-      title: 'Descoberta!',
-      when: 'à 12 minutos',
-      titleContentHtml: '',
-      contentHtml: '<img ng-image-appear placeholder class="img-responsive" src="img/snp_projeto_02_small.jpg"><p>Encontraste a região da Chacra</p>',
-      footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
+      contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
     }
+    // , {
+    //   badgeClass: 'bg-positive',
+    //   // badgeIconClass : 'ion-gear-b',
+    //   badgeIconClass: '',
+    //   title: 'Descoberta!',
+    //   when: 'à 12 minutos',
+    //   titleContentHtml: '',
+    //   contentHtml: '<img ng-image-appear placeholder class="img-responsive" src="img/snp_projeto_02_small.jpg"><p>Encontraste a região da Chacra</p>',
+    //   footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
+    // }
       // , {
       //   image: "img/atividades_quinta_pedagogica.jpg",
       //   badgeClass: 'bg-balanced',
@@ -654,17 +732,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // }
     ];
 
-    $scope.addEvent = function (img, thumb) {
+    $scope.addEvent = function (id, img, thumb, caption, noRefresh) {
       if (img) {
         $scope.events.push({
-          image: thumb,
+          // image: thumb,
+          id: id,
           image_src: img,
           badgeClass: 'bg-royal',
           // badgeIconClass : 'ion-checkmark',
           title: 'Foto - Album',
-          titleContentHtml: '<img ng-image-appear placeholder class="img-responsive" src="' + thumb + '">',
+          titleContentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="' + thumb + '">',
           when: 'Agora mesmo na ' + $rootScope.currentRI,
-          contentHtml: lorem
+          contentHtml: caption
         });
       } else
         $scope.events.push({
@@ -675,7 +754,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           when: '3 hours ago via Twitter',
           content: 'Some awesome content.'
         });
-      $ionicScrollDelegate.resize();
+
+      if (!noRefresh)
+        $ionicScrollDelegate.resize();
 
     };
     // optional: not mandatory (uses angular-scroll-animate)
@@ -732,8 +813,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.showImages = function (index) {
       console.log("clicked img in journal", index);
       $scope.activeSlide = 0;
-      $scope.activeIMG = $scope.events[index].image_src;
-      console.log("clicked image: ", $scope.activeIMG);
+
+      $scope.images.activeIMG =$scope.events[index].image_src;
+      // $scope.images.push({
+      //   activeIMG: $scope.events[index].image_src
+      // });
+      console.log("clicked image: ", $scope.images.activeIMG, $scope.events);
       $scope.showModal('templates/gallery-zoomview.html');
     };
 
@@ -761,6 +846,59 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
     document.addEventListener("deviceready", function () {
+
+      function done(evt) {
+        console.warn("Write completed.");
+        $scope.addEvent($scope.captureImageId, $scope.captureImage, $scope.thumbNailName);
+        $ionicLoading.hide();
+        $scope.showCaption();
+      }
+      function error(evt) {
+        $ionicLoading.hide();
+        console.error("Write failed:" + evt);
+      }
+
+      function savebase64AsImageFile(folderpath,filename,content,contentType){
+        // Convert the base64 string in a Blob
+        var DataBlob = blob.b64toBlob(content,contentType);
+
+        console.log("Starting to write the file :3");
+
+        window.resolveLocalFileSystemURL(folderpath, function(dir) {
+          console.log("Access to the directory granted succesfully");
+          dir.getFile(filename, {create:true}, function(file) {
+            console.log("File created succesfully.", file.toURL());
+            $scope.thumb_file = file.toURL();
+            file.createWriter(function(fileWriter) {
+              console.log("Writing content to file");
+              // fileWriter.write(DataBlob);
+              fileWriter.onwrite = done;
+              fileWriter.onerror = error;
+              // fileWriter.write(content);
+              fileWriter.write(DataBlob);
+            }, function(){
+              console.error('Unable to save file in path '+ folderpath);
+            });
+          });
+        });
+      }
+
+      saveThumbToFile = function (dir, thumb) {
+        var contentType = "image/png";
+        // var folderpath = "file:///storage/emulated/0/";
+        var folderpath = dir.nativeURL;
+        // var folderpath = dir.nativeURL + "thumb_" + $scope.newFile + ".png";
+        var filename = "thumb_" + $scope.newFile + ".png";
+
+        var block = thumb.split(";");
+// Get the content type
+        var dataType = block[0].split(":")[1];// In this case "image/png"
+// get the real base64 content of the file
+        var realData = block[1].split(",")[1];// In this case "iVBORw0KGg...."
+
+        savebase64AsImageFile(folderpath,filename,realData,dataType);
+        console.log("saveThumbToFile", folderpath,filename,contentType);
+      };
 
       resizeImage = function (img_path) {
         var q = $q.defer();
@@ -809,15 +947,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             var message = "SELECTED -> " + res.rows.item(res.rows.length - 1).IMG;
             // $scope.showAlert(message);
             for (var f = 0; f < res.rows.length; f++)
-              $scope.allImages.push({
-                src: res.rows.item(f).thumbnail_data,
-                img: res.rows.item(f).IMG
-              });
+              $scope.addEvent(res.rows.item(f).id, res.rows.item(f).IMG, res.rows.item(f).thumbnail_data, res.rows.item(f).caption, 1);
+
+            $ionicScrollDelegate.resize();
+              // $scope.allImages.push({
+              //   src: res.rows.item(f).thumbnail_data,
+              //   img: res.rows.item(f).IMG
+              // });
 
             console.log(message, res);
-            $scope.lastPhoto = res.rows.item(res.rows.length - 1).IMG;
-            $scope.lastPhoto_thumb = res.rows.item(res.rows.length - 1).thumbnail_data;
-            $scope.addEvent($scope.lastPhoto, $scope.lastPhoto_thumb);
+            // $scope.lastPhoto = res.rows.item(res.rows.length - 1).IMG;
+            // $scope.lastPhoto_thumb = res.rows.item(res.rows.length - 1).thumbnail_data;
+            // $scope.addEvent($scope.lastPhoto, $scope.lastPhoto_thumb);
             // $scope.allImages.src = $scope.lastPhoto;
             // $scope.$apply();
           } else {
@@ -837,6 +978,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
 //Callback function when the file system uri has been resolved
       function resolveOnSuccess(entry) {
+        var d = new Date();
+        var n = d.getTime();
+        $scope.newFile = n;
+        $scope.newFileName = n + ".jpg";
 
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
 
@@ -844,7 +989,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             fileSys.root.getDirectory(myFolderApp,
               {create: true, exclusive: false},
               function (directory) {
-                entry.copyTo(directory, newFileName, successMove, resOnError);
+                $scope.saveDir = directory;
+                console.warn("DIR: ", directory);
+                entry.copyTo(directory, $scope.newFileName, successMove, resOnError);
               },
               resGetDirImagesOnError);
 
@@ -878,31 +1025,41 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             fileEntry.filesystem.root.getDirectory(myRootFolderApp,
               {create: true, exclusive: false},
               function (directory) {
-                entry.copyTo(directory, newFileName, successCopy, resDirOnError);
+                entry.copyTo(directory, $scope.newFileName, successCopy, resDirOnError);
               },
               resGetdirOnError);
           });
         }
-        //I do my insert with "entry.fullPath" as for the path
+
         $scope.lastPhoto = entry.toURL();
 
         console.log("Success moved file, new URL: %s", entry.toURL(), entry.fullPath);
 
         resizeImage(entry.toURL()).then(function (res) {
           console.log("RESize RES: ", res);
-          $scope.allImages.push({
-            src: "data:image/png;base64," + res.imageData,
-            img: entry.toURL()
-          });
+          // $scope.allImages.push({
+          //   src: "data:image/png;base64," + res.imageData,
+          //   img: entry.toURL()
+          // });
           // $scope.$apply();
-          $ionicLoading.hide();
+          $scope.thumbNailName = $scope.saveDir.nativeURL + "thumb_" + $scope.newFile + ".png";
+          console.warn("ThumbFile: ", $scope.thumbNailName);
+          // saveThumbToFile($scope.saveDir, res.imageData);
+          saveThumbToFile($scope.saveDir, "data:image/png;base64," + res.imageData);
 
-          $scope.addEvent(entry.toURL(), "data:image/png;base64," + res.imageData);
+          // $ionicLoading.hide();
+
+          $scope.captureImage = entry.toURL();
+
+          // $scope.addEvent(entry.toURL(), thumbNailName);
+          // $ionicScrollDelegate.resize();
 
           query = "INSERT INTO `journal` (IMG,caption, thumbnail_data) VALUES (?,?,?)";
-          $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
+          // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
+          $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "Sem comentário.", $scope.thumbNailName]).then(function (res) {
             var message = "INSERT ID -> " + res.insertId;
-            console.log(message);
+            $scope.captureImageId = res.insertId;
+            console.log(message, entry.toURL(), res);
             // alert(message);
           }, function (err) {
             console.error(err);
@@ -1847,10 +2004,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     });
   })
   .controller('LoginCtrl', function ($scope, $rootScope, $window) {
-    ionic.Platform.fullScreen();
-    if ($window.StatusBar) {
-      return $window.StatusBar.hide();
-    }
+    // ionic.Platform.fullScreen();
+    // if ($window.StatusBar) {
+    //   return $window.StatusBar.hide();
+    // }
   })
   .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate) {
 
