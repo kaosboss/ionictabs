@@ -649,13 +649,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
       else {
         id = $scope.captureImageId;
-        $scope.data.caption = "";
+        $scope.data.caption = "\n\n\n";
       }
 
       // An elaborate, custom popup
       var caption = $ionicPopup.show({
-        template: '<textarea ng-model="data.caption" name="Text1" rows="2"></textarea>',
-        title: 'Comentário',
+        cssClass: "myPopup",
+        // template: '<textarea ng-model="data.caption" name="Text1" rows="2"></textarea>',
+        templateUrl: 'templates/template_caption.html',
+        title: 'Album',
         subTitle: 'Adicione uma descrição à foto',
         scope: $scope,
         buttons: [
@@ -675,14 +677,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       });
 
       caption.then(function (res) {
-        if (device.platform === 'Android') {
+        // if (device.platform === 'Android') {
           //
-          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+          // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
           //   ionic.Platform.fullScreen();
           //   if ($window.StatusBar)
           //     return $window.StatusBar.hide();
-        }
+        // }
         console.log('Tapped! ID: %s', id, res);
+        if (res.length > 300)
+          res = res.substring(0,300);
+
         $scope.events[id].contentHtml = res;
         $cordovaSQLite.updateValueToDB("journal", [res, id]).then(function (res) {
           if (!res.rowsAffected)
@@ -714,7 +719,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       title: 'Quinta Pedagógica',
       when: 'à 5 minutos',
 
-      contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
+      // contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
+      contentHtml: '',
+      titleContentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
     }
       // , {
       //   badgeClass: 'bg-positive',
@@ -2281,6 +2288,36 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
     };
 
+  })
+  .directive('expandingTextarea', function () {
+    return {
+      restrict: 'A',
+      controller: function ($scope, $element, $attrs, $timeout) {
+        $element.css('min-height', '0');
+        $element.css('resize', 'none');
+        $element.css('overflow-y', 'hidden');
+        setHeight(0);
+        $timeout(setHeightToScrollHeight);
+
+        function setHeight(height) {
+          $element.css('height', height + 'px');
+          $element.css('max-height', height + 'px');
+        }
+
+        function setHeightToScrollHeight() {
+          setHeight(0);
+          var scrollHeight = angular.element($element)[0]
+            .scrollHeight;
+          if (scrollHeight !== undefined) {
+            setHeight(scrollHeight);
+          }
+        }
+
+        $scope.$watch(function () {
+          return angular.element($element)[0].value;
+        }, setHeightToScrollHeight);
+      }
+    };
   })
   .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');

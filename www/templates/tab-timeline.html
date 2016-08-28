@@ -30,16 +30,22 @@
           <!-- uses angular-scroll-animate to give it some pop -->
           <timeline-panel class="{{event.badgeClass}} tm timeline-hidden"
                           when-visible="animateElementIn" when-not-visible="animateElementOut">
+            <i ng-click="showCaption($index)" class="caption icon icon ion-edit img-thumbnail"></i>
             <timeline-heading>
 
-              <div class="row">
+              <!--<div class="row">-->
                 <div><h4>{{event.title}}</h4></div>
-                <div ng-if="event.image_src"><i ng-click="showCaption($index)" class = "icon icon ion-edit img-thumbnail"></i></div>
-              </div>
+                <!--<div ng-if="event.image_src"><i ng-click="showCaption($index)" class = "icon icon ion-edit img-thumbnail"></i></div>-->
+                <!--<div <i ng-click="showCaption($index)" class = "icon icon ion-edit img-thumbnail"></i></div>-->
+                <!--<div>-->
+
+                <!--</div>-->
+              <!--</div>-->
 
               <p ng-if="event.when">
                 <small class="text-muted"><i class="glyphicon glyphicon-time"></i>{{event.when}}</small>
               </p>
+              <!--<p ng-if="event.titleContentHtml" ng-click="showImages($index)" ng-bind-html="event.titleContentHtml">-->
               <p ng-if="event.image_src" ng-click="showImages($index)" ng-bind-html="event.titleContentHtml">
               </p>
             </timeline-heading>

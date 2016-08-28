@@ -508,3 +508,9 @@ td-card img {
   -webkit-transition: all ease-in-out 250ms;
   transition: all ease-in-out 250ms;
 }
+
+.caption {
+  right: 10px;
+  top: 15px;
+  position: absolute;
+}
