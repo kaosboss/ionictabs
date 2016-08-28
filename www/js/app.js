@@ -164,8 +164,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // if ($window.StatusBar) {
       //   return $window.StatusBar.hide();
 
-        // org.apache.cordova.statusbar required
-        // StatusBar.styleDefault();
+      // org.apache.cordova.statusbar required
+      // StatusBar.styleDefault();
       // }
     });
   })
@@ -180,6 +180,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.logged = $rootScope.APP.logged;
 
+    $scope.goLogin = function () {
+      $state.go('tab.login');
+    };
+
+    $scope.goHome = function () {
+      $state.go('tab.dash');
+    };
+
     $scope.netWork = {
       type: "",
       isOnline: false,
@@ -189,9 +197,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
     if (cordova != null)
-      $ionicLoading.show({
-        template: 'A carregar...'
-      });
+      $ionicLoading.show();
 
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
@@ -235,7 +241,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             $rootScope.showAlert("NetWork OFFLINE");
           });
         };
-        $scope.checkNetwork();
+        // $scope.checkNetwork();
         // cordova.plugins.BluetoothStatus.initPlugin();
         // db = $rootScope.db = $window.sqlitePlugin.openDatabase({name: "snpquinta.db", location: "default"});
         db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
@@ -261,7 +267,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           });
         }
         dbres = 1;
-
+        $scope.checkNetwork();
         query = "select value from info where name=?";
         $cordovaSQLite.execute(db, query, ["APP"]).then(function (res) {
           if (res.rows.length > 0) {
@@ -350,7 +356,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         }, function (err) {
           if (cordova != null)
             $ionicLoading.hide();
-          alert(err);
+          // alert(err);
           console.error("ERROR ON get app version", err);
         });
 
@@ -630,18 +636,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     //   $scope.modal = modal;
     // });
 
-    $scope.showCaption = function(index) {
+    $scope.showCaption = function (index) {
 
       console.warn("showcaption index: ", index);
 
       var id = "";
       $scope.data = {};
 
-      if (index!=null) {
+      if (index != null) {
         id = $scope.events[index].id;
         $scope.data.caption = $scope.events[index].contentHtml;
       }
-      else{
+      else {
         id = $scope.captureImageId;
         $scope.data.caption = "";
       }
@@ -653,11 +659,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         subTitle: 'Adicione uma descrição à foto',
         scope: $scope,
         buttons: [
-          { text: 'Cancelar' },
+          {text: 'Cancelar'},
           {
             text: '<b>Guardar</b>',
             type: 'button-positive',
-            onTap: function(e) {
+            onTap: function (e) {
               if (!$scope.data.caption) {
                 e.preventDefault();
               } else {
@@ -668,13 +674,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         ]
       });
 
-      caption.then(function(res) {
+      caption.then(function (res) {
         if (device.platform === 'Android') {
-        //
+          //
           cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-        //   ionic.Platform.fullScreen();
-        //   if ($window.StatusBar)
-        //     return $window.StatusBar.hide();
+          //   ionic.Platform.fullScreen();
+          //   if ($window.StatusBar)
+          //     return $window.StatusBar.hide();
         }
         console.log('Tapped! ID: %s', id, res);
         $scope.events[id].contentHtml = res;
@@ -690,15 +696,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // }, 10000);
     };
 
-    $scope.createContact = function(caption, id) {
+    $scope.createContact = function (caption, id) {
       // $scope.contacts.push({ name: u.firstName + ' ' + u.lastName });
       console.log("New caption: %s for id: %s", caption, id);
       $scope.modal.hide();
     };
 
     $scope.side = 'left';
-    $scope.images = {
-    };
+    $scope.images = {};
 
     $scope.events = [{
       id: 0,
@@ -711,16 +716,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
     }
-    // , {
-    //   badgeClass: 'bg-positive',
-    //   // badgeIconClass : 'ion-gear-b',
-    //   badgeIconClass: '',
-    //   title: 'Descoberta!',
-    //   when: 'à 12 minutos',
-    //   titleContentHtml: '',
-    //   contentHtml: '<img ng-image-appear placeholder class="img-responsive" src="img/snp_projeto_02_small.jpg"><p>Encontraste a região da Chacra</p>',
-    //   footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
-    // }
+      // , {
+      //   badgeClass: 'bg-positive',
+      //   // badgeIconClass : 'ion-gear-b',
+      //   badgeIconClass: '',
+      //   title: 'Descoberta!',
+      //   when: 'à 12 minutos',
+      //   titleContentHtml: '',
+      //   contentHtml: '<img ng-image-appear placeholder class="img-responsive" src="img/snp_projeto_02_small.jpg"><p>Encontraste a região da Chacra</p>',
+      //   footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
+      // }
       // , {
       //   image: "img/atividades_quinta_pedagogica.jpg",
       //   badgeClass: 'bg-balanced',
@@ -814,7 +819,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       console.log("clicked img in journal", index);
       $scope.activeSlide = 0;
 
-      $scope.images.activeIMG =$scope.events[index].image_src;
+      $scope.images.activeIMG = $scope.events[index].image_src;
       // $scope.images.push({
       //   activeIMG: $scope.events[index].image_src
       // });
@@ -853,31 +858,32 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $ionicLoading.hide();
         $scope.showCaption();
       }
+
       function error(evt) {
         $ionicLoading.hide();
         console.error("Write failed:" + evt);
       }
 
-      function savebase64AsImageFile(folderpath,filename,content,contentType){
+      function savebase64AsImageFile(folderpath, filename, content, contentType) {
         // Convert the base64 string in a Blob
-        var DataBlob = blob.b64toBlob(content,contentType);
+        var DataBlob = blob.b64toBlob(content, contentType);
 
         console.log("Starting to write the file :3");
 
-        window.resolveLocalFileSystemURL(folderpath, function(dir) {
+        window.resolveLocalFileSystemURL(folderpath, function (dir) {
           console.log("Access to the directory granted succesfully");
-          dir.getFile(filename, {create:true}, function(file) {
+          dir.getFile(filename, {create: true}, function (file) {
             console.log("File created succesfully.", file.toURL());
             $scope.thumb_file = file.toURL();
-            file.createWriter(function(fileWriter) {
+            file.createWriter(function (fileWriter) {
               console.log("Writing content to file");
               // fileWriter.write(DataBlob);
               fileWriter.onwrite = done;
               fileWriter.onerror = error;
               // fileWriter.write(content);
               fileWriter.write(DataBlob);
-            }, function(){
-              console.error('Unable to save file in path '+ folderpath);
+            }, function () {
+              console.error('Unable to save file in path ' + folderpath);
             });
           });
         });
@@ -896,8 +902,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 // get the real base64 content of the file
         var realData = block[1].split(",")[1];// In this case "iVBORw0KGg...."
 
-        savebase64AsImageFile(folderpath,filename,realData,dataType);
-        console.log("saveThumbToFile", folderpath,filename,contentType);
+        savebase64AsImageFile(folderpath, filename, realData, dataType);
+        console.log("saveThumbToFile", folderpath, filename, contentType);
       };
 
       resizeImage = function (img_path) {
@@ -950,10 +956,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               $scope.addEvent(res.rows.item(f).id, res.rows.item(f).IMG, res.rows.item(f).thumbnail_data, res.rows.item(f).caption, 1);
 
             $ionicScrollDelegate.resize();
-              // $scope.allImages.push({
-              //   src: res.rows.item(f).thumbnail_data,
-              //   img: res.rows.item(f).IMG
-              // });
+            // $scope.allImages.push({
+            //   src: res.rows.item(f).thumbnail_data,
+            //   img: res.rows.item(f).IMG
+            // });
 
             console.log(message, res);
             // $scope.lastPhoto = res.rows.item(res.rows.length - 1).IMG;
@@ -1098,9 +1104,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $scope.takingPicture = 1;
 
         if (device.platform === 'iOS') {
-          $ionicLoading.show({
-            template: 'Tirar Fotografia'
-          });
+          $ionicLoading.show();
         }
 
         navigator.camera.getPicture(onSuccess, onFail, {
@@ -1116,14 +1120,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         function onSuccess(imageURI) {
 
-          if (device.platform === 'iOS') {
-            $ionicLoading.hide();
-          }
+          // if (device.platform === 'iOS') {
+          //   $ionicLoading.hide();
+          // }
 
           console.log(imageURI);
-          $ionicLoading.show({
-            template: 'A gravar'
-          });
+          if (device.platform === 'Android')
+            $ionicLoading.show();
+
           $scope.takingPicture = 0;
           // $scope.lastPhoto = imageURI;
           // $scope.$apply();
@@ -1753,6 +1757,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     //
     //   // console.log("tab mapa QR_CODE_SCAN scandat", args.barcodeData);
     // });
+
     $scope.$on("$ionicView.beforeEnter", function (event, data) {
       console.log("State $ionicView.beforeEnter Params: ", data);
       if ($stateParams.PI)
@@ -2011,6 +2016,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   })
   .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate) {
 
+    $scope.goLogin = function () {
+      $state.go('tab.login');
+    };
+
+    $scope.goHome = function () {
+      $state.go('tab.dash');
+    };
     // Called to navigate to the main app
     $scope.startApp = function () {
       $state.go('tab.dash');

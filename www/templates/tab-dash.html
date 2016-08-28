@@ -9,9 +9,8 @@
 
       <div class="APPmain">
         <h3 align="center">Bem vindo!</h3>
-        <div >
-          <a class="button button-calm APPcenter" ng-show=!$root.APP.logged href="#/tab/login">Concluido - Login</a>
-          <!--<a class="button button-calm APPcenter" ng-if=$root.APP.logged href="#/tab/dash">Concluido - HomePage</a>-->
+        <div>
+          <button ng-click="goLogin()" class="button button-balanced APPcenter">Login</button>
         </div>
       </div>
     </div>
