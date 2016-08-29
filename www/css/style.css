@@ -154,12 +154,12 @@ body {
   /*white-space: normal;*/
 }
 
-.APPheader {
-  height: 30%;
-}
-.APPmain {
-  height: 70%;
-}
+/*.APPheader {*/
+  /*height: 50%;*/
+/*}*/
+/*.APPmain {*/
+  /*height: 50%;*/
+/*}*/
 /*.APPmain .scroll-view {*/
   /*!*position: static;*!*/
   /*display: block;*/
@@ -176,8 +176,8 @@ body {
 }
 
 .APPimg {
-  width: 100%;
-  height: 100%;
+  /*width: 100%;*/
+  /*height: 100%;*/
 }
 
 /*Tinder cards PI*/

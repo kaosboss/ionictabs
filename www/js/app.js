@@ -97,7 +97,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         picture: 'img/SNP_small.jpg'
       }
     };
-    var preLoadImages = ['img/atividades_quinta_pedagogica_small.jpg', 'img/SNP_background_intro.jpg', 'img/snp_projeto_02_small.jpg'];
+    var preLoadImages = ['img/atividades/atividades_quinta_pedagogica_small.jpg', 'img/SNP_background_intro.jpg', 'img/snp_projeto_02_small.jpg'];
 
     $ImageCacheFactory.Cache(preLoadImages).then(function () {
       console.warn("done preloading!");
@@ -2230,48 +2230,67 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
   })
-  .controller('SNPCtrl', function ($scope, $state, $timeout) {
+  .controller('SNPCtrl', function ($scope, $state, $timeout, $ionicHistory) {
 
     $scope.goAtividades = function () {
       console.log("Go Atividades");
+      // $ionicHistory.goBack();
       $state.go("tab.snp", {
         AT: "ALL"
       });
     };
 
+    $scope.goBack = function () {
+      $ionicHistory.goBack();
+    };
+
     $scope.goAtividadesDetalhe = function (item) {
       console.log("Go Atividades detalhe ", item);
+      // $ionicHistory.goBack();
       $state.go("tab.snp", {
         AT: "atividades",
-        ATD: "arborismo"
+        ATD: item.template
       });
-    }
+    };
+
+    $scope.init = function () {
+      $scope.myItems = [];
+      $timeout(function () {
+        for (var i = 0; i < $scope.items.length; i++) {
+          $scope.myItems.push($scope.items[i]);
+        }
+      },  100);
+    };
 
     $scope.myItems = [];
     $scope.items = [
       {
         id: 0,
-        img: 'img/atividades_arborismo.png',
+        img: 'img/atividades/atividades_arborismo.png',
         title: 'ARBORISMO',
-        description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.'
+        description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.',
+        template: "arborismo"
       },
       {
         id: 1,
-        img: 'img/atividades_bicicletas-hover.png',
+        img: 'img/atividades/atividades_bicicletas-hover.png',
         title: 'BICICLETAS NO SNP',
-        description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.'
+        description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.',
+        template: "bicicletas"
       },
       {
         id: 2,
         title: 'DESPORTO AQUÁTICO AVENTURA',
         description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
-        img: 'img/actividades_aquaticas-hover.png'
+        img: 'img/atividades/actividades_aquaticas-hover.png',
+        template: "aquaticas"
       },
       {
         id: 3,
         title: 'CAMPOS DE FÉRIAS',
-        img: 'img/atividades_campo_ferias-hover.png',
-        description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.'
+        img: 'img/atividades/atividades_campo_ferias-hover.png',
+        description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.',
+        template: "campo_ferias"
       },
       // { id: 4,
       //   img: 'img/atividades_dormir_snp-hover.png'
@@ -2280,33 +2299,29 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         id: 5,
         title: 'FAUNA E FLORA',
         description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
-        img: 'img/atividades_fauna_flora-hover.png'
+        img: 'img/atividades/atividades_fauna_flora-hover.png'
       },
       {
         id: 6,
         title: 'PAINTBALL',
         description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
-        img: 'img/atividades_painball-hover.png'
+        img: 'img/atividades/atividades_painball-hover.png'
       },
       {
         id: 7,
         title: 'PERCURSOS PEDESTRES',
         description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
-        img: 'img/atividades_percursos_pedestres-hover.png'
+        img: 'img/atividades/atividades_percursos_pedestres-hover.png'
       },
       {
         id: 8,
-        img: 'img/atividades_tiro-hover.png',
+        img: 'img/atividades/atividades_tiro-hover.png',
         title: 'ATIVIDADES DE TIRO',
         description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
       }
     ];
 
-    $timeout(function () {
-      for (var i = 0; i < 5; i++) {
-        $scope.myItems.push($scope.items[i]);
-      }
-    });
+
   })
   .directive('expandingTextarea', function () {
     return {
