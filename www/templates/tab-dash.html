@@ -4,14 +4,21 @@
     <div class="APPfull">
       <div class="APPheader">
         <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
-        <img class="APPimg" src="img/atividades/atividades_quinta_pedagogica_small.jpg"/>
+        <!--<img class="APPimg animated fadeIn" src="img/atividades_quinta_pedagogica_small.jpg"/>-->
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica_small.jpg"-->
+        <!--ng-image-appear responsive transition-duration="2s" animation="fadeInRight" animation-duration="2s"-->
+        <!--easing="ease-out"-->
+        <!--no-loader placeholder>-->
+        <img class="img-responsive" src="img/atividades_quinta_pedagogica_small.jpg"
+             ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"
+             easing="ease-out"/>
       </div>
+    </div>
 
-      <div class="APPmain">
-        <h3 align="center">Bem vindo!</h3>
-        <div>
-          <button ng-click="goLogin()" class="button button-balanced APPcenter">Login</button>
-        </div>
+    <div class="APPmain">
+      <h3 align="center">Bem vindo!</h3>
+      <div>
+        <button ng-click="goLogin()" class="button button-balanced APPcenter animated slideInRight">Login</button>
       </div>
     </div>
 

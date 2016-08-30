@@ -1,13 +1,4 @@
-// Ionic Starter App
-// Ionic Starter App
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
-var APPverion = "0.2";
+var APPverion = "0.5";
 var APPtutorial = 0;
 var APPfirstTime = 0;
 var APPdir = null;
@@ -16,72 +7,6 @@ var enableBeacons = false;
 var initialOutput = "";
 var debug = 0;
 var noBLE = 1;
-// var aCircles_inicial = [
-//   {
-//     nome: "RI_A",
-//     descricao: "Região de interesse A",
-//     centerX: 273,
-//     centerY: 105,
-//     radius: 20,
-//     locked: false
-//   },
-//   {
-//     nome: "RI_B",
-//     descricao: "Região de interesse B",
-//     centerX: 230,
-//     centerY: 95,
-//     radius: 20,
-//     locked: false
-//   },
-//   {
-//     nome: "RI_C",
-//     descricao: "Região de interesse C",
-//     centerX: 187,
-//     centerY: 88,
-//     radius: 22,
-//     locked: false
-//   },
-//   {
-//     nome: "RI_D",
-//     descricao: "Região de interesse D",
-//     centerX: 135,
-//     centerY: 70,
-//     radius: 32,
-//     locked: true
-//   },
-//   {
-//     nome: "RI_E",
-//     descricao: "Região de interesse E",
-//     centerX: 53,
-//     centerY: 50,
-//     radius: 36,
-//     locked: true
-//   },
-//   {
-//     nome: "RI_F",
-//     descricao: "Região de interesse F",
-//     centerX: 75,
-//     centerY: 110,
-//     radius: 31,
-//     locked: true
-//   },
-//   {
-//     nome: "RI_G",
-//     descricao: "Região de interesse G",
-//     centerX: 178,
-//     centerY: 125,
-//     radius: 20,
-//     locked: true
-//   },
-//   {
-//     nome: "RI_H",
-//     descricao: "Região de interesse H",
-//     centerX: 225,
-//     centerY: 125,
-//     radius: 20,
-//     locked: true
-//   }
-// ];
 
 cw = function (value) {
   initialOutput += value + '\n';
@@ -97,7 +22,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         picture: 'img/SNP_small.jpg'
       }
     };
-    var preLoadImages = ['img/atividades/atividades_quinta_pedagogica_small.jpg', 'img/SNP_background_intro.jpg', 'img/snp_projeto_02_small.jpg'];
+    var preLoadImages = [
+      'img/atividades_quinta_pedagogica_small.jpg',
+      'img/SNP_background_intro.jpg',
+      'img/SNP_small.jpg',
+      'img/snp_projeto_02_small.jpg'];
 
     $ImageCacheFactory.Cache(preLoadImages).then(function () {
       console.warn("done preloading!");
@@ -196,7 +125,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       offLineState: ""
     };
 
-    if (cordova != null)
+    // console.log(typeof cordova);
+
+    if (!typeof cordova)
       $ionicLoading.show();
 
     $ionicPlatform.ready(function () {
@@ -244,7 +175,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // $scope.checkNetwork();
         // cordova.plugins.BluetoothStatus.initPlugin();
         // db = $rootScope.db = $window.sqlitePlugin.openDatabase({name: "snpquinta.db", location: "default"});
-        db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
+        // if (!typeof cordova)
+          db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
 
         if (db) {
           cw("DB open");
@@ -794,7 +726,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.images = {};
 
     $scope.events = [{
-      id: 0,
       badgeClass: 'mascoteAvatar',
       badgeIconClass: 'bg-dark',
       // badgeIconClass : 'ion-ionic',
@@ -804,7 +735,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       // contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
       contentHtml: '',
-      titleContentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
+      titleContentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
     }
       // , {
       //   badgeClass: 'bg-positive',
