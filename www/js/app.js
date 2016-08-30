@@ -662,8 +662,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             if (!res.rowsAffected)
               console.warn("ALERT: Delete from db got 0 affected rows");
             // console.log("Client side, returned update", res);
-            for(var i = 0; i < $scope.events.length; i++) {
-              if($scope.events[i].id==$scope.id) {
+            for (var i = 0; i < $scope.events.length; i++) {
+              if ($scope.events[i].id == $scope.id) {
                 $scope.events.splice(i, 1);
                 $ionicScrollDelegate.resize();
                 console.warn("FOUND ID: Delete from db got 0 affected rows", $scope.id);
@@ -733,8 +733,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           subTitle: 'Adicione uma descrição à foto',
           scope: $scope,
           buttons: [
-            {text: 'Cancelar',
-            type: 'button-small button-positive'
+            {
+              text: 'Cancelar',
+              type: 'button-small button-positive'
             },
             {
               text: '<b><i class="glyphicon icon ion-trash-a"></i></b>',
@@ -758,7 +759,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         });
 
       caption.then(function (res) {
-        if (res=="delete"){
+        if (res == "delete") {
           $scope.showDelete();
           return;
         }
@@ -825,6 +826,21 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       //   // footerContentHtml : '<a href="">Continue Reading</a>'
       // }
     ];
+
+    $scope.addInHouseEvent = function () {
+      $scope.events.push(
+        {
+          badgeClass: 'bg-positive',
+          // badgeIconClass : 'ion-gear-b',
+          badgeIconClass: '',
+          title: 'Descoberta!',
+          when: 'à 12 minutos',
+          titleContentHtml: '',
+          contentHtml: '<img ng-image-appear placeholder class="img-responsive" src="img/snp_projeto_02_small.jpg"><p>Encontraste a região da Chacra</p>',
+          footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
+        })
+
+    };
 
     $scope.addEvent = function (id, img, thumb, caption, noRefresh) {
       if (img) {
@@ -2335,15 +2351,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       });
     };
 
-    $scope.init = function () {
-      console.warn("ng-init atividades");
-      $scope.myItems = [];
-      $timeout(function () {
-        for (var i = 0; i < $scope.items.length; i++) {
-          $scope.myItems.push($scope.items[i]);
-        }
-      }, 200);
-    };
+    // $scope.init = function () {
+    //   console.warn("ng-init atividades");
+    //   $scope.myItems = [];
+    //   $timeout(function () {
+    //     for (var i = 0; i < $scope.items.length; i++) {
+    //       $scope.myItems.push($scope.items[i]);
+    //     }
+    //   }, 200);
+    // };
 
     // $scope.myItems = [];
     $scope.myItems = [
@@ -2375,9 +2391,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.',
         template: "campo_ferias"
       },
-      // { id: 4,
-      //   img: 'img/atividades_dormir_snp-hover.png'
-      // },
       {
         id: 5,
         title: 'FAUNA E FLORA',
@@ -2403,7 +2416,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
       }
     ];
-
 
   })
   .directive('expandingTextarea', function () {
