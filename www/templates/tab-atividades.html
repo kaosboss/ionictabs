@@ -1,30 +1,38 @@
 <ion-view view-title="Atividades">
-  <ion-content class="has-header has-tabs" scroll="true" ng-init="init()">
+  <ion-content class="has-header has-tabs" scroll="true">
 
     <div class="APPfull">
       <div class="APPheader">
         <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
         <img class="APPimg" src="img/snp_projeto_02_small.jpg"
-             ng-image-appear responsive transition-duration="1s" animation="fadeInUp" animation-duration="1s"
+             ng-image-appear responsive transition-duration="0.8s" animation="fadeInUp" animation-duration="0.8s"
              easing="ease-out">
       </div>
 
 
       <div class="APPmain">
 
-        <ion-list class="">
+        <ion-list class="list-borderless">
           <div class="list-item animated fadeInUpBig padding">
             <!--<h4 align="center">ARBORISMO</h4>-->
             <ion-item ng-click="goAtividadesDetalhe(item)" ng-repeat="item in myItems"
-                      class="item-thumbnail-left">
+                      class="item-thumbnail-left item-icon-right">
 
               <img ng-src="{{item.img}}">
               <h2>{{item.title}}</h2>
               <!--<p class="textWrap">{{item.description}}</p>-->
               <h4 class="textWrap">{{item.description}}</h4>
+              <i class="icon ion-chevron-right icon-accessory"></i>
+              <!--<button ng-show="item.like" class="captionAtividades button-light icon ion-heart" ng-click=""></button>-->
+              <!--<ion-option-button class="button-light icon ion-heart"></ion-option-button>-->
+              <!--<ion-option-button class="button-light icon ion-email"></ion-option-button>-->
+              <p>
+                <a href="#" class="subdued">123 likes</a>
+                <a href="#" class="{{ item.like ? 'assertive' : 'subdued'}} button-small button-light ion-heart"></a>
+              </p>
               <ion-option-button class="button-positive"
-                                 ng-click="share(item)">
-                Share
+                                 ng-click="item.like=!item.like">
+                Like
               </ion-option-button>
 
             </ion-item>

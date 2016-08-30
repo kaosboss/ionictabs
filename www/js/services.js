@@ -597,6 +597,26 @@ angular.module('starter.services', [])
       }
     };
 
+    deleteValueFromDB = function (tipo, binding) {
+      switch (tipo) {
+        case "journal":
+
+          var query = "delete from journal where id=?";
+          return this.execute(db, query, binding).then(function (res) {
+            result = res;
+            console.log("DELETE registo from DB, binding: %s", binding.toString());
+            if (!res.rowsAffected)
+              console.warn("ALERT: Deleet from db got 0 affected rows");
+            return res;
+          }, function (err) {
+            // alert(err);
+            console.error(err);
+            return 0;
+          });
+          break;
+      }
+    };
+
     updateValueToDB = function (tipo, binding) {
       switch (tipo) {
         case "info":
@@ -657,6 +677,8 @@ angular.module('starter.services', [])
       // nestedExecute: nestedExecute,
 
       // deleteDB: deleteDB,
+
+      deleteValueFromDB: deleteValueFromDB,
 
       getVarFromDB: getVarFromDB,
 

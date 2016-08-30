@@ -636,60 +636,142 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     //   $scope.modal = modal;
     // });
 
-    $scope.showCaption = function (index) {
-
-      console.warn("showcaption index: ", index);
-
-      var id = "";
-      $scope.data = {};
-
-      if (index != null) {
-        id = $scope.events[index].id;
-        $scope.data.caption = $scope.events[index].contentHtml;
-      }
-      else {
-        id = $scope.captureImageId;
-        $scope.data.caption = "\n\n\n";
-      }
-
-      // An elaborate, custom popup
-      var caption = $ionicPopup.show({
+    $scope.showDelete = function () {
+      var confirmDeletePopup = $ionicPopup.confirm({
         cssClass: "myPopup",
-        // template: '<textarea ng-model="data.caption" name="Text1" rows="2"></textarea>',
-        templateUrl: 'templates/template_caption.html',
-        title: 'Album',
-        subTitle: 'Adicione uma descrição à foto',
+        title: "Apagar",
+        template: 'Queres mesmo apagar este registo?',
         scope: $scope,
         buttons: [
-          {text: 'Cancelar'},
+          {text: 'Não'},
           {
-            text: '<b>Guardar</b>',
-            type: 'button-positive',
+            text: '<b>Sim</b>',
+            type: 'button-assertive',
             onTap: function (e) {
-              if (!$scope.data.caption) {
-                e.preventDefault();
-              } else {
-                return $scope.data.caption;
-              }
+              console.log("Confirmed delete id: %s", $scope.id);
+              return 1;
             }
           }
         ]
       });
 
-      caption.then(function (res) {
-        // if (device.platform === 'Android') {
-          //
-          // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-          //   ionic.Platform.fullScreen();
-          //   if ($window.StatusBar)
-          //     return $window.StatusBar.hide();
-        // }
-        console.log('Tapped! ID: %s', id, res);
-        if (res.length > 300)
-          res = res.substring(0,300);
+      confirmDeletePopup.then(function (res) {
+        if (res) {
+          console.log('resposta confirmacao de delete id: %s', $scope.id);
+          $cordovaSQLite.deleteValueFromDB("journal", $scope.id).then(function (res) {
+            if (!res.rowsAffected)
+              console.warn("ALERT: Delete from db got 0 affected rows");
+            // console.log("Client side, returned update", res);
+            for(var i = 0; i < $scope.events.length; i++) {
+              if($scope.events[i].id==$scope.id) {
+                $scope.events.splice(i, 1);
+                $ionicScrollDelegate.resize();
+                console.warn("FOUND ID: Delete from db got 0 affected rows", $scope.id);
+                break;
+              }
+            }
+          });
+        } else {
+          console.log('Nao, manter registo id: %s', $scope.id);
+        }
+        // $scope.popupON = 0;
+        // $rootScope.popupON = 0;
+      });
+    };
 
-        $scope.events[id].contentHtml = res;
-        $cordovaSQLite.updateValueToDB("journal", [res, id]).then(function (res) {
+    $scope.showCaption = function (index) {
+
+      console.warn("showcaption index: ", index);
+
+      $scope.id = "";
+      var edit = false;
+      $scope.data = {};
+      var caption = null;
+
+      if (index != null) {
+        $scope.id = $scope.events[index].id;
+        if ($scope.events[index].contentHtml != '')
+          edit = true;
+        $scope.data.caption = $scope.events[index].contentHtml;
+      }
+      else {
+        edit = false;
+        $scope.id = $scope.captureImageId;
+        $scope.data.caption = "\n\n\n";
+      }
+
+      // An elaborate, custom popup
+      if (!edit)
+        caption = $ionicPopup.show({
+          cssClass: "myPopup",
+          // template: '<textarea ng-model="data.caption" name="Text1" rows="2"></textarea>',
+          templateUrl: 'templates/template_caption.html',
+          title: 'Album',
+          subTitle: 'Adicione uma descrição à foto',
+          scope: $scope,
+          buttons: [
+            {text: 'Cancelar'},
+            {
+              text: '<b>Guardar</b>',
+              type: 'button-positive',
+              onTap: function (e) {
+                if (!$scope.data.caption) {
+                  e.preventDefault();
+                } else {
+                  return $scope.data.caption;
+                }
+              }
+            }
+          ]
+        });
+      else
+        caption = $ionicPopup.show({
+          cssClass: "myPopup",
+          // template: '<textarea ng-model="data.caption" name="Text1" rows="2"></textarea>',
+          templateUrl: 'templates/template_caption.html',
+          title: 'Album',
+          subTitle: 'Adicione uma descrição à foto',
+          scope: $scope,
+          buttons: [
+            {text: 'Cancelar',
+            type: 'button-small button-positive'
+            },
+            {
+              text: '<b><i class="glyphicon icon ion-trash-a"></i></b>',
+              type: 'button-small button-assertive',
+              onTap: function (e) {
+                return "delete";
+              }
+            },
+            {
+              text: 'Guardar',
+              type: 'button-small button-balanced',
+              onTap: function (e) {
+                if (!$scope.data.caption) {
+                  e.preventDefault();
+                } else {
+                  return $scope.data.caption;
+                }
+              }
+            }
+          ]
+        });
+
+      caption.then(function (res) {
+        if (res=="delete"){
+          $scope.showDelete();
+          return;
+        }
+
+        console.log('Tapped! ID: %s', $scope.id, res);
+        if (!res)
+          return;
+
+        if (res.length > 300)
+          res = res.substring(0, 300);
+
+        $scope.events[$scope.id].contentHtml = res;
+        $cordovaSQLite.updateValueToDB("journal", [res, $scope.id]).then(function (res) {
           if (!res.rowsAffected)
             console.warn("ALERT: Update db got 0 affected rows");
           // console.log("Client side, returned update", res);
@@ -2254,16 +2336,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
     $scope.init = function () {
+      console.warn("ng-init atividades");
       $scope.myItems = [];
       $timeout(function () {
         for (var i = 0; i < $scope.items.length; i++) {
           $scope.myItems.push($scope.items[i]);
         }
-      },  100);
+      }, 200);
     };
 
-    $scope.myItems = [];
-    $scope.items = [
+    // $scope.myItems = [];
+    $scope.myItems = [
       {
         id: 0,
         img: 'img/atividades/atividades_arborismo.png',
@@ -2280,7 +2363,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       },
       {
         id: 2,
-        title: 'DESPORTO AQUÁTICO AVENTURA',
+        title: 'DESPORTO AQUÁTICO',
         description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
         img: 'img/atividades/actividades_aquaticas-hover.png',
         template: "aquaticas"
