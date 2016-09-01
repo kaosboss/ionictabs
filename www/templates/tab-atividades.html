@@ -27,11 +27,11 @@
               <!--<ion-option-button class="button-light icon ion-heart"></ion-option-button>-->
               <!--<ion-option-button class="button-light icon ion-email"></ion-option-button>-->
               <p>
-                <a href="#" class="subdued">123 likes</a>
+                <a href="#" class="subdued">{{item.likes}} likes</a>
                 <a href="#" class="{{ item.like ? 'assertive' : 'subdued'}} button-small button-light ion-heart"></a>
               </p>
               <ion-option-button class="button-positive"
-                                 ng-click="item.like=!item.like">
+                                 ng-click="clickedLike(item)">
                 Like
               </ion-option-button>
 

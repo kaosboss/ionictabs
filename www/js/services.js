@@ -710,6 +710,165 @@ angular.module('starter.services', [])
     };
 
   })
+  .factory("likes", function ($firebaseArray, $firebase, $cordovaNetwork, $cordovaSQLite) {
+
+    var likesRef;
+    var allLikes = [];
+    var atividades = null;
+    var dataLoaded = false;
+    var needUpdate = false;
+    var items = [
+      {
+        id: 0,
+        img: 'img/atividades/atividades_arborismo.png',
+        title: 'ARBORISMO',
+        description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.',
+        template: "arborismo"
+      },
+      {
+        id: 1,
+        img: 'img/atividades/atividades_bicicletas-hover.png',
+        title: 'BICICLETAS NO SNP',
+        description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.',
+        template: "bicicletas"
+      },
+      {
+        id: 2,
+        title: 'DESPORTO AQUÁTICO',
+        description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
+        img: 'img/atividades/actividades_aquaticas-hover.png',
+        template: "aquaticas"
+      },
+      {
+        id: 3,
+        title: 'CAMPOS DE FÉRIAS',
+        img: 'img/atividades/atividades_campo_ferias-hover.png',
+        description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.',
+        template: "campo_ferias"
+      },
+      {
+        id: 5,
+        title: 'FAUNA E FLORA',
+        description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
+        img: 'img/atividades/atividades_fauna_flora-hover.png'
+      },
+      {
+        id: 6,
+        title: 'PAINTBALL',
+        description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
+        img: 'img/atividades/atividades_painball-hover.png'
+      },
+      {
+        id: 7,
+        title: 'PERCURSOS PEDESTRES',
+        description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
+        img: 'img/atividades/atividades_percursos_pedestres-hover.png'
+      },
+      {
+        id: 8,
+        img: 'img/atividades/atividades_tiro-hover.png',
+        title: 'ATIVIDADES DE TIRO',
+        description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
+      }
+    ];
+
+    isDataLoaded = function () {
+      return dataLoaded;
+    };
+
+    uploadLikes = function () {
+
+    };
+
+    init = function () {
+      var online = $cordovaNetwork.isOnline();
+      console.log("FIREBASE: likes INIT online: %s", online);
+
+      if (online) {
+        likesRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Likes/Atividades");
+
+        atividades = $firebaseArray(likesRef);
+        atividades.$loaded(function () {
+          console.log("Loaded likes");
+          processLikes(atividades);
+        });
+      } else {
+        $cordovaSQLite.getVarFromDB("info", "atividades").then(function (res) {
+          items = JSON.parse(res || '{}')
+        });
+      }
+      // allLikes = Firebase(likesRef).$asArray();
+      // return $firebaseArray(likesRef);
+    };
+    saveLikes = function (listItems) {
+      if (!listItems)
+        listItems = items;
+      console.log("Saving likes");
+      $cordovaSQLite.updateValueToDB("info", [JSON.stringify(listItems), "atividades"]).then(function (res) {
+        if (!res.rowsAffected)
+          console.warn("ALERT: Update db got 0 affected rows, on saveLikes");
+        // console.log("Client side, returned update", res);
+      });
+    };
+
+    processLikes = function (tempRef) {
+      console.log("process likes ", tempRef.length);
+      for (var f = 0; f < tempRef.length; f++) {
+        console.log("process likes ", tempRef[f]);
+        allLikes.push({
+          nome: tempRef[f].$id,
+          likes: tempRef[f].$value
+        })
+      }
+      for (var f = 0; f < items.length; f++) {
+        for (var i = 0; i < allLikes.length; i++) {
+          if (items[f].template == allLikes[i].nome) {
+            items[f].likes = allLikes[i].likes;
+          }
+        }
+      }
+
+      saveLikes();
+
+      offline();
+    };
+
+    getItems = function () {
+      return items;
+    };
+
+    needsUpdate = function (update) {
+      if (!update)
+        return needUpdate;
+      else
+        needUpdate = update;
+    };
+
+    getAllLikes = function () {
+
+      // if (allLikes.length)
+      return allLikes;
+      // else
+      //   return [];
+    };
+
+    offline = function () {
+      console.log("FIREBASE: going offline");
+      Firebase.goOffline();
+    };
+
+    return {
+      init: init,
+      isDataLoaded: isDataLoaded,
+      getAllLikes: getAllLikes,
+      getItems: getItems,
+      processLikes: processLikes,
+      saveLikes: saveLikes,
+      needsUpdate: needsUpdate,
+      offline: offline
+    };
+
+  })
   .factory("$regioes", function ($cordovaSQLite) {
 
     console.log("Factory $regioes");

@@ -101,7 +101,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   // .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $ionicLoading) {
   .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout,
                                     $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork,
-                                    UserService, users, $regioes, $state, perguntas, $ionicLoading) {
+                                    UserService, users, $regioes, $state, perguntas, $ionicLoading, likes) {
 
     dbres = 0;
     var query = "";
@@ -127,11 +127,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     // console.log(typeof cordova);
 
-    if (!typeof cordova)
+    if (typeof cordova)
       $ionicLoading.show();
 
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
+        $rootScope.isOnline = $cordovaNetwork.isOnline();
 
         $window.document.addEventListener("pause", function (event) {
           // $rootScope.$broadcast('cordovaPauseEvent');
@@ -154,6 +155,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           $rootScope.netWorktype = $cordovaNetwork.getNetwork();
           $scope.netWork.isOffline = $cordovaNetwork.isOffline();
 
+          // if ($cordovaNetwork.isOnline())
+          $timeout(function () {
+            if (!likes.isDataLoaded())
+              likes.init();
+          }, 1000);
+
           $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
             $scope.netWork.type = networkState;
             $rootScope.netWorktype = networkState;
@@ -161,6 +168,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             $scope.netWork.isOnline = true;
             $scope.netWork.isOffline = false;
             $rootScope.showAlert("NetWork ONLINE");
+
+            if (!likes.isDataLoaded())
+              likes.init();
           });
 
           $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
@@ -176,7 +186,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // cordova.plugins.BluetoothStatus.initPlugin();
         // db = $rootScope.db = $window.sqlitePlugin.openDatabase({name: "snpquinta.db", location: "default"});
         // if (!typeof cordova)
-          db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
+        db = $rootScope.db = $cordovaSQLite.openDB({name: "snpquinta.db", location: "default"});
 
         if (db) {
           cw("DB open");
@@ -227,7 +237,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 $rootScope.APP.user.email = userInfo.email;
                 $rootScope.APP.user.picture = userInfo.picture;
                 $scope.logged = true;
-                users.offline();
+
+                // users.offline();
                 console.log("USER: LOGGED: true");
                 // $state.go("tab.atividades");
               } else {
@@ -270,6 +281,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             }, function (err) {
               console.error(err);
               alert(err);
+            });
+
+            query = "INSERT INTO `info` (name,value) VALUES ('atividades', '" + JSON.stringify(likes.getItems()) + "')";
+            $cordovaSQLite.execute(db, query, []).then(function (res) {
+              var message = "INSERT ID -> " + res.insertId;
+              // console.log(message);
+              console.log("Inserted atividades items");
+            }, function (err) {
+              console.error(err);
+              // alert(err);
             });
 
             perguntas.getRegioesInicio().then(function (res) {
@@ -1615,7 +1636,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 platform: ionic.Platform.platform(),
                 version: ionic.Platform.version(),
                 timestamp: Date.now(),
-                data: Date().toLocaleLowerCase()
+                data: Date().toLocaleLowerCase(),
+                modelo: ionic.Platform.device().model
               })
             }
             $rootScope.enableBeacons = true;
@@ -1690,7 +1712,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                         platform: ionic.Platform.platform(),
                         version: ionic.Platform.version(),
                         timestamp: Date.now(),
-                        data: Date().toLocaleLowerCase()
+                        data: Date().toLocaleLowerCase(),
+                        modelo: ionic.Platform.device().model
                       })
                     }
                     $rootScope.showAlert("Facebook Logged IN com o nome: " + profileInfo.name + " email: " + profileInfo.email);
@@ -2259,7 +2282,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
   })
-  .controller('SNPCtrl', function ($scope, $state, $timeout, $ionicHistory) {
+  .controller('SNPCtrl', function ($scope, $state, $timeout, $ionicHistory, $rootScope, likes, $stateParams) {
+
+    // var allLikes = likes.getAllLikes();
+    $scope.myItems = [];
+    $scope.Items = likes.getItems();
+    $scope.url = null;
+
+    // console.warn("AllLikes: ", allLikes);
 
     $scope.goAtividades = function () {
       console.log("Go Atividades");
@@ -2274,12 +2304,84 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
     $scope.goAtividadesDetalhe = function (item) {
-      console.log("Go Atividades detalhe ", item);
+      console.log("Go Atividades detalhe ");
       // $ionicHistory.goBack();
       $state.go("tab.snp", {
         AT: "atividades",
         ATD: item.template
       });
+    };
+
+    // $scope.$on('$ionicView.enter', function () {
+    //   if (!$scope.currentUrl)
+    //     $scope.currentUrl = $state.current.url;
+    //   console.log("Entering SNP tab");
+    //   // allLikes = likes.getAllLikes();
+    //   var stateChangeListener = $scope.$on('$stateChangeSuccess', function (data) {
+    //     if (data.url !== $scope.currentUrl) {
+    //       console.log('leaving snp TAB');
+    //       if ($scope.dataChanged) {
+    //         likes.saveLikes($scope.items);
+    //         likes.needsUpdate(true);
+    //       }
+    //
+    //       $scope.currentUrl = '';
+    //       // stateChangeListener();
+    //     }
+    //   });
+    // });
+    $scope.$on('$stateChangeSuccess', function (data) {
+
+      if (($rootScope.url == null) && ($state.current.url == "/snp/:AT/:ATD")) {
+
+        console.log("entering snp");
+        $rootScope.url = $state.current.url;
+      }
+
+      if (($state.current.url.indexOf("snp") == -1)) {
+        $rootScope.url = null;
+        console.log("leaving snp");
+        if ($rootScope.dataChanged) {
+          likes.saveLikes($scope.items);
+          likes.needsUpdate(true);
+        }
+
+      }
+
+      // console.log('changing state: %s', $state.current.url, $stateParams);
+    });
+
+    // $scope.$on("$ionicParentView.beforeEnter", function (event, data) {
+    //   console.log("SNP: State $ionicView.beforeEnter Params: ");
+    //   allLikes = likes.getAllLikes();
+    // });
+    //
+    // $scope.$on("$ionicParentView.afterEnter", function (event, data) {
+    //   // if ($scope.dataChanged)
+    //   //   likes.saveLikes($scope.items);
+    //   if (data.stateId == "tab.snp_AT=SNP") {
+    //     console.log("SNP: State $ionicParentView.afterEnter Params: ", data);
+    //   }
+    // });
+    //
+    // $scope.$on("$ionicParentView.afterLeave", function (event, data) {
+    //   // if ($scope.dataChanged)
+    //   //   likes.saveLikes($scope.items);
+    //   if (data.stateId == "tab.snp_AT=SNP")
+    //     console.log("SNPxxxx: State $ionicParentView.beforeLeave Params: ", data);
+    //
+    //     console.log("SNP: State $ionicParentView.afterLeave Params: ", data);
+    // });
+
+    $scope.clickedLike = function (item) {
+
+      item.like = !item.like;
+      if (item.like)
+        item.likes += 1;
+      else
+        item.likes -= 1;
+
+      $rootScope.dataChanged = true;
     };
 
     // $scope.init = function () {
@@ -2293,60 +2395,67 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // };
 
     // $scope.myItems = [];
-    $scope.myItems = [
-      {
-        id: 0,
-        img: 'img/atividades/atividades_arborismo.png',
-        title: 'ARBORISMO',
-        description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.',
-        template: "arborismo"
-      },
-      {
-        id: 1,
-        img: 'img/atividades/atividades_bicicletas-hover.png',
-        title: 'BICICLETAS NO SNP',
-        description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.',
-        template: "bicicletas"
-      },
-      {
-        id: 2,
-        title: 'DESPORTO AQUÁTICO',
-        description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
-        img: 'img/atividades/actividades_aquaticas-hover.png',
-        template: "aquaticas"
-      },
-      {
-        id: 3,
-        title: 'CAMPOS DE FÉRIAS',
-        img: 'img/atividades/atividades_campo_ferias-hover.png',
-        description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.',
-        template: "campo_ferias"
-      },
-      {
-        id: 5,
-        title: 'FAUNA E FLORA',
-        description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
-        img: 'img/atividades/atividades_fauna_flora-hover.png'
-      },
-      {
-        id: 6,
-        title: 'PAINTBALL',
-        description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
-        img: 'img/atividades/atividades_painball-hover.png'
-      },
-      {
-        id: 7,
-        title: 'PERCURSOS PEDESTRES',
-        description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
-        img: 'img/atividades/atividades_percursos_pedestres-hover.png'
-      },
-      {
-        id: 8,
-        img: 'img/atividades/atividades_tiro-hover.png',
-        title: 'ATIVIDADES DE TIRO',
-        description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
+    // $scope.Items = [];
+    //   {
+    //     id: 0,
+    //     img: 'img/atividades/atividades_arborismo.png',
+    //     title: 'ARBORISMO',
+    //     description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.',
+    //     template: "arborismo"
+    //   },
+    //   {
+    //     id: 1,
+    //     img: 'img/atividades/atividades_bicicletas-hover.png',
+    //     title: 'BICICLETAS NO SNP',
+    //     description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.',
+    //     template: "bicicletas"
+    //   },
+    //   {
+    //     id: 2,
+    //     title: 'DESPORTO AQUÁTICO',
+    //     description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
+    //     img: 'img/atividades/actividades_aquaticas-hover.png',
+    //     template: "aquaticas"
+    //   },
+    //   {
+    //     id: 3,
+    //     title: 'CAMPOS DE FÉRIAS',
+    //     img: 'img/atividades/atividades_campo_ferias-hover.png',
+    //     description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.',
+    //     template: "campo_ferias"
+    //   },
+    //   {
+    //     id: 5,
+    //     title: 'FAUNA E FLORA',
+    //     description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
+    //     img: 'img/atividades/atividades_fauna_flora-hover.png'
+    //   },
+    //   {
+    //     id: 6,
+    //     title: 'PAINTBALL',
+    //     description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
+    //     img: 'img/atividades/atividades_painball-hover.png'
+    //   },
+    //   {
+    //     id: 7,
+    //     title: 'PERCURSOS PEDESTRES',
+    //     description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
+    //     img: 'img/atividades/atividades_percursos_pedestres-hover.png'
+    //   },
+    //   {
+    //     id: 8,
+    //     img: 'img/atividades/atividades_tiro-hover.png',
+    //     title: 'ATIVIDADES DE TIRO',
+    //     description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
+    //   }
+    // ];
+
+    $timeout(function () {
+      for (var i = 0; i < $scope.Items.length; i++) {
+        // $scope.items[i].likes =
+        $scope.myItems.push($scope.Items[i]);
       }
-    ];
+    });
 
   })
   .directive('expandingTextarea', function () {
