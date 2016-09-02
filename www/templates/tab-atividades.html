@@ -27,7 +27,7 @@
               <!--<ion-option-button class="button-light icon ion-heart"></ion-option-button>-->
               <!--<ion-option-button class="button-light icon ion-email"></ion-option-button>-->
               <p>
-                <a href="#" class="subdued">{{item.likes}} likes</a>
+                <a href="#" class="subdued">{{item.likes ? item.likes : '?' }} likes</a>
                 <a href="#" class="{{ item.like ? 'assertive' : 'subdued'}} button-small button-light ion-heart"></a>
               </p>
               <ion-option-button class="button-positive"

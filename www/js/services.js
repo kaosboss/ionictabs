@@ -6,7 +6,7 @@ angular.module('starter.services', [])
       $cordovaSQLite.updateValueToDB("info", [JSON.stringify(user_data), "userinfo"]).then(function (res) {
         if (res.rowsAffected == 0) {
           console.warn("ERROR updating profile, inserting new");
-          $cordovaSQLite.insertVarToDB("info", ["userinfo", JSON.stringify(user_data)]).then(function (res) {
+          $cordovaSQLite.insertVarToDB("info", [JSON.stringify(user_data)], "userinfo").then(function (res) {
             console.log("INSERTED userdata: : ", res);
             // return JSON.parse(res || '{}')
           }, function (err) {
@@ -567,33 +567,35 @@ angular.module('starter.services', [])
 
         case "info":
 
-          var query = "INSERT INTO `info` (name,value) VALUES (?, ?)";
+          var query = "INSERT INTO `info` (value, name) VALUES (?, ?)";
           return this.execute(db, query, binding).then(function (res) {
             result = res;
             if (res) {
-              console.log(res);
+              console.log("insertVarToDB: ", res);
               return res.insertId;
             }
           }, function (err) {
             // alert(err);
-            console.error(err);
+            console.error("insertVarToDB: ERROR: ", err);
             return 0;
           });
+          break;
 
         case "regioes":
 
-          var query = "INSERT INTO `regioes` (name,value) VALUES (?, ?)";
+          var query = "INSERT INTO `regioes` (value, name) VALUES (?, ?)";
           return this.execute(db, query, binding).then(function (res) {
             result = res;
             if (res) {
-              console.log(res);
+              console.log("insertVarToDB: ", res);
               return res.insertId;
             }
           }, function (err) {
             // alert(err);
-            console.error(err);
+            console.error("insertVarToDB: ERROR: ", err);
             return 0;
           });
+
       }
     };
 
@@ -667,6 +669,29 @@ angular.module('starter.services', [])
       }
     };
 
+    updateOrInsertValueToDB = function (tipo, binding) {
+      switch (tipo) {
+        case "info":
+
+          var query = "update info set value=? where name=?";
+          return this.execute(db, query, binding).then(function (res) {
+            result = res;
+            console.log("updateOrInsertValueToDB: UPDATED DB, binding: %s", binding.toString());
+            if (!res.rowsAffected) {
+              console.warn("ALERT: Update db got 0 affected rows on updateOrInsertValueToDB");
+              insertVarToDB(tipo, binding);
+            }
+            return res;
+          }, function (err) {
+            // alert(err);
+            console.error(err);
+            return 0;
+          });
+          break;
+
+      }
+    };
+
     return {
       openDB: openDB,
 
@@ -685,6 +710,8 @@ angular.module('starter.services', [])
       updateValueToDB: updateValueToDB,
 
       insertVarToDB: insertVarToDB,
+
+      updateOrInsertValueToDB: updateOrInsertValueToDB
 
     };
     // });
@@ -710,13 +737,13 @@ angular.module('starter.services', [])
     };
 
   })
-  .factory("likes", function ($firebaseArray, $firebase, $cordovaNetwork, $cordovaSQLite) {
+  .factory("likes", function ($firebaseArray, $firebase, $cordovaNetwork, $cordovaSQLite, $timeout) {
 
     var likesRef;
     var allLikes = [];
     var atividades = null;
     var dataLoaded = false;
-    var needUpdate = false;
+    var needUpdate = null;
     var items = [
       {
         id: 0,
@@ -771,35 +798,95 @@ angular.module('starter.services', [])
         description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
       }
     ];
+    var fireBaseOnline = null;
 
-    isDataLoaded = function () {
-      return dataLoaded;
-    };
-
-    uploadLikes = function () {
-
-    };
 
     init = function () {
       var online = $cordovaNetwork.isOnline();
       console.log("FIREBASE: likes INIT online: %s", online);
 
       if (online) {
+        fireBaseOnline = true;
         likesRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Likes/Atividades");
 
         atividades = $firebaseArray(likesRef);
         atividades.$loaded(function () {
           console.log("Loaded likes");
-          processLikes(atividades);
-        });
+          $cordovaSQLite.getVarFromDB("info", "atividades").then(function (res) {
+            items = JSON.parse(res || '{}');
+            processLikes(atividades);
+            dataLoaded = true;
+          });
+        })
       } else {
         $cordovaSQLite.getVarFromDB("info", "atividades").then(function (res) {
-          items = JSON.parse(res || '{}')
+          if (res)
+            items = JSON.parse(res || '{}');
+          console.log("items from db", items);
         });
       }
       // allLikes = Firebase(likesRef).$asArray();
       // return $firebaseArray(likesRef);
     };
+
+    isDataLoaded = function () {
+      return dataLoaded;
+    };
+    isfireBaseOnline = function () {
+      return fireBaseOnline;
+    };
+
+    uploadLikes = function () {
+      var online = $cordovaNetwork.isOnline();
+      console.log("FIREBASE: likes uploadLikes online: %s", online);
+
+      if (online) {
+        goOnline();
+        likesRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Likes/Atividades");
+
+        atividades = $firebaseArray(likesRef);
+        atividades.$loaded(function () {
+          console.log("Loaded likes: uploadLikes");
+
+          for (var f = 0; f < items.length; f++) {
+            if (items[f].changed) {
+              console.warn("updating atividade: item changed ", items[f]);
+              for (var i = 0; i < atividades.length; i++) {
+                if (items[f].template == atividades[i].$id) {
+                  console.warn("updating atividade: ", atividades[i]);
+                  var temp = Number(atividades[i].$value);
+
+                  if (items[f].like)
+                    temp++;
+                  else
+                    temp--;
+                  atividades[i].$value = temp.toString();
+
+                  items[f].changed = false;
+                  atividades.$save(i).then(function (ref) {
+                    console.warn("uploadLikes: SAVED Atividades", i);
+
+                    // ref.key() === atividades.$id; // true
+                    // offline();
+                  }, function (error) {
+                    console.log("Error:", error);
+                  });
+                }
+              }
+            }
+          }
+          needUpdate = false;
+          $timeout(function () {
+            offline();
+          }, 60000);
+          saveLikes();
+          console.log("uploadLikes: Atividades: ", atividades);
+
+        });
+      } else
+        saveLikes();
+    };
+
     saveLikes = function (listItems) {
       if (!listItems)
         listItems = items;
@@ -823,7 +910,7 @@ angular.module('starter.services', [])
       for (var f = 0; f < items.length; f++) {
         for (var i = 0; i < allLikes.length; i++) {
           if (items[f].template == allLikes[i].nome) {
-            items[f].likes = allLikes[i].likes;
+            items[f].likes = Number(allLikes[i].likes);
           }
         }
       }
@@ -838,10 +925,20 @@ angular.module('starter.services', [])
     };
 
     needsUpdate = function (update) {
-      if (!update)
-        return needUpdate;
-      else
+      if (!update) {
+        if (needUpdate == null) {
+          $cordovaSQLite.getVarFromDB("info", "needsUpdate").then(function (res) {
+            needUpdate = res;
+            console.log("Retrieved needUpdate from db: ", needUpdate);
+            if (needUpdate)
+              uploadLikes();
+          });
+        } else
+          return needUpdate;
+      } else {
         needUpdate = update;
+        $cordovaSQLite.updateOrInsertValueToDB("info", [needUpdate, "needsUpdate"]);
+      }
     };
 
     getAllLikes = function () {
@@ -852,9 +949,15 @@ angular.module('starter.services', [])
       //   return [];
     };
 
+    goOnline = function () {
+      Firebase.goOnline();
+      fireBaseOnline = true;
+    };
+
     offline = function () {
       console.log("FIREBASE: going offline");
       Firebase.goOffline();
+      fireBaseOnline = false;
     };
 
     return {
@@ -865,7 +968,10 @@ angular.module('starter.services', [])
       processLikes: processLikes,
       saveLikes: saveLikes,
       needsUpdate: needsUpdate,
-      offline: offline
+      uploadLikes: uploadLikes,
+      offline: offline,
+      goOnline: goOnline,
+      isfireBaseOnline: isfireBaseOnline
     };
 
   })
@@ -897,14 +1003,14 @@ angular.module('starter.services', [])
       $cordovaSQLite.updateValueToDB("regioes", [JSON.stringify(regioes), "estados"]).then(function (res) {
         if (res.rowsAffected == 0) {
           console.warn("ERROR updating regioes, inserting new");
-          $cordovaSQLite.insertVarToDB("regioes", ["estados", JSON.stringify(regioes)]).then(function (res) {
+          $cordovaSQLite.insertVarToDB("regioes", [JSON.stringify(regioes), "estados"]).then(function (res) {
             console.log("INSERTED regioes: : ", res);
             // return JSON.parse(res || '{}')
           }, function (err) {
             console.error("ERROR inserting regioes, NOT stored", err);
           });
         } else
-          console.log("Stored regioes", res)
+          console.log("Stored regioes", res);
 
       }, function (err) {
         console.error("ERROR updating regioes, NOT stored", err);

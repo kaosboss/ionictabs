@@ -156,10 +156,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           $scope.netWork.isOffline = $cordovaNetwork.isOffline();
 
           // if ($cordovaNetwork.isOnline())
-          $timeout(function () {
-            if (!likes.isDataLoaded())
-              likes.init();
-          }, 1000);
+          // $timeout(function () {
+          if (!likes.isDataLoaded())
+            likes.init();
+          // }, 1000);
 
           $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
             $scope.netWork.type = networkState;
@@ -170,8 +170,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             $rootScope.showAlert("NetWork ONLINE");
 
             if (!likes.isDataLoaded())
-              likes.init();
+              $timeout(function () {
+                if (!likes.isDataLoaded())
+                  likes.init();
+              }, 3000);
           });
+
+          likes.needsUpdate();
 
           $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
             $scope.netWork.type = networkState;
@@ -180,6 +185,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             $rootScope.isOnline = false;
             $scope.netWork.isOffline = true;
             $rootScope.showAlert("NetWork OFFLINE");
+            if (likes.isfireBaseOnline())
+              likes.offline();
           });
         };
         // $scope.checkNetwork();
@@ -287,7 +294,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             $cordovaSQLite.execute(db, query, []).then(function (res) {
               var message = "INSERT ID -> " + res.insertId;
               // console.log(message);
-              console.log("Inserted atividades items");
+              console.log("Inserted atividades items, ", message);
             }, function (err) {
               console.error(err);
               // alert(err);
@@ -799,6 +806,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $scope.events.push({
           // image: thumb,
           id: id,
+          edit: true,
           image_src: img,
           badgeClass: 'bg-royal',
           // badgeIconClass : 'ion-checkmark',
@@ -1412,13 +1420,22 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.addUser = function (user) {
       if (!$scope.users) {
         $scope.users = users.init();
-        $scope.users.$add(user);
+        $scope.users.$add(user).then(function (ref) {
+          var id = ref.key();
+          console.log("added record with id ", id, ref.key().$id);
+          users.offline();
+          // list.$indexFor(id); // returns location in the array
+        });
         // $scope.users.offline();
       } else {
-        $scope.users.$add(user);
+        $scope.users.$add(user).then(function (ref) {
+          var id = ref.key();
+          console.log("added record with id ", id, ref.key().$id);
+          users.offline();
+          // list.$indexFor(id); // returns location in the array
+        });
         // $scope.users.offline();
       }
-      users.offline();
     };
 
     $ionicPlatform.ready(function () {
@@ -2289,7 +2306,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.Items = likes.getItems();
     $scope.url = null;
 
-    // console.warn("AllLikes: ", allLikes);
+    console.warn("items: ", $scope.Items);
 
     $scope.goAtividades = function () {
       console.log("Go Atividades");
@@ -2342,8 +2359,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $rootScope.url = null;
         console.log("leaving snp");
         if ($rootScope.dataChanged) {
-          likes.saveLikes($scope.items);
+          // likes.saveLikes($scope.items);
           likes.needsUpdate(true);
+          likes.uploadLikes();
+          $rootScope.dataChanged = false;
         }
 
       }
@@ -2380,6 +2399,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         item.likes += 1;
       else
         item.likes -= 1;
+
+      item.changed = true;
 
       $rootScope.dataChanged = true;
     };
