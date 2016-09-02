@@ -157,7 +157,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
           // if ($cordovaNetwork.isOnline())
           // $timeout(function () {
-          if (!likes.isDataLoaded())
+          if (!likes.isDataLoading())
             likes.init();
           // }, 1000);
 
@@ -169,14 +169,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             $scope.netWork.isOffline = false;
             $rootScope.showAlert("NetWork ONLINE");
 
-            if (!likes.isDataLoaded())
-              $timeout(function () {
-                if (!likes.isDataLoaded())
-                  likes.init();
-              }, 3000);
+            // if ((likes.needsUpdate()) && (!likes.isUploading()))
+            //   likes.uploadLikes();
+
+            if ((!likes.isDataLoading()) && (!likes.isDataLoaded()))
+              likes.init();
+            else if ((!likes.isDataLoading()))
+              if (likes.needsUpdate())
+                likes.uploadLikes();
           });
 
-          likes.needsUpdate();
+          // likes.needsUpdate();
 
           $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
             $scope.netWork.type = networkState;

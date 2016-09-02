@@ -743,7 +743,7 @@ angular.module('starter.services', [])
     var allLikes = [];
     var atividades = null;
     var dataLoaded = false;
-    var needUpdate = null;
+    var needUpdate = false;
     var items = [
       {
         id: 0,
@@ -798,14 +798,18 @@ angular.module('starter.services', [])
         description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
       }
     ];
-    var fireBaseOnline = null;
+    var fireBaseOnline = false;
+    var dataLoading = false;
+    var upLoading = false;
 
 
     init = function () {
+      dataLoading = true;
       var online = $cordovaNetwork.isOnline();
       console.log("FIREBASE: likes INIT online: %s", online);
 
       if (online) {
+        goOnline();
         fireBaseOnline = true;
         likesRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Likes/Atividades");
 
@@ -816,6 +820,7 @@ angular.module('starter.services', [])
             items = JSON.parse(res || '{}');
             processLikes(atividades);
             dataLoaded = true;
+            dataLoading = false;
           });
         })
       } else {
@@ -823,6 +828,7 @@ angular.module('starter.services', [])
           if (res)
             items = JSON.parse(res || '{}');
           console.log("items from db", items);
+          dataLoading = false;
         });
       }
       // allLikes = Firebase(likesRef).$asArray();
@@ -832,16 +838,25 @@ angular.module('starter.services', [])
     isDataLoaded = function () {
       return dataLoaded;
     };
+    isDataLoading = function () {
+      return dataLoading;
+    };
+    isUpLoading = function () {
+      return upLoading;
+    };
+
     isfireBaseOnline = function () {
       return fireBaseOnline;
     };
 
     uploadLikes = function () {
+      upLoading = true;
       var online = $cordovaNetwork.isOnline();
       console.log("FIREBASE: likes uploadLikes online: %s", online);
 
       if (online) {
         goOnline();
+        fireBaseOnline = true;
         likesRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Likes/Atividades");
 
         atividades = $firebaseArray(likesRef);
@@ -864,7 +879,8 @@ angular.module('starter.services', [])
 
                   items[f].changed = false;
                   atividades.$save(i).then(function (ref) {
-                    console.warn("uploadLikes: SAVED Atividades", i);
+                    console.warn("uploadLikes: SAVED Atividades", i, atividades[atividades.$indexFor(ref.key())]);
+                    // ref.key()
 
                     // ref.key() === atividades.$id; // true
                     // offline();
@@ -873,18 +889,22 @@ angular.module('starter.services', [])
                   });
                 }
               }
+              // upLoading = false;
             }
           }
           needUpdate = false;
           $timeout(function () {
             offline();
+            upLoading = false;
           }, 60000);
           saveLikes();
           console.log("uploadLikes: Atividades: ", atividades);
 
         });
-      } else
+      } else {
+        upLoading = false;
         saveLikes();
+      }
     };
 
     saveLikes = function (listItems) {
@@ -908,6 +928,8 @@ angular.module('starter.services', [])
         })
       }
       for (var f = 0; f < items.length; f++) {
+        if (items[f].changed)
+          needUpdate = true;
         for (var i = 0; i < allLikes.length; i++) {
           if (items[f].template == allLikes[i].nome) {
             items[f].likes = Number(allLikes[i].likes);
@@ -917,7 +939,17 @@ angular.module('starter.services', [])
 
       saveLikes();
 
-      offline();
+      if (needUpdate) {
+        if (!upLoading)
+          uploadLikes();
+        else
+          $timeout(function () {
+            offline();
+          }, 60000);
+      } else
+        $timeout(function () {
+          offline();
+        }, 60000);
     };
 
     getItems = function () {
@@ -925,21 +957,27 @@ angular.module('starter.services', [])
     };
 
     needsUpdate = function (update) {
-      if (!update) {
-        if (needUpdate == null) {
-          $cordovaSQLite.getVarFromDB("info", "needsUpdate").then(function (res) {
-            needUpdate = res;
-            console.log("Retrieved needUpdate from db: ", needUpdate);
-            if (needUpdate)
-              uploadLikes();
-          });
-        } else
-          return needUpdate;
-      } else {
+      if (!update)
+        return needUpdate;
+      else
         needUpdate = update;
-        $cordovaSQLite.updateOrInsertValueToDB("info", [needUpdate, "needsUpdate"]);
-      }
     };
+    // needsUpdate = function (update) {
+    //   if (!update) {
+    //     if (needUpdate == null) {
+    //       $cordovaSQLite.getVarFromDB("info", "needsUpdate").then(function (res) {
+    //         needUpdate = res;
+    //         console.log("Retrieved needUpdate from db: ", needUpdate);
+    //         if (needUpdate)
+    //           uploadLikes();
+    //       });
+    //     } else
+    //       return needUpdate;
+    //   } else {
+    //     needUpdate = update;
+    //     $cordovaSQLite.updateOrInsertValueToDB("info", [needUpdate, "needsUpdate"]);
+    //   }
+    // };
 
     getAllLikes = function () {
 
@@ -971,7 +1009,9 @@ angular.module('starter.services', [])
       uploadLikes: uploadLikes,
       offline: offline,
       goOnline: goOnline,
-      isfireBaseOnline: isfireBaseOnline
+      isfireBaseOnline: isfireBaseOnline,
+      isDataLoading: isDataLoading,
+      isUploading: isUpLoading
     };
 
   })
