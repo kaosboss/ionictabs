@@ -15,14 +15,19 @@ cw = function (value) {
 
 angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCacheFactory', 'angular-timeline', 'ngImageAppear', 'angular-scroll-animate', 'ion-floating-menu', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
 
-  .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window, $ImageCacheFactory) {
+  .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window, $ImageCacheFactory, $state) {
     $rootScope.APP = {
       logged: false,
       firstTime: false,
       user: {
         picture: 'img/SNP_small.jpg'
+      },
+      goDefinicoes: function () {
+        console.log("Go definicoes");
+        $state.go('tab.account')
       }
     };
+
     var preLoadImages = [
       'img/atividades_quinta_pedagogica_small.jpg',
       'img/SNP_background_intro.jpg',
@@ -128,7 +133,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     // console.log(typeof cordova);
 
-    if (typeof cordova)
+    if (cordova !== undefined)
       $ionicLoading.show();
 
     $ionicPlatform.ready(function () {
@@ -2073,8 +2078,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   .controller('DebugCtrl', function ($scope, $rootScope) {
 
   })
-  .controller('GameCtrl', function ($scope, $rootScope) {
-
+  .controller('GameCtrl', function ($scope, $state) {
+    console.log("Game controller ready");
   })
   .controller('RegiaoCtrl', function ($scope, $rootScope) {
     // $scope.goBack = function(){

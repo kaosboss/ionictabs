@@ -1,4 +1,8 @@
 <ion-view view-title="Sesimbra Natura Park">
+  <ion-nav-buttons side="right">
+    <button class="button button-clear button-icon icon ion-ios-cog-outline" ng-click="$root.APP.goDefinicoes()">
+    </button>
+  </ion-nav-buttons>
   <ion-content class="has-header has-tabs" scroll="true">
 
     <div class="APPfull">
@@ -31,7 +35,7 @@
           <ion-item class="item-thumbnail-left list-item animated fadeInUpBig">
             <!--<div class="mascoteAvatarDesenho">-->
             <img ng-src="img/galo_desenho.png" class="">
-            <h2 class="">Anda visitar-nos!</h2>
+            <h2 class="newFont">Anda visitar-nos!</h2>
             <!--<p class="textWrap">{{item.description}}</p>-->
             <!--<h4 class="textWrap">Descobre todas as atividades</h4>-->
             <button class="button button-small button-calm" ng-click="goAtividades()">Descobre todas as atividades

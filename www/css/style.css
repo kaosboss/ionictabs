@@ -1,8 +1,24 @@
+@font-face {
+  font-family: 'Brandon';
+  src: url("font/Brandon_blk.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-size:16px;
+}
+* {
+font-family: 'Brandon', SansSerif !important;
+/*font-size:16px;*/
+}
 /* Empty. Add your own CSS if you like */
 body {
 /*cursor: url('../img/finger.png'), auto;*/
 /*cursor: pointer;*/
+  /** {*/
+  /*font-family: 'Brandon';*/
+  /*font-size:16px;*/
+/*}*/
 }
+
 /*.slider {*/
   /*height: 100%;*/
 /*}*/
@@ -536,8 +552,27 @@ td-card img {
   top: 15px;
   position: absolute;
 }
+.settingLogo {
+  right: 0px;
+  top: 12px;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+}
 
 /*.timeline-panel {*/
   /*margin-right: 5px;*/
   /*margin-top: 5px;*/
 /*}*/
+
+.newFont {
+  font-family: Brandon, serif;
+  /*display: inline-block;*/
+  /*width: 100%;*/
+  /*max-height: 100%;*/
+  /*vertical-align: middle;*/
+  /*overflow: hidden;*/
+  line-height: normal;
+}
+
+

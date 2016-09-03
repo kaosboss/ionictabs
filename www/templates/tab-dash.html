@@ -1,4 +1,8 @@
 <ion-view view-title="Quinta pedagógica">
+  <ion-nav-buttons side="right">
+    <button class="button button-clear button-icon icon ion-ios-cog-outline" ng-click="$root.APP.goDefinicoes()">
+    </button>
+  </ion-nav-buttons>
   <ion-content class="has-header has-tabs">
 
     <div class="APPfull">
@@ -16,7 +20,7 @@
     </div>
 
     <div class="APPmain">
-      <h3 align="center">Bem vindo!</h3>
+      <h3 align="center" class="newFont">Bem vindo!</h3>
       <div>
         <button ng-click="goLogin()" class="button button-balanced APPcenter animated slideInRight">Login</button>
       </div>
