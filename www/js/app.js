@@ -18,6 +18,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window, $ImageCacheFactory) {
     $rootScope.APP = {
       logged: false,
+      firstTime: false,
       user: {
         picture: 'img/SNP_small.jpg'
       }
@@ -71,7 +72,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       $rootScope.popupQueue = [];
 
       $rootScope.smallDevice = false;
-      $rootScope.currentRI = "Sem região de interesse"
+      $rootScope.currentRI = "região de interesse";
       $rootScope.showPopup = function (popup) {
         $rootScope.mypop = popup;
         $rootScope.$broadcast("SHOW_POPUP");
@@ -207,7 +208,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           }, function (err) {
             alert(err);
           });
-          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (id integer primary key autoincrement, `IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT)", []).then(function (res) {
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (id integer primary key autoincrement, `IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT, `when` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, `title` TEXT, `auto` TEXT)", []).then(function (res) {
             cw("Table journal", res);
           }, function (err) {
             alert(err);
@@ -274,6 +275,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               // console.log(message);
               console.log("Inserted APP version: v" + APPverion + " tutorial: ON");
               APPfirstTime = 1;
+              $rootScope.APP.firstTime = true;
               // $scope.showAlert("Inserted APP version: v" + APPverion + " tutorial: ON");
               // alert(message);
             }, function (err) {
@@ -646,6 +648,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       console.warn("showcaption index: ", index);
 
+      // index--;
       $scope.id = "";
       var edit = false;
       $scope.data = {};
@@ -653,8 +656,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       if (index != null) {
         $scope.id = $scope.events[index].id;
-        if ($scope.events[index].contentHtml != '')
-          edit = true;
+        // if ($scope.events[index].contentHtml != '')
+        //   edit = true;
         $scope.data.caption = $scope.events[index].contentHtml;
       }
       else {
@@ -727,14 +730,22 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           return;
         }
 
-        console.log('Tapped! ID: %s', $scope.id, res);
+        console.log('Tapped! ID: %s', $scope.id, res, $scope.events);
         if (!res)
           return;
 
         if (res.length > 300)
           res = res.substring(0, 300);
 
-        $scope.events[$scope.id].contentHtml = res;
+        var f = 0;
+        for (f = 0; f < $scope.events.length; f++) {
+          if ($scope.events[f].id == $scope.id) {
+            console.warn("Found id @: ", f);
+            break;
+          }
+        }
+
+        $scope.events[f].contentHtml = res;
         $cordovaSQLite.updateValueToDB("journal", [res, $scope.id]).then(function (res) {
           if (!res.rowsAffected)
             console.warn("ALERT: Update db got 0 affected rows");
@@ -756,18 +767,19 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.side = 'left';
     $scope.images = {};
 
-    $scope.events = [{
-      badgeClass: 'mascoteAvatar',
-      badgeIconClass: 'bg-dark',
-      // badgeIconClass : 'ion-ionic',
-      // badgeIconClass : 'avatar',
-      title: 'Quinta Pedagógica',
-      when: 'à 5 minutos',
-
-      // contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
-      contentHtml: '',
-      titleContentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
-    }
+    $scope.events = [
+      // {
+      //   badgeClass: 'mascoteAvatar',
+      //   badgeIconClass: 'bg-dark',
+      //   // badgeIconClass : 'ion-ionic',
+      //   // badgeIconClass : 'avatar',
+      //   title: 'Quinta Pedagógica',
+      //   when: 'à 5 minutos',
+      //
+      //   // contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
+      //   contentHtml: '',
+      //   titleContentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
+      // }
       // , {
       //   badgeClass: 'bg-positive',
       //   // badgeIconClass : 'ion-gear-b',
@@ -789,23 +801,62 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // }
     ];
 
-    $scope.addInHouseEvent = function () {
-      $scope.events.push(
-        {
-          badgeClass: 'bg-positive',
-          // badgeIconClass : 'ion-gear-b',
-          badgeIconClass: '',
-          title: 'Descoberta!',
-          when: 'à 12 minutos',
-          titleContentHtml: '',
-          contentHtml: '<img ng-image-appear placeholder class="img-responsive" src="img/snp_projeto_02_small.jpg"><p>Encontraste a região da Chacra</p>',
-          footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
-        })
+    $scope.addInHouseEvent = function (title, pic_src, caption, thumb_src, NO_PUSH) {
+      var d = new Date();
+      var when = d.toDateString();
+      // $scope.events.push(
+      //   {
+      //     badgeClass: 'bg-positive',
+      //     // badgeIconClass : 'ion-gear-b',
+      //     badgeIconClass: '',
+      //     title: 'Descoberta!',
+      //     when: 'à 12 minutos',
+      //     titleContentHtml: '',
+      //     contentHtml: '<img ng-image-appear placeholder class="img-responsive" src="img/snp_projeto_02_small.jpg"><p>Encontraste a região da Chacra</p>',
+      //     footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
+      //   });
+
+      if (NO_PUSH)
+        $scope.events.push(
+          {
+            id: 0,
+            badgeClass: 'mascoteAvatar',
+            badgeIconClass: 'bg-dark',
+            // badgeIconClass : 'ion-ionic',
+            // badgeIconClass : 'avatar',
+            title: title || 'Quinta Pedagógica',
+            when: when,
+
+            // contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
+            contentHtml: '',
+            titleContentHtml: '<img class="img-responsive img-thumbnail" src="' + thumb_src + '"><p>' + caption + '</p>'
+          });
+      $ionicScrollDelegate.resize();
+
+      query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto) VALUES (?,?,?,?,?)";
+      // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
+      $cordovaSQLite.execute($scope.db, query, [pic_src, caption, thumb_src, title, 'YES']).then(function (res) {
+        var message = "INSERT ID -> " + res.insertId;
+        // $scope.captureImageId = res.insertId;
+        console.log(message, pic_src, res);
+        // alert(message);
+      }, function (err) {
+        console.error(err);
+        alert(err);
+      });
 
     };
 
-    $scope.addEvent = function (id, img, thumb, caption, noRefresh) {
-      if (img) {
+    if ($rootScope.APP.firstTime)
+        $scope.addInHouseEvent("Welcome Back", "img/atividades/atividades_quinta_pedagogica_small.jpg", "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia.", "img/atividades/atividades_quinta_pedagogica_small.jpg", false);
+
+
+    $scope.addEvent = function (id, img, thumb, caption, noRefresh, when, title, auto) {
+      if (!when) {
+        var d = new Date();
+        when = d.toDateString();
+      }
+      if (auto == "NO") {
         $scope.events.push({
           // image: thumb,
           id: id,
@@ -813,20 +864,22 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           image_src: img,
           badgeClass: 'bg-royal',
           // badgeIconClass : 'ion-checkmark',
-          title: 'Foto - Album',
-          titleContentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="' + thumb + '">',
-          when: 'Agora mesmo na ' + $rootScope.currentRI,
+          title: title || 'Foto - Album',
+          titleContentHtml: '<img class="img-responsive img-thumbnail" src="' + thumb + '">',
+          when: when + " na " + $rootScope.currentRI,
           contentHtml: caption
         });
       } else
-        $scope.events.push({
-          image: false,
-          badgeClass: 'bg-royal',
-          // badgeIconClass : 'ion-checkmark',
-          title: 'First heading',
-          when: '3 hours ago via Twitter',
-          content: 'Some awesome content.'
-        });
+        $scope.events.push(
+          {
+            id: 0,
+            badgeClass: 'mascoteAvatar',
+            badgeIconClass: 'bg-dark',
+            title: title || 'Quinta Pedagógica',
+            when: when,
+            titleContentHtml: '<img class="img-responsive img-thumbnail" src="' + thumb + '">',
+            contentHtml: caption
+          });
 
       if (!noRefresh)
         $ionicScrollDelegate.resize();
@@ -885,6 +938,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.showImages = function (index) {
       console.log("clicked img in journal", index);
+
+      if (!$scope.events[index].edit)
+        return;
+
       $scope.activeSlide = 0;
 
       $scope.images.activeIMG = $scope.events[index].image_src;
@@ -922,7 +979,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       function done(evt) {
         console.warn("Write completed.");
-        $scope.addEvent($scope.captureImageId, $scope.captureImage, $scope.thumbNailName);
+        $scope.addEvent($scope.captureImageId, $scope.captureImage, $scope.thumbNailName, "", 0, 0, 'Foto - Album', "NO");
         $ionicLoading.hide();
         $scope.showCaption();
       }
@@ -1021,7 +1078,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             var message = "SELECTED -> " + res.rows.item(res.rows.length - 1).IMG;
             // $scope.showAlert(message);
             for (var f = 0; f < res.rows.length; f++)
-              $scope.addEvent(res.rows.item(f).id, res.rows.item(f).IMG, res.rows.item(f).thumbnail_data, res.rows.item(f).caption, 1);
+              $scope.addEvent(res.rows.item(f).id, res.rows.item(f).IMG, res.rows.item(f).thumbnail_data, res.rows.item(f).caption, 1, res.rows.item(f).when, res.rows.item(f).title, res.rows.item(f).auto);
+
 
             $ionicScrollDelegate.resize();
             // $scope.allImages.push({
@@ -1128,9 +1186,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // $scope.addEvent(entry.toURL(), thumbNailName);
           // $ionicScrollDelegate.resize();
 
-          query = "INSERT INTO `journal` (IMG,caption, thumbnail_data) VALUES (?,?,?)";
+          query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto) VALUES (?,?,?,?,?)";
           // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
-          $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "Sem comentário.", $scope.thumbNailName]).then(function (res) {
+          $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "Sem comentário.", $scope.thumbNailName, 'Foto - Album', 'NO']).then(function (res) {
             var message = "INSERT ID -> " + res.insertId;
             $scope.captureImageId = res.insertId;
             console.log(message, entry.toURL(), res);
