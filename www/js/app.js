@@ -854,8 +854,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     };
 
-    if ($rootScope.APP.firstTime)
-      $scope.addInHouseEvent("Welcome Back", "img/atividades/atividades_quinta_pedagogica_small.jpg", "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia.", "img/atividades/atividades_quinta_pedagogica_small.jpg", false);
+    // if ($rootScope.APP.firstTime)
+    //   $scope.addInHouseEvent("Welcome Back", "img/atividades/atividades_quinta_pedagogica_small.jpg", "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia.", "img/atividades/atividades_quinta_pedagogica_small.jpg", false);
 
 
     $scope.addEvent = function (id, img, thumb, caption, noRefresh, when, title, auto) {
@@ -1103,6 +1103,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           } else {
             // $scope.showAlert("No results found");
             console.log("No results found");
+            $scope.addInHouseEvent("Welcome Back!", "img/atividades/atividades_quinta_pedagogica_small.jpg", "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia!", "img/atividades/atividades_quinta_pedagogica_small.jpg", true);
           }
         }, function (err) {
           $scope.showAlert(err);

@@ -758,7 +758,7 @@ angular.module('starter.services', [])
     };
 
     init = function () {
-      // goOnline();
+      goOnline();
       console.log("FIREBASE: users INIT");
       usersRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Utilizadores/" + userID);
       userAccount = $firebaseObject(usersRef);
