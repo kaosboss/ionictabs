@@ -141,17 +141,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $rootScope.isOnline = $cordovaNetwork.isOnline();
 
         $window.document.addEventListener("pause", function (event) {
-          // $rootScope.$broadcast('cordovaPauseEvent');
           console.log('run() -> cordovaPauseEvent');
         });
 
         $window.document.addEventListener("resume", function (event) {
-          // $rootScope.$broadcast('cordovaResumeEvent');
           console.log('run() -> cordovaResumeEvent');
-          //   ionic.Platform.fullScreen();
-          //   if (window.StatusBar) {
-          //     return StatusBar.hide();
-          //   }
         });
 
         $scope.checkNetwork = function () {
@@ -267,12 +261,20 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 // }, 300)
               }
               checkBT();
+              $cordovaSQLite.getVarFromDB("info", "userID").then(function (res) {
+                $rootScope.APP.userID = res;
+                users.setUserID(res);
+                console.log("XXX Got userID: ", $rootScope.APP.userID);
+              });
             });
 
           } else {
             // $scope.checkNetwork();
             $scope.showAlert("No results found, primeira utilizacao!");
             console.log("No results found, firsttime?");
+
+            $rootScope.APP.userID = users.genUUID();
+            console.log("Generate userID: ", $rootScope.APP.userID);
 
             query = "INSERT INTO `info` (name,value) VALUES ('APP', " + APPverion + ")";
             $cordovaSQLite.execute(db, query, []).then(function (res) {
@@ -853,7 +855,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
     if ($rootScope.APP.firstTime)
-        $scope.addInHouseEvent("Welcome Back", "img/atividades/atividades_quinta_pedagogica_small.jpg", "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia.", "img/atividades/atividades_quinta_pedagogica_small.jpg", false);
+      $scope.addInHouseEvent("Welcome Back", "img/atividades/atividades_quinta_pedagogica_small.jpg", "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia.", "img/atividades/atividades_quinta_pedagogica_small.jpg", false);
 
 
     $scope.addEvent = function (id, img, thumb, caption, noRefresh, when, title, auto) {
@@ -1483,32 +1485,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       return $scope.fb.loggedIN;
     };
 
-    $scope.addUser = function (user) {
-      if (!$scope.users) {
-        $scope.users = users.init();
-        $scope.users.$add(user).then(function (ref) {
-          var id = ref.key();
-          console.log("added record with id ", id, ref.key().$id);
-          users.offline();
-          // list.$indexFor(id); // returns location in the array
-        });
-        // $scope.users.offline();
-      } else {
-        $scope.users.$add(user).then(function (ref) {
-          var id = ref.key();
-          console.log("added record with id ", id, ref.key().$id);
-          users.offline();
-          // list.$indexFor(id); // returns location in the array
-        });
-        // $scope.users.offline();
-      }
-    };
-
     $ionicPlatform.ready(function () {
 
       console.log("Logged: " + $rootScope.APP.logged + " online: " + $cordovaNetwork.isOnline());
       if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
-        $scope.users = users.init();
+        users.init();
         console.log("First Init firebase");
       }
 
@@ -1713,13 +1694,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             $scope.Download("https://graph.facebook.com/" + authResponse.userID + "/picture?type=large");
             if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
               $rootScope.APP.logged = true;
-              $scope.addUser({
+              users.addUser({
                 nome: profileInfo.name,
                 email: profileInfo.email,
                 platform: ionic.Platform.platform(),
                 version: ionic.Platform.version(),
                 timestamp: Date.now(),
-                data: Date().toLocaleLowerCase(),
+                dataInicio: Date().toLocaleLowerCase(),
                 modelo: ionic.Platform.device().model
               })
             }
@@ -1789,13 +1770,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                     $scope.Download("https://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large");
                     if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
                       $rootScope.APP.logged = true;
-                      $scope.addUser({
+                      users.addUser({
                         nome: profileInfo.name,
                         email: profileInfo.email,
                         platform: ionic.Platform.platform(),
                         version: ionic.Platform.version(),
                         timestamp: Date.now(),
-                        data: Date().toLocaleLowerCase(),
+                        dataInicio: Date().toLocaleLowerCase(),
                         modelo: ionic.Platform.device().model
                       })
                     }
@@ -2330,14 +2311,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
   })
   .controller('CardCtrl', function ($scope) {
-    // $scope.cardSwipedLeft = function(index) {
-    //   console.log('LEFT SWIPE');
-    //   $scope.addCard();
-    // };
-    // $scope.cardSwipedRight = function(index) {
-    //   console.log('RIGHT SWIPE');
-    //   $scope.addCard();
-    // };
   })
   .controller('AccountCtrl', function ($rootScope, $scope, UserService) {
     $scope.BLE = true;
@@ -2367,12 +2340,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   })
   .controller('SNPCtrl', function ($scope, $state, $timeout, $ionicHistory, $rootScope, likes, $stateParams) {
 
-    // var allLikes = likes.getAllLikes();
-    $scope.myItems = [];
     $scope.Items = likes.getItems();
     $scope.url = null;
 
     console.warn("items: ", $scope.Items);
+
+    $scope.$on('REFRESH_ITEMS', function () {
+      console.log("GOT broadcast REFRESH_ITEMS");
+      $scope.Items = likes.getItems();
+    });
 
     $scope.goAtividades = function () {
       console.log("Go Atividades");
@@ -2395,28 +2371,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       });
     };
 
-    // $scope.$on('$ionicView.enter', function () {
-    //   if (!$scope.currentUrl)
-    //     $scope.currentUrl = $state.current.url;
-    //   console.log("Entering SNP tab");
-    //   // allLikes = likes.getAllLikes();
-    //   var stateChangeListener = $scope.$on('$stateChangeSuccess', function (data) {
-    //     if (data.url !== $scope.currentUrl) {
-    //       console.log('leaving snp TAB');
-    //       if ($scope.dataChanged) {
-    //         likes.saveLikes($scope.items);
-    //         likes.needsUpdate(true);
-    //       }
-    //
-    //       $scope.currentUrl = '';
-    //       // stateChangeListener();
-    //     }
-    //   });
-    // });
     $scope.$on('$stateChangeSuccess', function (data) {
 
       if (($rootScope.url == null) && ($state.current.url == "/snp/:AT/:ATD")) {
-
         console.log("entering snp");
         $rootScope.url = $state.current.url;
       }
@@ -2430,36 +2387,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           likes.uploadLikes();
           $rootScope.dataChanged = false;
         }
-
       }
-
-      // console.log('changing state: %s', $state.current.url, $stateParams);
     });
 
-    // $scope.$on("$ionicParentView.beforeEnter", function (event, data) {
-    //   console.log("SNP: State $ionicView.beforeEnter Params: ");
-    //   allLikes = likes.getAllLikes();
-    // });
-    //
-    // $scope.$on("$ionicParentView.afterEnter", function (event, data) {
-    //   // if ($scope.dataChanged)
-    //   //   likes.saveLikes($scope.items);
-    //   if (data.stateId == "tab.snp_AT=SNP") {
-    //     console.log("SNP: State $ionicParentView.afterEnter Params: ", data);
-    //   }
-    // });
-    //
-    // $scope.$on("$ionicParentView.afterLeave", function (event, data) {
-    //   // if ($scope.dataChanged)
-    //   //   likes.saveLikes($scope.items);
-    //   if (data.stateId == "tab.snp_AT=SNP")
-    //     console.log("SNPxxxx: State $ionicParentView.beforeLeave Params: ", data);
-    //
-    //     console.log("SNP: State $ionicParentView.afterLeave Params: ", data);
-    // });
-
     $scope.clickedLike = function (item) {
-
       item.like = !item.like;
       if (item.like)
         item.likes += 1;
@@ -2467,83 +2398,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         item.likes -= 1;
 
       item.changed = true;
-
       $rootScope.dataChanged = true;
     };
-
-    // $scope.init = function () {
-    //   console.warn("ng-init atividades");
-    //   $scope.myItems = [];
-    //   $timeout(function () {
-    //     for (var i = 0; i < $scope.items.length; i++) {
-    //       $scope.myItems.push($scope.items[i]);
-    //     }
-    //   }, 200);
-    // };
-
-    // $scope.myItems = [];
-    // $scope.Items = [];
-    //   {
-    //     id: 0,
-    //     img: 'img/atividades/atividades_arborismo.png',
-    //     title: 'ARBORISMO',
-    //     description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.',
-    //     template: "arborismo"
-    //   },
-    //   {
-    //     id: 1,
-    //     img: 'img/atividades/atividades_bicicletas-hover.png',
-    //     title: 'BICICLETAS NO SNP',
-    //     description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.',
-    //     template: "bicicletas"
-    //   },
-    //   {
-    //     id: 2,
-    //     title: 'DESPORTO AQUÁTICO',
-    //     description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
-    //     img: 'img/atividades/actividades_aquaticas-hover.png',
-    //     template: "aquaticas"
-    //   },
-    //   {
-    //     id: 3,
-    //     title: 'CAMPOS DE FÉRIAS',
-    //     img: 'img/atividades/atividades_campo_ferias-hover.png',
-    //     description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.',
-    //     template: "campo_ferias"
-    //   },
-    //   {
-    //     id: 5,
-    //     title: 'FAUNA E FLORA',
-    //     description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
-    //     img: 'img/atividades/atividades_fauna_flora-hover.png'
-    //   },
-    //   {
-    //     id: 6,
-    //     title: 'PAINTBALL',
-    //     description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
-    //     img: 'img/atividades/atividades_painball-hover.png'
-    //   },
-    //   {
-    //     id: 7,
-    //     title: 'PERCURSOS PEDESTRES',
-    //     description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
-    //     img: 'img/atividades/atividades_percursos_pedestres-hover.png'
-    //   },
-    //   {
-    //     id: 8,
-    //     img: 'img/atividades/atividades_tiro-hover.png',
-    //     title: 'ATIVIDADES DE TIRO',
-    //     description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
-    //   }
-    // ];
-
-    $timeout(function () {
-      for (var i = 0; i < $scope.Items.length; i++) {
-        // $scope.items[i].likes =
-        $scope.myItems.push($scope.Items[i]);
-      }
-    });
-
   })
   .directive('expandingTextarea', function () {
     return {

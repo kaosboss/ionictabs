@@ -2,22 +2,25 @@ angular.module('starter.services', [])
   .service('UserService', function ($cordovaSQLite) {
     // For the purpose of this example I will store user data on ionic local storage but you should save it on a database
     var setUser = function (user_data) {
-      // window.localStorage.starter_facebook_user = JSON.stringify(user_data);
-      $cordovaSQLite.updateValueToDB("info", [JSON.stringify(user_data), "userinfo"]).then(function (res) {
-        if (res.rowsAffected == 0) {
-          console.warn("ERROR updating profile, inserting new");
-          $cordovaSQLite.insertVarToDB("info", [JSON.stringify(user_data)], "userinfo").then(function (res) {
-            console.log("INSERTED userdata: : ", res);
-            // return JSON.parse(res || '{}')
-          }, function (err) {
-            console.error("ERROR inserting profile, NOT stored", err);
-          });
-        } else
-          console.log("Stored profile", res)
 
-      }, function (err) {
-        console.error("ERROR updating profile, NOT stored", err);
-      });
+      $cordovaSQLite.updateOrInsertValueToDB("info", [JSON.stringify(user_data), "userinfo"]);
+
+      // window.localStorage.starter_facebook_user = JSON.stringify(user_data);
+      // $cordovaSQLite.updateValueToDB("info", [JSON.stringify(user_data), "userinfo"]).then(function (res) {
+      //   if (res.rowsAffected == 0) {
+      //     console.warn("ERROR updating profile, inserting new");
+      //     $cordovaSQLite.insertVarToDB("info", [JSON.stringify(user_data)], "userinfo").then(function (res) {
+      //       console.log("INSERTED userdata: : ", res);
+      //       // return JSON.parse(res || '{}')
+      //     }, function (err) {
+      //       console.error("ERROR inserting profile, NOT stored", err);
+      //     });
+      //   } else
+      //     console.log("Stored profile", res)
+      //
+      // }, function (err) {
+      //   console.error("ERROR updating profile, NOT stored", err);
+      // });
 
     };
 
@@ -716,28 +719,143 @@ angular.module('starter.services', [])
     };
     // });
   }])
-  .factory("users", function ($firebaseArray) {
+  .factory("users", function ($firebaseObject, $rootScope, $timeout, $cordovaSQLite) {
 
-    var usersRef;
+    var usersRef = null;
+    var userAccount = null;
+    var userID = null;
+
+    var genUUID = function () {
+      userID = UUID();
+      $cordovaSQLite.updateOrInsertValueToDB("info", [userID, "userID"]);
+      return userID;
+    };
+
+    var setUserID = function (id) {
+      userID = id;
+    };
+
+    UUID = function () {
+      function s(n) {
+        return h((Math.random() * (1 << (n << 2))) ^ Date.now()).slice(-n);
+      }
+
+      function h(n) {
+        return (n | 0).toString(16);
+      }
+
+      return [
+        s(4) + s(4), s(4),
+        '4' + s(3),                    // UUID version 4
+        h(8 | (Math.random() * 4)) + s(3), // {8|9|A|B}xxx
+        // s(4) + s(4) + s(4),
+        Date.now().toString(16).slice(-10) + s(2) // Use timestamp to avoid collisions
+      ].join('-');
+    };
+
+    goOnline = function () {
+      Firebase.goOnline();
+    };
 
     init = function () {
-      console.log("FIREBASE: INIT");
-      usersRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Utilizadores");
-      return $firebaseArray(usersRef);
+      // goOnline();
+      console.log("FIREBASE: users INIT");
+      usersRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Utilizadores/" + userID);
+      userAccount = $firebaseObject(usersRef);
+
+      return userAccount;
+    };
+
+    addUser = function (user) {
+      console.log("ADDUSER####: ", user);
+      if (userAccount == null) {
+        userAccount = init();
+
+        userAccount.$loaded(function () {
+          uploadUserAccount(userAccount, user);
+        });
+
+      } else {
+        uploadUserAccount(userAccount, user);
+      }
+    };
+
+    var updateFavorites = function (favs) {
+      console.log("UPLOAD FAVS####: userID: %s", userID, favs);
+      if (userAccount == null) {
+        // userAccount = init();
+        usersRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Utilizadores/" + userID);
+        userAccount = $firebaseObject(usersRef);
+
+        userAccount.$loaded(function () {
+          uploadFavorites(favs);
+        });
+
+      } else {
+        uploadFavorites(favs);
+      }
+    };
+
+    var uploadFavorites = function (favs) {
+
+      userAccount.favorites = favs.toString();
+
+      userAccount.$save().then(function (ref) {
+        var id = ref.key();
+        console.log("Favorites: added record with id ", id, ref.key().$id);
+        $timeout(function () {
+          offline();
+        }, 30000);
+        // list.$indexFor(id); // returns location in the array
+      });
+    };
+
+    uploadUserAccount = function (userAccount, user) {
+
+      userAccount.nome = user.nome;
+      userAccount.dataInicio = user.dataInicio;
+      userAccount.email = user.email;
+      userAccount.modelo = user.modelo;
+      userAccount.platform = user.platform;
+      userAccount.version = user.version;
+      userAccount.timestamp = user.timestamp;
+      userAccount.favorites = "";
+
+      userAccount.$save().then(function (ref) {
+        var id = ref.key();
+        console.log("1added record with id ", id, ref.key().$id);
+        $timeout(function () {
+          offline();
+        }, 30000);
+        // list.$indexFor(id); // returns location in the array
+      });
     };
 
     offline = function () {
       console.log("FIREBASE: going offline");
-      Firebase.goOffline();
+      userAccount.$destroy();
+      usersRef.$destroy();
+      $timeout(function () {
+        Firebase.goOffline();
+        console.log("FIREBASE: offline");
+        userAccount = null;
+        usersRef = null;
+      }, 60000);
+
     };
 
     return {
       init: init,
-      offline: offline
+      offline: offline,
+      addUser: addUser,
+      UUID: UUID,
+      setUserID: setUserID,
+      genUUID: genUUID,
+      updateFavorites: updateFavorites
     };
 
   })
-  .factory("likes", function ($firebaseArray, $firebase, $cordovaNetwork, $cordovaSQLite, $timeout) {
+  .factory("likes", function ($firebaseArray, $firebase, $cordovaNetwork, $cordovaSQLite, $timeout, $rootScope, users) {
 
     var likesRef;
     var allLikes = [];
@@ -801,7 +919,7 @@ angular.module('starter.services', [])
     var fireBaseOnline = false;
     var dataLoading = false;
     var upLoading = false;
-
+    var favs = [];
 
     init = function () {
       dataLoading = true;
@@ -862,8 +980,11 @@ angular.module('starter.services', [])
         atividades = $firebaseArray(likesRef);
         atividades.$loaded(function () {
           console.log("Loaded likes: uploadLikes");
-
+          favs = [];
           for (var f = 0; f < items.length; f++) {
+            if (items[f].like)
+              favs.push(items[f].template);
+
             if (items[f].changed) {
               console.warn("updating atividade: item changed ", items[f]);
               for (var i = 0; i < atividades.length; i++) {
@@ -892,6 +1013,8 @@ angular.module('starter.services', [])
               // upLoading = false;
             }
           }
+          console.log("Processed favs: ", favs);
+          users.updateFavorites(favs);
           needUpdate = false;
           $timeout(function () {
             offline();
@@ -928,6 +1051,9 @@ angular.module('starter.services', [])
         })
       }
       for (var f = 0; f < items.length; f++) {
+        if (items[f].like)
+          favs.push(items[f].template);
+
         if (items[f].changed)
           needUpdate = true;
         for (var i = 0; i < allLikes.length; i++) {
@@ -936,6 +1062,12 @@ angular.module('starter.services', [])
           }
         }
       }
+
+      // if (needUpdate){
+        console.log("favorites: ", favs, items);
+        users.updateFavorites(favs);
+// }
+      $rootScope.$broadcast('REFRESH_ITEMS');
 
       saveLikes();
 
@@ -975,7 +1107,7 @@ angular.module('starter.services', [])
     //       return needUpdate;
     //   } else {
     //     needUpdate = update;
-    //     $cordovaSQLite.updateOrInsertValueToDB("info", [needUpdate, "needsUpdate"]);
+    //     $cordovaSQLite.getvaInsertValueToDB("info", [needUpdate, "needsUpdate"]);
     //   }
     // };
 
