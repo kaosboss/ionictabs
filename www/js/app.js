@@ -2059,6 +2059,28 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   })
   .controller('DebugCtrl', function ($scope, $rootScope) {
 
+    $scope.Login = {
+      nome: $rootScope.APP.user.nome,
+      email: $rootScope.APP.user.email,
+      picture: $rootScope.APP.user.picture,
+      canSubmit: "disabled"
+    };
+
+    $scope.submit = function () {
+      console.log("Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
+      return false;
+    };
+
+    $scope.changed = function () {
+      console.log("changed: Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
+      if (($scope.Login.nome) && ($scope.Login.email)) {
+        $scope.Login.canSubmit = "";
+      } else {
+        $scope.Login.canSubmit = "disabled";
+      }
+      return false;
+    };
+
   })
   .controller('GameCtrl', function ($scope, $state) {
     console.log("Game controller ready");
@@ -2500,7 +2522,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         views: {
           'tab-login': {
             templateUrl: 'templates/tab-login.html',
-            controller: 'LoginCtrl'
+            controller: 'DebugCtrl'
+            // controller: 'LoginCtrl'
           }
         }
       })
