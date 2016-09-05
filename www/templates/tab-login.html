@@ -11,18 +11,18 @@
       <div id="form">
         <!--<br>-->
         <div class="avatar">
-          <img ng-src="{{Login.picture}}">
+          <img ng-src="{{$root.APP.user.picture}}">
         </div>
         <form id="register_form" ng-submit="submit()">
 
           <!--<fieldset id="personal-details">-->
           <!--<legend>Perfil</legend>-->
           <div class="input-container" id="nome">
-            <input type="text" name="name" ng-change="changed()" ng-model="Login.nome" required/>
+            <input type="text" name="name" ng-change="changed()" ng-model="$root.APP.user.name" required/>
             <label for="nome">Nome</label>
           </div>
           <div class="input-container" id="email">
-            <input type="text" name="email" ng-change="changed()" ng-model="Login.email" required/>
+            <input type="text" name="email" ng-change="changed()" ng-model="$root.APP.user.email" required/>
             <label for="email">Email</label>
           </div>
 

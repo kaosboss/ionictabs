@@ -2060,7 +2060,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   .controller('DebugCtrl', function ($scope, $rootScope) {
 
     $scope.Login = {
-      nome: $rootScope.APP.user.nome,
+      nome: $rootScope.APP.user.name,
       email: $rootScope.APP.user.email,
       picture: $rootScope.APP.user.picture,
       canSubmit: "disabled"
@@ -2073,7 +2073,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.changed = function () {
       console.log("changed: Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
-      if (($scope.Login.nome) && ($scope.Login.email)) {
+      if (($rootScope.APP.user.name) && ($rootScope.APP.user.email)) {
         $scope.Login.canSubmit = "";
       } else {
         $scope.Login.canSubmit = "disabled";
