@@ -177,6 +177,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             else if ((!likes.isDataLoading()))
               if (likes.needsUpdate())
                 likes.uploadLikes();
+
+            if (users.needsUpdate()) {
+              users.updateDados();
+            }
           });
 
           // likes.needsUpdate();
@@ -246,6 +250,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 $rootScope.APP.user.name = userInfo.name;
                 $rootScope.APP.user.email = userInfo.email;
                 $rootScope.APP.user.picture = userInfo.picture;
+                $rootScope.APP.user.fb_email = userInfo.fb_email;
                 $scope.logged = true;
 
                 // users.offline();
@@ -265,6 +270,22 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 $rootScope.APP.userID = res;
                 users.setUserID(res);
                 console.log("XXX Got userID: ", $rootScope.APP.userID);
+              });
+              $cordovaSQLite.getVarFromDB("info", "userinfoUpdate").then(function (res) {
+                console.log("Got userinfoUpdate = %s", res);
+                if (res == "true") {
+                  console.log("Got userinfoUpdate NEED UPDATE");
+                  users.updateDados({
+                    nome: userInfo.name,
+                    email: userInfo.email,
+                    picture: userInfo.picture,
+                    platform: ionic.Platform.platform(),
+                    version: ionic.Platform.version(),
+                    timestamp: Date.now(),
+                    dataInicio: Date().toLocaleLowerCase(),
+                    modelo: ionic.Platform.device().model
+                  })
+                }
               });
             });
 
@@ -1540,6 +1561,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 console.log("GOT USER from user service", userInfo);
                 userInfo.picture = fileEntry.toURL();
                 $rootScope.APP.logged = true;
+                userInfo.fb_email = userInfo.email;
                 $rootScope.APP.user.name = userInfo.name;
                 $rootScope.APP.user.email = userInfo.email;
                 $rootScope.APP.user.picture = userInfo.picture;
@@ -1622,30 +1644,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         return info.promise;
       };
 
-      // $scope.getFriends = function () {
-      //   getFacebookProfileFriends()
-      //     .then(function (profileInfo) {
-      //
-      //       console.log("Profile friends res: ", profileInfo)
-      //
-      //       // if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
-      //       //   $rootScope.APP.logged = true;
-      //       //   $scope.addUser({
-      //       //     nome: profileInfo.name,
-      //       //     email: profileInfo.email,
-      //       //     platform: ionic.Platform.platform(),
-      //       //     version: ionic.Platform.version(),
-      //       //     timestamp: Date.now(),
-      //       //     data: Date().toLocaleLowerCase()
-      //       //   })
-      //       // }
-      //     }, function (fail) {
-      //       // Fail get profile info
-      //       console.log('profile friends fail', fail);
-      //     });
-      // };
-
-
       var fbLoginSuccess = function (response) {
         if (!response.authResponse) {
           fbLoginError("Cannot find the authResponse");
@@ -1667,15 +1665,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             });
             console.log("FB: profile:", profileInfo);
 
-            // $rootScope.$broadcast('LOGGED_IN', networkState);
-            // console.log({
-            //   authResponse: authResponse,
-            //   userID: profileInfo.id,
-            //   name: profileInfo.name,
-            //   email: profileInfo.email,
-            //   picture: "http://graph.facebook.com/" + authResponse.userID + "/picture?type=large"
-            // });
-
             $scope.profile_photo = "https://graph.facebook.com/" + authResponse.userID + "/picture?type=large";
             $scope.profile_name = profileInfo.name;
             $scope.profile_email = profileInfo.email;
@@ -1684,18 +1673,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
             $ionicLoading.hide();
 
-            // if (device.platform === 'Android') {
-            //   ionic.Platform.fullScreen();
-            //   if (window.StatusBar) {
-            //     return StatusBar.hide();
-            //   }
-            // }
-
-            // $state.go('tab.camera');
             $scope.Download("https://graph.facebook.com/" + authResponse.userID + "/picture?type=large");
-            if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
+            if ($cordovaNetwork.isOnline()) {
               $rootScope.APP.logged = true;
+              $rootScope.APP.user.fb_email = profileInfo.email;
               users.addUser({
+                fb_email: profileInfo.email,
                 nome: profileInfo.name,
                 email: profileInfo.email,
                 platform: ionic.Platform.platform(),
@@ -1724,8 +1707,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       $scope.facebookSignIn = function () {
 
         if (!$cordovaNetwork.isOnline()) {
-          $rootScope.showAlert("Ligue a Internet e tente novamente");
-          return;
+          $rootScope.showAlert("Liga a Internet e tenta novamente");
+          return 0;
         }
 
         facebookConnectPlugin.getLoginStatus(function (success) {
@@ -1771,7 +1754,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                     $scope.Download("https://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large");
                     if (!$rootScope.APP.logged && $cordovaNetwork.isOnline()) {
                       $rootScope.APP.logged = true;
+                      $rootScope.APP.user.fb_email = profileInfo.email;
                       users.addUser({
+                        fb_email: profileInfo.email,
                         nome: profileInfo.name,
                         email: profileInfo.email,
                         platform: ionic.Platform.platform(),
@@ -2059,27 +2044,27 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   })
   .controller('DebugCtrl', function ($scope, $rootScope) {
 
-    $scope.Login = {
-      nome: $rootScope.APP.user.name,
-      email: $rootScope.APP.user.email,
-      picture: $rootScope.APP.user.picture,
-      canSubmit: "disabled"
-    };
-
-    $scope.submit = function () {
-      console.log("Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
-      return false;
-    };
-
-    $scope.changed = function () {
-      console.log("changed: Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
-      if (($rootScope.APP.user.name) && ($rootScope.APP.user.email)) {
-        $scope.Login.canSubmit = "";
-      } else {
-        $scope.Login.canSubmit = "disabled";
-      }
-      return false;
-    };
+    // $scope.Login = {
+    //   nome: $rootScope.APP.user.name,
+    //   email: $rootScope.APP.user.email,
+    //   picture: $rootScope.APP.user.picture,
+    //   canSubmit: "disabled"
+    // };
+    //
+    // $scope.submit = function () {
+    //   console.log("Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
+    //   return false;
+    // };
+    //
+    // $scope.changed = function () {
+    //   console.log("changed: Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
+    //   if (($rootScope.APP.user.name) && ($rootScope.APP.user.email)) {
+    //     $scope.Login.canSubmit = "";
+    //   } else {
+    //     $scope.Login.canSubmit = "disabled";
+    //   }
+    //   return false;
+    // };
 
   })
   .controller('GameCtrl', function ($scope, $state) {
@@ -2095,11 +2080,87 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   //
   //
   // })
-  .controller('LoginCtrl', function ($scope, $rootScope, $window) {
-    // ionic.Platform.fullScreen();
-    // if ($window.StatusBar) {
-    //   return $window.StatusBar.hide();
-    // }
+  .controller('LoginCtrl', function ($scope, $rootScope, users, UserService, $state) {
+
+    // if ($rootScope.APP.logged)
+      $scope.Login = {
+        nome: $rootScope.APP.user.name,
+        email: $rootScope.APP.user.email,
+        picture: $rootScope.APP.user.picture,
+        canSubmit: "disabled"
+      };
+    // else
+    //   $scope.Login = {
+    //     nome: "Nome",
+    //     email: "Email",
+        // picture: $rootScope.APP.user.picture,
+        // canSubmit: "disabled"
+      // };
+
+    $scope.submit = function () {
+      console.log("Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
+      $rootScope.APP.user.name = $scope.Login.nome;
+      $rootScope.APP.user.email = $scope.Login.email;
+      $rootScope.APP.user.picture = $scope.Login.picture;
+
+      if ($rootScope.APP.logged)
+        users.updateDados({
+          nome: $scope.Login.nome,
+          email: $scope.Login.email,
+          picture: $scope.Login.picture,
+          dataAtualizacao: Date().toLocaleLowerCase(),
+          dataAtualizacao_ts: Date.now(),
+        });
+      else {
+        users.updateDados({
+          nome: $scope.Login.nome,
+          email: $scope.Login.email,
+          picture: $scope.Login.picture,
+          platform: ionic.Platform.platform(),
+          version: ionic.Platform.version(),
+          timestamp: Date.now(),
+          dataInicio: Date().toLocaleLowerCase(),
+          modelo: ionic.Platform.device().model
+        });
+      }
+
+      var tempUser = UserService.getUser();
+      tempUser.then(function (res) {
+        var userInfo = JSON.parse(res || '{}');
+        // $scope.authResponse = userInfo.authResponse;
+        console.log("GOT USER from user service", userInfo);
+
+        userInfo.name = $scope.Login.nome;
+        userInfo.email = $scope.Login.email;
+        userInfo.picture = $scope.Login.picture;
+
+        $rootScope.APP.user.name = userInfo.name;
+        $rootScope.APP.user.email = userInfo.email;
+        $rootScope.APP.user.picture = userInfo.picture;
+        $rootScope.$broadcast('LOGGED_IN');
+        UserService.setUser(userInfo);
+      });
+
+      $state.go("tab.dash");
+      // return false;
+    };
+
+    $scope.changed = function (UPDATE) {
+      console.log("changed: Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
+      if (($scope.Login.nome) && ($scope.Login.email)) {
+        $scope.Login.canSubmit = "";
+      } else {
+        $scope.Login.canSubmit = "disabled";
+      }
+      if (UPDATE)
+        if (($scope.Login.name) || ($scope.Login.email)) {
+          $scope.Login.canSubmit = "";
+        } else {
+          $scope.Login.canSubmit = "disabled";
+        }
+
+      return false;
+    };
   })
   .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate) {
 
@@ -2522,8 +2583,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         views: {
           'tab-login': {
             templateUrl: 'templates/tab-login.html',
-            controller: 'DebugCtrl'
-            // controller: 'LoginCtrl'
+            // controller: 'DebugCtrl'
+            controller: 'LoginCtrl'
           }
         }
       })

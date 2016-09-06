@@ -1,110 +1,47 @@
-<ion-view view-title="Login">
+<ion-view view-title="Login" cache-view="false">
   <ion-content class="has-header has-tabs padding">
 
     <div class="">
-      <!--<div class="">-->
-
-      <!--<div class="avatar">-->
-      <!--<img src="img/SNP_small.jpg">-->
-      <!--</div>-->
 
       <div id="form">
-        <!--<br>-->
         <div class="avatar">
-          <img ng-src="{{$root.APP.user.picture}}">
+          <img ng-src="{{Login.picture}}">
         </div>
         <form id="register_form" ng-submit="submit()">
 
-          <!--<fieldset id="personal-details">-->
-          <!--<legend>Perfil</legend>-->
+
+
           <div class="input-container" id="nome">
-            <input type="text" name="name" ng-change="changed()" ng-model="$root.APP.user.name" required/>
+            <input type="text" name="nome" ng-change="changed()" ng-model="Login.nome" required/>
             <label for="nome">Nome</label>
           </div>
           <div class="input-container" id="email">
-            <input type="text" name="email" ng-change="changed()" ng-model="$root.APP.user.email" required/>
+            <input type="text" name="email" ng-change="changed()" ng-model="Login.email" required/>
             <label for="email">Email</label>
           </div>
 
           <!--<br>-->
-          <!--<a class="button button-block" ng-click="facebookSignIn()">Login Facebook</a>-->
-          <br>
-          <div class="">
-            <button ng-class="Login.canSubmit" class="button button-block button-calm">Inserir nome e email</button>
-        <!--<button class="button-clear">Ou</button>-->
+
+          <button ng-if="!$root.APP.logged" ng-class="Login.canSubmit" class="button button-block button-calm">Ligar com
+            nome e email
+          </button>
+
+          <button ng-if="$root.APP.logged" ng-class="Login.canSubmit" class="button button-block button-calm">Modificar
+            os dados
+          </button>
+
+          <div ng-if="!$root.APP.user.fb_email">
             <p align="center">Ou</p>
-            <button ng-controller="WelcomeCtrl" ng-click="facebookSignIn()" class="button  button-block button-calm">Ligar com o FaceBook</button>
+            <button ng-controller="WelcomeCtrl" ng-click="facebookSignIn()"
+                    class="button  button-block button-calm">Ligar com o FaceBook
+            </button>
           </div>
-          <!--<div class="input-container" id="last-name">-->
-          <!--<input type="text" name="last-name" required/>-->
-          <!--<label for="last-name">Last name</label>-->
-          <!--</div>-->
-          <!--<div class="input-container" id="address">-->
-          <!--<input type="text" name="address" required/>-->
-          <!--<label for="address">Address</label>-->
-          <!--</div>-->
-          <!--<div class="input-container" id="postal">-->
-          <!--<input type="text" name="postal" required maxlength="6" />-->
-          <!--<label for="postal">Postal Code</label>-->
-          <!--</div>-->
-          <!--<div class="input-container" id="city">-->
-          <!--<input type="text" name="city" required/>-->
-          <!--<label for="city">City</label>-->
-          <!--</div>-->
-          <!--</fieldset>-->
+
         </form>
 
       </div>
 
-      <!--<div class="list-borderless">-->
-      <!--<label class="item item-input item-floating-label">-->
-      <!--<span class="input-label"t>Label 1</span>-->
-      <!--<input type="text" placeholder="Placeholder 1">-->
-      <!--</label>-->
-
-      <!--<label class="item item-input item-floating-label">-->
-      <!--<span class="input-label">Label 2</span>-->
-      <!--<input type="text" placeholder="Placeholder 2">-->
-      <!--</label>-->
-      <!--</div>-->
-      <!--<ion-item>-->
-      <!--<ion-label primary floating>Floating Label</ion-label>-->
-      <!--<ion-input></ion-input>-->
-      <!--</ion-item>-->
-      <!--<input type="text" placeholder="username" required>-->
-      <!--<div class="mybar">-->
-      <!--<i></i>-->
-      <!--</div>-->
-      <!--<input type="password" placeholder="password" required>-->
-      <!--<button>Sign in</button>-->
-      <!--</div>-->
-
     </div>
-
-
-    <!--<a class="button button-block button-calm" href="#/tab/mapa">Go To Mapa Tab</a>-->
-    <!--<ion-item class="item">-->
-    <!--<div ng-controller="WelcomeCtrl">-->
-    <!--<p align="center">-->
-    <!--Nome: {{profile_name}}-->
-    <!--</p>-->
-    <!--<p align="center">-->
-    <!--Email: {{profile_email}}-->
-    <!--</p>-->
-    <!--<p>-->
-    <!--<img id="fb_photo" class="APPcenter" ng-src="{{profile_photo}}" style="max-width: 100%; height: auto;">-->
-    <!--&lt;!&ndash;<img id="fb_photo" class="center" ng-src="" style="max-width: 100%; height: auto;">&ndash;&gt;-->
-    <!--</p>-->
-    <!--&lt;!&ndash;<a class="button button-block" ng-hide=$root.APP.logged ng-click="facebookSignIn()">Login with&ndash;&gt;-->
-    <!--&lt;!&ndash;<a class="button button-block" ng-click="getFriends()">Login with&ndash;&gt;-->
-    <!--<a class="facebook-sign-in button button-block" ng-click="facebookSignIn()">Login with-->
-    <!--Facebook</a>-->
-    <!--</div>-->
-    <!--<div ng-controller="HomeCtrl">-->
-    <!--<a class="button button-assertive button-block button-outline" ng-show=$root.APP.logged-->
-    <!--ng-click="showLogOutMenu()">Log Out</a>-->
-    <!--</div>-->
-    <!--</ion-item>-->
     <div ng-controller="PopupCtrl"></div>
   </ion-content>
 </ion-view>

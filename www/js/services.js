@@ -719,11 +719,20 @@ angular.module('starter.services', [])
     };
     // });
   }])
-  .factory("users", function ($firebaseObject, $rootScope, $timeout, $cordovaSQLite) {
+  .factory("users", function ($firebaseObject, $rootScope, $timeout, $cordovaSQLite, $cordovaNetwork) {
 
     var usersRef = null;
     var userAccount = null;
     var userID = null;
+    var needUpdate = false;
+    var dadosUpdate = null;
+
+    var needsUpdate = function (update) {
+      if (!update)
+        return needUpdate;
+      else
+        needUpdate = update;
+    };
 
     var genUUID = function () {
       userID = UUID();
@@ -796,13 +805,74 @@ angular.module('starter.services', [])
       }
     };
 
+    var updateDados = function (dados) {
+      if (!dados)
+        dados = dadosUpdate;
+
+      if (!dados) {
+        console.log("UpdateDados empty set");
+        return;
+      }
+
+      var online = $cordovaNetwork.isOnline();
+      needUpdate = true;
+      dadosUpdate = dados;
+      console.log("UPLOAD dados####: userID: %s online: %s", userID, online, dados);
+      if (online) {
+        goOnline();
+        if (userAccount == null) {
+          // userAccount = init();
+          usersRef = new Firebase("https://crackling-torch-4418.firebaseio.com/Utilizadores/" + userID);
+          userAccount = $firebaseObject(usersRef);
+
+          userAccount.$loaded(function () {
+            uploadDados(dados);
+          });
+
+        } else {
+          uploadDados(dados);
+        }
+      } else {
+        $cordovaSQLite.updateOrInsertValueToDB("info", ["true", "userinfoUpdate"]);
+      }
+    };
+
     var uploadFavorites = function (favs) {
 
       userAccount.favorites = favs.toString();
+      userAccount.dataAtualizacao = Date().toLocaleLowerCase();
+      userAccount.dataAtualizacao_ts = Date.now();
 
       userAccount.$save().then(function (ref) {
         var id = ref.key();
         console.log("Favorites: added record with id ", id, ref.key().$id);
+        $timeout(function () {
+          offline();
+        }, 30000);
+        // list.$indexFor(id); // returns location in the array
+      });
+    };
+
+    var uploadDados = function (dados) {
+
+      userAccount.nome = dados.nome;
+      userAccount.email = dados.email;
+
+      if (dados.dataInicio) userAccount.dataInicio = dados.dataInicio;
+      if (dados.modelo) userAccount.modelo = dados.modelo;
+      if (dados.platform) userAccount.platform = dados.platform;
+      if (dados.version) userAccount.version = dados.version;
+      if (dados.timestamp) userAccount.timestamp = dados.timestamp;
+      if (dados.favorites) userAccount.favorites = "";
+
+      userAccount.dataAtualizacao = Date().toLocaleLowerCase();
+      userAccount.dataAtualizacao_ts = Date.now();
+
+      userAccount.$save().then(function (ref) {
+        var id = ref.key();
+        needUpdate = false;
+        $cordovaSQLite.updateOrInsertValueToDB("info", ["false", "userinfoUpdate"]);
+        console.log("upload dados: added record with id ", id, ref.key().$id);
         $timeout(function () {
           offline();
         }, 30000);
@@ -815,11 +885,17 @@ angular.module('starter.services', [])
       userAccount.nome = user.nome;
       userAccount.dataInicio = user.dataInicio;
       userAccount.email = user.email;
+      userAccount.fb_email = user.fb_email;
+
       userAccount.modelo = user.modelo;
       userAccount.platform = user.platform;
       userAccount.version = user.version;
       userAccount.timestamp = user.timestamp;
       userAccount.favorites = "";
+
+
+      userAccount.dataAtualizacao = Date().toLocaleLowerCase();
+      userAccount.dataAtualizacao_ts = Date.now();
 
       userAccount.$save().then(function (ref) {
         var id = ref.key();
@@ -832,12 +908,12 @@ angular.module('starter.services', [])
     };
 
     offline = function () {
-      console.log("FIREBASE: going offline");
+      console.log("FIREBASE: users going offline");
       userAccount.$destroy();
       usersRef.$destroy();
       $timeout(function () {
         Firebase.goOffline();
-        console.log("FIREBASE: offline");
+        console.log("FIREBASE: users offline");
         userAccount = null;
         usersRef = null;
       }, 60000);
@@ -851,13 +927,15 @@ angular.module('starter.services', [])
       UUID: UUID,
       setUserID: setUserID,
       genUUID: genUUID,
-      updateFavorites: updateFavorites
+      updateFavorites: updateFavorites,
+      updateDados: updateDados,
+      needsUpdate: needsUpdate
     };
 
   })
   .factory("likes", function ($firebaseArray, $firebase, $cordovaNetwork, $cordovaSQLite, $timeout, $rootScope, users) {
 
-    var likesRef;
+    var likesRef = null;
     var allLikes = [];
     var atividades = null;
     var dataLoaded = false;
@@ -1063,10 +1141,10 @@ angular.module('starter.services', [])
         }
       }
 
-      // if (needUpdate){
+      if (needUpdate) {
         console.log("favorites: ", favs, items);
         users.updateFavorites(favs);
-// }
+      }
       $rootScope.$broadcast('REFRESH_ITEMS');
 
       saveLikes();
@@ -1094,29 +1172,10 @@ angular.module('starter.services', [])
       else
         needUpdate = update;
     };
-    // needsUpdate = function (update) {
-    //   if (!update) {
-    //     if (needUpdate == null) {
-    //       $cordovaSQLite.getVarFromDB("info", "needsUpdate").then(function (res) {
-    //         needUpdate = res;
-    //         console.log("Retrieved needUpdate from db: ", needUpdate);
-    //         if (needUpdate)
-    //           uploadLikes();
-    //       });
-    //     } else
-    //       return needUpdate;
-    //   } else {
-    //     needUpdate = update;
-    //     $cordovaSQLite.getvaInsertValueToDB("info", [needUpdate, "needsUpdate"]);
-    //   }
-    // };
 
     getAllLikes = function () {
 
-      // if (allLikes.length)
       return allLikes;
-      // else
-      //   return [];
     };
 
     goOnline = function () {
@@ -1125,9 +1184,16 @@ angular.module('starter.services', [])
     };
 
     offline = function () {
-      console.log("FIREBASE: going offline");
-      Firebase.goOffline();
-      fireBaseOnline = false;
+      console.log("FIREBASE: likes going offline");
+      // likesRef.$destroy();
+      atividades.$destroy();
+      $timeout(function () {
+        Firebase.goOffline();
+        console.log("FIREBASE: likes offline");
+        likesRef = null;
+        atividades = null;
+      }, 60000);
+
     };
 
     return {
