@@ -20,7 +20,9 @@
           userID: {{$root.APP.userID}}
         </p>
         <p>
-          <img id="fb_photo" class="animated fadeIn APPcenter" ng-src="{{profile_photo}}" style="height: 100px;">
+        <div class="avatar">
+          <img id="fb_photo" class="animated fadeIn APPcenter" ng-src="{{$root.APP.user.picture}}" style="height: 100px;">
+        </div>
         </p>
       </ion-item>
       <!--<ion-toggle ng-model="settings.enableFriends">-->

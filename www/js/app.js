@@ -26,7 +26,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         console.log("Go definicoes");
         $state.go('tab.account')
       }
-    };
+    }
 
     var preLoadImages = [
       'img/atividades_quinta_pedagogica_small.jpg',
@@ -684,6 +684,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       if (index != null) {
         $scope.id = $scope.events[index].id;
+        edit = $scope.events[index].edit;
         // if ($scope.events[index].contentHtml != '')
         //   edit = true;
         $scope.data.caption = $scope.events[index].contentHtml;
@@ -1795,7 +1796,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             console.log('getLoginStatus', success.status);
 
             $ionicLoading.show({
-              template: 'Logging in...'
+              template: 'A iniciar a sessão...'
             });
 
             // Ask the permissions you need. You can learn more about
@@ -2080,22 +2081,199 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   //
   //
   // })
-  .controller('LoginCtrl', function ($scope, $rootScope, users, UserService, $state) {
+  .controller('LoginCtrl', function ($scope, $rootScope, users, UserService, $state, $window, $ionicLoading, blob, $q, $document) {
 
     // if ($rootScope.APP.logged)
-      $scope.Login = {
-        nome: $rootScope.APP.user.name,
-        email: $rootScope.APP.user.email,
-        picture: $rootScope.APP.user.picture,
-        canSubmit: "disabled"
-      };
-    // else
-    //   $scope.Login = {
-    //     nome: "Nome",
-    //     email: "Email",
-        // picture: $rootScope.APP.user.picture,
-        // canSubmit: "disabled"
-      // };
+    $scope.Login = {
+      nome: $rootScope.APP.user.name,
+      email: $rootScope.APP.user.email,
+      picture: $rootScope.APP.user.picture,
+      canSubmit: "disabled"
+    };
+
+    $scope.takingPicture = 0;
+
+    $scope.takeAvatarPicture = function () {
+      console.log("take Avatarpicture ready");
+
+      $rootScope.deviceBUSY = 1;
+      if ($scope.takingPicture)
+        return;
+      $scope.takingPicture = 1;
+
+      if (device.platform === 'iOS') {
+        $ionicLoading.show();
+      }
+
+      navigator.camera.getPicture(onSuccess, onFail, {
+        quality: 75,
+        destinationType: Camera.DestinationType.FILE_URI,
+        // destinationType: Camera.DestinationType.NATIVE_URI,
+        // destinationType: 0,
+        encodingType: 0,
+        targetWidth: 640,
+        targetHeight: 480,
+        correctOrientation: true,
+        saveToPhotoAlbum: false,
+        Direction: 1
+        // sourceType: 0
+
+      });
+
+      function onSuccess(imageURI) {
+
+        // if (device.platform === 'iOS') {
+        //   $ionicLoading.hide();
+        // }
+
+        console.log(imageURI);
+        if (device.platform === 'Android')
+          $ionicLoading.show();
+
+        $scope.takingPicture = 0;
+        // $scope.lastPhoto = imageURI;
+        // $scope.$apply();
+        window.resolveLocalFileSystemURL(imageURI, processAvatarPicture, resOnError);
+      }
+
+
+      function resOnError(message) {
+        console.error('Failed because: ' + message);
+        $scope.takingPicture = 0;
+        $ionicLoading.hide();
+      }
+
+      function onFail(message) {
+        console.error('Failed because: ' + message);
+        $scope.takingPicture = 0;
+        $ionicLoading.hide();
+      }
+    };
+
+    var processAvatarPicture = function (imageURI) {
+
+      console.log("processAvatarPicture: entry", imageURI, imageURI.toURL());
+
+      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
+
+          myFolderApp = "/";
+          fileSys.root.getDirectory(myFolderApp,
+            {create: true, exclusive: false},
+            function (directory) {
+              // $scope.saveDir = directory;
+              console.warn("DIR: ", directory);
+              thumbresizeImage(imageURI.toURL()).then(function (res) {
+                console.log("RESize RES: ", res);
+                saveThumbToFile(directory, "data:image/jpg;base64," + res.imageData);
+
+                $rootScope.deviceBUSY = 0;
+              });
+            },
+            resGetDirThumbOnError);
+
+        },
+        resGetfileSystemOnError);
+    };
+
+    var thumbresizeImage = function (img_path) {
+      var q = $q.defer();
+      console.log("thumbresizeImage: image path", img_path);
+      $window.imageResizer.resizeImage(function (success_resp) {
+        // console.log('success, img re-size: ' + JSON.stringify(success_resp));
+        console.log('success, img re-size: ');
+        q.resolve(success_resp);
+      }, function (fail_resp) {
+        console.log('fail, img re-size: ' + JSON.stringify(fail_resp));
+        q.reject(fail_resp);
+      }, img_path, 100, 0, {
+        imageDataType: ImageResizer.IMAGE_DATA_TYPE_URL,
+        resizeType: ImageResizer.RESIZE_TYPE_MIN_PIXEL,
+        pixelDensity: true,
+        storeImage: false,
+        photoAlbum: false,
+        format: 'jpg'
+      });
+
+      return q.promise;
+    };
+
+    function resGetDirThumbOnError(error) {
+      console.log("GET resGetDirThumbOnError images ERROR", error, error.code);
+      $rootScope.deviceBUSY = 0;
+      $ionicLoading.hide();
+    }
+
+    function resGetfileSystemOnError(error) {
+      console.log("resGetfileSystemOnError ERROR: ", error, error.code);
+      $rootScope.deviceBUSY = 0;
+      $ionicLoading.hide();
+    }
+
+    var saveThumbToFile = function (dir, thumb) {
+      var contentType = "image/png";
+      // var folderpath = "file:///storage/emulated/0/";
+      // var folderpath = dir;
+      var folderpath = dir.nativeURL;
+      // var filename = "thumb_" + $scope.newFile + ".png";
+      var d = new Date();
+      var n = d.getTime();
+      filename = n + ".jpg";
+      // var filename = "profile_photo.jpg";
+
+      var block = thumb.split(";");
+      var dataType = block[0].split(":")[1];// In this case "image/png"
+      var realData = block[1].split(",")[1];// In this case "iVBORw0KGg...."
+
+      console.log("saveThumbToFile", folderpath, filename, contentType);
+      savebase64AsImageFile(folderpath, filename, realData, dataType);
+
+    };
+
+    function done(evt) {
+      console.warn("Write completed.", $scope.thumb_file);
+      var img = document.getElementById("profile_photo");
+      img.src = $scope.thumb_file;
+      $rootScope.APP.user.picture = $scope.thumb_file;
+      $scope.$apply();
+      var tempUser = UserService.getUser();
+      tempUser.then(function (res) {
+        var userInfo = JSON.parse(res || '{}');
+        userInfo.picture = $scope.thumb_file;
+        $rootScope.APP.logged = true;
+        UserService.setUser(userInfo);
+      });
+      $ionicLoading.hide();
+    }
+
+    function error(evt) {
+      $ionicLoading.hide();
+      console.error("Write failed:" + evt);
+    }
+
+    var savebase64AsImageFile = function (folderpath, filename, content, contentType) {
+      // Convert the base64 string in a Blob
+      var DataBlob = blob.b64toBlob(content, contentType);
+
+      console.log("Starting to write the file :4", folderpath);
+
+      window.resolveLocalFileSystemURL(folderpath, function (dir) {
+        console.log("Access to the directory granted succesfully");
+        dir.getFile(filename, {create: true}, function (file) {
+          console.log("File created succesfully.", file.toURL());
+          $scope.thumb_file = file.toURL();
+          file.createWriter(function (fileWriter) {
+            console.log("Writing content to file");
+            // fileWriter.write(DataBlob);
+            fileWriter.onwrite = done;
+            fileWriter.onerror = error;
+            // fileWriter.write(content);
+            fileWriter.write(DataBlob);
+          }, function () {
+            console.error('Unable to save file in path ' + folderpath);
+          });
+        });
+      });
+    };
 
     $scope.submit = function () {
       console.log("Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
@@ -2141,6 +2319,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         UserService.setUser(userInfo);
       });
 
+      $rootScope.showAlert("Sessão iniciada, podes alterar os dados mais tarde nas definições");
       $state.go("tab.dash");
       // return false;
     };

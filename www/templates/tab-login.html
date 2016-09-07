@@ -5,11 +5,9 @@
 
       <div id="form">
         <div class="avatar">
-          <img ng-src="{{Login.picture}}">
+          <img id="profile_photo" ng-click="takeAvatarPicture()" ng-src="{{Login.picture}}">
         </div>
         <form id="register_form" ng-submit="submit()">
-
-
 
           <div class="input-container" id="nome">
             <input type="text" name="nome" ng-change="changed()" ng-model="Login.nome" required/>
