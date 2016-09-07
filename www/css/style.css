@@ -1,17 +1,17 @@
 @font-face {
   font-family: 'Brandon';
-  src: url("font/Brandon_reg.otf") format("opentype");
+  src: url("font/Brandon_bld.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
-  font-size:16px;
+  font-size:22px;
 }
 * {
-font-family: 'Brandon', SansSerif !important;
+/*font-family: 'Brandon', SansSerif !important;*/
 /*font-size:16px;*/
 }
 /* Empty. Add your own CSS if you like */
 body {
-  font-size:18px;
+  /*font-size:18px;*/
 /*cursor: url('../img/finger.png'), auto;*/
 /*cursor: pointer;*/
   /** {*/
@@ -857,4 +857,16 @@ form *:focus {
   to {
     opacity: 1;
   }
+}
+
+/* atividade detalhe*/
+
+.detalheAtividade {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.APPmain {
+  font-size: 18px;
+  opacity: 0.85;
 }
