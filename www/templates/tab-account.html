@@ -9,21 +9,46 @@
         <p align="center">Ligaçao: {{$root.netWorktype}} isOnline: {{$root.isOnline}}</p>
         <p align="center">Utilizador Logged: {{$root.APP.logged}}</p>
       </ion-item>
-      <ion-item class="item">
-        <p align="center">
-          Nome: {{profile_name}}
-        </p>
-        <p align="center">
-          Email: {{profile_email}}
-        </p>
-        <p align="center">
-          userID: {{$root.APP.userID}}
-        </p>
-        <p>
-        <div class="avatar">
-          <img id="fb_photo" class="animated fadeIn APPcenter" ng-src="{{$root.APP.user.picture}}" style="height: 100px;">
+      <ion-item class="item" ng-controller="LoginCtrl">
+        <div class="">
+
+          <div id="form">
+            <div class="avatar">
+              <img id="profile_photo" ng-click="takeAvatarPicture()" ng-src="{{Login.picture}}">
+            </div>
+            <form id="register_form" ng-submit="submit()">
+
+              <div class="input-container" id="nome">
+                <input type="text" name="nome" ng-change="changed()" ng-model="Login.nome" required/>
+                <label for="nome">Nome</label>
+              </div>
+              <div class="input-container" id="email">
+                <input type="text" name="email" ng-change="changed()" ng-model="Login.email" required/>
+                <label for="email">Email</label>
+              </div>
+
+              <!--<br>-->
+
+              <button ng-if="!$root.APP.logged" ng-class="Login.canSubmit" class="button button-block button-calm">Ligar com
+                nome e email
+              </button>
+
+              <button ng-if="$root.APP.logged" ng-class="Login.canSubmit" class="button button-block button-calm">Modificar
+                os dados
+              </button>
+
+              <div ng-if="!$root.APP.user.fb_email">
+                <p align="center">Ou</p>
+                <button ng-controller="WelcomeCtrl" ng-click="facebookSignIn()"
+                        class="button  button-block button-calm">Ligar com o FaceBook
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+
         </div>
-        </p>
       </ion-item>
       <!--<ion-toggle ng-model="settings.enableFriends">-->
       <!--Ativar  Friends-->

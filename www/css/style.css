@@ -468,7 +468,7 @@ td-card img {
 
 .tm.tm-scroll.mascoteAvatar {
   /* This image is 687 wide by 1024 tall, similar to your aspect ratio */
-  background-image: url('../img/cards/galo2.jpg');
+  background-image: url('../img/galo_desenho.png');
 
   /* make a square container */
   width: 50px;
@@ -869,4 +869,182 @@ form *:focus {
 .APPmain {
   font-size: 18px;
   opacity: 0.85;
+}
+
+
+/* progress bar */
+
+.Gamebody {
+  font: 13px/20px "Brandon", Tahoma, Verdana, sans-serif;
+  color: #404040;
+  font-size: medium;
+  /*background: #2a2a2a;*/
+}
+
+.container {
+  margin: auto;
+  width: 100%;
+  text-align: center;
+  padding: 5%;
+}
+
+.container .progress {
+  margin: 0 auto;
+  width: 100%;
+}
+
+.progress {
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.progress-bar {
+  height: 16px;
+  border-radius: 4px;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+  transition: 0.4s linear;
+  transition-property: width, background-color;
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/*
+ * Note: using adjacent or general sibling selectors combined with
+ *       pseudo classes doesn't work in Safari 5.0 and Chrome 12.
+ *       See this article for more info and a potential fix:
+ *       http://css-tricks.com/webkit-sibling-bug/
+ */
+
+#five:checked ~ .progress > .progress-bar {
+  width: 5%;
+  background-color: #f63a0f;
+}
+
+#twentyfive:checked ~ .progress > .progress-bar {
+  width: 25%;
+  background-color: #f27011;
+}
+
+#fifty:checked ~ .progress > .progress-bar {
+  width: 50%;
+  background-color: #f2b01e;
+}
+
+#seventyfive:checked ~ .progress > .progress-bar {
+  width: 75%;
+  background-color: #f2d31b;
+}
+
+#onehundred:checked ~ .progress > .progress-bar {
+  width: 100%;
+  background-color: #86e01e;
+}
+
+.radio {
+  display: none;
+}
+
+.label {
+  display: inline-block;
+  margin: 0 5px 20px;
+  padding: 3px 8px;
+  color: #aaa;
+  text-shadow: 0 1px black;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.radio:checked + .label {
+  color: white;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+
+/* radial progress*/
+
+.progress-pie-chart {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #E5E5E5;
+  position: relative;
+}
+.progress-pie-chart.gt-50 {
+  background-color: #81CE97;
+}
+
+.ppc-progress {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  left: calc(50% - 25px);
+  top: calc(50% - 25px);
+  width: 50px;
+  height: 50px;
+  clip: rect(0, 50px, 50px, 25px);
+}
+.ppc-progress .ppc-progress-fill {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  left: calc(50% - 25px);
+  top: calc(50% - 25px);
+  width: 50px;
+  height: 50px;
+  clip: rect(0, 25px, 50px, 0);
+  background: #81CE97;
+  transform: rotate(60deg);
+}
+.gt-50 .ppc-progress {
+  clip: rect(0, 25px, 50px, 0);
+}
+.gt-50 .ppc-progress .ppc-progress-fill {
+  clip: rect(0, 50px, 50px, 25px);
+  background: #E5E5E5;
+}
+
+.ppc-percents {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  left: calc(50% - 33.33333px/2);
+  top: calc(50% - 33.33333px/2);
+  width: 33.33333px;
+  height: 33.33333px;
+  background: #fff;
+  text-align: center;
+  display: table;
+}
+.ppc-percents span {
+  display: block;
+  font-size: 2.6em;
+  font-weight: bold;
+  color: #81CE97;
+}
+
+.pcc-percents-wrapper {
+  display: table-cell;
+  font-size: 5px;
+  vertical-align: middle;
+}
+
+/*body {*/
+  /*font-family: Arial;*/
+  /*background: #f7f7f7;*/
+/*}*/
+
+.progress-pie-chart {
+  margin: 5px auto 0;
+}
+
+.radialLabelRegioes {
+  position: relative;
+  top: -20px;
+}
+
+.radialLabelPontos {
+  position: relative;
+  top: -20px;
+  left: -30px;
 }

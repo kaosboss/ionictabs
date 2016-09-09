@@ -1,20 +1,78 @@
-<ion-view title="Desafios">
+<ion-view title="Desafios" cache-view="false">
 
-  <ion-nav-buttons side="right">
-    <button class="button button-clear button-icon icon ion-ios-cog-outline" ng-click="$root.APP.goDefinicoes()">
-    </button>
-  </ion-nav-buttons>
+  <ion-content class="Gamebody">
 
-  <ion-content>
-    <!--<p>Page 1</p>-->
+    <ion-item class="item-borderless">
+      <div class="container animated fadeIn">
+        <span>Nível</span>
+        <input type="radio" disabled class="radio" name="progress" value="five" id="five" checked>
+        <label for="five" class="label">1</label>
+
+        <input type="radio" disabled class="radio" name="progress" value="twentyfive" id="twentyfive">
+        <label for="twentyfive" class="label">2</label>
+
+        <input type="radio" disabled class="radio" name="progress" value="fifty" id="fifty">
+        <label for="fifty" class="label">3</label>
+
+        <input type="radio" disabled class="radio" name="progress" value="seventyfive" id="seventyfive">
+        <label for="seventyfive" class="label">4</label>
+
+        <input type="radio" disabled class="radio" name="progress" value="onehundred" id="onehundred">
+        <label for="onehundred" class="label">5</label>
+
+        <div class="progress">
+          <div class="progress-bar"></div>
+        </div>
+      </div>
+    </ion-item>
+
+    <ion-item class="item-borderless animated fadeIn">
+
+      <div class="row">
+        <div class="col animated tada">
+          <div ng-controller="RadialCtrl" ng-init="initRadial('Regiões', 75, '6/8', 'regioes')">
+            <div name="progress-pie-{{unique}}" class="progress-pie-chart">
+              <span class="radialLabelRegioes">{{item}}</span>
+              <div class="ppc-progress">
+                <div name="progress-fill-{{unique}}" class="ppc-progress-fill"></div>
+              </div>
+              <div class="ppc-percents">
+                <div class="pcc-percents-wrapper">
+                  <span>{{caption}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col animated tada">
+          <div ng-controller="RadialCtrl" ng-init="initRadial('Pontos de interesse', 35, '12/35', 'pontos')">
+            <div name="progress-pie-{{unique}}" class="progress-pie-chart">
+              <span class="radialLabelPontos">{{item}}</span>
+              <div class="ppc-progress">
+                <div name="progress-fill-{{unique}}" class="ppc-progress-fill"></div>
+              </div>
+              <div class="ppc-percents">
+                <div class="pcc-percents-wrapper">
+                  <span>{{caption}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-item>
+
+
   </ion-content>
+
 </ion-view>
 
 <!--<ion-view ng-click="goDefinicoes()" view-title="Quinta Pedagógica<img class='settingLogo header-image' src='img/definicoes_img.png'>">-->
-  <!--<ion-content scroll="false" class="has-header has-tabs padding">-->
-    <!--&lt;!&ndash;<ion-header-bar align-title="left">&ndash;&gt;-->
-      <!--&lt;!&ndash;<img class="title header-image" src="img/SNP_small.jpg">&ndash;&gt;-->
-      <!--&lt;!&ndash;<a class="title header-text">Query Stix</a>&ndash;&gt;-->
-    <!--&lt;!&ndash;</ion-header-bar>&ndash;&gt;-->
-  <!--</ion-content>-->
+<!--<ion-content scroll="false" class="has-header has-tabs padding">-->
+<!--&lt;!&ndash;<ion-header-bar align-title="left">&ndash;&gt;-->
+<!--&lt;!&ndash;<img class="title header-image" src="img/SNP_small.jpg">&ndash;&gt;-->
+<!--&lt;!&ndash;<a class="title header-text">Query Stix</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</ion-header-bar>&ndash;&gt;-->
+<!--</ion-content>-->
 <!--</ion-view>-->

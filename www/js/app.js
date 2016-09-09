@@ -1856,10 +1856,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // });
     console.log("Mapa controller ready");
 
+    var aCircles = [];
+
     $scope.count = 0;
     $scope.start = 0;
     $scope.showQR = false;
     $scope.PI = $stateParams.PI.replace("PI_", "");
+    $scope.dataChanged = false;
 
     // $scope.$on('QR_CODE_SCAN', function (e, args) {
     //   console.log("tab mapa QR_CODE_SCAN", args);
@@ -1867,6 +1870,25 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     //
     //   // console.log("tab mapa QR_CODE_SCAN scandat", args.barcodeData);
     // });
+    // console.warn("entering mapa: ", $state.current.url);
+
+    $scope.$on('$stateChangeSuccess', function (data) {
+
+      if (($rootScope.Mapaurl == null) && ($state.current.url == "/regiao/:RI/:PI")) {
+        console.warn("entering mapa");
+        $rootScope.Mapaurl = $state.current.url;
+      }
+
+      if (($state.current.url.indexOf("regiao") == -1)) {
+        $rootScope.Mapaurl = null;
+        console.warn("leaving mapa");
+        if ($rootScope.MapadataChanged) {
+          console.warn("leaving mapa : Data changed: saving");
+          $regioes.setRegioes($regioes.getTempRegioes());
+          $rootScope.MapadataChanged = false;
+        }
+      }
+    });
 
     $scope.$on("$ionicView.beforeEnter", function (event, data) {
       console.log("State $ionicView.beforeEnter Params: ", data);
@@ -1914,6 +1936,25 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       createCircles();
     });
 
+    $scope.updateRegiaoVisitada = function (RI, PI) {
+      aCircles = $regioes.getTempRegioes();
+      console.log("Mapa updateRegiaoVisitada: ", RI, PI, aCircles, $scope.aCircles);
+      if (aCircles)
+        aCircles.forEach(function (reg) {
+          if (reg.nome == RI) {
+            if (reg.PIs) {
+              reg.PIs.forEach(function (tpi) {
+                if (tpi.nome == PI) {
+                  tpi.visited = true;
+                  $rootScope.MapadataChanged = true;
+                  console.log("Mapa updateRegiaoVisitada Found PI: " , PI);
+                  $regioes.setTempRegioes(aCircles);
+                }
+              });
+            }
+          }
+        });
+    };
 
     $ionicPlatform.ready(function () {
 
@@ -1959,6 +2000,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         $regioes.getRegioes().then(function (res) {
           $scope.aCircles = JSON.parse(res || [{}]);
+          $regioes.setTempRegioes($scope.aCircles);
           console.log("createCircles: GOT regioes from cordova service to aCircles", $scope.aCircles);
           drawImage();
         });
@@ -2039,6 +2081,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         //});
       };
       console.log("Mapa antes dos circles", $stateParams);
+
+      if ($stateParams.PI != "")
+        $scope.updateRegiaoVisitada($stateParams.RI, $stateParams.PI);
+
       if ($stateParams.RI == "ALL")
         createCircles();
     })
@@ -2068,19 +2114,88 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // };
 
   })
-  .controller('GameCtrl', function ($scope, $state) {
+  .controller('GameCtrl', function ($scope, $state, $window, $timeout) {
     console.log("Game controller ready");
+
+    $timeout(function () {
+      $window.document.getElementById("twentyfive").checked = true;
+    }, 300);
+
   })
-  .controller('RegiaoCtrl', function ($scope, $rootScope) {
-    // $scope.goBack = function(){
-    console.log("going RegiaoCtrl ######");
-    //   $ionicHistory.goBack();
-    // }
+  .controller('RadialCtrl', function ($scope, $state, $window, $timeout, $regioes) {
+    console.log("RadialCtrl controller ready");
+
+    var progressElem = null;
+    var progressPie = null;
+    var deg = 0;
+    var unique = Math.floor(Math.random() * 1000);
+    var regioes = null;
+    $scope.unique = unique;
+
+    $scope.initRadial = function (item, percent, caption, tipo) {
+      console.log("initRadial ready: item: %s perc: %s", item, percent);
+      // $scope.unique = unique;
+      $scope.item = item;
+      // $scope.caption = caption;
+      if (tipo == "regioes") {
+        regioes = $regioes.getAllRegioesList();
+        $regioes.getRegioes().then(function (res) {
+          var regioes = JSON.parse(res || [{}]);
+          console.log("got regioes: ", regioes);
+          var r_total = 0;
+          var r_atual = 0;
+          regioes.forEach(function (reg) {
+            if (reg.locked == false)
+              r_atual++;
+            r_total++;
+          });
+          $scope.caption = r_atual + "/" + r_total;
+          percent = (r_atual / r_total) * 100;
+          console.log("r_total: %s r_atual: %s perc: %s", r_total, r_atual, percent);
+          $timeout(function () {
+            progressElem = $window.document.getElementsByName("progress-fill-" + unique)[0];
+            progressPie = $window.document.getElementsByName("progress-pie-" + unique)[0];
+            deg = 360 * percent / 100;
+            if (percent > 50) {
+              progressPie.classList.add('gt-50');
+            }
+            progressElem.style = "transform: rotate(" + deg + "deg);";
+          });
+        });
+      } else {
+        regioes = $regioes.getAllRegioesList();
+        $regioes.getRegioes().then(function (res) {
+          var regioes = JSON.parse(res || [{}]);
+          console.log("got regioes: ", regioes);
+          var r_total = 0;
+          var r_atual = 0;
+          regioes.forEach(function (reg) {
+            if (reg.PIs)
+              reg.PIs.forEach(function (pi) {
+                if (pi.visited)
+                  r_atual++;
+                r_total++;
+              })
+          });
+          $scope.caption = r_atual + "/" + r_total;
+          percent = (r_atual / r_total) * 100;
+          console.log("r_total: %s r_atual: %s perc: %s", r_total, r_atual, percent);
+          $timeout(function () {
+            progressElem = $window.document.getElementsByName("progress-fill-" + unique)[0];
+            progressPie = $window.document.getElementsByName("progress-pie-" + unique)[0];
+            deg = 360 * percent / 100;
+            if (percent > 50) {
+              progressPie.classList.add('gt-50');
+            }
+            progressElem.style = "transform: rotate(" + deg + "deg);";
+          });
+        });
+      }
+
+    };
+
+
   })
-  // .controller('AtividadesCtrl', function ($scope, $rootScope, $timeout) {
-  //
-  //
-  // })
   .controller('LoginCtrl', function ($scope, $rootScope, users, UserService, $state, $window, $ionicLoading, blob, $q, $document) {
 
     // if ($rootScope.APP.logged)
@@ -2607,6 +2722,25 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.url = null;
 
     console.warn("items: ", $scope.Items);
+
+    $scope.$on('$stateChangeSuccess', function (data) {
+
+      if (($rootScope.url == null) && ($state.current.url == "/snp/:AT/:ATD")) {
+        console.log("entering snp");
+        $rootScope.url = $state.current.url;
+      }
+
+      if (($state.current.url.indexOf("snp") == -1)) {
+        $rootScope.url = null;
+        console.log("leaving snp");
+        if ($rootScope.dataChanged) {
+          // likes.saveLikes($scope.items);
+          likes.needsUpdate(true);
+          likes.uploadLikes();
+          $rootScope.dataChanged = false;
+        }
+      }
+    });
 
     $scope.$on('REFRESH_ITEMS', function () {
       console.log("GOT broadcast REFRESH_ITEMS");

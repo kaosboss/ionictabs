@@ -1,8 +1,4 @@
 <ion-view view-title="Mapa">
-  <ion-nav-buttons side="right">
-    <button class="button button-clear button-icon icon ion-ios-cog-outline" ng-click="$root.APP.goDefinicoes()">
-    </button>
-  </ion-nav-buttons>
   <ion-content padding="true" class="padding" scroll="true" direction="y">
     <ion-item class="item">
       <button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>
@@ -16,6 +12,7 @@
     </ion-item>
     <!--<ion-item class="item">-->
       <a class="button button-block button-calm" href="#/tab/regiao/RI_D/PI_16">Regiao D-PI 16</a>
+      <a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_19">Regiao E-PI 19</a>
     <button type="button" ng-click="unlock_regiao()" class="button button-balanced APPcenter">Desbloquear Regiao D</button>
     <!--</ion-item>-->
     <div ng-controller="PopupCtrl"></div>

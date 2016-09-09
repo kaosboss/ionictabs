@@ -1186,7 +1186,7 @@ angular.module('starter.services', [])
     offline = function () {
       console.log("FIREBASE: likes going offline");
       // likesRef.$destroy();
-      atividades.$destroy();
+      // atividades.$destroy();
       $timeout(function () {
         Firebase.goOffline();
         console.log("FIREBASE: likes offline");
@@ -1228,6 +1228,9 @@ angular.module('starter.services', [])
       "Regiao de interesse H": "RI_H"
     };
 
+    var regioesDesafios = null;
+    var tempRegioes = [];
+
     var convertRegiaoLongToShort = function (reg) {
       return regioes[reg];
     };
@@ -1260,7 +1263,17 @@ angular.module('starter.services', [])
       return $cordovaSQLite.getVarFromDB("regioes", "estados");
     };
 
+    var setTempRegioes = function (tregioes) {
+      tempRegioes = tregioes;
+    };
+
+    var getTempRegioes = function () {
+      return tempRegioes;
+    };
+
     return {
+      getTempRegioes: getTempRegioes,
+      setTempRegioes: setTempRegioes,
       setRegioes: setRegioes,
       getRegioes: getRegioes,
       convertRegiaoLongToShort: convertRegiaoLongToShort,
