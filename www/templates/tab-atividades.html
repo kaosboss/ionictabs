@@ -7,19 +7,20 @@
         <img class="APPimg" src="img/snp_projeto_02_small.jpg"
              ng-image-appear responsive transition-duration="0.8s" animation="fadeInUp" animation-duration="0.8s"
              easing="ease-out">
+        <!--<img class="animated slideInUp" src="img/snp_projeto_02_small.jpg">-->
       </div>
 
-      <div class="APPmain">
+      <div class="APPmain animated fadeInUpBig padding">
 
         <ion-list class="list-borderless">
-          <div class="list-item animated fadeInUpBig padding">
+          <!--<div class="list-item animated fadeInUpBig padding">-->
             <!--<h4 align="center">ARBORISMO</h4>-->
             <ion-item ng-click="goAtividadesDetalhe(item)" ng-repeat="item in Items"
                       class="item-thumbnail-left item-icon-right">
 
-              <img ng-src="{{item.img}}">
-              <h2>{{item.title}}</h2>
-              <h4 class="textWrap">{{item.description}}</h4>
+              <img ng-src="{{::item.img}}">
+              <h2>{{::item.title}}</h2>
+              <h4 class="textWrap">{{::item.description}}</h4>
               <i class="icon ion-chevron-right icon-accessory"></i>
               <p>
                 <a href="#" class="subdued">{{item.likes ? item.likes : '?' }} likes</a>
@@ -31,13 +32,12 @@
               </ion-option-button>
 
             </ion-item>
-          </div>
+          <!--</div>-->
 
         </ion-list>
 
       </div>
     </div>
-
     <div ng-controller="PopupCtrl"></div>
   </ion-content>
 </ion-view>

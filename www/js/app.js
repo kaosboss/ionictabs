@@ -115,9 +115,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.logged = $rootScope.APP.logged;
 
-    $scope.goLogin = function () {
-      $state.go('tab.login');
-    };
+    // $scope.goLogin = function () {
+    //   $state.go('tab.account');
+    // };
 
     $scope.goHome = function () {
       $state.go('tab.dash');
@@ -1891,9 +1891,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     });
 
     $scope.$on("$ionicView.beforeEnter", function (event, data) {
-      console.log("State $ionicView.beforeEnter Params: ", data);
-      if ($stateParams.PI)
-        perguntas.init($stateParams.RI, $stateParams.PI);
+      console.log("State $ionicView.beforeEnter MApa Params: ", data);
+      // if ($stateParams.PI)
+      //   perguntas.init($stateParams.RI, $stateParams.PI);
     });
 
     $scope.init = function () {
@@ -1905,27 +1905,27 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       console.log("slide box init");
       $scope.slideIndex = 0;
       $scope.start = 1;
-      if (!$scope.perguntas)
-        perguntas.init(RI, PI);
+      // if (!$scope.perguntas)
+      //   perguntas.init(RI, PI);
     };
 
-    $scope.next = function () {
-      $ionicSlideBoxDelegate.next();
-    };
-    $scope.previous = function () {
-      $ionicSlideBoxDelegate.previous();
-    };
-    $scope.disableSwipe = function () {
-      $ionicSlideBoxDelegate.enableSlide(false);
-    };
-    $scope.PI_slideChanged = function (index) {
-      $scope.slideIndex = index;
-      console.log("Index: " + index);
-      $scope.start = 0;
+    // $scope.next = function () {
+    //   $ionicSlideBoxDelegate.next();
+    // };
+    // $scope.previous = function () {
+    //   $ionicSlideBoxDelegate.previous();
+    // };
+    // $scope.disableSwipe = function () {
+    //   $ionicSlideBoxDelegate.enableSlide(false);
+    // };
+    // $scope.PI_slideChanged = function (index) {
+    //   $scope.slideIndex = index;
+    //   console.log("Index: " + index);
+    //   $scope.start = 0;
       // $scope.count = 0;
       // if (index==2)
       //   $scope.disableSwipe();
-    };
+    // };
 
     $scope.goBack = function () {
       $ionicHistory.goBack();
@@ -2459,7 +2459,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate) {
 
     $scope.goLogin = function () {
-      $state.go('tab.login');
+      $state.go('tab.account');
     };
 
     $scope.goHome = function () {
@@ -2544,10 +2544,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // $scope.view.buttonClass = "button";
       // $scope.view.score = 0;
       // $scope.view.buttonStart = "Score " + $scope.view.score;
-      if ($scope.cat1)
-        cardTypes = perguntas.getTdcards();
-      else
-        cardTypes = perguntas.getPerguntas();
+      // if ($scope.cat1)
+      //   cardTypes = perguntas.getTdcards();
+      // else
+      //   cardTypes = perguntas.getPerguntas();
 
       console.log("carTypes: cat1: %s", $scope.cat1, cardTypes);
 
@@ -2719,7 +2719,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   .controller('SNPCtrl', function ($scope, $state, $timeout, $ionicHistory, $rootScope, likes, $stateParams) {
 
     $scope.Items = likes.getItems();
-    $scope.url = null;
+    // $scope.url = null;
 
     console.warn("items: ", $scope.Items);
 
@@ -2732,8 +2732,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       if (($state.current.url.indexOf("snp") == -1)) {
         $rootScope.url = null;
-        console.log("leaving snp");
+        // console.log("leaving snp");
         if ($rootScope.dataChanged) {
+          console.log("leaving snp, saving data");
           // likes.saveLikes($scope.items);
           likes.needsUpdate(true);
           likes.uploadLikes();
@@ -2768,24 +2769,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       });
     };
 
-    $scope.$on('$stateChangeSuccess', function (data) {
-
-      if (($rootScope.url == null) && ($state.current.url == "/snp/:AT/:ATD")) {
-        console.log("entering snp");
-        $rootScope.url = $state.current.url;
-      }
-
-      if (($state.current.url.indexOf("snp") == -1)) {
-        $rootScope.url = null;
-        console.log("leaving snp");
-        if ($rootScope.dataChanged) {
-          // likes.saveLikes($scope.items);
-          likes.needsUpdate(true);
-          likes.uploadLikes();
-          $rootScope.dataChanged = false;
-        }
-      }
-    });
+    // $scope.$on('$stateChangeSuccess', function (data) {
+    //
+    //   if (($rootScope.url == null) && ($state.current.url == "/snp/:AT/:ATD")) {
+    //     console.log("entering snp");
+    //     $rootScope.url = $state.current.url;
+    //   }
+    //
+    //   if (($state.current.url.indexOf("snp") == -1)) {
+    //     $rootScope.url = null;
+    //     console.log("leaving snp");
+    //     if ($rootScope.dataChanged) {
+    //       // likes.saveLikes($scope.items);
+    //       likes.needsUpdate(true);
+    //       likes.uploadLikes();
+    //       $rootScope.dataChanged = false;
+    //     }
+    //   }
+    // });
 
     $scope.clickedLike = function (item) {
       item.like = !item.like;
@@ -2834,7 +2835,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       scope: {},
       templateUrl: 'templates/template-Quiz.html',
       link: function (scope, elem, attrs) {
+
         scope.start = function () {
+          scope.banner = "Agora é que vamos ver o que aprendeste nesta região, acerta o máximo que conseguires e vais ser recompensado.";
           scope.id = 0;
           scope.quizOver = false;
           scope.inProgress = true;
@@ -2859,6 +2862,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             scope.answerMode = true;
           } else {
             scope.quizOver = true;
+            scope.banner = "Acabaste o questionário!\n\rPontuação: " + scope.score;
+            // scope.view.buttonClass = "hidden";
           }
         };
 
@@ -2871,6 +2876,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
           if (ans == scope.answer) {
             scope.score++;
+            scope.iconClass = "ion-checkmark-circled balanced";
             scope.view.buttonClass = "animated tada balanced";
             $timeout(function () {
               scope.view.buttonClass = "";
@@ -2879,6 +2885,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             scope.mensagem = "Essa é a resposta correta!";
             // scope.answerMode = false;
           } else {
+            scope.iconClass = "ion-close-circled assertive";
             scope.view.buttonClass = "animated tada assertive";
             $timeout(function () {
               scope.view.buttonClass = "";
@@ -2904,6 +2911,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         };
 
         scope.reset();
+        scope.start();
+
       }
     }
   })
@@ -2970,16 +2979,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       //     }
       //   }
       // })
-      .state('tab.login', {
-        url: '/login',
-        views: {
-          'tab-login': {
-            templateUrl: 'templates/tab-login.html',
-            // controller: 'DebugCtrl'
-            controller: 'LoginCtrl'
-          }
-        }
-      })
+      // .state('tab.login', {
+      //   url: '/login',
+      //   views: {
+      //     'tab-login': {
+      //       templateUrl: 'templates/tab-login.html',
+      //       // controller: 'DebugCtrl'
+      //       controller: 'LoginCtrl'
+      //     }
+      //   }
+      // })
       // .state('tab.mapa', {
       //   url: '/mapa',
       //   views: {

@@ -607,7 +607,7 @@ angular.module('starter.services', [])
         case "journal":
 
           var query = "delete from journal where id=?";
-          return this.execute(db, query, binding).then(function (res) {
+          return this.execute(db, query, [binding]).then(function (res) {
             result = res;
             console.log("DELETE registo from DB, binding: %s", binding.toString());
             if (!res.rowsAffected)

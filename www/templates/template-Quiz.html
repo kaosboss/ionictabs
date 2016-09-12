@@ -1,57 +1,73 @@
+<div class="APPmain">
+  <ion-item class="item-thumbnail-left item-borderless list-item">
+    <!--<div class="mascoteAvatarDesenho">-->
+    <img ng-src="img/galo_desenho.png" class="">
+    <p align="left" class="textWrap padding">{{banner}}</p>
+    <!--<h2 class="newFont"><br></h2>-->
+    <!--<p style="font-size: medium" class="textWrap">Agora é que vamos ver o que aprendeste nesta região, acerta o máximo que conseguires e vais ser recompensado.</p>-->
+    <!--<span style="max-width: 100%">Agora é que vamos ver o que aprendeste nesta região, acerta o máximo que conseguires e vais ser recompensado.</span>-->
+    <div ng-if="quizOver" class="padding">
+      <button class="button button-small button-calm" ng-click="start()">Tentar novamente.
+      </button>
+    </div>
 
-<div ng-if="inProgress" class="">
-  <div class="score APPcenter" ng-class="view.buttonClass">
-    <span style="opacity: 0.8">Score {{score}}</span>
-  </div>
-  <!--<div class="score energized">-->
-    <!--<span ng-click="stopCards()">Stop</span>-->
-  <!--</div>-->
-</div>
-<div class="quiz-area padding" ng-show="inProgress">
-  <div ng-show="!quizOver">
-    <!--<h2 id="question">{{question}}</h2>-->
-    <legend>{{question}}</legend>
-    <ul class="padding">
-      <li ng-click="selectValue($index)" ng-repeat="option in options">
+  </ion-item>
+  <div class="quiz-area padding" ng-show="inProgress">
+    <div ng-if="!quizOver">
+      <div class="score APPcenter" ng-class="view.buttonClass">
+        <span>Pontuação {{score}}</span>
+      </div>
+      <!--<div class="score energized">-->
+      <!--<span ng-click="stopCards()">Stop</span>-->
+      <!--</div>-->
+    </div>
+    <div ng-show="!quizOver">
+      <!--<h2 id="question">{{question}}</h2>-->
+      <!--<fieldset>-->
+      <legend>{{question}}</legend>
+      <ul class="padding">
+        <li ng-click="selectValue($index)" ng-repeat="option in options">
 
-        <label>
-          <input type="radio" name="answer" value="{{option}}"> <span>{{option}}</span>
-        </label>
-        <!--<label>-->
+          <label>
+            <input type="radio" name="answer" value="{{option}}"> <span>{{option}}</span>
+          </label>
+          <!--<label>-->
           <!--<input type="radio" name="answer" value="{{option}}">-->
           <!--{{option}}-->
-        <!--</label>-->
-      </li>
-      </li>
+          <!--</label>-->
+        </li>
+        </li>
 
-    </ul>
-    <!--<button ng-click="checkAnswer($index)" ng-show="answerMode">Submit</button>-->
+      </ul>
+      <!--<button ng-click="checkAnswer($index)" ng-show="answerMode">Submit</button>-->
 
-    <div ng-show="!answerMode" class="">
-      <p align="center" class="animated fadeIn APPcenter" style="font-size: medium">{{mensagem}}</p>
-      <!--<span><br></span>-->
-      <br>
-      <!--<span class="animated fadeIn" ng-show="!correctAns">{{mensagem}}</span>-->
+      <div ng-show="!answerMode" class="">
+
+        <p align="center" class="animated fadeIn APPcenter" style="font-size: medium"><i ng-class="iconClass" class="icon"></i> {{mensagem}}</p>
+        <!--<span><br></span>-->
+        <br>
+        <!--<span class="animated fadeIn" ng-show="!correctAns">{{mensagem}}</span>-->
+      </div>
+      <div ng-show="!answerMode" class="">
+        <button ng-click="nextQuestion()" class="button button-next animated fadeIn APPcenter">Próxima questão</button>
+      </div>
+      <!--</fieldset>-->
     </div>
-    <div ng-show="!answerMode" class="">
-      <button ng-click="nextQuestion()" class="button button-next animated fadeIn APPcenter">Próxima questão</button>
-    </div>
-
-  </div>
 
 
-  <div ng-show="quizOver">
-    <h3 align="center">Acabaste o questionário!</h3>
-    <button class="button button-next APPcenter" ng-click="reset()">Tentar novamente</button>
-  </div>
+    <!--<div ng-show="quizOver">-->
+      <!--<h3 align="center">Acabaste o questionário!</h3>-->
+      <!--<button class="button button-next APPcenter" ng-click="reset(); start();">Tentar novamente</button>-->
+    <!--</div>-->
 
-  <!--<div id="score">-->
+    <!--<div id="score">-->
     <!--Score: {{score}}-->
-  <!--</div>-->
-</div>
+    <!--</div>-->
+  </div>
 
-<div class="padding" ng-show="!inProgress">
+  <!--<div class="padding" ng-show="!inProgress">-->
   <!--<p>Welcome to the QuizApp</p>-->
-  <button class="button button-next APPcenter" id="startQuiz" ng-click="start()">Iniciar Questionário</button>
+  <!--<button class="button button-next APPcenter" id="startQuiz" ng-click="start()">Iniciar Questionário</button>-->
+  <!--</div>-->
+  <!--</ion-content>-->
 </div>
-<!--</ion-content>-->
