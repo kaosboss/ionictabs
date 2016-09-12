@@ -1395,6 +1395,46 @@ angular.module('starter.services', [])
       getThumbFile: getThumbFile,
       b64toBlob: b64toBlob
     }
+  })
+  .factory('quizFactory', function() {
+    var questions = [
+      {
+        question: "Em que região existem mais alfarrobeiras em Portugal?",
+        options: ["Alentejo", "Santarém", "Algarve", "Minho"],
+        answer: 2
+      },
+      {
+        question: "De que planta é que os egípcios utilizavam para diminuir dores e febre?",
+        options: ["Salgueiro", "Sobreiro", "Alfarrobeira", "urtigas"],
+        answer: 0
+      },
+      {
+        question: "De que fruto é que se faz a marmelada?",
+        options: ["Maçã", "Pêra", "Marmelo", "Morango"],
+        answer: 2
+      }
+      // ,
+      // {
+      //   question: "Which city hosted the 1996 Summer Olympics?",
+      //   options: ["Atlanta", "Sydney", "Athens", "Beijing"],
+      //   answer: 0
+      // },
+      // {
+      //   question: "Who invented telephone?",
+      //   options: ["Albert Einstein", "Alexander Graham Bell", "Isaac Newton", "Marie Curie"],
+      //   answer: 1
+      // }
+    ];
+
+    return {
+      getQuestion: function(id) {
+        if(id < questions.length) {
+          return questions[id];
+        } else {
+          return false;
+        }
+      }
+    };
   });
 
 // .factory('Chats', function () {

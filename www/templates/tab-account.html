@@ -1,15 +1,15 @@
-<ion-view view-title="Definições">
+<ion-view view-title="Definições" cache-view="false">
   <ion-content>
     <ion-list>
       <ion-toggle ng-change="toggleChange()" ng-model="enableBeacons">
         Ativar Localizacao na Quinta
       </ion-toggle>
       </ion-list>
-      <ion-item class="item">
+      <ion-item class="item-borderless">
         <p align="center">Ligaçao: {{$root.netWorktype}} isOnline: {{$root.isOnline}}</p>
         <p align="center">Utilizador Logged: {{$root.APP.logged}}</p>
       </ion-item>
-      <ion-item class="item" ng-controller="LoginCtrl">
+      <ion-item class="item-borderless animated fadeIn" ng-controller="LoginCtrl">
         <div class="">
 
           <div id="form">
@@ -55,8 +55,8 @@
       <!--</ion-toggle>-->
       <ion-item class="animated fadeIn item">
         <div class="button-bar">
-          <a class="button button-calm" href="#/tab/intro">Ver a intro</a>
-          <a class="button button-assertive" href="#/tab/debug">Debug</a>
+          <a class="button button-small button-calm" href="#/tab/intro">Ver a intro</a>
+          <a class="button button-small button-assertive" href="#/tab/debug">Debug</a>
         </div>
       </ion-item>
     <!--</ion-list>-->

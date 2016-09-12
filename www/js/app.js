@@ -1947,7 +1947,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 if (tpi.nome == PI) {
                   tpi.visited = true;
                   $rootScope.MapadataChanged = true;
-                  console.log("Mapa updateRegiaoVisitada Found PI: " , PI);
+                  console.log("Mapa updateRegiaoVisitada Found PI: ", PI);
                   $regioes.setTempRegioes(aCircles);
                 }
               });
@@ -2827,6 +2827,85 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         }, setHeightToScrollHeight);
       }
     };
+  })
+  .directive('quiz', function (quizFactory, $timeout) {
+    return {
+      restrict: 'AE',
+      scope: {},
+      templateUrl: 'templates/template-Quiz.html',
+      link: function (scope, elem, attrs) {
+        scope.start = function () {
+          scope.id = 0;
+          scope.quizOver = false;
+          scope.inProgress = true;
+          scope.getQuestion();
+          scope.view = {
+            buttonClass: ""
+          }
+        };
+
+        scope.reset = function () {
+          scope.inProgress = false;
+          scope.score = 0;
+          scope.selValue = -1;
+        };
+
+        scope.getQuestion = function () {
+          var q = quizFactory.getQuestion(scope.id);
+          if (q) {
+            scope.question = q.question;
+            scope.options = q.options;
+            scope.answer = q.answer;
+            scope.answerMode = true;
+          } else {
+            scope.quizOver = true;
+          }
+        };
+
+        scope.checkAnswer = function (index) {
+          // if(!$('input[name=answer]:checked').length) return;
+          //
+          // var ans = $('input[name=answer]:checked').val();
+          var ans = scope.selValue;
+          console.warn("index: ", ans, scope.answer, scope.options[scope.answer]);
+
+          if (ans == scope.answer) {
+            scope.score++;
+            scope.view.buttonClass = "animated tada balanced";
+            $timeout(function () {
+              scope.view.buttonClass = "";
+            },2000);
+            scope.correctAns = true;
+            scope.mensagem = "Essa é a resposta correta!";
+            // scope.answerMode = false;
+          } else {
+            scope.view.buttonClass = "animated tada assertive";
+            $timeout(function () {
+              scope.view.buttonClass = "";
+            },2000);
+            scope.correctAns = false;
+            scope.mensagem = "Essa resposta está incorreta";
+            // scope.answerMode = true;
+          }
+
+          scope.answerMode = false;
+        };
+
+        scope.selectValue = function (index) {
+          scope.selValue = index;
+          if (scope.answerMode)
+            scope.checkAnswer();
+        };
+
+        scope.nextQuestion = function () {
+          scope.id++;
+          scope.correctAns = false;
+          scope.getQuestion();
+        };
+
+        scope.reset();
+      }
+    }
   })
   .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
