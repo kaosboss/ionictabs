@@ -157,10 +157,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
 
-      var swiper = new Swiper('.swiper-container', {
-        pagination: '.swiper-pagination',
-        paginationClickable: true
-      });
+        var swiper = new Swiper('.swiper-container', {
+          pagination: '.swiper-pagination',
+          paginationClickable: true,
+          // effect: 'fade'
+        });
 
         $rootScope.isOnline = $cordovaNetwork.isOnline();
 
@@ -1946,9 +1947,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     //   $scope.slideIndex = index;
     //   console.log("Index: " + index);
     //   $scope.start = 0;
-      // $scope.count = 0;
-      // if (index==2)
-      //   $scope.disableSwipe();
+    // $scope.count = 0;
+    // if (index==2)
+    //   $scope.disableSwipe();
     // };
 
     $scope.goBack = function () {
@@ -2858,16 +2859,42 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
     };
   })
-  .directive('quiz', function (quizFactory, $timeout) {
+  .directive('quiz', function (quizFactory, $timeout, $document) {
     return {
       restrict: 'AE',
       scope: {},
       templateUrl: 'templates/template-Quiz.html',
       link: function (scope, elem, attrs) {
+        var elem = null;
+        var t1 = 3000;
+        var t2 = 5000;
+        var count = 0;
 
         scope.start = function () {
-          scope.banner = "Agora é que vamos ver o que aprendeste nesta região, acerta o máximo que conseguires e vais ser recompensado.";
+          if (count++ > 0)
+            scope.banner = "Se tiveres dificuldades volta a visitar a região. Acerta o máximo que conseguires e vais ser recompensado.";
+          else
+            scope.banner = "Agora é que vamos ver o que aprendeste nesta região, acerta o máximo que conseguires e vais ser recompensado.";
+
           scope.id = 0;
+
+          scope.header = true;
+          $timeout(function () {
+            scope.header = false;
+            elem = document.getElementById("headerQuiz");
+            if (elem) {
+              elem.classList.add("animated", "fadeOut");
+            }
+          }, t1);
+
+          $timeout(function () {
+            scope.header = false;
+            elem = document.getElementById("headerQuiz");
+            if (elem) {
+              elem.classList.remove("animated", "fadeOut");
+            }
+          }, t2);
+
           scope.quizOver = false;
           scope.inProgress = true;
           scope.getQuestion();
@@ -2890,8 +2917,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             scope.answer = q.answer;
             scope.answerMode = true;
           } else {
+            scope.header = true;
             scope.quizOver = true;
             scope.banner = "Acabaste o questionário!\n\rPontuação: " + scope.score;
+            t1 = 2000;
+            t2 = 4000;
             // scope.view.buttonClass = "hidden";
           }
         };
@@ -2909,7 +2939,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             scope.view.buttonClass = "animated tada balanced";
             $timeout(function () {
               scope.view.buttonClass = "";
-            },2000);
+            }, 2000);
             scope.correctAns = true;
             scope.mensagem = "Essa é a resposta correta!";
             // scope.answerMode = false;
@@ -2918,7 +2948,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             scope.view.buttonClass = "animated tada assertive";
             $timeout(function () {
               scope.view.buttonClass = "";
-            },2000);
+            }, 2000);
             scope.correctAns = false;
             scope.mensagem = "Essa resposta está incorreta";
             // scope.answerMode = true;

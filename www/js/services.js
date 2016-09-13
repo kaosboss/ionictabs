@@ -1400,17 +1400,17 @@ angular.module('starter.services', [])
     var questions = [
       {
         question: "Em que região existem mais alfarrobeiras em Portugal?",
-        options: ["Alentejo", "Santarém", "Algarve", "Minho"],
+        options: ["Alentejo", "Santarém", "Algarve"],
         answer: 2
       },
       {
         question: "De que planta é que os egípcios utilizavam para diminuir dores e febre?",
-        options: ["Salgueiro", "Sobreiro", "Alfarrobeira", "urtigas"],
+        options: ["Salgueiro", "Sobreiro", "Alfarrobeira"],
         answer: 0
       },
       {
         question: "De que fruto é que se faz a marmelada?",
-        options: ["Maçã", "Pêra", "Marmelo", "Morango"],
+        options: ["Maçã", "Pêra", "Marmelo"],
         answer: 2
       }
       // ,

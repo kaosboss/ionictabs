@@ -368,7 +368,7 @@ td-card img {
   /* margin-left: auto; */
   /* margin-right: auto; */
   text-align: center;
-  font-size: x-large;
+  font-size: large;
 }
 
 .myanimated {
@@ -1138,22 +1138,23 @@ fieldset {
 .button-next{
   background: #ffe8a3;
   border-radius: 1em;
-  font-size: 1em;
+  font-size: 0.9em;
 }
 legend {
+  line-height: 1.6;
   /*color: #fff;*/
-  font-size: 1.1em;
+  font-size: 1em;
   margin-top: 15px;
   background: #ffe8a3;
-  padding: 0em 0.5em;
+  padding: 0em 1em;
   border-radius: 1em;
 }
 
-.p {
-  text-align: center;
-  font-size: 10px;
-  padding-top: 120px;
-}
+/*.p {*/
+  /*text-align: center;*/
+  /*font-size: 10px;*/
+  /*padding-top: 120px;*/
+/*}*/
 
 /* swipe slider text */
 
@@ -1162,7 +1163,7 @@ legend {
 }
 .swiper-container {
   width: 100%;
-  height: 110px;
+  height: 120px;
 }
 .swiper-slide {
   text-align: center;
