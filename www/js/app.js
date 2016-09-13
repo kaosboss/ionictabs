@@ -113,6 +113,23 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     var query = "";
     if (debug) alert("start");
 
+    $scope.goAtividades = function () {
+      console.log("Go Atividades");
+      // $ionicHistory.goBack();
+      $state.go("tab.snp", {
+        AT: "ALL"
+      });
+    };
+
+    $scope.goQuiz = function () {
+      console.log("Go Quiz");
+      // $ionicHistory.goBack();
+      $state.go("tab.mapa", {
+        RI: "RI_D",
+        PI: "PI_17"
+      });
+    };
+
     $scope.logged = $rootScope.APP.logged;
 
     // $scope.goLogin = function () {
@@ -138,6 +155,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
+
+      var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        paginationClickable: true
+      });
+
         $rootScope.isOnline = $cordovaNetwork.isOnline();
 
         $window.document.addEventListener("pause", function (event) {
@@ -2120,6 +2143,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $timeout(function () {
       $window.document.getElementById("twentyfive").checked = true;
     }, 300);
+
+    var swiper = new Swiper('.swiper-container', {
+      pagination: '.swiper-pagination',
+      paginationClickable: true
+    });
 
   })
   .controller('RadialCtrl', function ($scope, $state, $window, $timeout, $regioes) {

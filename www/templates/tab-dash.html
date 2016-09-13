@@ -1,7 +1,7 @@
 <ion-view view-title="Quinta pedagógica">
   <!--<ion-nav-buttons side="right">-->
-    <!--<button class="button button-clear button-icon icon ion-ios-cog-outline" ng-click="$root.APP.goDefinicoes()">-->
-    <!--</button>-->
+  <!--<button class="button button-clear button-icon icon ion-ios-cog-outline" ng-click="$root.APP.goDefinicoes()">-->
+  <!--</button>-->
   <!--</ion-nav-buttons>-->
 
   <ion-content class="has-header has-tabs">
@@ -9,19 +9,56 @@
     <div class="APPfull">
       <div class="APPheader">
         <!--<img class="img-responsive" src="img/atividades_quinta_pedagogica_small.jpg"-->
-             <!--ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"-->
-             <!--easing="ease-out"/>-->
-        <img class="img-responsive animated fadeIn" src="img/atividades_quinta_pedagogica_small.jpg">
+        <!--ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"-->
+        <!--easing="ease-out"/>-->
+        <img class="animated fadeIn" src="img/atividades_quinta_pedagogica_small.jpg">
       </div>
 
       <div class="APPmain">
         <br>
         <div class="">
           <h2 align="center">Welcome Back!</h2>
+          <br>
+          <h3 align="center" style="margin-bottom: -15px;">Novidades</h3>
         </div>
-        <!--<div class="animated slideInRight">-->
-          <!--<button ng-click="goLogin()" class="button button-balanced APPcenter">Login</button>-->
-        <!--</div>-->
+        <div class="swiper-container Gamebody">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">Anouncement : pode conter mensagem sobre o<br>
+              estado da gamification e/ou novos eventos ou <br>
+              workshops na quinta pedagógica<br>
+            </div>
+            <!--<div class="swiper-slide">-->
+            <!--<button class="button button-small button-calm" ng-click="goAtividades()">Descobre todas as atividades-->
+            <!--</button>-->
+            <!--</div>-->
+            <div class="swiper-slide">Em Outubro vai começar a aventura na Quinta,<br>
+              com jogos e atividades para te divertires.<br>
+              Vem fazer uma visita!<br>
+            </div>
+            <div class="swiper-slide"><div class="mascoteAvatarDesenho"></div>Em Outubro vai começar a aventura na Quinta,
+              com jogos e atividades para te divertires.
+              Vem fazer uma visita!
+            </div>
+            <div class="swiper-slide">
+              <img class="" style="width: 65px;" src="img/atividades/atividades_bicicletas-hover.png"/>
+              Grandes Notícias para quem<br>
+              gosta de atividades de bicicletas
+            </div>
+            <div class="swiper-slide"><div class="mascoteAvatarDesenho"></div>
+              <button class="button button-small button-balanced" ng-click="goQuiz()">Anda testar os teus conhecimentos
+              </button>
+            </div>
+
+            <!--<div class="swiper-slide">Slide 6</div>-->
+            <!--<div class="swiper-slide">Slide 7</div>-->
+            <!--<div class="swiper-slide">Slide 8</div>-->
+            <!--<div class="swiper-slide">Slide 9</div>-->
+            <!--<div class="swiper-slide">Slide 10</div>-->
+          </div>
+          <!-- Add Pagination -->
+          <div class="swiper-pagination"></div>
+        </div>
+        <!--</ion-item>-->
       </div>
     </div>
 
