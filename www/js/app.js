@@ -2859,7 +2859,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
     };
   })
-  .directive('quiz', function (quizFactory, $timeout, $document) {
+  .directive('quiz', function (quizFactory, $timeout, $document, $state) {
     return {
       restrict: 'AE',
       scope: {},
@@ -2869,6 +2869,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var t1 = 3000;
         var t2 = 5000;
         var count = 0;
+
+        scope.goMapa = function () {
+          $state.go("tab.mapa", {
+            RI: "ALL",
+            PI: ""
+          });
+        };
 
         scope.start = function () {
           if (count++ > 0)
@@ -2909,6 +2916,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           scope.selValue = -1;
         };
 
+        scope.disableRadio = function (value) {
+          // console.log("Disable radio");
+          var x = document.getElementsByClassName("option");
+          var i;
+          for (i = 0; i < x.length; i++) {
+            x[i].disabled = value;
+            // console.log("Disable radio: ", x[i]);
+
+          }
+        };
+
         scope.getQuestion = function () {
           var q = quizFactory.getQuestion(scope.id);
           if (q) {
@@ -2919,7 +2937,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           } else {
             scope.header = true;
             scope.quizOver = true;
-            scope.banner = "Acabaste o questionário!\n\rPontuação: " + scope.score;
+            scope.banner = "Acabaste o questionário com a pontuação de " + scope.score;
+            if (scope.score >= 3)
+              scope.banner += ". Parabéns, atingiste a pontuação máxima para este desafio!";
+            else
+              scope.banner += ". A pontuação máxima para este desafio é de 3 pontos.";
             t1 = 2000;
             t2 = 4000;
             // scope.view.buttonClass = "hidden";
@@ -2934,7 +2956,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           console.warn("index: ", ans, scope.answer, scope.options[scope.answer]);
 
           if (ans == scope.answer) {
-            scope.score++;
+            if (scope.score < 3)
+              scope.score++;
             scope.iconClass = "ion-checkmark-circled balanced";
             scope.view.buttonClass = "animated tada balanced";
             $timeout(function () {
@@ -2955,6 +2978,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           }
 
           scope.answerMode = false;
+          scope.disableRadio(true);
         };
 
         scope.selectValue = function (index) {
@@ -2967,6 +2991,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           scope.id++;
           scope.correctAns = false;
           scope.getQuestion();
+          scope.disableRadio(false);
         };
 
         scope.reset();

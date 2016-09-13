@@ -8,7 +8,9 @@
     <!--<p style="font-size: medium" class="textWrap">Agora é que vamos ver o que aprendeste nesta região, acerta o máximo que conseguires e vais ser recompensado.</p>-->
     <!--<span style="max-width: 100%">Agora é que vamos ver o que aprendeste nesta região, acerta o máximo que conseguires e vais ser recompensado.</span>-->
     <div ng-if="quizOver" class="padding">
-      <button style="margin-left: -40px; margin-top: 0px;" class="button button-small button-calm" ng-click="start()">Tentar novamente.
+      <button ng-if="score<3" style="margin-left: -40px; margin-top: 0px;" class="button button-small button-calm" ng-click="start()">Tentar novamente.
+      </button>
+      <button ng-if="score>=3"style="margin-left: -40px; margin-top: 0px;" class="button button-small button-calm" ng-click="goMapa()">Descobre outra região
       </button>
     </div>
 
@@ -31,7 +33,7 @@
         <li ng-click="selectValue($index)" ng-repeat="option in options">
 
           <label style="font-size: 95%;">
-            <input type="radio" name="answer" value="{{option}}"> <span>{{option}}</span>
+            <input class="option" type="radio" name="answer" value="{{option}}"> <span>{{option}}</span>
           </label>
           <!--<label>-->
           <!--<input type="radio" name="answer" value="{{option}}">-->
