@@ -1347,6 +1347,17 @@ angular.module('starter.services', [])
           if (regioes_inicio[f].nome == RI)
             return regioes_inicio[f].PIs;
         }
+      },
+      getQuiz: function (RI) {
+        console.warn("GetQuiz, called");
+        if (!regioes_inicio) {
+          console.warn("GetQuiz, empty regioes");
+          return [];
+        }
+        for (var f = 0; f < regioes_inicio.length; f++) {
+          if (regioes_inicio[f].nome == RI)
+            return regioes_inicio[f].Quiz;
+        }
       }
     }
   })
@@ -1395,47 +1406,91 @@ angular.module('starter.services', [])
       getThumbFile: getThumbFile,
       b64toBlob: b64toBlob
     }
-  })
-  .factory('quizFactory', function() {
-    var questions = [
-      {
-        question: "Em que região existem mais alfarrobeiras em Portugal?",
-        options: ["Alentejo", "Santarém", "Algarve"],
-        answer: 2
-      },
-      {
-        question: "De que planta é que os egípcios utilizavam para diminuir dores e febre?",
-        options: ["Salgueiro", "Sobreiro", "Alfarrobeira"],
-        answer: 0
-      },
-      {
-        question: "De que fruto é que se faz a marmelada?",
-        options: ["Maçã", "Pêra", "Marmelo"],
-        answer: 2
-      }
-      // ,
-      // {
-      //   question: "Which city hosted the 1996 Summer Olympics?",
-      //   options: ["Atlanta", "Sydney", "Athens", "Beijing"],
-      //   answer: 0
-      // },
-      // {
-      //   question: "Who invented telephone?",
-      //   options: ["Albert Einstein", "Alexander Graham Bell", "Isaac Newton", "Marie Curie"],
-      //   answer: 1
-      // }
-    ];
-
-    return {
-      getQuestion: function(id) {
-        if(id < questions.length) {
-          return questions[id];
-        } else {
-          return false;
-        }
-      }
-    };
   });
+  // .factory('quizFactory', function ($regioes, $state) {
+  //
+  //   var questions = null;
+  //   var quizRI = null;
+  //   var regioes = null;
+  //
+  //   // [
+  //   // {
+  //   //   question: "Em que região existem mais alfarrobeiras em Portugal?",
+  //   //   options: ["Alentejo", "Santarém", "Algarve"],
+  //   //   answer: 2
+  //   // },
+  //   // {
+  //   //   question: "De que planta é que os egípcios utilizavam para diminuir dores e febre?",
+  //   //   options: ["Salgueiro", "Sobreiro", "Alfarrobeira"],
+  //   //   answer: 0
+  //   // },
+  //   // {
+  //   //   question: "De que fruto é que se faz a marmelada?",
+  //   //   options: ["Maçã", "Pêra", "Marmelo"],
+  //   //   answer: 2
+  //   // }
+  //   // ,
+  //   // {
+  //   //   question: "Which city hosted the 1996 Summer Olympics?",
+  //   //   options: ["Atlanta", "Sydney", "Athens", "Beijing"],
+  //   //   answer: 0
+  //   // },
+  //   // {
+  //   //   question: "Who invented telephone?",
+  //   //   options: ["Albert Einstein", "Alexander Graham Bell", "Isaac Newton", "Marie Curie"],
+  //   //   answer: 1
+  //   // }
+  //   // ];
+  //
+  //
+  //   return {
+  //     init: function (RI) {
+  //       console.log("Quiz factory initing RI:", RI);
+  //       quizRI = RI;
+  //       // if (regioes==null)
+  //       $regioes.getRegioes().then(function (res) {
+  //         regioes = JSON.parse(res || [{}]);
+  //         // $regioes.setTempRegioes($scope.aCircles);
+  //         // console.log("createCircles: GOT regioes from cordova service to aCircles", $scope.aCircles);
+  //         // drawImage();
+  //         for (var f = 0; f < regioes.length; f++) {
+  //           if (regioes[f].nome == RI)
+  //             if (regioes[f].Quiz)
+  //               questions = regioes[f].Quiz;
+  //         }
+  //         console.log("Quiz factory inited", questions);
+  //       });
+  //     },
+  //     getQuestion: function (id) {
+  //       // if (!questions)
+  //       //   questions = perguntas.getQuiz(RI);
+  //       if (id < questions.length) {
+  //         return questions[id];
+  //       } else {
+  //         return false;
+  //       }
+  //     },
+  //     quizCompleto: function () {
+  //       $regioes.getRegioes().then(function (res) {
+  //         var found = false;
+  //         regioes = JSON.parse(res || [{}]);
+  //         console.log("quizCompleto: GOT regioes from cordova service");
+  //         for (var f = 0; f <= regioes.length - 1; f++) {
+  //           if (regioes[f].nome == quizRI) {
+  //             regioes[f].quizDone = true;
+  //             found = true;
+  //           }
+  //         }
+  //         if (found) {
+  //           console.log("quizCompleto: UPDATE: ", regioes);
+  //           $regioes.setRegioes(regioes);
+  //         } else
+  //           console.warn("QuizCompleto RI not found", quizRI);
+  //       });
+  //     }
+  //
+  //   };
+  // });
 
 // .factory('Chats', function () {
 //   // Might use a resource here that returns a JSON array

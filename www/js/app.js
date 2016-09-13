@@ -1874,12 +1874,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       };
     });
   })
-  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $ionicSlideBoxDelegate, $ionicHistory, perguntas) {
+  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams,
+                                    $ionicSlideBoxDelegate, $ionicHistory, perguntas) {
 
     // $ionicLoading.show({
     //   template: 'A verificar o Mapa'
     // });
     console.log("Mapa controller ready");
+
+    // if ($stateParams.RI != "ALL")
+    //   quizFactory.init($stateParams.RI);
 
     var aCircles = [];
 
@@ -2859,16 +2863,19 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
     };
   })
-  .directive('quiz', function (quizFactory, $timeout, $document, $state) {
+  .directive('quiz', function ($timeout, $document, $state, $regioes) {
     return {
       restrict: 'AE',
       scope: {},
       templateUrl: 'templates/template-Quiz.html',
       link: function (scope, elem, attrs) {
+        console.log("ELEM QUIZ: ", attrs);
         var elem = null;
         var t1 = 3000;
         var t2 = 5000;
         var count = 0;
+        var regioes = null;
+        var RI = attrs.ri;
 
         scope.goMapa = function () {
           $state.go("tab.mapa", {
@@ -2928,7 +2935,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         };
 
         scope.getQuestion = function () {
-          var q = quizFactory.getQuestion(scope.id);
+          // var q = quizFactory.getQuestion(scope.id);
+          var q = questions[scope.id];
           if (q) {
             scope.question = q.question;
             scope.options = q.options;
@@ -2938,14 +2946,34 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             scope.header = true;
             scope.quizOver = true;
             scope.banner = "Acabaste o questionário com a pontuação de " + scope.score;
-            if (scope.score >= 3)
-              scope.banner += ". Parabéns, atingiste a pontuação máxima para este desafio!";
-            else
+            if (scope.score >= 3) {
+              scope.banner += ". Parabéns, atingiste a pontuação máxima e concluiste este desafio!";
+              scope.quizCompleto();
+            } else
               scope.banner += ". A pontuação máxima para este desafio é de 3 pontos.";
             t1 = 2000;
             t2 = 4000;
             // scope.view.buttonClass = "hidden";
           }
+        };
+
+        scope.quizCompleto = function () {
+          $regioes.getRegioes().then(function (res) {
+            var found = false;
+            regioes = JSON.parse(res || [{}]);
+            console.log("quizCompleto: GOT regioes from cordova service");
+            for (var f = 0; f <= regioes.length - 1; f++) {
+              if (regioes[f].nome == RI) {
+                regioes[f].quizDone = true;
+                found = true;
+              }
+            }
+            if (found) {
+              console.log("quizCompleto: UPDATE: ", regioes);
+              $regioes.setRegioes(regioes);
+            } else
+              console.warn("QuizCompleto RI not found", quizRI);
+          });
         };
 
         scope.checkAnswer = function (index) {
@@ -2994,8 +3022,21 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           scope.disableRadio(false);
         };
 
-        scope.reset();
-        scope.start();
+        $regioes.getRegioes().then(function (res) {
+          regioes = JSON.parse(res || [{}]);
+          // $regioes.setTempRegioes($scope.aCircles);
+          // console.log("createCircles: GOT regioes from cordova service to aCircles", $scope.aCircles);
+          // drawImage();
+          for (var f = 0; f < regioes.length; f++) {
+            if (regioes[f].nome == RI)
+              if (regioes[f].Quiz)
+                questions = regioes[f].Quiz;
+          }
+          // quizFactory.update
+          console.log("Quiz factory inited", questions);
+          scope.reset();
+          scope.start();
+        });
 
       }
     }
