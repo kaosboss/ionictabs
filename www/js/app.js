@@ -117,7 +117,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       console.log("Go Atividades");
       // $ionicHistory.goBack();
       $state.go("tab.snp", {
-        AT: "ALL"
+        AT: "atividades",
+        ATD: "bicicletas"
       });
     };
 
@@ -2144,10 +2145,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       $window.document.getElementById("twentyfive").checked = true;
     }, 300);
 
-    var swiper = new Swiper('.swiper-container', {
-      pagination: '.swiper-pagination',
-      paginationClickable: true
-    });
+    // var swiper = new Swiper('.swiper-container', {
+    //   pagination: '.swiper-pagination',
+    //   paginationClickable: true
+    // });
 
   })
   .controller('RadialCtrl', function ($scope, $state, $window, $timeout, $regioes) {
