@@ -650,7 +650,7 @@ form #last-name, form #city {
   display: inline-block;
 }
 form #last-name label, form #last-name input, form #city label, form #city input {
-  padding: 1px 0.4em 1px 0.4em;
+  /*padding: 1px 0.4em 1px 0.4em;*/
 }
 form #last-name + *, form #city + * {
   clear: both;
@@ -683,7 +683,7 @@ form label {
   font-family: "Helvetica Neue", Helvetica, Arial;
   display: block;
   position: absolute;
-  margin-top: 2px;
+  margin-top: -6px;
   padding: 1px;
   letter-spacing: 0.012em;
   color: #ACACAC;

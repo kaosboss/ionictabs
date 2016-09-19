@@ -107,10 +107,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   // .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $ionicLoading) {
   .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout,
                                     $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork,
-                                    UserService, users, $regioes, $state, perguntas, $ionicLoading, likes) {
+                                    UserService, users, $regioes, $state, perguntas, $ionicLoading, likes, news) {
 
     dbres = 0;
     var query = "";
+    var swiper = null;
+    var newsres = null;
     if (debug) alert("start");
 
     $scope.goAtividades = function () {
@@ -141,13 +143,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       $state.go('tab.dash');
     };
 
-    $scope.netWork = {
-      type: "",
-      isOnline: false,
-      isOffline: true,
-      onlineState: "",
-      offLineState: ""
-    };
+    // $scope.netWork = {
+    //   type: "",
+    //   isOnline: false,
+    //   isOffline: true,
+    //   onlineState: "",
+    //   offLineState: ""
+    // };
 
     // console.log(typeof cordova);
 
@@ -157,11 +159,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
 
-        var swiper = new Swiper('.swiper-container', {
-          pagination: '.swiper-pagination',
-          paginationClickable: true,
-          // effect: 'fade'
-        });
+        // swiper = new Swiper('.swiper-container', {
+        //   pagination: '.swiper-pagination',
+        //   paginationClickable: true,
+        //   onInit: function (swp) {
+        //     console.warn("swipper init");
+        //   }
+        // });
 
         $rootScope.isOnline = $cordovaNetwork.isOnline();
 
@@ -174,24 +178,25 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         });
 
         $scope.checkNetwork = function () {
-          $scope.netWork.type = $cordovaNetwork.getNetwork();
-          $scope.netWork.isOnline = $cordovaNetwork.isOnline();
+          // $scope.netWork.type = $cordovaNetwork.getNetwork();
+          // $scope.netWork.isOnline = $cordovaNetwork.isOnline();
           $rootScope.isOnline = $cordovaNetwork.isOnline();
           $rootScope.netWorktype = $cordovaNetwork.getNetwork();
-          $scope.netWork.isOffline = $cordovaNetwork.isOffline();
+          // $scope.netWork.isOffline = $cordovaNetwork.isOffline();
 
-          // if ($cordovaNetwork.isOnline())
-          // $timeout(function () {
-          if (!likes.isDataLoading())
-            likes.init();
-          // }, 1000);
+          if ($cordovaNetwork.isOnline()) {
+            if (!likes.isDataLoading())
+              likes.init();
+            if (!news.checked())
+              news.checkNews();
+          }
 
           $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
-            $scope.netWork.type = networkState;
+            // $scope.netWork.type = networkState;
             $rootScope.netWorktype = networkState;
             $rootScope.isOnline = true;
-            $scope.netWork.isOnline = true;
-            $scope.netWork.isOffline = false;
+            // $scope.netWork.isOnline = true;
+            // $scope.netWork.isOffline = false;
             $rootScope.showAlert("NetWork ONLINE");
 
             // if ((likes.needsUpdate()) && (!likes.isUploading()))
@@ -206,16 +211,19 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             if (users.needsUpdate()) {
               users.updateDados();
             }
+
+            if (!news.checked())
+              news.checkNews();
           });
 
           // likes.needsUpdate();
 
           $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
-            $scope.netWork.type = networkState;
+            // $scope.netWork.type = networkState;
             $rootScope.netWorktype = networkState;
-            $scope.netWork.isOnline = false;
+            // $scope.netWork.isOnline = false;
             $rootScope.isOnline = false;
-            $scope.netWork.isOffline = true;
+            // $scope.netWork.isOffline = true;
             $rootScope.showAlert("NetWork OFFLINE");
             if (likes.isfireBaseOnline())
               likes.offline();
@@ -314,6 +322,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               });
             });
 
+            $cordovaSQLite.getVarFromDB("info", "news").then(function (res) {
+              newsres = JSON.parse(res || '{}');
+
+              console.warn("Got news from db: ", newsres);
+              swiper = new Swiper('.swiper-container', {
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+                onInit: function (swp) {
+                  console.warn("swipper init");
+                  newsres.forEach(function (slide) {
+                    swp.appendSlide('<div class="swiper-slide">' + slide.noticia + '</div>');
+                  });
+                  swp.update(true);
+                  news.updated(false);
+                }
+              });
+            });
+
           } else {
             // $scope.checkNetwork();
             $scope.showAlert("No results found, primeira utilizacao!");
@@ -362,6 +388,27 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               $regioes.setRegioes(res);
             });
 
+            news.getNewsInicio().then(function (res) {
+              news.setNews(res);
+              newsres = res;
+
+              console.warn("Got news inicio: ", newsres);
+              swiper = new Swiper('.swiper-container', {
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+                onInit: function (swp) {
+                  console.warn("swipper init");
+                  newsres.forEach(function (slide) {
+                    swp.appendSlide('<div class="swiper-slide">' + slide.noticia + '</div>');
+                  });
+                  // $timeout(function () {
+                  swp.update(true);
+                  news.updated(false);
+                  // },500);
+                }
+              });
+            });
+
             if (cordova != null)
               $ionicLoading.hide();
 
@@ -376,6 +423,26 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             $ionicLoading.hide();
           // alert(err);
           console.error("ERROR ON get app version", err);
+        });
+
+        $scope.$on("$ionicView.afterEnter", function (event, data) {
+          console.log("State $ionicView.afterEnter dash Params: ", data, news.updated());
+          if (!news.updated()) {
+            console.log("State $ionicView.afterEnter dash news needs update: ", news.updated());
+            swiper.update(true);
+            news.updated(true);
+          }
+        });
+
+        $scope.$on('GOT_NEWS', function (e) {
+          console.warn("BROADCAST GOT_NEWS RECEIVED");
+          swiper.removeAllSlides();
+          news.getNews().forEach(function (slide) {
+            swiper.appendSlide('<div class="swiper-slide">' + slide.noticia + '</div>');
+            console.warn("Gotnews adding slide: ", slide);
+          });
+          swiper.update(true);
+          news.updated(false);
         });
 
         checkBT = function () {
@@ -2150,11 +2217,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       $window.document.getElementById("twentyfive").checked = true;
     }, 300);
 
-    // var swiper = new Swiper('.swiper-container', {
-    //   pagination: '.swiper-pagination',
-    //   paginationClickable: true
-    // });
-
   })
   .controller('RadialCtrl', function ($scope, $state, $window, $timeout, $regioes) {
     console.log("RadialCtrl controller ready");
@@ -2474,7 +2536,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
     $scope.changed = function (UPDATE) {
-      console.log("changed: Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
+      // console.log("changed: Nome: %s Email: %s", $scope.Login.nome, $scope.Login.email);
       if (($scope.Login.nome) && ($scope.Login.email)) {
         $scope.Login.canSubmit = "";
       } else {
@@ -3104,16 +3166,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       //     }
       //   }
       // })
-      // .state('tab.login', {
-      //   url: '/login',
-      //   views: {
-      //     'tab-login': {
-      //       templateUrl: 'templates/tab-login.html',
-      //       // controller: 'DebugCtrl'
-      //       controller: 'LoginCtrl'
-      //     }
-      //   }
-      // })
+      .state('tab.login', {
+        url: '/login',
+        views: {
+          'tab-login': {
+            templateUrl: 'templates/tab-login.html',
+            // controller: 'DebugCtrl'
+            controller: 'LoginCtrl'
+          }
+        }
+      })
       // .state('tab.mapa', {
       //   url: '/mapa',
       //   views: {

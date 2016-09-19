@@ -1406,91 +1406,181 @@ angular.module('starter.services', [])
       getThumbFile: getThumbFile,
       b64toBlob: b64toBlob
     }
+  })
+  .factory('news', function ($rootScope, $http, $cordovaSQLite, $cordovaNetwork, $firebaseArray, $firebase) {
+
+    var news_inicio = [];
+    var url = '';
+    var updated = false;
+    var newsRef = null;
+    var newsList = null;
+    var newsGotNews = false;
+    var newsChecked = false;
+    var newsArray = [];
+
+    var setNews = function (newsres) {
+      console.warn("updating news with: ", newsres);
+      $cordovaSQLite.updateOrInsertValueToDB("info", [JSON.stringify(newsres), "news"]);
+    };
+
+    return {
+      getNewsInicio: function () {
+        url = "data/news_inicio.json";
+        return $http.get(url).then(function (response) {
+          console.log("response xxx news inicio: ", response.data);
+          news_inicio = response.data;
+          return news_inicio;
+        });
+      },
+      setNews: setNews,
+      updated: function (value) {
+        if (value)
+          updated = value;
+        else
+          return updated;
+      },
+      goOnline: function () {
+        Firebase.goOnline();
+        fireBaseOnline = true;
+      },
+
+      offline: function () {
+        console.log("FIREBASE: news going offline");
+        // likesRef.$destroy();
+        // atividades.$destroy();
+        $timeout(function () {
+          Firebase.goOffline();
+          console.log("FIREBASE: news offline");
+          newsRef = null;
+          newsList = null;
+        }, 60000);
+      },
+      checkNews: function () {
+        if (newsChecked)
+           return;
+
+        var online = $cordovaNetwork.isOnline();
+        console.log("FIREBASE: news online: %s", online);
+
+        if (online) {
+          goOnline();
+          // fireBaseOnline = true;
+          newsRef = new Firebase("https://crackling-torch-4418.firebaseio.com/News");
+
+          newsList = $firebaseArray(newsRef);
+          newsList.$loaded(function () {
+            console.warn("Got news list", newsList);
+            newsGotNews = true;
+            newsChecked = true;
+            newsArray = [];
+            newsList.forEach(function (slide) {
+              newsArray.push({
+                noticia: slide.$value
+              });
+            });
+            console.warn("Got news, saving: ", newsArray);
+            setNews(newsArray);
+            $rootScope.$broadcast('GOT_NEWS');
+            offline();
+          });
+        }
+      },
+      getNews: function () {
+        return newsArray;
+      },
+      checked: function () {
+        return newsChecked;
+      },
+      gotNews: function () {
+        return newsGotNews;
+      }
+    }
+
   });
-  // .factory('quizFactory', function ($regioes, $state) {
-  //
-  //   var questions = null;
-  //   var quizRI = null;
-  //   var regioes = null;
-  //
-  //   // [
-  //   // {
-  //   //   question: "Em que região existem mais alfarrobeiras em Portugal?",
-  //   //   options: ["Alentejo", "Santarém", "Algarve"],
-  //   //   answer: 2
-  //   // },
-  //   // {
-  //   //   question: "De que planta é que os egípcios utilizavam para diminuir dores e febre?",
-  //   //   options: ["Salgueiro", "Sobreiro", "Alfarrobeira"],
-  //   //   answer: 0
-  //   // },
-  //   // {
-  //   //   question: "De que fruto é que se faz a marmelada?",
-  //   //   options: ["Maçã", "Pêra", "Marmelo"],
-  //   //   answer: 2
-  //   // }
-  //   // ,
-  //   // {
-  //   //   question: "Which city hosted the 1996 Summer Olympics?",
-  //   //   options: ["Atlanta", "Sydney", "Athens", "Beijing"],
-  //   //   answer: 0
-  //   // },
-  //   // {
-  //   //   question: "Who invented telephone?",
-  //   //   options: ["Albert Einstein", "Alexander Graham Bell", "Isaac Newton", "Marie Curie"],
-  //   //   answer: 1
-  //   // }
-  //   // ];
-  //
-  //
-  //   return {
-  //     init: function (RI) {
-  //       console.log("Quiz factory initing RI:", RI);
-  //       quizRI = RI;
-  //       // if (regioes==null)
-  //       $regioes.getRegioes().then(function (res) {
-  //         regioes = JSON.parse(res || [{}]);
-  //         // $regioes.setTempRegioes($scope.aCircles);
-  //         // console.log("createCircles: GOT regioes from cordova service to aCircles", $scope.aCircles);
-  //         // drawImage();
-  //         for (var f = 0; f < regioes.length; f++) {
-  //           if (regioes[f].nome == RI)
-  //             if (regioes[f].Quiz)
-  //               questions = regioes[f].Quiz;
-  //         }
-  //         console.log("Quiz factory inited", questions);
-  //       });
-  //     },
-  //     getQuestion: function (id) {
-  //       // if (!questions)
-  //       //   questions = perguntas.getQuiz(RI);
-  //       if (id < questions.length) {
-  //         return questions[id];
-  //       } else {
-  //         return false;
-  //       }
-  //     },
-  //     quizCompleto: function () {
-  //       $regioes.getRegioes().then(function (res) {
-  //         var found = false;
-  //         regioes = JSON.parse(res || [{}]);
-  //         console.log("quizCompleto: GOT regioes from cordova service");
-  //         for (var f = 0; f <= regioes.length - 1; f++) {
-  //           if (regioes[f].nome == quizRI) {
-  //             regioes[f].quizDone = true;
-  //             found = true;
-  //           }
-  //         }
-  //         if (found) {
-  //           console.log("quizCompleto: UPDATE: ", regioes);
-  //           $regioes.setRegioes(regioes);
-  //         } else
-  //           console.warn("QuizCompleto RI not found", quizRI);
-  //       });
-  //     }
-  //
-  //   };
-  // });
+// .factory('quizFactory', function ($regioes, $state) {
+//
+//   var questions = null;
+//   var quizRI = null;
+//   var regioes = null;
+//
+//   // [
+//   // {
+//   //   question: "Em que região existem mais alfarrobeiras em Portugal?",
+//   //   options: ["Alentejo", "Santarém", "Algarve"],
+//   //   answer: 2
+//   // },
+//   // {
+//   //   question: "De que planta é que os egípcios utilizavam para diminuir dores e febre?",
+//   //   options: ["Salgueiro", "Sobreiro", "Alfarrobeira"],
+//   //   answer: 0
+//   // },
+//   // {
+//   //   question: "De que fruto é que se faz a marmelada?",
+//   //   options: ["Maçã", "Pêra", "Marmelo"],
+//   //   answer: 2
+//   // }
+//   // ,
+//   // {
+//   //   question: "Which city hosted the 1996 Summer Olympics?",
+//   //   options: ["Atlanta", "Sydney", "Athens", "Beijing"],
+//   //   answer: 0
+//   // },
+//   // {
+//   //   question: "Who invented telephone?",
+//   //   options: ["Albert Einstein", "Alexander Graham Bell", "Isaac Newton", "Marie Curie"],
+//   //   answer: 1
+//   // }
+//   // ];
+//
+//
+//   return {
+//     init: function (RI) {
+//       console.log("Quiz factory initing RI:", RI);
+//       quizRI = RI;
+//       // if (regioes==null)
+//       $regioes.getRegioes().then(function (res) {
+//         regioes = JSON.parse(res || [{}]);
+//         // $regioes.setTempRegioes($scope.aCircles);
+//         // console.log("createCircles: GOT regioes from cordova service to aCircles", $scope.aCircles);
+//         // drawImage();
+//         for (var f = 0; f < regioes.length; f++) {
+//           if (regioes[f].nome == RI)
+//             if (regioes[f].Quiz)
+//               questions = regioes[f].Quiz;
+//         }
+//         console.log("Quiz factory inited", questions);
+//       });
+//     },
+//     getQuestion: function (id) {
+//       // if (!questions)
+//       //   questions = perguntas.getQuiz(RI);
+//       if (id < questions.length) {
+//         return questions[id];
+//       } else {
+//         return false;
+//       }
+//     },
+//     quizCompleto: function () {
+//       $regioes.getRegioes().then(function (res) {
+//         var found = false;
+//         regioes = JSON.parse(res || [{}]);
+//         console.log("quizCompleto: GOT regioes from cordova service");
+//         for (var f = 0; f <= regioes.length - 1; f++) {
+//           if (regioes[f].nome == quizRI) {
+//             regioes[f].quizDone = true;
+//             found = true;
+//           }
+//         }
+//         if (found) {
+//           console.log("quizCompleto: UPDATE: ", regioes);
+//           $regioes.setRegioes(regioes);
+//         } else
+//           console.warn("QuizCompleto RI not found", quizRI);
+//       });
+//     }
+//
+//   };
+// });
 
 // .factory('Chats', function () {
 //   // Might use a resource here that returns a JSON array
