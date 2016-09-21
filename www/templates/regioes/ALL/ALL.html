@@ -1,23 +1,23 @@
 <ion-view view-title="Mapa">
-  <ion-content padding="true" class="padding" scroll="true" direction="y">
-    <ion-item class="item">
-      <button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>
-    </ion-item>
-    <canvas id="imageView"></canvas>
-    <ion-item class="item">
-      <p>Nome Região de interesse: {{nome}}</p>
+  <ion-content>
+    <!--<ion-item class="item">-->
+      <!--<button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>-->
+    <!--</ion-item>-->
+    <canvas class="imageView" id="imageView"></canvas>
+    <!--<ion-item class="item">-->
+      <!--<p>Nome Região de interesse: {{nome}}</p>-->
+    <!--&lt;!&ndash;</ion-item>&ndash;&gt;-->
+    <!--&lt;!&ndash;<ion-item class="item">&ndash;&gt;-->
+      <!--<p>Região desbloqueada: {{locked}}</p>-->
     <!--</ion-item>-->
     <!--<ion-item class="item">-->
-      <p>Região desbloqueada: {{locked}}</p>
-    </ion-item>
-    <ion-item class="item">
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_A/RI_A_Q">Questionário RI_A</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_B/RI_B_Q">Questionário RI_B</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_C/RI_C_Q">Questionário RI_C</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_D/RI_D_Q">Questionário RI_D</a>
-      <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_19">Regiao E-PI 19</a>-->
+      <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_A/RI_A_Q">Questionário RI_A</a>-->
+      <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_B/RI_B_Q">Questionário RI_B</a>-->
+      <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_C/RI_C_Q">Questionário RI_C</a>-->
+      <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_D/RI_D_Q">Questionário RI_D</a>-->
+      <!--&lt;!&ndash;<a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_19">Regiao E-PI 19</a>&ndash;&gt;-->
     <button type="button" ng-click="unlock_regiao()" class="button button-balanced APPcenter">Desbloquear Regiao D</button>
-    </ion-item>
+    <!--</ion-item>-->
 
     <!--<ion-item>-->
       <!--<quiz/>-->

@@ -32,6 +32,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       'img/atividades_quinta_pedagogica_small.jpg',
       'img/SNP_background_intro.jpg',
       'img/SNP_small.jpg',
+      'img/mapaqtapedagogica2.png',
       'img/snp_projeto_02_small.jpg'];
 
     $ImageCacheFactory.Cache(preLoadImages).then(function () {
@@ -2060,7 +2061,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       if (canvas) {
         var regioes = $regioes.getAllRegioesList();
         var context = canvas.getContext('2d');
-
       }
 
       touchUp = function (e) {
@@ -2092,13 +2092,50 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         }
       };
 
-      createCircles = function (nova_regiao) {
+      drawImage = function () {
+        //shadow
+        //alert();
+        // context.shadowBlur = 20;
+        // context.shadowColor = "rgb(0,0,0)";
 
+        //image
+        var image = new Image();
+        image.onload = function () {
+          //alert("load");
+          console.log("load image done");
+          context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+          // createCircles();
+          // drawCircles();
+
+        };
+        //canvas.addEventListener("touchend", touchUp, false);
+        canvas.addEventListener("click", touchUp, false);
+        //image.src ="http://i.imgur.com/p3gjnKa.jpg";
+        // image.className = "img-responsive";
+        image.src = "img/mapaqtapedagogica2.png";
+        //<img id="pic" src="http://i.telegraph.co.uk/multimedia/archive/03589/Wellcome_Image_Awa_3589699k.jpg">
+
+        //$(image).load(function () {
+        //image.height = canvas.height();
+        //image.width = canvas.width();
+        //context.drawImage(image);
+        //context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        //});
+      };
+
+      if (canvas) {
+        // drawImage();
+      }
+
+
+      createCircles = function (nova_regiao) {
+        drawImage();
         $regioes.getRegioes().then(function (res) {
           $scope.aCircles = JSON.parse(res || [{}]);
           $regioes.setTempRegioes($scope.aCircles);
           console.log("createCircles: GOT regioes from cordova service to aCircles", $scope.aCircles);
-          drawImage();
+          drawCircles();
         });
       };
 
@@ -2113,12 +2150,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var centerX = oCircle.centerX;
         var centerY = oCircle.centerY;
         var radius = oCircle.radius || 20;
+        // var radius = 35;
         var blue = "108, 202, 255";
         var red = "255, 104, 85";
         var color = blue;
 
-        context.beginPath();
-        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        // context.beginPath();
+        // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
 
         if ($rootScope.currentRI) {
           if (regioes[$rootScope.currentRI] == oCircle.nome) {
@@ -2127,16 +2165,59 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           }
         }
 
-        if (oCircle.locked)
-          context.fillStyle = "rgba(" + color + ", 0.9)";
-        else
-          context.fillStyle = "rgba(" + color + ", 0.5)";
+        // if (oCircle.locked)
+        //   context.fillStyle = "rgba(" + color + ", 0.9)";
+        // else
+        //   context.fillStyle = "rgba(" + color + ", 0.5)";
 
-        context.fill();
-        context.lineWidth = 1;
+        // context.fill();
+        // context.lineWidth = 1;
+        // //
+        // context.strokeStyle = '#003300';
+        // context.stroke();
 
-        context.strokeStyle = '#003300';
-        context.stroke();
+        // context.closePath();
+        // context.clip();
+
+        var img = new Image();
+        img.onclick = function (e) {
+          console.log("cicked mapa: ", e);
+        };
+
+        img.onload = function() {
+
+          // context.save();
+          // context.beginPath();
+          // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+          // context.closePath();
+          // context.clip();
+          context.drawImage(img, centerX, centerY - (radius + 10));
+          // context.restore();
+
+          // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+          // context.lineWidth = 1;
+          // //
+          // context.strokeStyle = '#003300';
+          // context.stroke();
+          // context.closePath();
+          // context.clip();
+          //
+          // context.drawImage(img, 0, 0, 50, 50);
+
+          // tmpCtx.beginPath();
+          // tmpCtx.arc(0, 0, 25, 0, Math.PI * 2, true);
+          // tmpCtx.clip();
+          // tmpCtx.closePath();
+          // tmpCtx.restore();
+        };
+//         img.addEventListener('load', function(e) {
+//           context.drawImage(this, 0, 0, 50, 50);
+//           console.log("loaded img canvas");
+//           context.fill();
+// context.stroke();
+//         }, true);
+//         img.classList = "animated bounce";
+        img.src="img/RegiaoA.png";
       };
 
       drawCircles = function () {
@@ -2146,36 +2227,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // $ionicLoading.hide();
       };
 
-      drawImage = function () {
-        //shadow
-        //alert();
-        context.shadowBlur = 20;
-        context.shadowColor = "rgb(0,0,0)";
-
-        //image
-        var image = new Image();
-        image.onload = function () {
-          //alert("load");
-          console.log("load image done");
-          context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-          // createCircles();
-          drawCircles();
-
-        };
-        //canvas.addEventListener("touchend", touchUp, false);
-        canvas.addEventListener("click", touchUp, false);
-        //image.src ="http://i.imgur.com/p3gjnKa.jpg";
-        image.src = "img/mapaqtapedagogica.jpg";
-        //<img id="pic" src="http://i.telegraph.co.uk/multimedia/archive/03589/Wellcome_Image_Awa_3589699k.jpg">
-
-        //$(image).load(function () {
-        //image.height = canvas.height();
-        //image.width = canvas.width();
-        //context.drawImage(image);
-        //context.drawImage(image, 0, 0, canvas.width, canvas.height);
-        //});
-      };
       console.log("Mapa antes dos circles", $stateParams);
 
       if ($stateParams.PI != "")

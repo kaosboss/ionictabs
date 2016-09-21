@@ -1183,3 +1183,9 @@ legend {
   -webkit-align-items: center;
   align-items: center;
 }
+
+/* canvas */
+
+.imageView {
+  width: 100%;
+}
