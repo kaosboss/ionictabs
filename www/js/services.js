@@ -1250,8 +1250,9 @@ angular.module('starter.services', [])
           }, function (err) {
             console.error("ERROR inserting regioes, NOT stored", err);
           });
-        } else
-          console.log("Stored regioes", res);
+        }
+        // else
+        //   console.log("Stored regioes", res);
 
       }, function (err) {
         console.error("ERROR updating regioes, NOT stored", err);

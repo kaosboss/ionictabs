@@ -548,6 +548,16 @@ td-card img {
   top: 15px;
   position: absolute;
 }
+.captionCanvas {
+  right: 5px;
+  top: 15px;
+  position: absolute;
+}
+.captionPIs {
+  right: 10px;
+  bottom: 15px;
+  position: absolute;
+}
 .captionAtividades {
   right: 10px;
   top: 15px;
@@ -579,6 +589,11 @@ td-card img {
 
 /* LOGIN */
 
+.myAvatar {
+  width: 65px;
+  height: 65px;;
+}
+
 .avatar {
   /*width: 100%;*/
   /*margin: auto;*/
@@ -590,9 +605,9 @@ td-card img {
   /*bottom: -15px;*/
 }
 .avatar img {
-  width: 100px;
-  height: 100px;
-  border-radius: 100px;
+  width: 65px;
+  height: 65px;
+  border-radius: 65px;
   margin: auto;
   border:3px solid #fff;
   display: block;
@@ -1190,7 +1205,7 @@ legend {
   width: 320px;
   height: 200px;
   padding-top: 10px;
-  padding-bottom: 10px;
+  /*padding-bottom: 10px;*/
   /*position: fixed;*/
   /*top: 0px;*/
   /*left: 0px;*/
