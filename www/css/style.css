@@ -1187,5 +1187,13 @@ legend {
 /* canvas */
 
 .imageView {
-  width: 100%;
+  width: 320px;
+  height: 200px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  /*position: fixed;*/
+  /*top: 0px;*/
+  /*left: 0px;*/
+  /*overflow: hidden;*/
+  /*z-index: 1000;*/
 }

@@ -707,7 +707,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                                       $cordovaDevice, $cordovaSQLite, $ionicPlatform,
                                       $ionicPopup, $timeout, $ionicBackdrop,
                                       $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate,
-                                      $window, $document, $q, $ionicLoading, blob) {
+                                      $window, $q, $ionicLoading, blob) {
 
     var query = "";
     var lorem = "Aqui está a familia Ramos num Domingo muito divertido e diferente!";
@@ -1942,8 +1942,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       };
     });
   })
-  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams,
-                                    $ionicSlideBoxDelegate, $ionicHistory, perguntas) {
+  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $timeout) {
+                                    // $ionicSlideBoxDelegate, $ionicHistory, perguntas) {
 
     // $ionicLoading.show({
     //   template: 'A verificar o Mapa'
@@ -1954,13 +1954,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     //   quizFactory.init($stateParams.RI);
 
     var aCircles = [];
+    var drawedMapa = false;
+    var elem = null;
 
     $scope.count = 0;
     $scope.start = 0;
     $scope.showQR = false;
     $scope.PI = $stateParams.PI.replace("PI_", "");
     $scope.dataChanged = false;
-
+    $scope.regiao_banner = "Bem-vindo à “Região A”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!";
+    $scope.headeron = true;
     // $scope.$on('QR_CODE_SCAN', function (e, args) {
     //   console.log("tab mapa QR_CODE_SCAN", args);
     //   $scope.showQR = args.showQR;
@@ -1999,33 +2002,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       if (!PI)
         return;
 
-      console.log("slide box init");
-      $scope.slideIndex = 0;
-      $scope.start = 1;
+      console.log("mapa init init");
+      // $scope.slideIndex = 0;
+      // $scope.start = 1;
       // if (!$scope.perguntas)
       //   perguntas.init(RI, PI);
-    };
-
-    // $scope.next = function () {
-    //   $ionicSlideBoxDelegate.next();
-    // };
-    // $scope.previous = function () {
-    //   $ionicSlideBoxDelegate.previous();
-    // };
-    // $scope.disableSwipe = function () {
-    //   $ionicSlideBoxDelegate.enableSlide(false);
-    // };
-    // $scope.PI_slideChanged = function (index) {
-    //   $scope.slideIndex = index;
-    //   console.log("Index: " + index);
-    //   $scope.start = 0;
-    // $scope.count = 0;
-    // if (index==2)
-    //   $scope.disableSwipe();
-    // };
-
-    $scope.goBack = function () {
-      $ionicHistory.goBack();
     };
 
     $scope.$on('RI_FOUND', function (e) {
@@ -2063,6 +2044,22 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var context = canvas.getContext('2d');
       }
 
+      $timeout(function () {
+        $scope.headeron = false;
+        elem = document.getElementById("headerOn");
+        if (elem) {
+          elem.classList.add("animated", "fadeOut");
+        }
+      }, 3000);
+
+      $timeout(function () {
+        $scope.headeron = false;
+        elem = document.getElementById("headerOn");
+        if (elem) {
+          elem.classList.remove("animated", "fadeOut");
+        }
+      }, 5000);
+
       touchUp = function (e) {
         console.log("rootpop: ", $rootScope.popupON);
         // e.preventDefault();
@@ -2093,6 +2090,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       };
 
       drawImage = function () {
+        console.log("Draw image enter");
         //shadow
         //alert();
         // context.shadowBlur = 20;
@@ -2106,8 +2104,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
           // createCircles();
-          // drawCircles();
-
+          // $timeout(function () {
+          //   drawCircles();
+          // }, 200)
+          drawedMapa = true;
         };
         //canvas.addEventListener("touchend", touchUp, false);
         canvas.addEventListener("click", touchUp, false);
@@ -2130,7 +2130,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
 
       createCircles = function (nova_regiao) {
-        drawImage();
+        console.log("create circles enter");
+        if (!drawedMapa)
+          drawImage();
         $regioes.getRegioes().then(function (res) {
           $scope.aCircles = JSON.parse(res || [{}]);
           $regioes.setTempRegioes($scope.aCircles);
@@ -2154,6 +2156,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var blue = "108, 202, 255";
         var red = "255, 104, 85";
         var color = blue;
+        // var file = oCircle.nome;
+        var file = "RI_A";
 
         // context.beginPath();
         // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -2165,10 +2169,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           }
         }
 
-        // if (oCircle.locked)
-        //   context.fillStyle = "rgba(" + color + ", 0.9)";
+        if (oCircle.locked)
+          file += "_red";
+        else if (oCircle.completed)
+          file += "_green";
+        else file += "_orange";
+
+        file += ".png";
+        console.log("file: ", file, oCircle);
+
+        // context.fillStyle = "rgba(" + color + ", 0.9)";
         // else
-        //   context.fillStyle = "rgba(" + color + ", 0.5)";
+        // context.fillStyle = "rgba(" + color + ", 0.5)";
 
         // context.fill();
         // context.lineWidth = 1;
@@ -2184,7 +2196,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           console.log("cicked mapa: ", e);
         };
 
-        img.onload = function() {
+        img.onload = function () {
 
           // context.save();
           // context.beginPath();
@@ -2217,7 +2229,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 // context.stroke();
 //         }, true);
 //         img.classList = "animated bounce";
-        img.src="img/RegiaoA.png";
+        img.src = "img/mapa/" + file;
       };
 
       drawCircles = function () {
@@ -2343,7 +2355,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
 
   })
-  .controller('LoginCtrl', function ($scope, $rootScope, users, UserService, $state, $window, $ionicLoading, blob, $q, $document) {
+  .controller('LoginCtrl', function ($scope, $rootScope, users, UserService, $state, $window, $ionicLoading, blob, $q) {
 
     // if ($rootScope.APP.logged)
     $scope.Login = {
@@ -2976,7 +2988,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
     };
   })
-  .directive('quiz', function ($timeout, $document, $state, $regioes) {
+  .directive('quiz', function ($timeout, $state, $regioes) {
     return {
       restrict: 'AE',
       scope: {},
