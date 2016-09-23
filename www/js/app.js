@@ -375,14 +375,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               alert(err);
             });
 
-            query = "INSERT INTO `info` (name,value) VALUES ('atividades', '" + JSON.stringify(likes.getItems()) + "')";
-            $cordovaSQLite.execute(db, query, []).then(function (res) {
-              var message = "INSERT ID -> " + res.insertId;
-              // console.log(message);
-              console.log("Inserted atividades items, ", message);
-            }, function (err) {
-              console.error(err);
-              // alert(err);
+            likes.getAtividadesInicio().then(function (res) {
+              query = "INSERT INTO `info` (name,value) VALUES ('atividades', '" + JSON.stringify(likes.getItems()) + "')";
+              $cordovaSQLite.execute(db, query, []).then(function (res) {
+                var message = "INSERT ID -> " + res.insertId;
+                // console.log(message);
+                console.log("Inserted atividades items, ", message);
+              }, function (err) {
+                console.error(err);
+                // alert(err);
+              });
             });
 
             perguntas.getRegioesInicio().then(function (res) {
@@ -1954,7 +1956,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     //   quizFactory.init($stateParams.RI);
 
     var aCircles = [];
-    var drawedMapa = false;
+    // var drawedMapa = false;
     var elem = null;
 
     // $scope.count = 0;
@@ -2001,6 +2003,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       console.log("State $ionicView.beforeEnter MApa Params: ", data);
       // if ($stateParams.PI)
       //   perguntas.init($stateParams.RI, $stateParams.PI);
+      if ($stateParams.RI == "ALL")
+        createCircles();
     });
 
     $scope.init = function () {
@@ -2017,18 +2021,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
     $scope.goPI = function (PI) {
-      console.log("GOPI: %s", PI);
-      $scope.regiao.PIs.forEach(function (tpi) {
-        if (PI == tpi.nome) {
-          tpi.visited = true;
-          $scope.$apply();
-          console.log("found PI goPI, marked visited: ", PI);
+      console.log("GOPI: ", PI);
+      $scope.regiao.PIs.some(function (tpi) {
+        if (PI.nome == tpi.nome) {
+          if (!tpi.visited) {
+            tpi.visited = true;
+            // $scope.$apply();
+            console.log("found PI goPI, marked visited: ", PI);
+            return true;
+          }
         }
       });
+      // $timeout(function () {
       $state.go("tab.mapa", {
         RI: $scope.RI,
         PI: PI.nome
       });
+      // }
+      // , 100);
     };
 
     $scope.$on('RI_FOUND', function (e) {
@@ -2200,11 +2210,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // drawImage();
       }
 
-
       createCircles = function () {
         console.log("create circles enter");
-        if (!drawedMapa)
+        if (!$regioes.drawedMapa()) {
           drawImage();
+          $regioes.drawedMapa(true);
+        }
         $regioes.getRegioes().then(function (res) {
           $scope.aCircles = JSON.parse(res || [{}]);
           aCircles = $scope.aCircles;
@@ -2317,8 +2328,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       if ($stateParams.PI != "")
         $scope.updateRegiaoVisitada($stateParams.RI, $stateParams.PI);
 
-      if ($stateParams.RI == "ALL")
-        createCircles();
+      // if ($stateParams.RI == "ALL")
+      //   createCircles();
     })
   })
   .controller('DebugCtrl', function ($scope, $rootScope) {

@@ -644,7 +644,7 @@ angular.module('starter.services', [])
           var query = "update regioes set value=? where name=?";
           return this.execute(db, query, binding).then(function (res) {
             result = res;
-            console.log("UPDATED DB, binding: %s", binding.toString());
+            console.log("UPDATED DB Regioes, binding: %s", binding.toString());
             if (!res.rowsAffected)
               console.warn("ALERT: Update db got 0 affected rows");
             return res;
@@ -1166,6 +1166,15 @@ angular.module('starter.services', [])
       return items;
     };
 
+    getAtividadesInicio =  function () {
+      url = "data/atividades_inicio.json";
+      return $http.get(url).then(function (response) {
+        items = response.data;
+        console.log("response xxx atividades inicio: ", response.data);
+        return items;
+      });
+    };
+
     needsUpdate = function (update) {
       if (!update)
         return needUpdate;
@@ -1209,7 +1218,8 @@ angular.module('starter.services', [])
       goOnline: goOnline,
       isfireBaseOnline: isfireBaseOnline,
       isDataLoading: isDataLoading,
-      isUploading: isUpLoading
+      isUploading: isUpLoading,
+      getAtividadesInicio: getAtividadesInicio
     };
 
   })
@@ -1230,6 +1240,7 @@ angular.module('starter.services', [])
 
     var regioesDesafios = null;
     var tempRegioes = [];
+    var mapaIsDrawed = false;
 
     var convertRegiaoLongToShort = function (reg) {
       return regioes[reg];
@@ -1278,7 +1289,13 @@ angular.module('starter.services', [])
       setRegioes: setRegioes,
       getRegioes: getRegioes,
       convertRegiaoLongToShort: convertRegiaoLongToShort,
-      getAllRegioesList: getAllRegioesList
+      getAllRegioesList: getAllRegioesList,
+      drawedMapa: function (value) {
+        if (!value)
+          return mapaIsDrawed;
+        else
+          mapaIsDrawed = value;
+      }
     }
   })
   .factory('perguntas', function ($http, $rootScope) {
