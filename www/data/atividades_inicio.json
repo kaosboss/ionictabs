@@ -50,5 +50,11 @@
     "img": "img/atividades/atividades_tiro-hover.png",
     "title": "ATIVIDADES DE TIRO",
     "description": "O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana."
+  },
+  {
+    "id": 9,
+    "img": "img/atividades/atividades_centro_canino_thumb.png",
+    "title": "CENTRO CANINO PEDAGÓGICO",
+    "description": "O Sesimbra Natura Park tem integrado o Centro Pedagógico Canino Beira Tejo."
   }
 ]
