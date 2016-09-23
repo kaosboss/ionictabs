@@ -2313,7 +2313,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 // context.stroke();
 //         }, true);
 //         img.classList = "animated bounce";
-        img.src = "img/mapa/" + file;
+        img.src = "img/mapa/marcadores/" + file;
       };
 
       drawCircles = function () {
