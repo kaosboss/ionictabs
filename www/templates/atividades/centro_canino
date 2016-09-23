@@ -1,0 +1,50 @@
+<ion-view view-title="Aquáticas">
+  <ion-content class="has-header has-tabs" scroll="true">
+
+    <div class="APPfull">
+      <div class="APPheader">
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
+        <img class="APPimg" src="img/atividades/atividades_centro_canino.jpg"
+             ng-image-appear responsive transition-duration="0.8s" animation="fadeInUp" animation-duration="0.8s"
+             easing="ease-out">
+      </div>
+
+
+      <div class="APPmain">
+
+        <ion-list class="list-borderless">
+          <div class="list-item animated fadeInUpBig padding">
+            <!--<h4 align="center">CENTRO CANINO</h4>-->
+            <p style="text-align: left;">
+              O Centro Pedagógico Canino Beira Tejo realiza a demonstração do treino dos cães que se encontram à sua guarda. 
+              A demonstração tem uma duração de cerca de 45 minutos, onde podemos aprender sobre a forma de treino de cães praticada neste centro, em que os cães são ensinados sempre de uma forma alegre e utilizando o reforço positivo.
+            </p>
+            <p style="text-align: left;">
+              Liderado por Jorge Piçarra, 4 vezes campeão mundial nas modalidades de Santo Humberto e Caça Prática, com 20 anos de experiência a competir e a criar Cães de Parar.
+            </p>
+            <p style="text-align: left;">
+              Juntamente com a restante infraestrutura do SNP, este é o local ideal para exposições caninas, mostras, competições, exibições e cursos de ensino e sociabilização.
+            </p>
+          </div>
+
+          <!--<ion-item class="item-thumbnail-left list-item animated fadeInUpBig">-->
+            <!--<img ng-src="img/galo_desenho.png" class="">-->
+            <!--<h2 class="">Anda experimentar!</h2>-->
+            <!--&lt;!&ndash;<button class="button button-small button-calm" ng-click="goAtividades()">Explora outras atividades&ndash;&gt;-->
+            <!--&lt;!&ndash;</button>&ndash;&gt;-->
+            <!--<button ng-click="$ionicGoBack()" class="button button-small back-button buttons button-calm"><i-->
+              <!--class="icon ion-ios-arrow-back"></i>-->
+              <!--<span class="back-text" style="transform: translate3d(0px, 0px, 0px);"><span class="default-title hide">Back</span><span-->
+                <!--class="previous-title">Atividades</span></span>-->
+            <!--</button>-->
+          <!--</ion-item>-->
+
+      </div>
+
+      </ion-list>
+
+    </div>
+
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
+</ion-view>
