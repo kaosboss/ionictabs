@@ -1,26 +1,117 @@
 <ion-view view-title="Mapa">
-  <ion-content>
+  <ion-content class="APPmain" has-bouncing="true">
     <!--<ion-item class="item">-->
-      <!--<button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>-->
+    <!--<button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>-->
     <!--</ion-item>-->
-    <canvas class="imageView" id="imageView"></canvas>
+
+    <div class="imageView APPcenter">
+      <canvas class="" id="imageView"></canvas>
+      <!--<img class="caption" ng-src="{{regiao.nome}}.jpg">-->
+      <img class="captionCanvas animated bounce" ng-src="img/mapa/marcadores/RI_A_green.png" style="width: 60px; height: 60px">
+    </div>
+    <!--<div style="width: 320px; height: 220px"></div>-->
     <!--<ion-item class="item">-->
-      <!--<p>Nome Região de interesse: {{nome}}</p>-->
+    <!--<p>Nome Região de interesse: {{nome}}</p>-->
     <!--&lt;!&ndash;</ion-item>&ndash;&gt;-->
     <!--&lt;!&ndash;<ion-item class="item">&ndash;&gt;-->
-      <!--<p>Região desbloqueada: {{locked}}</p>-->
+    <!--<p>Região desbloqueada: {{locked}}</p>-->
     <!--</ion-item>-->
     <!--<ion-item class="item">-->
-      <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_A/RI_A_Q">Questionário RI_A</a>-->
-      <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_B/RI_B_Q">Questionário RI_B</a>-->
-      <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_C/RI_C_Q">Questionário RI_C</a>-->
-      <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_D/RI_D_Q">Questionário RI_D</a>-->
-      <!--&lt;!&ndash;<a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_19">Regiao E-PI 19</a>&ndash;&gt;-->
-    <button type="button" ng-click="unlock_regiao()" class="button button-balanced APPcenter">Desbloquear Regiao D</button>
+    <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_A/RI_A_Q">Questionário RI_A</a>-->
+    <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_B/RI_B_Q">Questionário RI_B</a>-->
+    <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_C/RI_C_Q">Questionário RI_C</a>-->
+    <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_D/RI_D_Q">Questionário RI_D</a>-->
+    <!--&lt;!&ndash;<a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_19">Regiao E-PI 19</a>&ndash;&gt;-->
+    <ion-item ng-if="headeron" id="headerOn" class="item-thumbnail-left item-borderless list-item">
+      <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
+      <p style="margin-left: -30px; margin-top: 0px;" align="left" class="textWrap">{{regiao.banner}}</p>
+      <span ng-click="closeHeder()" class="captionPIs" style="font-size: small">
+        [Fechar
+        <!--<a href="#" class="subdued">{{item.likes ? item.likes : '?' }} likes</a>-->
+        <a href=""  class="subdued button-small button-light ion-close"></a>
+        ]
+      </span>
+    </ion-item>
+    <!--<ion-item ng-if="!headeron">-->
+      <!--<p>Regiao: {{regiao.nome}} Completa: {{regiao.completed}}</p>-->
+    <!--</ion-item>-->
+
+    <!--<ion-scroll style="height: 150px">-->
+    <ion-scroll ng-if="regiao.radius" style="height: 250px">
+      <ion-list class="list-borderless">
+
+        <ion-item ng-click="goPI(PI)" ng-repeat="PI in regiao.PIs"
+                  class="item-thumbnail-left item-icon-right">
+
+          <img class="myAvatar" ng-src="img/atividades/atividades_painball-hover.png">
+          <h2><br></h2>
+          <h2>{{PI.descricao}}</h2>
+          <!--<h4 class="textWrap">{{PI.descricao}}</h4>-->
+          <i class="icon ion-chevron-right icon-accessory"></i>
+          <p>
+            Visitado:
+            <!--<a href="#" class="subdued">{{item.likes ? item.likes : '?' }} likes</a>-->
+            <!--<a href="#" class="subdued button-small button-light ion-heart">Visitado : {{PI.visited}}</a>-->
+            <a href="" class="{{ PI.visited ? 'balanced' : 'assertive'}} button-small button-light {{ PI.visited ? 'ion-checkmark' : 'ion-close'}}"></a>
+          </p>
+          <!--<ion-option-button class="button-positive"-->
+          <!--ng-click="clickedLike(item)">-->
+          <!--Like-->
+          <!--</ion-option-button>-->
+
+        </ion-item>
+        <!--<ion-item class="item-thumbnail-left list-item">-->
+        <!--&lt;!&ndash;<div class="mascoteAvatarDesenho">&ndash;&gt;-->
+        <!--<img ng-src="img/SNP_small.jpg" class="">-->
+        <!--<h2 class="newFont">Anda visitar-nos!</h2>-->
+        <!--<p class="textWrap padding">Descobre todas as atividades</p>-->
+        <!--&lt;!&ndash;<h4 class="textWrap">Descobre todas as atividades</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<button class="button button-small button-calm" ng-click="goAtividades()">Descobre todas as atividades&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+        <!--</ion-item>-->
+        <!--<ion-item class="item-thumbnail-left list-item">-->
+        <!--&lt;!&ndash;<div class="mascoteAvatarDesenho">&ndash;&gt;-->
+        <!--<img ng-src="img/SNP_small.jpg" class="">-->
+        <!--<h2 class="newFont">Anda visitar-nos!</h2>-->
+        <!--<p class="textWrap">Descobre todas as atividades</p>-->
+        <!--&lt;!&ndash;<h4 class="textWrap">Descobre todas as atividades</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<button class="button button-small button-calm" ng-click="goAtividades()">Descobre todas as atividades&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+        <!--</ion-item>-->
+        <!--<ion-item class="item-thumbnail-left list-item">-->
+        <!--&lt;!&ndash;<div class="mascoteAvatarDesenho">&ndash;&gt;-->
+        <!--<img ng-src="img/SNP_small.jpg" class="">-->
+        <!--<h2 class="newFont">Anda visitar-nos!</h2>-->
+        <!--<p class="textWrap">Descobre todas as atividades</p>-->
+        <!--&lt;!&ndash;<h4 class="textWrap">Descobre todas as atividades</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<button class="button button-small button-calm" ng-click="goAtividades()">Descobre todas as atividades&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+        <!--</ion-item>-->
+        <!--<ion-item class="item-thumbnail-left list-item">-->
+        <!--&lt;!&ndash;<div class="mascoteAvatarDesenho">&ndash;&gt;-->
+        <!--<img ng-src="img/SNP_small.jpg" class="">-->
+        <!--<h2 class="newFont">Anda visitar-nos!</h2>-->
+        <!--<p class="textWrap">Descobre todas as atividades</p>-->
+        <!--&lt;!&ndash;<h4 class="textWrap">Descobre todas as atividades</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<button class="button button-small button-calm" ng-click="goAtividades()">Descobre todas as atividades&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+        <!--</ion-item>-->
+        <!--<ion-item class="item-thumbnail-left list-item">-->
+        <!--&lt;!&ndash;<div class="mascoteAvatarDesenho">&ndash;&gt;-->
+        <!--<img ng-src="img/SNP_small.jpg" class="">-->
+        <!--<h2 class="newFont">Anda visitar-nos!</h2>-->
+        <!--<p class="textWrap">Descobre todas as atividades</p>-->
+        <!--&lt;!&ndash;<h4 class="textWrap">Descobre todas as atividades</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<button class="button button-small button-calm" ng-click="goAtividades()">Descobre todas as atividades&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+        <!--</ion-item>-->
+      </ion-list>
+    </ion-scroll>
+    <!--<button type="button" ng-click="unlock_regiao()" class="button button-balanced APPcenter">Desbloquear Regiao D</button>-->
     <!--</ion-item>-->
 
     <!--<ion-item>-->
-      <!--<quiz/>-->
+    <!--<quiz/>-->
     <!--</ion-item>-->
 
     <div ng-controller="PopupCtrl"></div>

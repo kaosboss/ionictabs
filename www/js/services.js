@@ -644,7 +644,7 @@ angular.module('starter.services', [])
           var query = "update regioes set value=? where name=?";
           return this.execute(db, query, binding).then(function (res) {
             result = res;
-            console.log("UPDATED DB, binding: %s", binding.toString());
+            console.log("UPDATED DB Regioes, binding: %s", binding.toString());
             if (!res.rowsAffected)
               console.warn("ALERT: Update db got 0 affected rows");
             return res;
@@ -933,67 +933,68 @@ angular.module('starter.services', [])
     };
 
   })
-  .factory("likes", function ($firebaseArray, $firebase, $cordovaNetwork, $cordovaSQLite, $timeout, $rootScope, users) {
+  .factory("likes", function ($firebaseArray, $firebase, $cordovaNetwork, $cordovaSQLite, $timeout, $rootScope, users, $http) {
 
     var likesRef = null;
     var allLikes = [];
     var atividades = null;
     var dataLoaded = false;
     var needUpdate = false;
-    var items = [
-      {
-        id: 0,
-        img: 'img/atividades/atividades_arborismo.png',
-        title: 'ARBORISMO',
-        description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.',
-        template: "arborismo"
-      },
-      {
-        id: 1,
-        img: 'img/atividades/atividades_bicicletas-hover.png',
-        title: 'BICICLETAS NO SNP',
-        description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.',
-        template: "bicicletas"
-      },
-      {
-        id: 2,
-        title: 'DESPORTO AQUÁTICO',
-        description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
-        img: 'img/atividades/actividades_aquaticas-hover.png',
-        template: "aquaticas"
-      },
-      {
-        id: 3,
-        title: 'CAMPOS DE FÉRIAS',
-        img: 'img/atividades/atividades_campo_ferias-hover.png',
-        description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.',
-        template: "campo_ferias"
-      },
-      {
-        id: 5,
-        title: 'FAUNA E FLORA',
-        description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
-        img: 'img/atividades/atividades_fauna_flora-hover.png'
-      },
-      {
-        id: 6,
-        title: 'PAINTBALL',
-        description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
-        img: 'img/atividades/atividades_painball-hover.png'
-      },
-      {
-        id: 7,
-        title: 'PERCURSOS PEDESTRES',
-        description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
-        img: 'img/atividades/atividades_percursos_pedestres-hover.png'
-      },
-      {
-        id: 8,
-        img: 'img/atividades/atividades_tiro-hover.png',
-        title: 'ATIVIDADES DE TIRO',
-        description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
-      }
-    ];
+    var items = [];
+    // var items = [
+    //   {
+    //     id: 0,
+    //     img: 'img/atividades/atividades_arborismo.png',
+    //     title: 'ARBORISMO',
+    //     description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.',
+    //     template: "arborismo"
+    //   },
+    //   {
+    //     id: 1,
+    //     img: 'img/atividades/atividades_bicicletas-hover.png',
+    //     title: 'BICICLETAS NO SNP',
+    //     description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.',
+    //     template: "bicicletas"
+    //   },
+    //   {
+    //     id: 2,
+    //     title: 'DESPORTO AQUÁTICO',
+    //     description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
+    //     img: 'img/atividades/actividades_aquaticas-hover.png',
+    //     template: "aquaticas"
+    //   },
+    //   {
+    //     id: 3,
+    //     title: 'CAMPOS DE FÉRIAS',
+    //     img: 'img/atividades/atividades_campo_ferias-hover.png',
+    //     description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.',
+    //     template: "campo_ferias"
+    //   },
+    //   {
+    //     id: 5,
+    //     title: 'FAUNA E FLORA',
+    //     description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
+    //     img: 'img/atividades/atividades_fauna_flora-hover.png'
+    //   },
+    //   {
+    //     id: 6,
+    //     title: 'PAINTBALL',
+    //     description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
+    //     img: 'img/atividades/atividades_painball-hover.png'
+    //   },
+    //   {
+    //     id: 7,
+    //     title: 'PERCURSOS PEDESTRES',
+    //     description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
+    //     img: 'img/atividades/atividades_percursos_pedestres-hover.png'
+    //   },
+    //   {
+    //     id: 8,
+    //     img: 'img/atividades/atividades_tiro-hover.png',
+    //     title: 'ATIVIDADES DE TIRO',
+    //     description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
+    //   }
+    // ];
     var fireBaseOnline = false;
     var dataLoading = false;
     var upLoading = false;
@@ -1166,6 +1167,15 @@ angular.module('starter.services', [])
       return items;
     };
 
+    getAtividadesInicio =  function () {
+      url = "data/atividades_inicio.json";
+      return $http.get(url).then(function (response) {
+        items = response.data;
+        console.log("response xxx atividades inicio: ", response.data);
+        return items;
+      });
+    };
+
     needsUpdate = function (update) {
       if (!update)
         return needUpdate;
@@ -1209,7 +1219,8 @@ angular.module('starter.services', [])
       goOnline: goOnline,
       isfireBaseOnline: isfireBaseOnline,
       isDataLoading: isDataLoading,
-      isUploading: isUpLoading
+      isUploading: isUpLoading,
+      getAtividadesInicio: getAtividadesInicio
     };
 
   })
@@ -1230,6 +1241,7 @@ angular.module('starter.services', [])
 
     var regioesDesafios = null;
     var tempRegioes = [];
+    var mapaIsDrawed = false;
 
     var convertRegiaoLongToShort = function (reg) {
       return regioes[reg];
@@ -1250,8 +1262,9 @@ angular.module('starter.services', [])
           }, function (err) {
             console.error("ERROR inserting regioes, NOT stored", err);
           });
-        } else
-          console.log("Stored regioes", res);
+        }
+        // else
+        //   console.log("Stored regioes", res);
 
       }, function (err) {
         console.error("ERROR updating regioes, NOT stored", err);
@@ -1277,7 +1290,13 @@ angular.module('starter.services', [])
       setRegioes: setRegioes,
       getRegioes: getRegioes,
       convertRegiaoLongToShort: convertRegiaoLongToShort,
-      getAllRegioesList: getAllRegioesList
+      getAllRegioesList: getAllRegioesList,
+      drawedMapa: function (value) {
+        if (!value)
+          return mapaIsDrawed;
+        else
+          mapaIsDrawed = value;
+      }
     }
   })
   .factory('perguntas', function ($http, $rootScope) {
