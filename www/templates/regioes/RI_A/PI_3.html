@@ -1,0 +1,53 @@
+<ion-view view-title="Ponto de interesse {{PI}}">
+
+  <ion-content class="has-header has-tabs APPmain" scroll="true">
+
+    <div class="APPfull">
+      <div class="APPheader">
+        <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
+          <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
+          <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">Esta é a minha fonte de água cristalina,
+            pura e fresquinha! Pena não poder tomar banho aqui...</p>
+        </ion-item>
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
+        <img class="APPimg" src="img/mapa/PIs/PI_3.jpg"
+             ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"
+             easing="ease-out">
+        <!--<img class="animated slideInUp" src="img/atividades/SNP_background_arborismo.jpg">-->
+      </div>
+
+      <div class="APPmain padding">
+
+        <ion-list class="list-borderless detalheAtividade">
+          <div class="list-item animated fadeInUpBig padding">
+            <!--<h3 align="center">ARBORISMO</h3>-->
+            <p style="text-align: left;">
+              Mas ainda bem que água não falta aqui na Quinta! Esta aqui é usada para regar a horta! <br>
+              Sabes que os poços servem para nós conseguirmos aceder à água que está no subsolo. Para encontrar esta água foi preciso escavar 4 metros!<br>
+              Vou-te explicar como aparece esta água: a água evapora nos grandes oceanos e formam-se núvens. O vento empurra as núvens para a terra e depois chove. É assim que podemos encontrar água no subsolo.<br>
+              É muito importante beber pelo menos 2 litros de água por dia! Afinal de contas o nosso corpo é 70% de água e precisamos de manter esse nível!<br>
+              Estás a ouvir um cantar lindo?... Vem ver quem são!
+            </p>
+            <!--<br>-->
+            <!--<h3 align="left">Informação adicional</h3>-->
+            <br>
+           <div class="paraLembrar">
+              <h4>Para lembrar</h4>
+              <br>
+              <p style="text-align: left;">
+                1 - um poço normal tem entre 3 a 5 metros de profundidade;
+                <br>
+                2 - ciclo da água: água oceanos evapora, forma nuvens, chove, rios levam água para oceanos;
+                <br>
+                3 -  70% do nosso corpo é água: devemos beber pelo menos 2 litros de água por dia
+                <br>
+               </p></div>
+          </div>
+        </ion-list>
+      </div>
+
+    </div>
+
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
+</ion-view>
