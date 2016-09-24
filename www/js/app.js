@@ -1965,7 +1965,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.regiao = {
       nome: "sem região",
-      banner: "Bem-vindo à “Região A”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!"
+      banner: "Bem-vindo à “Região A”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!",
+      marcador: "marcador_galo.png"
     };
     $scope.RI = $stateParams.RI;
     $scope.PI_FULL = $stateParams.PI;
@@ -2161,6 +2162,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             else {
               $scope.regiao = aCircles[f];
               $scope.RI = aCircles[f].nome;
+              var file = aCircles[f].nome;
+              if (aCircles[f].locked)
+                file += "_red";
+              else if (aCircles[f].completed)
+                file += "_green";
+              else file += "_orange";
+              file += ".png";
+              $scope.regiao.marcador = file;
+              console.log("file: ", file, aCircles[f]);
+              $scope.headeron = true;
               $scope.$apply();
               console.log("setting scope regiao: ", $scope.regiao);
             }
@@ -2240,8 +2251,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var blue = "108, 202, 255";
         var red = "255, 104, 85";
         var color = blue;
-        // var file = oCircle.nome;
-        var file = "RI_A";
+        var file = oCircle.nome;
+        // var file = "RI_A";
 
         // context.beginPath();
         // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -2276,9 +2287,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // context.clip();
 
         var img = new Image();
-        img.onclick = function (e) {
-          console.log("cicked mapa: ", e);
-        };
+        // img.onclick = function (e) {
+        //   console.log("cicked mapa: ", e);
+        // };
 
         img.onload = function () {
 
