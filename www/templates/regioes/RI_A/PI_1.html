@@ -1,0 +1,51 @@
+<ion-view view-title="Ponto de interesse {{PI}}">
+
+  <ion-content class="has-header has-tabs APPmain" scroll="true">
+
+    <div class="APPfull">
+      <div class="APPheader">
+        <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
+          <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
+          <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">Agora que ja te expliquei como podes tirar mais partido da tua visita,
+             vem dai comigo para ver tudo o que preparei para ti!</p>
+        </ion-item>
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
+        <img class="APPimg" src="img/mapa/PIs/PI_1.jpg"
+             ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"
+             easing="ease-out">
+        <!--<img class="animated slideInUp" src="img/atividades/SNP_background_arborismo.jpg">-->
+      </div>
+
+      <div class="APPmain padding">
+
+        <ion-list class="list-borderless detalheAtividade">
+          <div class="list-item animated fadeInUpBig padding">
+            <!--<h3 align="center">ARBORISMO</h3>-->
+            <p style="text-align: left;">
+              Vou-me mostrar a minha casa, a minha família e os meus vizinhos! São todos muito simpáticos, embora alguns deles tenham uns hábitos estranhos ...
+Aqui onde eu vivo temos tudo o que precisamos sem ter de ir às compras! Temos árvores para nos dar sombra, fruta deliciosa, legumes muito saudáveis e até ervas aromáticas para temperar a nossa comida. Na Quinta tudo é feito de uma forma sustentável e seguindo as boas práticas, respeitando a Natureza!
+Vou começar por te levar à horta das ervas aromáticas que fazem com que a nossa comida seja ainda mais saborosa!
+            </p>
+            <!--<br>-->
+            <!--<h3 align="left">Informação adicional</h3>-->
+            <br>
+      <!--      <div class="paraLembrar">
+              <h4>Para lembrar</h4>
+              <br>
+              <p style="text-align: left;">
+                1 - um poço normal tem entre 3 a 5 metros de profundidade
+                <br>
+                2 - ciclo da água: água oceanos evapora, forma nuvens, chove, rios levam água para oceanos
+                <br>
+                3 - 70% do nosso corpo é água: devemos beber pelo menos 2 litros de água por dia
+                <br>
+              </p></div>  -->
+          </div>
+        </ion-list>
+      </div>
+
+    </div>
+
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
+</ion-view>
