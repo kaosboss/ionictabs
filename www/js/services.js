@@ -940,61 +940,68 @@ angular.module('starter.services', [])
     var atividades = null;
     var dataLoaded = false;
     var needUpdate = false;
-    var items = [];
-    // var items = [
-    //   {
-    //     id: 0,
-    //     img: 'img/atividades/atividades_arborismo.png',
-    //     title: 'ARBORISMO',
-    //     description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.',
-    //     template: "arborismo"
-    //   },
-    //   {
-    //     id: 1,
-    //     img: 'img/atividades/atividades_bicicletas-hover.png',
-    //     title: 'BICICLETAS NO SNP',
-    //     description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.',
-    //     template: "bicicletas"
-    //   },
-    //   {
-    //     id: 2,
-    //     title: 'DESPORTO AQUÁTICO',
-    //     description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
-    //     img: 'img/atividades/actividades_aquaticas-hover.png',
-    //     template: "aquaticas"
-    //   },
-    //   {
-    //     id: 3,
-    //     title: 'CAMPOS DE FÉRIAS',
-    //     img: 'img/atividades/atividades_campo_ferias-hover.png',
-    //     description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.',
-    //     template: "campo_ferias"
-    //   },
-    //   {
-    //     id: 5,
-    //     title: 'FAUNA E FLORA',
-    //     description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
-    //     img: 'img/atividades/atividades_fauna_flora-hover.png'
-    //   },
-    //   {
-    //     id: 6,
-    //     title: 'PAINTBALL',
-    //     description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
-    //     img: 'img/atividades/atividades_painball-hover.png'
-    //   },
-    //   {
-    //     id: 7,
-    //     title: 'PERCURSOS PEDESTRES',
-    //     description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
-    //     img: 'img/atividades/atividades_percursos_pedestres-hover.png'
-    //   },
-    //   {
-    //     id: 8,
-    //     img: 'img/atividades/atividades_tiro-hover.png',
-    //     title: 'ATIVIDADES DE TIRO',
-    //     description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
-    //   }
-    // ];
+    // var items = [];
+    var items = [
+      {
+        id: 0,
+        img: 'img/atividades/atividades_arborismo.png',
+        title: 'ARBORISMO',
+        description: 'O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.',
+        template: "arborismo"
+      },
+      {
+        id: 1,
+        img: 'img/atividades/atividades_bicicletas-hover.png',
+        title: 'BICICLETAS NO SNP',
+        description: 'Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.',
+        template: "bicicletas"
+      },
+      {
+        id: 2,
+        title: 'DESPORTO AQUÁTICO',
+        description: 'O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.',
+        img: 'img/atividades/actividades_aquaticas-hover.png',
+        template: "aquaticas"
+      },
+      {
+        id: 3,
+        title: 'CAMPOS DE FÉRIAS',
+        img: 'img/atividades/atividades_campo_ferias-hover.png',
+        description: 'O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.',
+        template: "campo_ferias"
+      },
+      {
+        id: 5,
+        title: 'FAUNA E FLORA',
+        description: 'O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.',
+        img: 'img/atividades/atividades_fauna_flora-hover.png'
+      },
+      {
+        id: 6,
+        title: 'PAINTBALL',
+        description: 'O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.',
+        img: 'img/atividades/atividades_painball-hover.png'
+      },
+      {
+        id: 7,
+        title: 'PERCURSOS PEDESTRES',
+        description: 'Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.',
+        img: 'img/atividades/atividades_percursos_pedestres-hover.png'
+      },
+      {
+        id: 8,
+        img: 'img/atividades/atividades_tiro-hover.png',
+        title: 'ATIVIDADES DE TIRO',
+        description: 'O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.'
+      },
+      {
+        id: 9,
+        img: "img/atividades/atividades_centro_canino_thumb.png",
+        title: "CENTRO CANINO PEDAGÓGICO",
+        description: "O Sesimbra Natura Park tem integrado o Centro Pedagógico Canino Beira Tejo.",
+        template: "centro_canino"
+      }
+    ];
     var fireBaseOnline = false;
     var dataLoading = false;
     var upLoading = false;
