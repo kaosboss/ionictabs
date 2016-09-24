@@ -2171,6 +2171,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               file += ".png";
               $scope.regiao.marcador = file;
               console.log("file: ", file, aCircles[f]);
+              $scope.headeron = true;
               $scope.$apply();
               console.log("setting scope regiao: ", $scope.regiao);
             }
