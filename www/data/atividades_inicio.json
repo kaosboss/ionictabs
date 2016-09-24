@@ -32,28 +32,28 @@
     "title": "FAUNA E FLORA",
     "description": "O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.",
     "img": "img/atividades/atividades_fauna_flora_thumb.png",
-    "template": "centro_canino"
+    "template": "fauna_flora"
   },
   {
     "id": 6,
     "title": "PAINTBALL",
     "description": "O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.",
     "img": "img/atividades/atividades_painball_thumb.png",
-    "template": "centro_canino"
+    "template": "paintball"
   },
   {
     "id": 7,
     "title": "PERCURSOS PEDESTRES",
     "description": "Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.",
     "img": "img/atividades/atividades_percursos_pedestres_thumb.png",
-    "template": "centro_canino"
+    "template": "percursos_pedestres"
   },
   {
     "id": 8,
     "img": "img/atividades/atividades_tiro_thumb.png",
     "title": "ATIVIDADES DE TIRO",
     "description": "O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.",
-    "template": "centro_canino"
+    "template": "tiro"
   },
   {
     "id": 9,
