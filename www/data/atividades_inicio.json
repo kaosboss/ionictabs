@@ -16,7 +16,7 @@
   {
     "id": 2,
     "title": "DESPORTO AQUÁTICO",
-    "description": "O Sesimbra Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.",
+    "description": "O Sesimbra  Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.",
     "img": "img/atividades/actividades_aquaticas_thumb.png",
     "template": "aquaticas"
   },
@@ -31,34 +31,34 @@
     "id": 5,
     "title": "FAUNA E FLORA",
     "description": "O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.",
-    "img": "img/atividades/atividades_fauna_flora_thumb.png"
+    "img": "img/atividades/atividades_fauna_flora_thumb.png",
+    "template": "centro_canino"
   },
   {
     "id": 6,
     "title": "PAINTBALL",
     "description": "O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.",
-    "img": "img/atividades/atividades_painball_thumb.png"
+    "img": "img/atividades/atividades_painball_thumb.png",
+    "template": "centro_canino"
   },
   {
     "id": 7,
     "title": "PERCURSOS PEDESTRES",
     "description": "Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.",
-    "img": "img/atividades/atividades_percursos_pedestres_thumb.png"
+    "img": "img/atividades/atividades_percursos_pedestres_thumb.png",
+    "template": "centro_canino"
   },
   {
     "id": 8,
     "img": "img/atividades/atividades_tiro_thumb.png",
     "title": "ATIVIDADES DE TIRO",
-    "description": "O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana."
+    "description": "O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.",
+    "template": "centro_canino"
   },
   {
     "id": 9,
     "img": "img/atividades/atividades_centro_canino_thumb.png",
-<<<<<<< HEAD
     "title": "CENTRO CANINO",
-=======
-    "title": "CENTRO CANINO PEDAGÓGICO",
->>>>>>> origin/ionicstabs
     "description": "O Sesimbra Natura Park tem integrado o Centro Pedagógico Canino Beira Tejo.",
     "template": "centro_canino"
   },
