@@ -1330,6 +1330,7 @@ angular.module('starter.services', [])
     var regioesDesafios = null;
     var tempRegioes = [];
     var mapaIsDrawed = false;
+    var aCircles = [];
 
     var convertRegiaoLongToShort = function (reg) {
       return regioes[reg];
@@ -1384,6 +1385,15 @@ angular.module('starter.services', [])
           return mapaIsDrawed;
         else
           mapaIsDrawed = value;
+      },
+      getCacheRegioes: function () {
+        return aCircles;
+      },
+      setCacheRegioes: function (value) {
+        if (value)
+          aCircles = value;
+        else
+          return aCircles;
       }
     }
   })
