@@ -1966,14 +1966,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.regiao = {
       nome: "sem região",
       banner: "",
-      marcador: "marcador_galo.png"
+      marcador: "marcador_galo.png",
+      headeron: false
     };
     $scope.RI = $stateParams.RI;
     $scope.PI_FULL = $stateParams.PI;
     $scope.PI = $stateParams.PI.replace("PI_", "");
     // $scope.dataChanged = false;
     // $scope.regiao.banner = "Bem-vindo à “Região A”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!";
-    $scope.headeron = false;
+    // $scope.headeron = false;
     // $scope.$on('QR_CODE_SCAN', function (e, args) {
     //   console.log("tab mapa QR_CODE_SCAN", args);
     //   $scope.showQR = args.showQR;
@@ -2048,7 +2049,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     });
 
     $scope.closeHeder = function () {
-      $scope.headeron = false;
+      $scope.regiao.headeron = false;
+      // $scope.headeron = false;
     };
 
     $scope.updateRegiaoVisitada = function (RI, PI) {
@@ -2118,9 +2120,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var context = canvas.getContext('2d');
       }
 
-      if ($scope.headeron) {
+      if ($scope.regiao.headeron) {
         $timeout(function () {
-          $scope.headeron = false;
+          $scope.regiao.headeron = false;
           elem = document.getElementById("headerOn");
           if (elem) {
             elem.classList.add("animated", "fadeOut");
@@ -2128,7 +2130,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         }, 10000);
 
         $timeout(function () {
-          $scope.headeron = false;
+          $scope.regiao.headeron = false;
           elem = document.getElementById("headerOn");
           if (elem) {
             elem.classList.remove("animated", "fadeOut");
@@ -2171,7 +2173,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               file += ".png";
               $scope.regiao.marcador = file;
               console.log("file: ", file, aCircles[f]);
-              $scope.headeron = true;
+              $scope.regiao.headeron = true;
               $scope.$apply();
               console.log("setting scope regiao: ", $scope.regiao);
             }
