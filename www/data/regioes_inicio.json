@@ -6,7 +6,7 @@
     "centerY": 105,
     "radius": 20,
     "locked": false,
-    "banner": "Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa!",
+    "banner": "Bem-vindo à “Região A”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!",
     "PIs": [
       {
         "id": 1,
@@ -67,7 +67,7 @@
     "centerY": 95,
     "radius": 20,
     "locked": false,
-    "banner": "Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa!",
+    "banner": "Bem-vindo à “região B”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos! ",
     "PIs": [
       {
         "id": 5,
@@ -133,7 +133,7 @@
     "centerY": 88,
     "radius": 22,
     "locked": false,
-    "banner": "Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa!",
+    "banner" : "",
     "PIs": [
       {
         "id": 10,
@@ -204,7 +204,6 @@
     "centerY": 70,
     "radius": 32,
     "locked": true,
-    "banner": "Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa!",
     "PIs": [
       {
         "id": 16,
