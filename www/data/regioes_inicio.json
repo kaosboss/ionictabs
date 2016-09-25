@@ -133,7 +133,7 @@
     "centerY": 88,
     "radius": 22,
     "locked": false,
-    "banner" : "",
+    "banner" : "Bem-vindo à região C! Agora que já conheceste a minha casa e os meus vizinhos do lado, vou dar-te a conhecer excelentes frutos e árvores, bem como os meus vizinhos mais saloios ... ",
     "PIs": [
       {
         "id": 10,
@@ -204,6 +204,7 @@
     "centerY": 70,
     "radius": 32,
     "locked": true,
+    "banner": "Estás agora a entrar na região D! Esta é a região com mais água da Quinta! Para além da água vais também ficar a saber mais de uma das árvores mais inteligentes de todas!",
     "PIs": [
       {
         "id": 16,
@@ -258,6 +259,7 @@
     "centerX": 53,
     "centerY": 50,
     "radius": 36,
+    "banner": "Chegaste à região E! Depois de já teres ficado a conhecer o Eucalipto, vais agora conhecer as duas outras árvores mais abundantes em Portugal e com uma grande importância. Vou-te ensinar muitas coisas!",
     "locked": true,
     "PIs": [
       {
@@ -324,6 +326,7 @@
     "centerY": 110,
     "radius": 31,
     "locked": true,
+    "banner": "Nesta região F vais ficar a conhecer a Romã e vais também ficar a saber quais as características do Montado.",
     "PIs": [
       {
         "id": 24,
@@ -374,6 +377,7 @@
     "centerY": 125,
     "radius": 20,
     "locked": true,
+    "banner": "Estamos quase a chegar ao fim, mas nesta região G ainda vais poder aprender muitas coisas interessantes! Prepara-te para conhecer mais sobre frutas deliciosas e sobre o famoso Pinheiro!",
     "PIs": [
       {
         "id": 26,
@@ -429,6 +433,7 @@
     "centerY": 125,
     "radius": 20,
     "locked": true,
+    "banner": "Chegámos à última região, a H! Nesta região vou mostrar-te árvores que vieram da China, vou-te falar de árvores que vivem mais de 2.000 anos e de plantas que se movem com o sol...",
     "PIs": [
       {
         "id": 29,
