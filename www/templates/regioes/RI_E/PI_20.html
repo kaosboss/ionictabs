@@ -1,185 +1,54 @@
 <ion-view view-title="Ponto de interesse {{PI}}">
 
-  <ion-slide-box on-slide-changed="PI_slideChanged(index)">
-    <!--<ion-slide-box on-slide-changed="PI_slideChanged(index)" on-swipe-left="swipeLeft()" on-swipe-right="swipeRight()">-->
-    <ion-slide ng-init='init()'>
+  <ion-content class="has-header has-tabs APPmain" scroll="true">
 
-      <!--</ion-slide>-->
-      <!--<ion-slide>-->
+    <div class="APPfull">
+      <div class="APPheader">
+        <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
+          <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
+          <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">Esta é a única alfarrobeira que há no Sesimbra Natura Park! E veio do Algarve!</p>
+        </ion-item>
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
+        <img class="APPimg" src="img/mapa/PIs/PI_20.jpg"
+             ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"
+             easing="ease-out">
+        <!--<img class="animated slideInUp" src="img/atividades/SNP_background_arborismo.jpg">-->
+      </div>
 
-      <ion-content scroll="true" direction="y">
-        <div class="list card" ng-controller="MapaCtrl">
+      <div class="APPmain padding">
 
-          <div class="item item-avatar">
-            <img src="img/galo_avatar.jpg">
-
-            <h4>Galo Pantufas</h4>
-            <h5>Os galos também costumam cantar</h5>
-            <h5>criando um duelo de cantos, quando</h5>
-            <h5>ouvem o canto de outro galo.</h5>
-            <!--<h5>curtas distâncias.</h5>-->
-          </div>
-
-          <div class="item item-body">
-
-            <img class="full-image" src="img/cards/galo2.jpg">
-
-            <p align="justify">
-              O galo é extremamente territorialista, sempre evitando a proximidade de outros galos ao harém. Dependendo
-              da espécie, a sociabilidade dos galos é restrita com relação a outros machos, já que chegando na idade
-              adulta eles se isolam de seus irmãos e procuram proximidade das fêmeas, sempre provocando briga com
-              estranhos. Mas, não raramente surgem galos, principalmente os mais fracos ou criados juntos que toleram a
-              presença de outros.
+        <ion-list class="list-borderless detalheAtividade">
+          <div class="list-item animated fadeInUpBig padding">
+            <!--<h3 align="center">ARBORISMO</h3>-->
+            <p style="text-align: left;">
+              A alfarrobeira é uma árvore selvagem e produz a alfarroba, que é uma vagem castanha comestível.
+              Dentro da vagem estão habitualmente entre 10 e 16 sementinhas a que se dá o nome de quilates.
             </p>
-
-            <p align="justify">Os galos mais jovens brigam entre si, e respeitam uma espécie de hierarquia depois dos
-              embates, ou respeitando os mais velhos. Com o passar do tempo, os galos mais jovens sentem-se mais
-              confiantes e passam a desafiar os mais velhos na busca pelo domínio do território.</p>
-
-            <p align="justify">Ter o domínio do território significa ao galo ser o mais forte da área a que ele está
-              reservado(delimitado por cercas dos quintais ou outros), o galo é tolerante a outros galos em sem
-              território, desde que não procurem acasalar com as fêmeas ou fiquem destraidos muito próximos, o que pode
-              parecer um desafio.</p>
-            <p>
-              <a href="#" class="subdued">1 Like</a>
-              <a href="#" class="subdued">5 Comments</a>
+            <p style="text-align: left;">
+              A utilização da alfarroba muitas vezes substitui o cacau, mas na verdade são muito diferentes.
+              A alfarroba tem muito menos gordura e mais açúcares naturais, o que a torna muito menos calórica. <br>
+              Pelo facto da alfarroba ser um alimento saudável e nutritivo é utilizada para a confeção de refeições já preparadas para bebés.
             </p>
+            <!--<br>-->
+            <!--<h3 align="left">Informação adicional</h3>-->
+            <br>
+            <div class="paraLembrar">
+              <h4>Para lembrar</h4>
+              <br>
+              <p style="text-align: left;">
+                1 - Dentro da alfarroba estão 10 a 16 sementinhas que se chamam quilates;<br>
+                <br>
+                2 - Alfarroba tem menos gordura, mais açucares naturais e é menos calórica do que o cacau; <br>
+                <br>
+                3 - Alfarroba é utilizada para fazer refeições pré-preparada para bebés. <br>
+                <br>
+              </p></div>
           </div>
-          <div class="item tabs tabs-secondary tabs-icon-left">
-            <a class="tab-item" href="#">
-              <i class="icon ion-thumbsup"></i>
-              Like
-            </a>
-            <a class="tab-item" href="#">
-              <i class="icon ion-chatbox"></i>
-              Comment
-            </a>
-            <a class="tab-item" href="#">
-              <i class="icon ion-share"></i>
-              Share
-            </a>
-          </div>
-        </div>
-        <div ng-controller="PopupCtrl"></div>
-      </ion-content>
+        </ion-list>
+      </div>
 
-    </ion-slide>
+    </div>
 
-    <ion-slide>
-
-      <ion-content scroll="false" class="padding" ng-controller="CardsCtrl">
-
-        <td-cards>
-          <td-card ng-repeat="card in cards"
-                   on-transition-left="transitionLeft($index)"
-                   on-transition-right="transitionRight($index)"
-                   on-destroy="cardDestroyed($index)"
-                   class="card-{{$index}}">
-
-            <div class="image" ng-controller="CardCtrl">
-
-              <div class="no-text">Não</div>
-              <div class="yes-text">Sim</div>
-
-              <div ng-if="cat1">
-                <!--<div class="no-text">Não</div>-->
-                <img ng-src="{{card.image}}">
-                <!--<div class="yes-text">Sim</div>-->
-              </div>
-
-              <div ng-if="!cat1">
-                <!--<div class="no-text">Não</div>-->
-                <div class="td-text" align="justify">
-                  <br>
-                  <br>
-                  É verdade que {{card.pergunta}}
-                </div>
-                <img ng-src="{{card.image}}">
-                <!--<div class="yes-text">Sim</div>-->
-              </div>
-
-            </div>
-
-          </td-card>
-        </td-cards>
-
-        <div ng-if="!startted">
-          <h4 align="center" style="color: #444;">Que animais vivem no SNP?</h4>
-          <h5 align="center" style="color: #444;">Ganhas 5 pontos por cada resposta certa e perdes 15 por cada errada,
-            vamos testar os teus conhecimentos</h5>
-
-          <button ng-click="startCards()" class="button button-balanced APPcenter">Vamos descobrir</button>
-
-          <br>
-          <h4 align="center" style="color: #444;">Verdade ou mentira?</h4>
-          <h5 align="center" style="color: #444;">Ganhas 5 pontos por cada resposta certa e perdes 15 por cada errada,
-            vamos testar os teus conhecimentos</h5>
-
-          <button ng-click='startCards(2)' class="button button-balanced APPcenter">Vamos descobrir
-          </button>
-        </div>
-
-        <div ng-if="startted" class="button-bar">
-          <div class="score" ng-class="view.buttonClass">
-            <span>Score {{view.buttonStart}}</span>
-          </div>
-          <div class="score energized">
-            <span ng-click="stopCards()">Stop</span>
-          </div>
-        </div>
-
-        <!--<div ng-controller="PopupCtrl"></div>-->
-      </ion-content>
-
-    </ion-slide>
-
-    <ion-slide>
-      <!--<ion-floating-button ng-if="showQR" class="animated bounce" click="getBarcode()" has-footer="true" button-color="#2AC9AA" icon="ion-qr-scanner" iconColor="#fff">-->
-      <!--</ion-floating-button>-->
-
-      <ion-content class="QRcode" scroll="true" direction="y" class="padding" ng-controller="BarCodeReaderController">
-
-        <div ng-if="!startted">
-          <h4 align="center" style="color: #444;">Caça ao código QR?</h4>
-          <h5 align="center" style="color: #444;">Ganhas 20 pontos por cada código QR encontrado,
-            vamos à caça?</h5>
-
-          <button ng-click="startQR()" class="button button-balanced APPcenter">Vamos!</button>
-        </div>
-
-        <div ng-if="startted" class="button-bar">
-          <div class="score" ng-class="view.buttonClass">
-            <span>Score {{view.buttonStart}}</span>
-          </div>
-          <div class="score energized">
-            <span ng-click="stopQR()">Stop</span>
-          </div>
-        </div>
-
-        <div class="QRList" ng-if="startted">
-
-          <br>
-          <button ng-click="getBarcode()" class="button button-calm APPcenter">Caça QRode <i
-            class="icon ion-qr-scanner"></i>
-          </button>
-          <br>
-          <ion-list>
-
-            <ion-item id="PI_{{item.id}}" ng-click="listClick($index)" ng-repeat="item in PIs"
-                      class="animated fadeInLeft">
-
-              <h4 align="center" style="width: 100%" class="">{{item.descricao}} Score: {{item.score}}</h4>
-
-            </ion-item>
-          </ion-list>
-
-        </div>
-
-        <!--<div ng-controller="PopupCtrl"></div>-->
-      </ion-content>
-
-    </ion-slide>
-
-  </ion-slide-box>
-
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
 </ion-view>
