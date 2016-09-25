@@ -1,0 +1,53 @@
+<ion-view view-title="Ponto de interesse {{PI}}">
+
+  <ion-content class="has-header has-tabs APPmain" scroll="true">
+
+    <div class="APPfull">
+      <div class="APPheader">
+        <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
+          <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
+          <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">O que sabe mesmo bem ao lanche é um sumo de laranja!
+            Sabias que as laranjas foram trazidas pelos portugueses da china?</p>
+        </ion-item>
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
+        <img class="APPimg" src="img/mapa/PIs/PI_14.jpg"
+             ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"
+             easing="ease-out">
+        <!--<img class="animated slideInUp" src="img/atividades/SNP_background_arborismo.jpg">-->
+      </div>
+
+      <div class="APPmain padding">
+
+        <ion-list class="list-borderless detalheAtividade">
+          <div class="list-item animated fadeInUpBig padding">
+            <!--<h3 align="center">ARBORISMO</h3>-->
+            <p style="text-align: left;">
+              Aqui podemos encontrar tangerineiras e laranjeiras, que na estação da Primavera espalham no ar um inconfundível aroma.<br>
+              As laranjeiras foram trazidas da China pelos portugueses, há muitos séculos.
+            </p>
+            <p style="text-align: left;"> As laranjas são de tal forma associadas aos portugueses, que laranja em grego se designa por Portugalia.<br>
+              As laranjas, tal como as tangerinas e os limões são fontes muito importantes de Vitamina C, que te protege de constipações.
+            </p>
+            <!--<br>-->
+            <!--<h3 align="left">Informação adicional</h3>-->
+            <br>
+           <div class="paraLembrar">
+              <h4>Para lembrar</h4>
+              <br>
+              <p style="text-align: left;">
+                1 – As laranjeiras foram trazidas pelos portugueses da China;<br>
+                <br>
+                2 – Laranja em grego é Portugalia; <br>
+                <br>
+                3 – Os citrinos são muito ricos em Vitamina C, que protege das constipações; <br>
+                <br>
+               </p></div>
+          </div>
+        </ion-list>
+      </div>
+
+    </div>
+
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
+</ion-view>

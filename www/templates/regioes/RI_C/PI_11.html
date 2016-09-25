@@ -1,0 +1,54 @@
+<ion-view view-title="Ponto de interesse {{PI}}">
+
+  <ion-content class="has-header has-tabs APPmain" scroll="true">
+
+    <div class="APPfull">
+      <div class="APPheader">
+        <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
+          <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
+          <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">Só como os diospiros quando estão maduros, senão fico com o bico a parecer cortiça!</p>
+        </ion-item>
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
+        <img class="APPimg" src="img/mapa/PIs/PI_11.jpg"
+             ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"
+             easing="ease-out">
+        <!--<img class="animated slideInUp" src="img/atividades/SNP_background_arborismo.jpg">-->
+      </div>
+
+      <div class="APPmain padding">
+
+        <ion-list class="list-borderless detalheAtividade">
+          <div class="list-item animated fadeInUpBig padding">
+            <!--<h3 align="center">ARBORISMO</h3>-->
+            <p style="text-align: left;">
+              Sabes quais são os frutos que são de cor laranja por fora e por dentro e não são laranjas? :-) <br>
+              São os dióspiros!
+            </p>
+            <p style="text-align: left;"> Os dióspiros são frutos muito ricos em fibra e água, bem como com um poder anti-oxidante muito forte! <br>
+              É este poder que nos ajuda a manter jovens e saudáveis.
+            </p>
+            <p style="text-align: left;">
+              O dióspiro é daqueles frutos que devem ser consumidos bem maduros, pois o sabor enquanto verde é muito diferente e normalmente as pessoas não gostam,
+              dando uma sensação de boca com cortiça.
+            </p>
+                      <!--<br>-->
+            <!--<h3 align="left">Informação adicional</h3>-->
+            <br>
+           <div class="paraLembrar">
+              <h4>Para lembrar</h4>
+              <br>
+              <p style="text-align: left;">
+                1 – Dióspiros são ricos em água, fibra e com forte poder anti-oxidante;<br>
+                <br>
+                2 – Deve ser consumido bem maduro (quando verde dá uma sensação de cortiça na boca); <br>
+                <br>
+               </p></div>
+          </div>
+        </ion-list>
+      </div>
+
+    </div>
+
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
+</ion-view>
