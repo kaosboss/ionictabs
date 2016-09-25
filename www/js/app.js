@@ -1965,7 +1965,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.regiao = {
       nome: "sem região",
-      banner: "Bem-vindo à “Região A”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!",
+      banner: "",
       marcador: "marcador_galo.png"
     };
     $scope.RI = $stateParams.RI;
@@ -1973,7 +1973,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.PI = $stateParams.PI.replace("PI_", "");
     // $scope.dataChanged = false;
     // $scope.regiao.banner = "Bem-vindo à “Região A”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!";
-    $scope.headeron = true;
+    $scope.headeron = false;
     // $scope.$on('QR_CODE_SCAN', function (e, args) {
     //   console.log("tab mapa QR_CODE_SCAN", args);
     //   $scope.showQR = args.showQR;
