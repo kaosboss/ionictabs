@@ -1,0 +1,52 @@
+<ion-view view-title="Ponto de interesse {{PI}}">
+
+  <ion-content class="has-header has-tabs APPmain" scroll="true">
+
+    <div class="APPfull">
+      <div class="APPheader">
+        <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
+          <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
+          <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">As abóboras não servem apenas para fazer máscaras! São muito boas para as sopas e para as compotas! As amoreiras são também</p>
+        </ion-item>
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
+        <img class="APPimg" src="img/mapa/PIs/PI_30.jpg"
+             ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"
+             easing="ease-out">
+        <!--<img class="animated slideInUp" src="img/atividades/SNP_background_arborismo.jpg">-->
+      </div>
+
+      <div class="APPmain padding">
+
+        <ion-list class="list-borderless detalheAtividade">
+          <div class="list-item animated fadeInUpBig padding">
+            <!--<h3 align="center">ARBORISMO</h3>-->
+            <p style="text-align: left;">
+             Aposto que já viste máscaras de Haloween feitas de abóbora! Mas a abóbora é um legume muito bom para fazer ricas sopas e compotas.
+            </p>
+            <p style="text-align: left;">
+             A amoreira dá-nos as lindas amoras que têm um sabor e uma textura únicas! Se nunca provaste tens de experimentar!
+            </p>
+
+            <!--<br>-->
+            <!--<h3 align="left">Informação adicional</h3>-->
+            <br>
+            <div class="paraLembrar">
+              <h4>Para lembrar</h4>
+              <br>
+              <p style="text-align: left;">
+                1 - Abóboras são usadas para fazer máscaras no Haloween;<br>
+                <br>
+                2 - Abóboras são muito boas para fazer sopas ou compotas;<br>
+                <br>
+                3 - As amoras vêm das amoreiras e têm um sabor e textura únicos.<br>
+                <br>
+              </p></div>
+          </div>
+        </ion-list>
+      </div>
+
+    </div>
+
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
+</ion-view>

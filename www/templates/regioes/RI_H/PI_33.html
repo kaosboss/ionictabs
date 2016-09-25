@@ -1,0 +1,53 @@
+<ion-view view-title="Ponto de interesse {{PI}}">
+
+  <ion-content class="has-header has-tabs APPmain" scroll="true">
+
+    <div class="APPfull">
+      <div class="APPheader">
+        <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
+          <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
+          <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">Sabes que o girassol está sempre a olhar para o sol? Não sei como não se aleija no pescoço...</p>
+        </ion-item>
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
+        <img class="APPimg" src="img/mapa/PIs/PI_33.jpg"
+             ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"
+             easing="ease-out">
+        <!--<img class="animated slideInUp" src="img/atividades/SNP_background_arborismo.jpg">-->
+      </div>
+
+      <div class="APPmain padding">
+
+        <ion-list class="list-borderless detalheAtividade">
+          <div class="list-item animated fadeInUpBig padding">
+            <!--<h3 align="center">ARBORISMO</h3>-->
+            <p style="text-align: left;">
+             O girassol tem este nome porque a sua grande flor gira em função do sol.<br>
+             Esta planta é originária da América do Norte.
+            </p>
+            <p style="text-align: left;">
+             As sementes do girassol são muito ricas em óleo pelo que se usam para extrair o óleo de girassol que, tal como o azeite, é um óleo muito saudável.
+            </p>
+
+            <!--<br>-->
+            <!--<h3 align="left">Informação adicional</h3>-->
+            <br>
+            <div class="paraLembrar">
+              <h4>Para lembrar</h4>
+              <br>
+              <p style="text-align: left;">
+                1 - A flor do girassol está sempre virada para o sol;<br>
+                <br>
+                2 - As sementes são usadas para extrair óleo de girassol;<br>
+                <br>
+                3 - O Girasol é originário da América do Norte.<br>
+                <br>
+              </p></div>
+          </div>
+        </ion-list>
+      </div>
+
+    </div>
+
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
+</ion-view>
