@@ -1,0 +1,57 @@
+<ion-view view-title="Ponto de interesse {{PI}}">
+
+  <ion-content class="has-header has-tabs APPmain" scroll="true">
+
+    <div class="APPfull">
+      <div class="APPheader">
+        <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
+          <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
+          <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">Chegaste à piscina do empreendimento! Eu gosto muito de ficar a ver as beldades a tomar banhos desde minha casa...</p>
+        </ion-item>
+        <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
+        <img class="APPimg" src="img/mapa/PIs/PI_9.jpg"
+             ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"
+             easing="ease-out">
+        <!--<img class="animated slideInUp" src="img/atividades/SNP_background_arborismo.jpg">-->
+      </div>
+
+      <div class="APPmain padding">
+
+        <ion-list class="list-borderless detalheAtividade">
+          <div class="list-item animated fadeInUpBig padding">
+            <!--<h3 align="center">ARBORISMO</h3>-->
+            <p style="text-align: left;">
+              Aqui moram os vizinhos mais bonitos (depois de mim, claro)... <br>
+              Os cisnes adoram que lhes tirem fotografias. Estão sempre com aquela pose!
+            </p>
+            <p style="text-align: left;"> Sabes que na Inglaterra todos os ciscnes pertencem à Rainha?! É assim há muito tempo e se alguém lhes fizer mal, vai ter que se haver com a própria Rainha!<br>
+              Os patos são da mesma família dos gansos e deve ser por isso que também passam o tempo na água!
+              É por estarem tanto tempo na água que até têm umas membranas entre os dedos das patas. Assim podem-se mexer melhor.
+            </p>
+            <p style="text-align: left;">
+              Eles têm penas impermeáveis, porque senão constipavam-se, uma vez que estão tanto tempo na água!<br>
+              Não vale a pena falares com os patos, porque uns são mudos e os outros estão sempre a olhar para o chão...
+            </p>
+                      <!--<br>-->
+            <!--<h3 align="left">Informação adicional</h3>-->
+            <br>
+           <div class="paraLembrar">
+              <h4>Para lembrar</h4>
+              <br>
+              <p style="text-align: left;">
+                1 – Todos os cisnes em Inglaterra pertencem à Rainha;<br>
+                <br>
+                2 – Os cines, gansos e patos têm membranas entre os dedos; <br>
+                <br>
+                3 – Os cines, gansos e patos têm penas impermeáveis. <br>
+                <br>
+               </p></div>
+          </div>
+        </ion-list>
+      </div>
+
+    </div>
+
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
+</ion-view>
