@@ -33,7 +33,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       'img/SNP_background_intro.jpg',
       'img/SNP_small.jpg',
       'img/mapaqtapedagogica2.png',
-      'img/snp_projeto_02_small.jpg'];
+      'img/snp_projeto_02_small.jpg',
+      'img/journal/atividades_quinta_pedagogica_small.jpg'];
 
     $ImageCacheFactory.Cache(preLoadImages).then(function () {
       console.warn("done preloading!");
@@ -1220,7 +1221,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           } else {
             // $scope.showAlert("No results found");
             console.log("No results found");
-            $scope.addInHouseEvent("Welcome Back!", "img/atividades/atividades_quinta_pedagogica_small.jpg", "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia!", "img/atividades/atividades_quinta_pedagogica_small.jpg", true);
+            $scope.addInHouseEvent("Welcome Back!", "img/journal/atividades_quinta_pedagogica_small.jpg", "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia!", "img/journal/atividades_quinta_pedagogica_small.jpg", true);
           }
         }, function (err) {
           $scope.showAlert(err);
@@ -1969,6 +1970,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       marcador: "marcador_galo.png",
       headeron: false
     };
+
+    // $scope.marcador = "marcador_galo.png";
+
     $scope.RI = $stateParams.RI;
     $scope.PI_FULL = $stateParams.PI;
     $scope.PI = $stateParams.PI.replace("PI_", "");
@@ -2113,7 +2117,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $ionicPlatform.ready(function () {
 
       console.log("Mapactrl ready");
-      $scope.aCircles = [];
+      // $scope.aCircles = [];
       var canvas = document.getElementById('imageView');
       if (canvas) {
         var regioes = $regioes.getAllRegioesList();
@@ -2139,7 +2143,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
 
       touchUp = function (e) {
-        console.log("rootpop: ", $rootScope.popupON);
+
+        aCircles = $regioes.getCacheRegioes();
+        console.log("rootpop:  acircle", $rootScope.popupON, aCircles);
         // e.preventDefault();
         // alert("clicked");
         //console.log(e);
@@ -2172,7 +2178,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               else file += "_orange";
               file += ".png";
               $scope.regiao.marcador = file;
-              console.log("file: ", file, aCircles[f]);
+              $scope.marcador = file;
+              console.log("file: ", file, aCircles[f], $scope.marcador);
               $scope.regiao.headeron = true;
               $scope.$apply();
               console.log("setting scope regiao: ", $scope.regiao);
@@ -2224,23 +2231,50 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
 
       createCircles = function () {
-        console.log("create circles enter");
+        console.log("create circles enter, scope.ri: ", $scope.RI);
         if (!$regioes.drawedMapa()) {
           drawImage();
           $regioes.drawedMapa(true);
         }
         $regioes.getRegioes().then(function (res) {
-          $scope.aCircles = JSON.parse(res || [{}]);
-          aCircles = $scope.aCircles;
+          var found = false;
+          // $scope.aCircles = JSON.parse(res || [{}]);
+          aCircles = JSON.parse(res || [{}]);
+          $regioes.setCacheRegioes(aCircles);
+          aCircles.some(function (reg) {
+            // console.log("Some: reg.nome, reg, scope.ri ", reg.nome, reg, $scope.RI);
+            if (reg.nome == $scope.RI) {
+              // console.log("Some FOUND: reg.nome, reg, scope.ri ", reg.nome, reg, $scope.RI);
+              var file = reg.nome;
+              if (reg.locked)
+                file += "_red";
+              else if (reg.completed)
+                file += "_green";
+              else file += "_orange";
+              file += ".png";
+              reg.marcador = file;
+              $scope.marcador = file;
+              $scope.regiao = reg;
+              // $scope.$apply();
+              var idMarcador = document.getElementById('marcador');
+              idMarcador.src = 'img/mapa/marcadores/' + file;
+              found = true;
+              console.log("Some FOUND: reg.nome, reg, scope.ri ", reg.nome, reg, $scope.RI, $scope.regiao, idMarcador);
+              // return true;
+            }
+          });
+          // if (found)
+          //   $scope.$apply();
+          // aCircles = $scope.aCircles;
           // $regioes.setTempRegioes($scope.aCircles);
-          console.log("createCircles: GOT regioes from cordova service to aCircles", $scope.aCircles);
+          console.log("createCircles: GOT regioes from cordova service to aCircles", aCircles);
           drawCircles();
         });
       };
 
       $scope.unlock_regiao = function () {
-        $scope.aCircles[3].locked = false;
-        $regioes.setRegioes($scope.aCircles);
+        aCircles[3].locked = false;
+        $regioes.setRegioes(aCircles);
         $timeout(createCircles, 1000);
       };
 
@@ -2330,8 +2364,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       };
 
       drawCircles = function () {
-        for (var f = 0; f <= $scope.aCircles.length - 1; f++) {
-          drawCircle($scope.aCircles[f]);
+        for (var f = 0; f <= aCircles.length - 1; f++) {
+          drawCircle(aCircles[f]);
         }
         // $ionicLoading.hide();
       };
