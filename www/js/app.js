@@ -2013,8 +2013,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         createCircles();
         $timeout(function () {
           var idMarcador = $window.document.getElementById('marcador');
-          idMarcador.classList.remove('animated bounce');
-          },3000);
+          if (idMarcador)
+          idMarcador.classList.remove('animated','bounce');
+          },2000);
       }
     });
 
@@ -2152,9 +2153,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         aCircles = $regioes.getCacheRegioes();
         console.log("rootpop:  acircle", $rootScope.popupON, aCircles);
-        // e.preventDefault();
-        // alert("clicked");
-        //console.log(e);
 
         for (var f = 0; f <= aCircles.length - 1; f++) {
 
@@ -2167,18 +2165,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           var dist = Math.sqrt(y * y + x * x);
           //console.log("circle: %s dist: ", $scope.aCircles[f].nome, dist);
           if (dist < circleRadius) {
-            //go to google
-            // $scope.nome = $scope.aCircles[f].nome;
-            // $scope.locked = $scope.aCircles[f].locked;
             console.log("in circle: %s", aCircles[f].nome);
             if (aCircles[f].locked) {
               $rootScope.showAlert("A " + aCircles[f].descricao + " está por descobrir");
-              context.beginPath();
-              context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
-              context.lineWidth = 1;
-              context.strokeStyle = '#003300';
-              context.stroke();
-              context.closePath();
+              // context.beginPath();
+              // context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
+              // context.lineWidth = 1;
+              // context.strokeStyle = '#003300';
+              // context.stroke();
+              // context.closePath();
             }
             else {
               $scope.regiao = aCircles[f];
@@ -2195,35 +2190,27 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               console.log("file: ", file, aCircles[f], $scope.marcador);
               $scope.regiao.headeron = true;
               $scope.$apply();
-
               console.log("setting scope regiao: ", $scope.regiao);
 
-              context.beginPath();
-              context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
-              context.lineWidth = 1;
-              context.strokeStyle = '#003300';
-              context.stroke();
-              context.closePath();
+              // context.beginPath();
+              // context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
+              // context.lineWidth = 1;
+              // context.strokeStyle = '#003300';
+              // context.stroke();
+              // context.closePath();
+
+              var idMarcador = $window.document.getElementById('marcador');
+              if (idMarcador)
+                idMarcador.classList.add('animated','bounce');
 
               $timeout(function () {
-                $scope.regiao.headeron = false;
-                elem = $window.document.getElementById("headerOn");
+                elem = $window.document.getElementById("marcador");
                 if (elem) {
-                  elem.classList.add("animated", "fadeOut");
+                  elem.classList.remove("animated", "bounce");
                 }
-              }, 6000);
+              }, 1000);
 
-              $timeout(function () {
-                $scope.regiao.headeron = false;
-                elem = $window.document.getElementById("headerOn");
-                if (elem) {
-                  elem.classList.remove("animated", "fadeOut");
-                }
-              }, 8000);
             }
-            // else $state.go("tab.mapa", {
-            //   RI: aCircles[f].nome
-            // });
           }
         }
       };
@@ -2295,7 +2282,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               // $scope.$apply();
               var idMarcador = $window.document.getElementById('marcador');
               idMarcador.src = 'img/mapa/marcadores/' + file;
-              idMarcador.classList.add('animated bounce');
+              idMarcador.classList.add('animated', 'bounce');
               found = true;
               console.log("Some FOUND: reg.nome, reg, scope.ri ", reg.nome, reg, $scope.RI, $scope.regiao, idMarcador);
               // return true;

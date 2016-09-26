@@ -561,14 +561,15 @@ td-card img {
 }
 
 .captionCanvas {
-  right: 5px;
-  top: 15px;
+  right: 0px;
+  top: 10px;
   position: absolute;
 }
 
 .captionPIs {
   right: 10px;
   bottom: 15px;
+  /*top: 0px;*/
   position: absolute;
 }
 
@@ -1245,12 +1246,13 @@ legend {
 
 .imageView {
   width: 320px;
-  height: 200px;
-  padding-top: 10px;
+  /*height: 199px;*/
+  padding-top: 15px;
+  position: relative;
   /*padding-bottom: 10px;*/
   /*position: fixed;*/
-  /*top: 0px;*/
-  /*left: 0px;*/
+  top: 0px;
+  left: 0px;
   /*overflow: hidden;*/
   /*z-index: 1000;*/
 }
