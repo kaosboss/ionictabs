@@ -946,7 +946,7 @@ angular.module('starter.services', [])
           "id": 0,
           "img": "img/atividades/atividades_arborismo_thumb.png",
           "title": "ARBORISMO",
-          "description": "O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.",
+          "description": "Percurso de arborismo para que possa reforçar a sua ligação à natureza.",
           "template": "arborismo"
         },
         {
@@ -959,7 +959,7 @@ angular.module('starter.services', [])
         {
           "id": 2,
           "title": "DESPORTO AQUÁTICO",
-          "description": "O Sesimbra  Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.",
+          "description": " 13ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.",
           "img": "img/atividades/atividades_aquaticas_thumb.png",
           "template": "aquaticas"
         },
@@ -967,7 +967,7 @@ angular.module('starter.services', [])
           "id": 3,
           "title": "CAMPOS DE FÉRIAS",
           "img": "img/atividades/atividades_campo_ferias_thumb.png",
-          "description": "O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.",
+          "description": "Campo Base tem uma infraestrutura ideal para a realização de campos de férias.",
           "template": "campo_ferias"
         },
         {
@@ -980,7 +980,7 @@ angular.module('starter.services', [])
         {
           "id": 5,
           "title": "PAINTBALL",
-          "description": "O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.",
+          "description": "Paintball num campo em contexto de mato, criado especialmente para esta modalidade.",
           "img": "img/atividades/atividades_painball_thumb.png",
           "template": "paintball"
         },
@@ -1009,7 +1009,7 @@ angular.module('starter.services', [])
           "id": 9,
           "img": "img/atividades/atividades_pomar_variedades_thumb.png",
           "title": "POMAR VARIEDADES",
-          "description": "O Sesimbra Natura Park disponibiliza aos seus visitantes um pomar com variedades locais e regionais, onde poderão realizar um conjunto diverso de atividades ligadas ao mundo rural.",
+          "description": "Pomar com variedades locais e regionais, onde poderão realizar um conjunto diverso de atividades ligadas ao mundo rural.",
           "template": "pomar_variedades"
         },
         {
@@ -1022,8 +1022,8 @@ angular.module('starter.services', [])
         {
           "id": 11,
           "img": "img/atividades/atividades_rugby_thumb.png",
-          "title": "FUTEBOL/RUGBY DE PRAIA",
-          "description": "Aceite esta sugestão e passe um dia diferente com toda a emoção e adrenalina.",
+          "title": "FUTEBOL/RUGBY",
+          "description": "Futebol e Rugby de praia, aceite esta sugestão e passe um dia diferente com toda a emoção e adrenalina.",
           "template": "rugby"
         },
         {
