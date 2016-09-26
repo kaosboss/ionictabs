@@ -1945,7 +1945,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       };
     });
   })
-  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $timeout) {
+  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $timeout, $window) {
     // $ionicSlideBoxDelegate, $ionicHistory, perguntas) {
 
     // $ionicLoading.show({
@@ -2009,8 +2009,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       console.log("State $ionicView.beforeEnter MApa Params: ", data);
       // if ($stateParams.PI)
       //   perguntas.init($stateParams.RI, $stateParams.PI);
-      if ($stateParams.RI == "ALL")
+      if ($stateParams.RI == "ALL") {
         createCircles();
+        $timeout(function () {
+          var idMarcador = $window.document.getElementById('marcador');
+          idMarcador.classList.remove('animated bounce');
+          },3000);
+      }
     });
 
     $scope.init = function () {
@@ -2032,6 +2037,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         if (PI.nome == tpi.nome) {
           if (!tpi.visited) {
             tpi.visited = true;
+            $scope.PI_descricao = tpi.descricao;
             // $scope.$apply();
             console.log("found PI goPI, marked visited: ", PI);
             return true;
@@ -2131,7 +2137,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           if (elem) {
             elem.classList.add("animated", "fadeOut");
           }
-        }, 10000);
+        }, 6000);
 
         $timeout(function () {
           $scope.regiao.headeron = false;
@@ -2139,7 +2145,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           if (elem) {
             elem.classList.remove("animated", "fadeOut");
           }
-        }, 12000);
+        }, 8000);
       }
 
       touchUp = function (e) {
@@ -2152,7 +2158,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         for (var f = 0; f <= aCircles.length - 1; f++) {
 
-          var circleY = aCircles[f].centerY - 15;
+          var circleY = aCircles[f].centerY - 30;
           var circleX = aCircles[f].centerX;
           // var circleRadius = $scope.aCircles[f].radius;
           var circleRadius = 20;
@@ -2165,8 +2171,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             // $scope.nome = $scope.aCircles[f].nome;
             // $scope.locked = $scope.aCircles[f].locked;
             console.log("in circle: %s", aCircles[f].nome);
-            if (aCircles[f].locked)
+            if (aCircles[f].locked) {
               $rootScope.showAlert("A " + aCircles[f].descricao + " está por descobrir");
+              context.beginPath();
+              context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
+              context.lineWidth = 1;
+              context.strokeStyle = '#003300';
+              context.stroke();
+              context.closePath();
+            }
             else {
               $scope.regiao = aCircles[f];
               $scope.RI = aCircles[f].nome;
@@ -2182,7 +2195,31 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               console.log("file: ", file, aCircles[f], $scope.marcador);
               $scope.regiao.headeron = true;
               $scope.$apply();
+
               console.log("setting scope regiao: ", $scope.regiao);
+
+              context.beginPath();
+              context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
+              context.lineWidth = 1;
+              context.strokeStyle = '#003300';
+              context.stroke();
+              context.closePath();
+
+              $timeout(function () {
+                $scope.regiao.headeron = false;
+                elem = $window.document.getElementById("headerOn");
+                if (elem) {
+                  elem.classList.add("animated", "fadeOut");
+                }
+              }, 6000);
+
+              $timeout(function () {
+                $scope.regiao.headeron = false;
+                elem = $window.document.getElementById("headerOn");
+                if (elem) {
+                  elem.classList.remove("animated", "fadeOut");
+                }
+              }, 8000);
             }
             // else $state.go("tab.mapa", {
             //   RI: aCircles[f].nome
@@ -2256,13 +2293,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               $scope.marcador = file;
               $scope.regiao = reg;
               // $scope.$apply();
-              var idMarcador = document.getElementById('marcador');
+              var idMarcador = $window.document.getElementById('marcador');
               idMarcador.src = 'img/mapa/marcadores/' + file;
+              idMarcador.classList.add('animated bounce');
               found = true;
               console.log("Some FOUND: reg.nome, reg, scope.ri ", reg.nome, reg, $scope.RI, $scope.regiao, idMarcador);
               // return true;
             }
           });
+          // if ($scope.regiao.headeron) {
+          //   console.log("Setting timeout for banner");
+          // }
           // if (found)
           //   $scope.$apply();
           // aCircles = $scope.aCircles;
@@ -2321,8 +2362,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         // context.closePath();
         // context.clip();
+        var img = $window.document.getElementById(oCircle.nome);
+        console.log("image: ", img);
+        if (!img) {
+          img = new Image();
+          img.id = oCircle.nome;
+          console.log("created img id: ", oCircle.nome);
+        } else
+          console.log("found img id: ", oCircle.nome);
 
-        var img = new Image();
         // img.onclick = function (e) {
         //   console.log("cicked mapa: ", e);
         // };
