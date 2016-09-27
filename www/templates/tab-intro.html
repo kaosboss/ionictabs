@@ -3,13 +3,19 @@
     <ion-slide-box on-slide-changed="slideChanged(index)">
       <ion-slide>
         <ion-content class="has-tabs padding">
-          <h3 align="center">Bem vindo ao SNP</h3>
+          <h3 align="center">DESCOBRE</h3>
+          <br>
+          <p class="APPcenter">
+            Nós estamos no Sesimbra Natura Park!
+          </p>
+          <br>
           <div id="logo">
             <img src="img/SNP.jpg" style="width:200px;height:200px;margin:auto;display:block">
             <!--<img src="img/SNP.jpg">-->
           </div>
+          <br>
           <p class="APPcenter">
-            Obrigado por instalares a aplicação da Quinta Pedagógica
+            Descobre todas as atividades que podes fazer em contacto com a Natureza em segurança, onde tens animais amigáveis, água, árvores e lugares muito bonitos!
           </p>
           <p>
           </p>
@@ -18,8 +24,20 @@
       <ion-slide>
         <ion-content class="has-tabs padding">
 
-          <h3 align="center">Descrição slide 2</h3>
-          <div class="APPlist">
+          <h3 align="center">APRENDE</h3>
+          <br>
+          <p class="APPcenter">
+            Em cada região podes encontrar vários pontos de interesse. Em todos eles eu vou dar-te informações muito interessantes.
+          </p>
+          <br>
+          <div id="logo">
+            <img src="img/SNP.jpg" style="width:200px;height:200px;margin:auto;display:block">
+          </div>
+          <br>
+          <p class="APPcenter">
+            Aprende e fica a conhecer mais sobre os animais e plantas que habitam na Quinta Pedagógica!
+          </p>
+      <!--<div class="APPlist">
             <h5 align="center">Lista:</h5>
             <ol>
               <li>Primeiro item</li>
@@ -27,7 +45,7 @@
               <li>Terceiro item</li>
               <li>Quarto item</li>
             </ol>
-          </div>
+          </div> -->
 
         </ion-content>
       </ion-slide>
@@ -40,25 +58,49 @@
           <!--<a class="button button-calm" ng-hide=$root.APP.logged href="#/tab/login">Concluido - Login</a>-->
           <!--<a class="button button-calm" ng-show=$root.APP.logged href="#/tab/atividades">Concluido - Atividades</a>-->
 
-          <h3 align="center">Descrição slide 3</h3>
+          <h3 align="center">DIVERTE-TE</h3>
+          <br>
+          <p class="APPcenter">
+            Para tornar a tua experiência ainda mais interessante e mais rica, preparei um conjunto de desafios para ti.
+          </p>
+          <br>
+          <div id="logo">
+            <img src="img/SNP.jpg" style="width:200px;height:200px;margin:auto;display:block">
+          </div>
+          <br>
+          <p class="APPcenter">
+            Com estes desafios podes aprender muitas coisas a brincar! Descobre as várias regiões de uma forma divertida.
+          </p>
+
+        </ion-content>
+      </ion-slide>
+
+      <ion-slide>
+        <ion-content class="has-tabs padding">
+
+          <h3 align="center">RECORDA</h3>
+          <br>
+          <p class="APPcenter">
+            Eu gosto muito de fotografias... Especialmente naquelas onde eu apareço com a minha linda crista!
+          </p>
+          <br>
+          <div id="logo">
+            <img src="img/SNP.jpg" style="width:200px;height:200px;margin:auto;display:block">
+          </div>
+          <br>
+          <p class="APPcenter">
+            Tira todas as fotos que quiseres para mais tarde recordares os momentos mais importantes da tua visita!
+          </p>
 
           <!--<p align="justify">-->
           <!--Este botão tem duas opções, se o utilizador estiver ligado, o mesmo é redirecionado para a tab de Atividades.-->
           <!--Se não estiver logged, redireciona para o login.-->
           <!--</p>-->
-
-          <div class="APPlist">
-            <h5 align="center">Lista:</h5>
-            <ol>
-              <li>Primeiro item</li>
-              <li>Segundo item</li>
-              <li>Terceiro item</li>
-              <li>Quarto item</li>
-            </ol>
-          </div>
-
           <button ng-click="goLogin()" ng-hide=$root.APP.logged class="button button-balanced APPcenter">Concluido - Login</button>
           <button ng-click="goHome()" ng-show=$root.APP.logged class="button button-balanced APPcenter">Concluido - HomePage</button>
+
+
+
         </ion-content>
       </ion-slide>
     </ion-slide-box>
