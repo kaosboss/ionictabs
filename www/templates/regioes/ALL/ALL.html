@@ -4,8 +4,9 @@
     <!--<button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>-->
     <!--</ion-item>-->
 
-    <div class="imageView APPcenter">
-      <canvas class="" id="imageView"></canvas>
+    <div class="APPcenter">
+      <!--<img class="imageView" src="img/mapaqtapedagogica2.png">-->
+      <canvas class="" id="imageView" style="width: 320px; height: auto; position: relative;"></canvas>
       <!--<img class="caption" ng-src="{{regiao.nome}}.jpg">-->
       <img class="captionCanvas animated bounce" id="marcador" ng-src="img/mapa/marcadores/{{marcador ? marcador : 'marcador_galo.png'}}"
            style="width: 60px; height: 65px">
@@ -26,11 +27,7 @@
     <ion-item ng-if="regiao.headeron" id="headerOn" class="item-thumbnail-left item-borderless list-item">
       <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
       <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">{{regiao.banner}}</p>
-      <span ng-click="closeHeder()" class="captionPIs" style="font-size: small">
-        [Fechar
-        <!--<a href="#" class="subdued">{{item.likes ? item.likes : '?' }} likes</a>-->
-        <a href="" style="opacity:1;" class="subdued button-small button-light ion-close"></a>
-        ]
+      <span ng-click="closeHeder()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;" class="subdued button-small button-light ion-close"></a> ]
       </span>
     </ion-item>
     <!--<ion-item ng-if="!headeron">-->
@@ -38,7 +35,7 @@
     <!--</ion-item>-->
 
     <!--<ion-scroll style="height: 150px">-->
-    <ion-scroll ng-if="regiao.radius" style="height: 250px">
+    <div><ion-scroll ng-if="regiao.radius" style="height: 300px">
       <ion-list class="list-borderless">
 
         <ion-item ng-click="goPI(PI)" ng-repeat="PI in regiao.PIs"
@@ -63,7 +60,7 @@
 
         </ion-item>
       </ion-list>
-    </ion-scroll>
+    </ion-scroll></div>
     <div ng-if="!regiao.radius">
       <a class="button button-block button-calm" href="#/tab/regiao/RI_A/PI_1">Ponto de
         interesse 1</a>

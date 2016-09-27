@@ -667,7 +667,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             onTap: function (e) {
               console.log("Confirmed navigation to region");
               $state.go("tab.mapa", {
-                RI: $regioes.convertRegiaoLongToShort($scope.currentRI)
+                RI: "ALL",
+                PI: $regioes.convertRegiaoLongToShort($scope.currentRI)
               });
               return 1;
             }
@@ -1945,7 +1946,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       };
     });
   })
-  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $timeout) {
+  .controller('MapaCtrl', function ($scope, $rootScope, $state, $ionicLoading, $ionicPlatform, $regioes, $stateParams, $timeout, $window) {
     // $ionicSlideBoxDelegate, $ionicHistory, perguntas) {
 
     // $ionicLoading.show({
@@ -1971,11 +1972,40 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       headeron: false
     };
 
-    // $scope.marcador = "marcador_galo.png";
+    loadRegiao = function (RI) {
+
+      $regioes.getRegioes().then(function (res) {
+        aCircles = JSON.parse(res || [{}]);
+
+        aCircles.some(function (reg) {
+
+          if (reg.nome == RI) {
+            $scope.regiao = reg;
+            $scope.RI = reg.nome;
+            var file = reg.nome;
+            if (reg.locked)
+              file += "_red";
+            else if (reg.completed)
+              file += "_green";
+            else file += "_orange";
+            file += ".png";
+            $scope.regiao.marcador = file;
+            $scope.marcador = file;
+            $scope.PI_FULL = "";
+            $scope.PI = "";
+          }
+        });
+      });
+    };
 
     $scope.RI = $stateParams.RI;
     $scope.PI_FULL = $stateParams.PI;
     $scope.PI = $stateParams.PI.replace("PI_", "");
+
+    if (($scope.RI == "ALL") && ($stateParams.PI != "")) {
+      loadRegiao($scope.PI);
+    }
+
     // $scope.dataChanged = false;
     // $scope.regiao.banner = "Bem-vindo à “Região A”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!";
     // $scope.headeron = false;
@@ -2009,8 +2039,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       console.log("State $ionicView.beforeEnter MApa Params: ", data);
       // if ($stateParams.PI)
       //   perguntas.init($stateParams.RI, $stateParams.PI);
-      if ($stateParams.RI == "ALL")
+      if ($stateParams.RI == "ALL") {
         createCircles();
+        $timeout(function () {
+          var idMarcador = $window.document.getElementById('marcador');
+          if (idMarcador)
+          idMarcador.classList.remove('animated','bounce');
+          },2000);
+      }
     });
 
     $scope.init = function () {
@@ -2032,6 +2068,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         if (PI.nome == tpi.nome) {
           if (!tpi.visited) {
             tpi.visited = true;
+            $scope.PI_descricao = tpi.descricao;
             // $scope.$apply();
             console.log("found PI goPI, marked visited: ", PI);
             return true;
@@ -2131,7 +2168,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           if (elem) {
             elem.classList.add("animated", "fadeOut");
           }
-        }, 10000);
+        }, 6000);
 
         $timeout(function () {
           $scope.regiao.headeron = false;
@@ -2139,34 +2176,35 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           if (elem) {
             elem.classList.remove("animated", "fadeOut");
           }
-        }, 12000);
+        }, 8000);
       }
 
       touchUp = function (e) {
 
         aCircles = $regioes.getCacheRegioes();
         console.log("rootpop:  acircle", $rootScope.popupON, aCircles);
-        // e.preventDefault();
-        // alert("clicked");
-        //console.log(e);
 
         for (var f = 0; f <= aCircles.length - 1; f++) {
 
-          var circleY = aCircles[f].centerY - 15;
+          var circleY = aCircles[f].centerY - 30;
           var circleX = aCircles[f].centerX;
           // var circleRadius = $scope.aCircles[f].radius;
-          var circleRadius = 20;
+          var circleRadius = 30;
           var y = e.offsetY - circleY;
           var x = e.offsetX - circleX;
           var dist = Math.sqrt(y * y + x * x);
           //console.log("circle: %s dist: ", $scope.aCircles[f].nome, dist);
           if (dist < circleRadius) {
-            //go to google
-            // $scope.nome = $scope.aCircles[f].nome;
-            // $scope.locked = $scope.aCircles[f].locked;
             console.log("in circle: %s", aCircles[f].nome);
-            if (aCircles[f].locked)
+            if (aCircles[f].locked) {
               $rootScope.showAlert("A " + aCircles[f].descricao + " está por descobrir");
+              // context.beginPath();
+              // context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
+              // context.lineWidth = 1;
+              // context.strokeStyle = '#003300';
+              // context.stroke();
+              // context.closePath();
+            }
             else {
               $scope.regiao = aCircles[f];
               $scope.RI = aCircles[f].nome;
@@ -2183,10 +2221,26 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               $scope.regiao.headeron = true;
               $scope.$apply();
               console.log("setting scope regiao: ", $scope.regiao);
+
+              // context.beginPath();
+              // context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
+              // context.lineWidth = 1;
+              // context.strokeStyle = '#003300';
+              // context.stroke();
+              // context.closePath();
+
+              var idMarcador = $window.document.getElementById('marcador');
+              if (idMarcador)
+                idMarcador.classList.add('animated','bounce');
+
+              $timeout(function () {
+                elem = $window.document.getElementById("marcador");
+                if (elem) {
+                  elem.classList.remove("animated", "bounce");
+                }
+              }, 1000);
+
             }
-            // else $state.go("tab.mapa", {
-            //   RI: aCircles[f].nome
-            // });
           }
         }
       };
@@ -2256,13 +2310,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               $scope.marcador = file;
               $scope.regiao = reg;
               // $scope.$apply();
-              var idMarcador = document.getElementById('marcador');
+              var idMarcador = $window.document.getElementById('marcador');
               idMarcador.src = 'img/mapa/marcadores/' + file;
+              idMarcador.classList.add('animated', 'bounce');
               found = true;
               console.log("Some FOUND: reg.nome, reg, scope.ri ", reg.nome, reg, $scope.RI, $scope.regiao, idMarcador);
               // return true;
             }
           });
+          // if ($scope.regiao.headeron) {
+          //   console.log("Setting timeout for banner");
+          // }
           // if (found)
           //   $scope.$apply();
           // aCircles = $scope.aCircles;
@@ -2321,8 +2379,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         // context.closePath();
         // context.clip();
+        var img = $window.document.getElementById(oCircle.nome);
+        console.log("image: ", img);
+        if (!img) {
+          img = new Image();
+          img.id = oCircle.nome;
+          console.log("created img id: ", oCircle.nome);
+        } else
+          console.log("found img id: ", oCircle.nome);
 
-        var img = new Image();
         // img.onclick = function (e) {
         //   console.log("cicked mapa: ", e);
         // };
@@ -3386,6 +3451,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           'tab-mapa': {
             templateUrl: function ($stateParams) {
               console.log("state params: ", $stateParams);
+
+              if ($stateParams.RI=="ALL") {
+                return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.RI + '.html';
+              }
               if (!$stateParams.PI) {
                 console.log(' returned: templates/regioes/' + $stateParams.RI + '.html');
                 return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.RI + '.html';

@@ -944,86 +944,86 @@ angular.module('starter.services', [])
     var items = [
         {
           "id": 0,
-          "img": "img/atividades/atividades_arborismo_thumb.png",
-          "title": "ARBORISMO",
-          "description": "O Sesimbra Natura Park desenvolveu um percurso de arborismo para que possa reforçar a sua ligação à natureza.",
-          "template": "arborismo"
+          "img": "img/atividades/eventos_despedidas_thumb.png",
+          "title": "EVENTOS",
+          "description": "O SNP oferece um conjunto diversificado de locais ideais para que crie o seu evento.",
+          "template": "eventos"
         },
         {
           "id": 1,
+          "img": "img/atividades/atividades_arborismo_thumb.png",
+          "title": "ARBORISMO",
+          "description": "Percurso de arborismo para que possa reforçar a sua ligação à natureza.",
+          "template": "arborismo"
+        },
+        {
+          "id": 2,
           "img": "img/atividades/atividades_bicicletas_thumb.png",
           "title": "BICICLETAS NO SNP",
           "description": "Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.",
           "template": "bicicletas"
         },
         {
-          "id": 2,
+          "id": 3,
           "title": "DESPORTO AQUÁTICO",
-          "description": "O Sesimbra  Natura Park tem 13 ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.",
+          "description": "Existem 13ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.",
           "img": "img/atividades/atividades_aquaticas_thumb.png",
           "template": "aquaticas"
         },
         {
-          "id": 3,
+          "id": 4,
           "title": "CAMPOS DE FÉRIAS",
           "img": "img/atividades/atividades_campo_ferias_thumb.png",
-          "description": "O SNP disponibiliza no Campo Base uma infraestrutura ideal para a realização de campos de férias.",
+          "description": "Campo Base tem uma infraestrutura ideal para a realização de campos de férias.",
           "template": "campo_ferias"
         },
         {
-          "id": 4,
+          "id": 5,
           "title": "FAUNA E FLORA",
           "description": "O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.",
           "img": "img/atividades/atividades_fauna_flora_thumb.png",
           "template": "fauna_flora"
         },
         {
-          "id": 5,
+          "id": 6,
           "title": "PAINTBALL",
-          "description": "O Sesimbra Natura Park permite a prática de paintball num campo em contexto de mato, criado especialmente para esta modalidade.",
+          "description": "Paintball num campo em contexto de mato, criado especialmente para esta modalidade.",
           "img": "img/atividades/atividades_painball_thumb.png",
           "template": "paintball"
         },
         {
-          "id": 6,
+          "id": 7,
           "title": "PERCURSOS PEDESTRES",
           "description": "Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.",
           "img": "img/atividades/atividades_percursos_pedestres_thumb.png",
           "template": "percursos_pedestres"
         },
         {
-          "id": 7,
+          "id": 8,
           "img": "img/atividades/atividades_tiro_thumb.png",
           "title": "ATIVIDADES DE TIRO",
           "description": "O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.",
           "template": "tiro"
         },
         {
-          "id": 8,
+          "id": 9,
           "img": "img/atividades/atividades_centro_canino_thumb.png",
           "title": "CENTRO CANINO",
           "description": "O Sesimbra Natura Park tem integrado o Centro Pedagógico Canino Beira Tejo.",
           "template": "centro_canino"
         },
         {
-          "id": 9,
+          "id": 10,
           "img": "img/atividades/atividades_pomar_variedades_thumb.png",
           "title": "POMAR VARIEDADES",
-          "description": "O Sesimbra Natura Park disponibiliza aos seus visitantes um pomar com variedades locais e regionais, onde poderão realizar um conjunto diverso de atividades ligadas ao mundo rural.",
+          "description": "Pomar com variedades locais e regionais, onde poderão realizar um conjunto diverso de atividades ligadas ao mundo rural.",
           "template": "pomar_variedades"
-        },
-        {
-          "id": 10,
-          "img": "img/atividades/atividades_quinta_pedagogica_thumb.png",
-          "title": "QUINTA PEDAGÓGICA",
-          "description": "O Sesimbra Natura Park tem integrada uma Quinta Pedagógica com uma área de 2.2 hectares.",
-          "template": "quinta_pedagogica"
         },
         {
           "id": 11,
           "img": "img/atividades/atividades_rugby_thumb.png",
-          "title": "FUTEBOL/RUGBY DE PRAIA",
-          "description": "Aceite esta sugestão e passe um dia diferente com toda a emoção e adrenalina.",
+          "title": "FUTEBOL/RUGBY",
+          "description": "Futebol e Rugby de praia, aceite esta sugestão e passe um dia diferente com toda a emoção e adrenalina.",
           "template": "rugby"
         },
         {
@@ -1039,48 +1039,6 @@ angular.module('starter.services', [])
           "title": "VOLEIBOL DE PRAIA",
           "description": "Aceite esta sugestão e passe um dia diferente com toda a emoção e adrenalina",
           "template": "voley_praia"
-        },
-        {
-          "id": 14,
-          "img": "img/atividades/eventos_aniversario_thumb.png",
-          "title": "FESTAS DE ANIVERSÁRIO",
-          "description": "As festas de aniversário realizadas no Sesimbra Natura Park são eventos inesquecíveis.",
-          "template": "aniversarios"
-        },
-        {
-          "id": 15,
-          "img": "img/atividades/eventos_despedidas_thumb.png",
-          "title": "DESPEDIDAS DE SOLTEIRO",
-          "description": "No Sesimbra Natura Park definimos tendências com a organização de uma despedida de solteiro no campo.",
-          "template": "despedidas"
-        },
-        {
-          "id": 16,
-          "img": "img/atividades/eventos_casamentos_thumb.png",
-          "title": "CASAMENTOS",
-          "description": "No, Sesimbra Natura Park definimos tendências com a Organização de um Casamento no Campo.",
-          "template": "casamentos"
-        },
-        {
-          "id": 17,
-          "img": "img/atividades/eventos_piqueniques_thumb.png",
-          "title": "PIQUENIQUES NO CAMPO",
-          "description": "No SNP encontra o espaço ideal para fazer os piqueniques de que tanto gosta, em contacto com a natureza.",
-          "template": "piqueniques"
-        },
-        {
-          "id": 18,
-          "img": "img/atividades/eventos_empresas_thumb.png",
-          "title": "EMPRESAS",
-          "description": "Junte a sua equipa ou clientes num evento único e exclusivo em perfeita simbiose com a natureza.",
-          "template": "empresas"
-        },
-        {
-          "id": 19,
-          "img": "img/atividades/eventos_filmagens_thumb.png",
-          "title": "FILMAGENS E ANÚNCIOS",
-          "description": "SNP oferece um conjunto diversificado de locais ideais para a realização de filmagens.",
-          "template": "filmagens"
         }
       ];
     var fireBaseOnline = false;
