@@ -667,7 +667,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             onTap: function (e) {
               console.log("Confirmed navigation to region");
               $state.go("tab.mapa", {
-                RI: $regioes.convertRegiaoLongToShort($scope.currentRI)
+                RI: "ALL",
+                PI: $regioes.convertRegiaoLongToShort($scope.currentRI)
               });
               return 1;
             }
@@ -1971,11 +1972,40 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       headeron: false
     };
 
-    // $scope.marcador = "marcador_galo.png";
+    loadRegiao = function (RI) {
+
+      $regioes.getRegioes().then(function (res) {
+        aCircles = JSON.parse(res || [{}]);
+
+        aCircles.some(function (reg) {
+
+          if (reg.nome == RI) {
+            $scope.regiao = reg;
+            $scope.RI = reg.nome;
+            var file = reg.nome;
+            if (reg.locked)
+              file += "_red";
+            else if (reg.completed)
+              file += "_green";
+            else file += "_orange";
+            file += ".png";
+            $scope.regiao.marcador = file;
+            $scope.marcador = file;
+            $scope.PI_FULL = "";
+            $scope.PI = "";
+          }
+        });
+      });
+    };
 
     $scope.RI = $stateParams.RI;
     $scope.PI_FULL = $stateParams.PI;
     $scope.PI = $stateParams.PI.replace("PI_", "");
+
+    if (($scope.RI == "ALL") && ($stateParams.PI != "")) {
+      loadRegiao($scope.PI);
+    }
+
     // $scope.dataChanged = false;
     // $scope.regiao.banner = "Bem-vindo à “Região A”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!";
     // $scope.headeron = false;
@@ -2159,7 +2189,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           var circleY = aCircles[f].centerY - 30;
           var circleX = aCircles[f].centerX;
           // var circleRadius = $scope.aCircles[f].radius;
-          var circleRadius = 20;
+          var circleRadius = 30;
           var y = e.offsetY - circleY;
           var x = e.offsetX - circleX;
           var dist = Math.sqrt(y * y + x * x);
@@ -3421,6 +3451,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           'tab-mapa': {
             templateUrl: function ($stateParams) {
               console.log("state params: ", $stateParams);
+
+              if ($stateParams.RI=="ALL") {
+                return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.RI + '.html';
+              }
               if (!$stateParams.PI) {
                 console.log(' returned: templates/regioes/' + $stateParams.RI + '.html');
                 return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.RI + '.html';
