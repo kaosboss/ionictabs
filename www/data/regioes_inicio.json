@@ -203,7 +203,7 @@
     "centerX": 135,
     "centerY": 70,
     "radius": 32,
-    "locked": true,
+    "locked": false,
     "banner": "Estás agora a entrar na região D! Esta é a região com mais água da Quinta! Para além da água vais também ficar a saber mais de uma das árvores mais inteligentes de todas!",
     "PIs": [
       {
@@ -325,7 +325,7 @@
     "centerX": 75,
     "centerY": 110,
     "radius": 31,
-    "locked": true,
+    "locked": false,
     "banner": "Nesta região F vais ficar a conhecer a Romã e vais também ficar a saber quais as características do Montado.",
     "PIs": [
       {
@@ -376,7 +376,7 @@
     "centerX": 178,
     "centerY": 125,
     "radius": 20,
-    "locked": true,
+    "locked": false,
     "banner": "Estamos quase a chegar ao fim, mas nesta região G ainda vais poder aprender muitas coisas interessantes! Prepara-te para conhecer mais sobre frutas deliciosas e sobre o famoso Pinheiro!",
     "PIs": [
       {
@@ -432,7 +432,7 @@
     "centerX": 225,
     "centerY": 125,
     "radius": 20,
-    "locked": true,
+    "locked": false,
     "banner": "Chegámos à última região, a H! Nesta região vou mostrar-te árvores que vieram da China, vou-te falar de árvores que vivem mais de 2.000 anos e de plantas que se movem com o sol...",
     "PIs": [
       {

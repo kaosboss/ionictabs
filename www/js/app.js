@@ -1965,13 +1965,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // $scope.start = 0;
     // $scope.showQR = false;
 
-    $scope.regiao = {
-      nome: "sem região",
-      banner: "",
-      marcador: "marcador_galo.png",
-      headeron: false
-    };
-
     loadRegiao = function (RI) {
 
       $regioes.getRegioes().then(function (res) {
@@ -2004,6 +1997,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     if (($scope.RI == "ALL") && ($stateParams.PI != "")) {
       loadRegiao($scope.PI);
+    } else {
+      $scope.regiao = {
+        nome: "sem região",
+        banner: "",
+        marcador: "marcador_galo.png",
+        headeron: false
+      };
     }
 
     // $scope.dataChanged = false;
@@ -2161,23 +2161,23 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var context = canvas.getContext('2d');
       }
 
-      if ($scope.regiao.headeron) {
-        $timeout(function () {
-          $scope.regiao.headeron = false;
-          elem = document.getElementById("headerOn");
-          if (elem) {
-            elem.classList.add("animated", "fadeOut");
-          }
-        }, 6000);
-
-        $timeout(function () {
-          $scope.regiao.headeron = false;
-          elem = document.getElementById("headerOn");
-          if (elem) {
-            elem.classList.remove("animated", "fadeOut");
-          }
-        }, 8000);
-      }
+      // if ($scope.regiao.headeron) {
+      //   $timeout(function () {
+      //     $scope.regiao.headeron = false;
+      //     elem = document.getElementById("headerOn");
+      //     if (elem) {
+      //       elem.classList.add("animated", "fadeOut");
+      //     }
+      //   }, 6000);
+      //
+      //   $timeout(function () {
+      //     $scope.regiao.headeron = false;
+      //     elem = document.getElementById("headerOn");
+      //     if (elem) {
+      //       elem.classList.remove("animated", "fadeOut");
+      //     }
+      //   }, 8000);
+      // }
 
       touchUp = function (e) {
 
