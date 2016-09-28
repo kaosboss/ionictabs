@@ -1960,6 +1960,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     var aCircles = [];
     // var drawedMapa = false;
     var elem = null;
+    $scope.data = {
+      PI_descricao: "Hello"
+    }
 
     // $scope.count = 0;
     // $scope.start = 0;
@@ -1995,6 +1998,29 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.PI_FULL = $stateParams.PI;
     $scope.PI = $stateParams.PI.replace("PI_", "");
 
+    if (($scope.RI != "ALL") && ($stateParams.PI != "")) {
+        $regioes.getRegioes().then(function (res) {
+          regioes = JSON.parse(res || [{}]);
+
+          regioes.some(function (reg) {
+            if (reg.nome == $scope.RI) {
+              reg.PIs.some(function (tpi) {
+                if (tpi.nome == $stateParams.PI) {
+                  $scope.data = {
+                    PI_descricao: tpi.descricao
+                  };
+                  $scope.data.PI_descricao = tpi.descricao;
+                  $scope.PI_descricao = tpi.descricao;
+                  console.warn("Setting pi desc", tpi.descricao);
+                  return true;
+                }
+              });
+              return true;
+            }
+
+          });
+        });
+    }
     if (($scope.RI == "ALL") && ($stateParams.PI != "")) {
       loadRegiao($scope.PI);
     } else {
@@ -2044,8 +2070,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $timeout(function () {
           var idMarcador = $window.document.getElementById('marcador');
           if (idMarcador)
-          idMarcador.classList.remove('animated','bounce');
-          },2000);
+            idMarcador.classList.remove('animated', 'bounce');
+        }, 2000);
       }
     });
 
@@ -2065,12 +2091,19 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.goPI = function (PI) {
       console.log("GOPI: ", PI);
       $scope.regiao.PIs.some(function (tpi) {
+        console.warn("tpi:", tpi);
         if (PI.nome == tpi.nome) {
           if (!tpi.visited) {
             tpi.visited = true;
-            $scope.PI_descricao = tpi.descricao;
+            // console.warn("pi descicao", tpi.descricao);
+            // $scope.data.PI_descricao = tpi.descricao;
             // $scope.$apply();
             console.log("found PI goPI, marked visited: ", PI);
+            return true;
+          } else {
+            // $scope.data.PI_descricao = tpi.descricao;
+            console.log("found PI goPI: ", tpi);
+            // $scope.$apply();
             return true;
           }
         }
@@ -2118,6 +2151,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                     count++;
                   total++;
                   if (tpi.nome == PI) {
+                    $scope.data = {
+                      PI_descricao: tpi.descricao
+                    }
+                    $scope.PI_descricao = tpi.descricao;
+                    // $scope.$apply();
                     if (!tpi.visited) {
                       tpi.visited = true;
                       count++;
@@ -2125,6 +2163,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                       // $rootScope.MapadataChanged = true;
                       console.log("Mapa updateRegiaoVisitada Found updated PI: ", PI, count, total);
                       // $regioes.setTempRegioes(aCircles);
+                    } else {
+                      console.log("Mapa updateRegiaoVisitada Found updated PI: ", $scope.data.PI_descricao);
                     }
                   }
                 }
@@ -2231,7 +2271,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
               var idMarcador = $window.document.getElementById('marcador');
               if (idMarcador)
-                idMarcador.classList.add('animated','bounce');
+                idMarcador.classList.add('animated', 'bounce');
 
               $timeout(function () {
                 elem = $window.document.getElementById("marcador");
@@ -3452,7 +3492,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             templateUrl: function ($stateParams) {
               console.log("state params: ", $stateParams);
 
-              if ($stateParams.RI=="ALL") {
+              if ($stateParams.RI == "ALL") {
                 return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.RI + '.html';
               }
               if (!$stateParams.PI) {
