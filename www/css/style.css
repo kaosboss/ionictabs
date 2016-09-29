@@ -1281,16 +1281,16 @@ legend {
 
 /* CSS para listas dos níveis, badges e recompensas*/
 
-* {margin: 0; padding: 0;}
+/** {margin: 0; padding: 0;}*/
 
-div {
-  margin: 20px;
-}
+/*div {*/
+  /*margin: 20px;*/
+/*}*/
 
-ul {
-  list-style-type: none;
-  width: 400px;
-}
+/*ul {*/
+  /*list-style-type: none;*/
+  /*width: 400px;*/
+/*}*/
 
 h3.lista_niveis {
   font: bold 20px/1.5 "Brandon", Verdana, sans-serif;
@@ -1309,6 +1309,7 @@ li p {
 li {
   padding: 10px;
   overflow: auto;
+}
 
 li:hover {
   background: #eee;
