@@ -4,13 +4,15 @@
     <!--<button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>-->
     <!--</ion-item>-->
 
-    <div class="APPcenter" style="box-shadow: 0px 10px 5px #888888;">
+    <div class="APPcenter">
       <!--<img class="imageView" src="img/mapaqtapedagogica2.png">-->
       <canvas class="" id="imageView" style="width: 320px; height: auto; position: relative;"></canvas>
       <!--<img class="caption" ng-src="{{regiao.nome}}.jpg">-->
       <img class="captionCanvas animated bounce" id="marcador" ng-src="img/mapa/marcadores/{{marcador ? marcador : 'marcador_galo.png'}}"
            style="width: 60px; height: 65px">
     </div>
+    <!--<HR style="box-shadow: 0 8px 6px -6px #999;">-->
+    <div style="width: 100%; height: 20px; box-shadow: 0 10px 20px -6px #999;"></div>
     <!--<div style="width: 320px; height: 220px"></div>-->
     <!--<ion-item class="item">-->
     <!--<p>Nome Região de interesse: {{nome}}</p>-->
@@ -24,7 +26,7 @@
     <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_C/RI_C_Q">Questionário RI_C</a>-->
     <!--<a class="button button-block button-calm" href="#/tab/regiao/RI_D/RI_D_Q">Questionário RI_D</a>-->
     <!--&lt;!&ndash;<a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_19">Regiao E-PI 19</a>&ndash;&gt;-->
-    <ion-item ng-if="regiao.headeron" id="headerOn" class="item-thumbnail-left item-borderless list-item">
+    <ion-item ng-show="regiao.headeron" id="headerOn" class="item-thumbnail-left item-borderless list-item">
       <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
       <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">{{regiao.banner}}</p>
       <span ng-click="closeHeder()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;" class="subdued button-small button-light ion-close"></a> ]
@@ -35,7 +37,7 @@
     <!--</ion-item>-->
 
     <!--<ion-scroll style="height: 150px">-->
-    <div><ion-scroll ng-if="regiao.radius" style="height: 300px">
+    <div><ion-scroll ng-show="regiao.radius" style="height: 300px">
       <ion-list class="list-borderless">
 
         <ion-item ng-click="goPI(PI)" ng-repeat="PI in regiao.PIs"
