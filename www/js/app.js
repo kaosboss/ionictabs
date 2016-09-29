@@ -2011,11 +2011,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                   };
                   $scope.data.PI_descricao = tpi.descricao;
                   $scope.PI_descricao = tpi.descricao;
+                  // $scope.$apply();
                   console.warn("Setting pi desc", tpi.descricao);
-                  return true;
+                  // return true;
                 }
               });
-              return true;
+              // return true;
             }
 
           });
