@@ -1,5 +1,19 @@
 <ion-view view-title="Mapa">
-  <ion-content class="APPmain" has-bouncing="true">
+  <!--<ion-floating-menu has-footer="true">-->
+    <!--<ion-floating-button class="" click="" has-footer="true" button-color="#2AC9AA" icon="ion-clipboard"-->
+    <!--<ion-floating-button button-class="" click="" has-footer="true" button-color="#4CAF50" icon="ion-clipboard"-->
+    <ion-floating-button button-class="" click="goQuiz()" has-footer="true" button-color="#ef473a" icon="ion-clipboard"
+                         iconColor="#fff">
+    </ion-floating-button>
+    <!--<div class="floatUp"><ion-floating-button class="" click="" button-color="#ef473a" icon="ion-qr-scanner"-->
+                         <!--iconColor="#fff">-->
+    <!--</ion-floating-button></div>-->
+    <!--<ion-floating-button class="" click="" has-footer="" button-color="#ef473a" icon="ion-qr-scanner"-->
+                         <!--iconColor="#fff">-->
+    <!--</ion-floating-button>-->
+  <!--</ion-floating-menu>-->
+
+  <ion-content class="APPmain has-bouncing" has-bouncing="true">
     <!--<ion-item class="item">-->
     <!--<button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>-->
     <!--</ion-item>-->
@@ -8,7 +22,8 @@
       <!--<img class="imageView" src="img/mapaqtapedagogica2.png">-->
       <canvas class="" id="imageView" style="width: 320px; height: auto; position: relative;"></canvas>
       <!--<img class="caption" ng-src="{{regiao.nome}}.jpg">-->
-      <img class="captionCanvas animated bounce" id="marcador" ng-src="img/mapa/marcadores/{{marcador ? marcador : 'marcador_galo.png'}}"
+      <img class="captionCanvas animated bounce" id="marcador"
+           ng-src="img/mapa/marcadores/{{marcador ? marcador : 'marcador_galo.png'}}"
            style="width: 60px; height: 65px">
     </div>
     <!--<HR style="box-shadow: 0 8px 6px -6px #999;">-->
@@ -29,7 +44,8 @@
     <ion-item ng-show="regiao.headeron" id="headerOn" class="item-thumbnail-left item-borderless list-item">
       <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
       <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">{{regiao.banner}}</p>
-      <span ng-click="closeHeder()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;" class="subdued button-small button-light ion-close"></a> ]
+      <span ng-click="closeHeder()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;"
+                                                                                    class="subdued button-small button-light ion-close"></a> ]
       </span>
     </ion-item>
     <!--<ion-item ng-if="!headeron">-->
@@ -37,32 +53,34 @@
     <!--</ion-item>-->
 
     <!--<ion-scroll style="height: 150px">-->
-    <div><ion-scroll ng-show="regiao.radius" style="height: 300px">
-      <ion-list class="list-borderless">
+    <div>
+      <ion-scroll ng-show="regiao.radius" style="height: 300px">
+        <ion-list class="list-borderless">
 
-        <ion-item ng-click="goPI(PI)" ng-repeat="PI in regiao.PIs"
-                  class="item-thumbnail-left item-icon-right">
+          <ion-item ng-click="goPI(PI)" ng-repeat="PI in regiao.PIs"
+                    class="item-thumbnail-left item-icon-right">
 
-          <img class="myAvatar" ng-src="img/mapa/PIs/{{PI.nome}}_thumb.png">
-          <h2><br></h2>
-          <h2>{{PI.descricao}}</h2>
-          <!--<h4 class="textWrap">{{PI.descricao}}</h4>-->
-          <i class="icon ion-chevron-right icon-accessory"></i>
-          <p>
-            Visitado:
-            <!--<a href="#" class="subdued">{{item.likes ? item.likes : '?' }} likes</a>-->
-            <!--<a href="#" class="subdued button-small button-light ion-heart">Visitado : {{PI.visited}}</a>-->
-            <a href=""
-               class="{{ PI.visited ? 'balanced' : 'assertive'}} button-small button-light {{ PI.visited ? 'ion-checkmark' : 'ion-close'}}"></a>
-          </p>
-          <!--<ion-option-button class="button-positive"-->
-          <!--ng-click="clickedLike(item)">-->
-          <!--Like-->
-          <!--</ion-option-button>-->
+            <img class="myAvatar" ng-src="img/mapa/PIs/{{PI.nome}}_thumb.png">
+            <h2><br></h2>
+            <h2>{{PI.descricao}}</h2>
+            <!--<h4 class="textWrap">{{PI.descricao}}</h4>-->
+            <i class="icon ion-chevron-right icon-accessory"></i>
+            <p>
+              Visitado:
+              <!--<a href="#" class="subdued">{{item.likes ? item.likes : '?' }} likes</a>-->
+              <!--<a href="#" class="subdued button-small button-light ion-heart">Visitado : {{PI.visited}}</a>-->
+              <a href=""
+                 class="{{ PI.visited ? 'balanced' : 'assertive'}} button-small button-light {{ PI.visited ? 'ion-checkmark' : 'ion-close'}}"></a>
+            </p>
+            <!--<ion-option-button class="button-positive"-->
+            <!--ng-click="clickedLike(item)">-->
+            <!--Like-->
+            <!--</ion-option-button>-->
 
-        </ion-item>
-      </ion-list>
-    </ion-scroll></div>
+          </ion-item>
+        </ion-list>
+      </ion-scroll>
+    </div>
     <div ng-if="!regiao.radius">
       <a class="button button-block button-calm" href="#/tab/regiao/RI_A/PI_1">Ponto de
         interesse 1</a>

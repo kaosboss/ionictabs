@@ -126,15 +126,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       });
     };
 
-    $scope.goQuiz = function () {
-      console.log("Go Quiz");
-      // $ionicHistory.goBack();
-      $state.go("tab.mapa", {
-        RI: "RI_D",
-        PI: "PI_17"
-      });
-    };
-
     $scope.logged = $rootScope.APP.logged;
 
     // $scope.goLogin = function () {
@@ -1954,6 +1945,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // });
     console.log("Mapa controller ready");
 
+    $scope.goQuiz = function () {
+      console.log("Go Quiz");
+      // $ionicHistory.goBack();
+      $state.go("tab.mapa", {
+        RI: $scope.RI,
+        PI: $scope.RI + "_Q"
+      });
+    };
     // if ($stateParams.RI != "ALL")
     //   quizFactory.init($stateParams.RI);
 
