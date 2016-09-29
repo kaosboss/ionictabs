@@ -2011,11 +2011,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                   };
                   $scope.data.PI_descricao = tpi.descricao;
                   $scope.PI_descricao = tpi.descricao;
+                  // $scope.$apply();
                   console.warn("Setting pi desc", tpi.descricao);
-                  return true;
+                  // return true;
                 }
               });
-              return true;
+              // return true;
             }
 
           });
@@ -3085,6 +3086,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   })
   .controller('CardCtrl', function ($scope) {
   })
+  .controller('GameHelpCtrl', function ($scope) {
+  })
   .controller('AccountCtrl', function ($rootScope, $scope, UserService) {
     $scope.BLE = true;
     $scope.enableBeacons = $rootScope.enableBeacons;
@@ -3536,6 +3539,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           'tab-game': {
             templateUrl: 'templates/tab-game.html',
             controller: 'GameCtrl'
+          }
+        }
+      })
+      .state('tab.game_help', {
+        url: '/game_help',
+        views: {
+          'tab-game_help': {
+            templateUrl: 'templates/tab-game_help.html',
+            controller: 'GameHelpCtrl'
           }
         }
       })
