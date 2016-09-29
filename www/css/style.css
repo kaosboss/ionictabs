@@ -57,8 +57,7 @@ body {
 }
 
 .tabela-header {
-    border-radius: 25px;
-    background: #000000;
+    border-radius: 15px;
     padding: 20px;
     width: 200px;
     height: 150px;
