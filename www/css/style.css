@@ -1281,33 +1281,19 @@ legend {
 
 /* CSS para listas dos níveis, badges e recompensas*/
 
-/** {margin: 0; padding: 0;}*/
-
-/*div {*/
-  /*margin: 20px;*/
-/*}*/
-
-/*ul {*/
-  /*list-style-type: none;*/
-  /*width: 400px;*/
-/*}*/
-
-h3.lista_niveis {
-  font: bold 20px/1.5 "Brandon", Verdana, sans-serif;
+.desafios_help ul
+ {
+  list-style-type: none;
+  padding: 0px
 }
 
 li img {
   float: left;
-  margin: 0 15px 0 0;
 }
 
-li p {
-  font: 200 12px/1.5 "Brandon", Times New Roman, serif;
-}
 
 
 li {
-  padding: 10px;
   overflow: auto;
 }
 
@@ -1354,16 +1340,15 @@ div.table-title {
 
 th {
 
-  color:#D5DDE5;;
-  background:#1b1e24;
-  border-bottom:4px solid #9ea7af;
+  color: #000000;
+  background: #fec659;
+  border-bottom: 4px solid #9ea7af;
   border-right: 1px solid #343a45;
-  font-size:23px;
-  font-weight: 100;
-  padding:24px;
-  text-align:center;
+  font-size: 12px;
+  padding: 12PX;
+  text-align: center;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  vertical-align:middle;
+  vertical-align: middle;
 
 }
 
@@ -1379,7 +1364,6 @@ th:last-child {
 tr {
   border-top: 1px solid #C1C3D1;
   border-bottom-: 1px solid #C1C3D1;
-  color:#666B85;
   font-size:16px;
   font-weight:normal;
   text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
@@ -1415,11 +1399,10 @@ tr:last-child td:last-child {
 
 td {
   background:#FFFFFF;
-  padding:20px;
+  padding:5px;
   text-align:left;
   vertical-align:middle;
-  font-weight:300;
-  font-size:18px;
+  font-size:14px;
   text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
   border-right: 1px solid #C1C3D1;
 }
