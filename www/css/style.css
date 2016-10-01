@@ -1282,7 +1282,10 @@ legend {
 
 /* CSS para listas dos níveis, badges e recompensas*/
 
-.desafios_help ul {
+
+.desafios_help ul
+ {
+
   list-style-type: none;
   padding: 0px
 }
@@ -1361,8 +1364,9 @@ th:last-child {
 tr {
   border-top: 1px solid #C1C3D1;
   border-bottom-: 1px solid #C1C3D1;
-  font-size: 16px;
-  font-weight: normal;
+<<<<<<< HEAD
+  font-size:16px;
+  font-weight:normal;
   text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
 }
 
@@ -1394,11 +1398,13 @@ tr:last-child td:last-child {
 }
 
 td {
-  background: #FFFFFF;
-  padding: 5px;
-  text-align: left;
-  vertical-align: middle;
-  font-size: 14px;
+
+  background:#FFFFFF;
+  padding:5px;
+  text-align:left;
+  vertical-align:middle;
+  font-size:14px;
+
   text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
   border-right: 1px solid #C1C3D1;
 }
