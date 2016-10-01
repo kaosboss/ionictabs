@@ -1282,12 +1282,10 @@ legend {
 
 /* CSS para listas dos níveis, badges e recompensas*/
 
-<<<<<<< HEAD
+
 .desafios_help ul
  {
-=======
-.desafios_help ul {
->>>>>>> refs/remotes/dakarpt/master
+
   list-style-type: none;
   padding: 0px
 }
@@ -1295,15 +1293,8 @@ legend {
 .desafios_help li img {
   float: left;
 }
-<<<<<<< HEAD
-
-
-
-li {
-=======
 
 .desafios_help li {
->>>>>>> refs/remotes/dakarpt/master
   overflow: auto;
 }
 
@@ -1376,10 +1367,6 @@ tr {
 <<<<<<< HEAD
   font-size:16px;
   font-weight:normal;
-=======
-  font-size: 16px;
-  font-weight: normal;
->>>>>>> refs/remotes/dakarpt/master
   text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
 }
 
@@ -1411,19 +1398,13 @@ tr:last-child td:last-child {
 }
 
 td {
-<<<<<<< HEAD
+
   background:#FFFFFF;
   padding:5px;
   text-align:left;
   vertical-align:middle;
   font-size:14px;
-=======
-  background: #FFFFFF;
-  padding: 5px;
-  text-align: left;
-  vertical-align: middle;
-  font-size: 14px;
->>>>>>> refs/remotes/dakarpt/master
+
   text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
   border-right: 1px solid #C1C3D1;
 }
