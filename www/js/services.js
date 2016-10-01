@@ -942,105 +942,105 @@ angular.module('starter.services', [])
     var needUpdate = false;
     // var items = [];
     var items = [
-        {
-          "id": 0,
-          "img": "img/atividades/eventos_despedidas_thumb.png",
-          "title": "EVENTOS",
-          "description": "O SNP oferece um conjunto diversificado de locais ideais para que crie o seu evento.",
-          "template": "eventos"
-        },
-        {
-          "id": 1,
-          "img": "img/atividades/atividades_arborismo_thumb.png",
-          "title": "ARBORISMO",
-          "description": "Percurso de arborismo para que possa reforçar a sua ligação à natureza.",
-          "template": "arborismo"
-        },
-        {
-          "id": 2,
-          "img": "img/atividades/atividades_bicicletas_thumb.png",
-          "title": "BICICLETAS NO SNP",
-          "description": "Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.",
-          "template": "bicicletas"
-        },
-        {
-          "id": 3,
-          "title": "DESPORTO AQUÁTICO",
-          "description": "Existem 13ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.",
-          "img": "img/atividades/atividades_aquaticas_thumb.png",
-          "template": "aquaticas"
-        },
-        {
-          "id": 4,
-          "title": "CAMPOS DE FÉRIAS",
-          "img": "img/atividades/atividades_campo_ferias_thumb.png",
-          "description": "Campo Base tem uma infraestrutura ideal para a realização de campos de férias.",
-          "template": "campo_ferias"
-        },
-        {
-          "id": 5,
-          "title": "FAUNA E FLORA",
-          "description": "O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.",
-          "img": "img/atividades/atividades_fauna_flora_thumb.png",
-          "template": "fauna_flora"
-        },
-        {
-          "id": 6,
-          "title": "PAINTBALL",
-          "description": "Paintball num campo em contexto de mato, criado especialmente para esta modalidade.",
-          "img": "img/atividades/atividades_painball_thumb.png",
-          "template": "paintball"
-        },
-        {
-          "id": 7,
-          "title": "PERCURSOS PEDESTRES",
-          "description": "Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.",
-          "img": "img/atividades/atividades_percursos_pedestres_thumb.png",
-          "template": "percursos_pedestres"
-        },
-        {
-          "id": 8,
-          "img": "img/atividades/atividades_tiro_thumb.png",
-          "title": "ATIVIDADES DE TIRO",
-          "description": "O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.",
-          "template": "tiro"
-        },
-        {
-          "id": 9,
-          "img": "img/atividades/atividades_centro_canino_thumb.png",
-          "title": "CENTRO CANINO",
-          "description": "O Sesimbra Natura Park tem integrado o Centro Pedagógico Canino Beira Tejo.",
-          "template": "centro_canino"
-        },
-        {
-          "id": 10,
-          "img": "img/atividades/atividades_pomar_variedades_thumb.png",
-          "title": "POMAR VARIEDADES",
-          "description": "Pomar com variedades locais e regionais, onde poderão realizar um conjunto diverso de atividades ligadas ao mundo rural.",
-          "template": "pomar_variedades"
-        },
-        {
-          "id": 11,
-          "img": "img/atividades/atividades_rugby_thumb.png",
-          "title": "FUTEBOL/RUGBY",
-          "description": "Futebol e Rugby de praia, aceite esta sugestão e passe um dia diferente com toda a emoção e adrenalina.",
-          "template": "rugby"
-        },
-        {
-          "id": 12,
-          "img": "img/atividades/atividades_senior_thumb.png",
-          "title": "ACTIVIDADES SÉNIOR",
-          "description": "Aceite esta sugestão e passe um dia diferente com toda a emoção e relaxe para o seu bem-estar.",
-          "template": "senior"
-        },
-        {
-          "id": 13,
-          "img": "img/atividades/atividades_voley_praia_thumb.png",
-          "title": "VOLEIBOL DE PRAIA",
-          "description": "Aceite esta sugestão e passe um dia diferente com toda a emoção e adrenalina",
-          "template": "voley_praia"
-        }
-      ];
+      {
+        "id": 0,
+        "img": "img/atividades/eventos_despedidas_thumb.png",
+        "title": "EVENTOS",
+        "description": "O SNP oferece um conjunto diversificado de locais ideais para que crie o seu evento.",
+        "template": "eventos"
+      },
+      {
+        "id": 1,
+        "img": "img/atividades/atividades_arborismo_thumb.png",
+        "title": "ARBORISMO",
+        "description": "Percurso de arborismo para que possa reforçar a sua ligação à natureza.",
+        "template": "arborismo"
+      },
+      {
+        "id": 2,
+        "img": "img/atividades/atividades_bicicletas_thumb.png",
+        "title": "BICICLETAS NO SNP",
+        "description": "Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.",
+        "template": "bicicletas"
+      },
+      {
+        "id": 3,
+        "title": "DESPORTO AQUÁTICO",
+        "description": "Existem 13ha de planos de água, perfeitos para a prática de atividades de desporto náutico não poluentes.",
+        "img": "img/atividades/atividades_aquaticas_thumb.png",
+        "template": "aquaticas"
+      },
+      {
+        "id": 4,
+        "title": "CAMPOS DE FÉRIAS",
+        "img": "img/atividades/atividades_campo_ferias_thumb.png",
+        "description": "Campo Base tem uma infraestrutura ideal para a realização de campos de férias.",
+        "template": "campo_ferias"
+      },
+      {
+        "id": 5,
+        "title": "FAUNA E FLORA",
+        "description": "O Ecossistema Ecológico do Sesimbra Natura Park é um dos nossos maiores orgulhos.",
+        "img": "img/atividades/atividades_fauna_flora_thumb.png",
+        "template": "fauna_flora"
+      },
+      {
+        "id": 6,
+        "title": "PAINTBALL",
+        "description": "Paintball num campo em contexto de mato, criado especialmente para esta modalidade.",
+        "img": "img/atividades/atividades_painball_thumb.png",
+        "template": "paintball"
+      },
+      {
+        "id": 7,
+        "title": "PERCURSOS PEDESTRES",
+        "description": "Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.",
+        "img": "img/atividades/atividades_percursos_pedestres_thumb.png",
+        "template": "percursos_pedestres"
+      },
+      {
+        "id": 8,
+        "img": "img/atividades/atividades_tiro_thumb.png",
+        "title": "ATIVIDADES DE TIRO",
+        "description": "O SNP disponibiliza a possibilidade de praticar o tiro em duas modalidades distintas: tiro com arco e zarabatana.",
+        "template": "tiro"
+      },
+      {
+        "id": 9,
+        "img": "img/atividades/atividades_centro_canino_thumb.png",
+        "title": "CENTRO CANINO",
+        "description": "O Sesimbra Natura Park tem integrado o Centro Pedagógico Canino Beira Tejo.",
+        "template": "centro_canino"
+      },
+      {
+        "id": 10,
+        "img": "img/atividades/atividades_pomar_variedades_thumb.png",
+        "title": "POMAR VARIEDADES",
+        "description": "Pomar com variedades locais e regionais, onde poderão realizar um conjunto diverso de atividades ligadas ao mundo rural.",
+        "template": "pomar_variedades"
+      },
+      {
+        "id": 11,
+        "img": "img/atividades/atividades_rugby_thumb.png",
+        "title": "FUTEBOL/RUGBY",
+        "description": "Futebol e Rugby de praia, aceite esta sugestão e passe um dia diferente com toda a emoção e adrenalina.",
+        "template": "rugby"
+      },
+      {
+        "id": 12,
+        "img": "img/atividades/atividades_senior_thumb.png",
+        "title": "ACTIVIDADES SÉNIOR",
+        "description": "Aceite esta sugestão e passe um dia diferente com toda a emoção e relaxe para o seu bem-estar.",
+        "template": "senior"
+      },
+      {
+        "id": 13,
+        "img": "img/atividades/atividades_voley_praia_thumb.png",
+        "title": "VOLEIBOL DE PRAIA",
+        "description": "Aceite esta sugestão e passe um dia diferente com toda a emoção e adrenalina",
+        "template": "voley_praia"
+      }
+    ];
     var fireBaseOnline = false;
     var dataLoading = false;
     var upLoading = false;
@@ -1213,7 +1213,7 @@ angular.module('starter.services', [])
       return items;
     };
 
-    getAtividadesInicio =  function () {
+    getAtividadesInicio = function () {
       url = "data/atividades_inicio.json";
       return $http.get(url).then(function (response) {
         items = response.data;
@@ -1319,6 +1319,27 @@ angular.module('starter.services', [])
 
     };
 
+    var setRegioesPromise = function (regioes) {
+      // window.localStorage.starter_facebook_user = JSON.stringify(user_data);
+      return $cordovaSQLite.updateValueToDB("regioes", [JSON.stringify(regioes), "estados"]).then(function (res) {
+        if (res.rowsAffected == 0) {
+          console.warn("ERROR updating regioes, inserting new");
+          $cordovaSQLite.insertVarToDB("regioes", [JSON.stringify(regioes), "estados"]).then(function (res) {
+            console.log("INSERTED regioes: : ", res);
+            // return JSON.parse(res || '{}')
+          }, function (err) {
+            console.error("ERROR inserting regioes, NOT stored", err);
+          });
+        }
+        // else
+        //   console.log("Stored regioes", res);
+
+      }, function (err) {
+        console.error("ERROR updating regioes, NOT stored", err);
+      });
+
+    };
+
     var getRegioes = function () {
       return $cordovaSQLite.getVarFromDB("regioes", "estados");
     };
@@ -1339,10 +1360,26 @@ angular.module('starter.services', [])
       convertRegiaoLongToShort: convertRegiaoLongToShort,
       getAllRegioesList: getAllRegioesList,
       drawedMapa: function (value) {
-        if (!value)
-          return mapaIsDrawed;
+        var ret = false;
+
+        if (value == "ON")
+          value = true;
+        else if (value == "OFF")
+          value = false;
+        else if (value == undefined)
+          ret = true;
+
+        if (!ret)
+          console.warn("drawed setting mapa: ", value, mapaIsDrawed);
         else
+          console.warn("drawed getting mapa: ", value, mapaIsDrawed);
+
+        if (!ret)
           mapaIsDrawed = value;
+        else
+          return mapaIsDrawed;
+        // else
+        //   mapaIsDrawed = value;
       },
       getCacheRegioes: function () {
         return aCircles;
@@ -1352,7 +1389,8 @@ angular.module('starter.services', [])
           aCircles = value;
         else
           return aCircles;
-      }
+      },
+      setRegioesPromise: setRegioesPromise
     }
   })
   .factory('perguntas', function ($http, $rootScope) {
@@ -1532,7 +1570,7 @@ angular.module('starter.services', [])
       },
       checkNews: function () {
         if (newsChecked)
-           return;
+          return;
 
         var online = $cordovaNetwork.isOnline();
         console.log("FIREBASE: news online: %s", online);
@@ -1571,6 +1609,54 @@ angular.module('starter.services', [])
       }
     }
 
+  })
+  .factory('$gameFactory', function () {
+
+    var headers = {
+      "RI_A": true,
+      "RI_B": true,
+      "RI_C": true,
+      "RI_D": true,
+      "RI_E": true,
+      "RI_F": true,
+      "RI_G": true,
+      "RI_H": true
+    };
+    console.log("gameFactory enter");
+
+    var quizHeader = true;
+
+    var quizHeaderValue = function (value) {
+
+      var ret = false;
+
+      if (value == "ON")
+        value = true;
+      else if (value == "OFF")
+        value = false;
+      else if (value == undefined)
+        ret = true;
+
+      if (!ret)
+        console.warn("gameFactory setting quiz header:", value, quizHeader);
+      else
+        console.warn("gameFactory getting quiz header:", value, quizHeader);
+
+      if (!ret)
+        quizHeader = value;
+      else
+        return quizHeader;
+    };
+
+    return {
+      setHeaderOff: function (RI) {
+        headers[RI] = false;
+      },
+      isHeaderOn: function (RI) {
+        return headers[RI];
+      },
+      quizHeaderValue: quizHeaderValue
+    }
   });
 // .factory('quizFactory', function ($regioes, $state) {
 //

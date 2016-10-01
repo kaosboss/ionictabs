@@ -1199,7 +1199,8 @@ fieldset {
 }
 
 .button-next {
-  background: #ffe8a3;
+  /*background: #ffe8a3;*/
+  background: #fec659;
   border-radius: 1em;
   font-size: 0.9em;
 }
@@ -1209,7 +1210,8 @@ legend {
   /*color: #fff;*/
   font-size: 1em;
   margin-top: 15px;
-  background: #ffe8a3;
+  background: #fec659;
+  /*background: #ffe8a3;*/
   padding: 0em 1em;
   border-radius: 1em;
 }
