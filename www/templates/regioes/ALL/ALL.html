@@ -1,5 +1,19 @@
-<ion-view view-title="Mapa">
-  <ion-content class="APPmain" has-bouncing="true">
+<ion-view view-title="Mapa" >
+  <!--<ion-floating-menu has-footer="true">-->
+    <!--<ion-floating-button class="" click="" has-footer="true" button-color="#2AC9AA" icon="ion-clipboard"-->
+    <!--<ion-floating-button button-class="" click="" has-footer="true" button-color="#4CAF50" icon="ion-clipboard"-->
+    <ion-floating-button ng-if="regiao.radius" button-class="" click="goQuiz()" has-footer="true" button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}" icon="ion-clipboard"
+                         iconColor="#fff">
+    </ion-floating-button>
+    <!--<div class="floatUp"><ion-floating-button class="" click="" button-color="#ef473a" icon="ion-qr-scanner"-->
+                         <!--iconColor="#fff">-->
+    <!--</ion-floating-button></div>-->
+    <!--<ion-floating-button class="" click="" has-footer="" button-color="#ef473a" icon="ion-qr-scanner"-->
+                         <!--iconColor="#fff">-->
+    <!--</ion-floating-button>-->
+  <!--</ion-floating-menu>-->
+
+  <ion-content class="APPmain has-bouncing" has-bouncing="true">
     <!--<ion-item class="item">-->
     <!--<button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>-->
     <!--</ion-item>-->
@@ -8,7 +22,8 @@
       <!--<img class="imageView" src="img/mapaqtapedagogica2.png">-->
       <canvas class="" id="imageView" style="width: 320px; height: auto; position: relative;"></canvas>
       <!--<img class="caption" ng-src="{{regiao.nome}}.jpg">-->
-      <img class="captionCanvas animated bounce" id="marcador" ng-src="img/mapa/marcadores/{{marcador ? marcador : 'marcador_galo.png'}}"
+      <img class="captionCanvas animated bounce" id="marcador"
+           ng-src="img/mapa/marcadores/{{marcador ? marcador : 'marcador_galo.png'}}"
            style="width: 60px; height: 65px">
     </div>
     <!--<HR style="box-shadow: 0 8px 6px -6px #999;">-->
@@ -29,7 +44,8 @@
     <ion-item ng-show="regiao.headeron" id="headerOn" class="item-thumbnail-left item-borderless list-item">
       <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
       <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">{{regiao.banner}}</p>
-      <span ng-click="closeHeder()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;" class="subdued button-small button-light ion-close"></a> ]
+      <span ng-click="closeHeader()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;"
+                                                                                    class="subdued button-small button-light ion-close"></a> ]
       </span>
     </ion-item>
     <!--<ion-item ng-if="!headeron">-->
@@ -37,67 +53,39 @@
     <!--</ion-item>-->
 
     <!--<ion-scroll style="height: 150px">-->
-    <div><ion-scroll ng-show="regiao.radius" style="height: 300px">
-      <ion-list class="list-borderless">
+    <div>
+      <ion-scroll ng-show="regiao.radius" style="height: 298px">
+        <ion-list class="list-borderless">
 
-        <ion-item ng-click="goPI(PI)" ng-repeat="PI in regiao.PIs"
-                  class="item-thumbnail-left item-icon-right">
+          <ion-item ng-click="goPI(PI)" ng-repeat="PI in regiao.PIs"
+                    class="item-thumbnail-left item-icon-right">
 
-          <img class="myAvatar" ng-src="img/mapa/PIs/{{PI.nome}}_thumb.png">
-          <h2><br></h2>
-          <h2>{{PI.descricao}}</h2>
-          <!--<h4 class="textWrap">{{PI.descricao}}</h4>-->
-          <i class="icon ion-chevron-right icon-accessory"></i>
-          <p>
-            Visitado:
-            <!--<a href="#" class="subdued">{{item.likes ? item.likes : '?' }} likes</a>-->
-            <!--<a href="#" class="subdued button-small button-light ion-heart">Visitado : {{PI.visited}}</a>-->
-            <a href=""
-               class="{{ PI.visited ? 'balanced' : 'assertive'}} button-small button-light {{ PI.visited ? 'ion-checkmark' : 'ion-close'}}"></a>
-          </p>
-          <!--<ion-option-button class="button-positive"-->
-          <!--ng-click="clickedLike(item)">-->
-          <!--Like-->
-          <!--</ion-option-button>-->
+            <img class="myAvatar" ng-src="img/mapa/PIs/{{PI.nome}}_thumb.png">
+            <h2><br></h2>
+            <h2>{{PI.descricao}}</h2>
+            <!--<h4 class="textWrap">{{PI.descricao}}</h4>-->
+            <i class="icon ion-chevron-right icon-accessory"></i>
+            <p>
+              Visitado:
+              <!--<a href="#" class="subdued">{{item.likes ? item.likes : '?' }} likes</a>-->
+              <!--<a href="#" class="subdued button-small button-light ion-heart">Visitado : {{PI.visited}}</a>-->
+              <a href=""
+                 class="{{ PI.visited ? 'balanced' : 'assertive'}} button-small button-light {{ PI.visited ? 'ion-checkmark' : 'ion-close'}}"></a>
+            </p>
+            <!--<ion-option-button class="button-positive"-->
+            <!--ng-click="clickedLike(item)">-->
+            <!--Like-->
+            <!--</ion-option-button>-->
 
-        </ion-item>
-      </ion-list>
-    </ion-scroll></div>
-    <div ng-if="!regiao.radius">
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_A/PI_1">Ponto de
-        interesse 1</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_A/PI_2">Ponto de interesse 2</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_A/PI_3">Ponto de interesse 3</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_A/PI_4">Ponto de interesse 4</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_B/PI_5">Ponto de interesse 5</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_B/PI_6">Ponto de interesse 6</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_B/PI_7">Ponto de interesse 7</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_B/PI_8">Ponto de interesse 8</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_B/PI_9">Ponto de interesse 9</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_C/PI_10">Ponto de interesse 10</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_C/PI_11">Ponto de interesse 11</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_C/PI_12">Ponto de interesse 12</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_C/PI_13">Ponto de interesse 13</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_C/PI_14">Ponto de interesse 14</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_C/PI_15">Ponto de interesse 15</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_D/PI_16">Ponto de interesse 16</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_D/PI_17">Ponto de interesse 17</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_D/PI_18">Ponto de interesse 18</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_19">Ponto de interesse 19</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_20">Ponto de interesse 20</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_21">Ponto de interesse 21</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_22">Ponto de interesse 22</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_E/PI_23">Ponto de interesse 23</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_F/PI_24">Ponto de interesse 24</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_F/PI_25">Ponto de interesse 25</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_G/PI_26">Ponto de interesse 26</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_G/PI_27">Ponto de interesse 27</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_G/PI_28">Ponto de interesse 28</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_H/PI_29">Ponto de interesse 29</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_H/PI_30">Ponto de interesse 30</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_H/PI_31">Ponto de interesse 31</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_H/PI_32">Ponto de interesse 32</a>
-      <a class="button button-block button-calm" href="#/tab/regiao/RI_H/PI_33">Ponto de interesse 33</a>
+          </ion-item>
+        </ion-list>
+      </ion-scroll>
+    </div>
+    <div ng-if="!regiao.radius" class="padding">
+      <br>
+      <br>
+      <p align="center" class="title">Texto de ajuda</p>
+      <p align="center" class="popup-sub-title">Texto de ajuda com legend</p>
     </div>
     <!--<button type="button" ng-click="unlock_regiao()" class="button button-balanced APPcenter">Desbloquear Regiao D</button>-->
     <!--</ion-item>-->

@@ -4,22 +4,32 @@
     <!--<img ng-src="img/galo_desenho.png" class="">-->
     <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
     <p style="margin-left: -30px; margin-top: 0px;" align="left" class="textWrap">{{banner}}</p>
+    <span ng-click="closeQuizHeader()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;"
+                                                                                   class="subdued button-small button-light ion-close"></a> ]
+      </span>
     <!--<h2 class="newFont"><br></h2>-->
     <!--<p style="font-size: medium" class="textWrap">Agora é que vamos ver o que aprendeste nesta região, acerta o máximo que conseguires e vais ser recompensado.</p>-->
     <!--<span style="max-width: 100%">Agora é que vamos ver o que aprendeste nesta região, acerta o máximo que conseguires e vais ser recompensado.</span>-->
     <div ng-if="quizOver" class="padding">
-      <button ng-if="score<3" style="margin-left: -40px; margin-top: 0px;" class="button button-small button-calm"
-              ng-click="reset(); start();">Tentar novamente.
-      </button>
-      <button ng-if="score>=3" style="margin-left: -40px; margin-top: 0px;" class="button button-small button-balanced"
-              ng-click="goMapa()">Descobre outra região
-      </button><br>
-      <button ng-if="score>=3" style="margin-left: -40px; margin-top: 0px;" class="button button-small button-calm"
-              ng-click="reset(); start();">Jogar novamente
-      </button>
+      <!--<button ng-if="score<3" style="margin-left: -40px; margin-top: 0px;" class="button button-small button-calm"-->
+      <!--ng-click="reset(); start();">Tentar novamente.-->
+      <!--</button>-->
+      <!--<button ng-if="score>=3" style="margin-left: -40px; margin-top: 0px;" class="button button-small button-balanced"-->
+      <!--ng-click="goMapa()">Descobre outra região-->
+      <!--</button><br>-->
+      <!--<button ng-if="score>=3" style="margin-left: -40px; margin-top: 0px;" class="button button-small button-calm"-->
+      <!--ng-click="reset(); start();">Jogar novamente-->
+      <!--</button>-->
+      <!--<div ng-if="score>=3" ng-include src="'templates/template-Quiz-Win.html'"></div>-->
+      <!--<div ng-if="score<3" ng-include src="'templates/template-Quiz-Fail.html'"></div>-->
     </div>
 
   </ion-item>
+
+  <!--<div ng-if="quizOver" class="padding">-->
+    <!--<div ng-if="score>=3" ng-include src="'templates/template-Quiz-Win.html'"></div>-->
+    <!--<div ng-if="score<3" ng-include src="'templates/template-Quiz-Fail.html'"></div>-->
+  <!--</div>-->
 
   <div class="quiz-area padding" ng-show="inProgress">
     <div ng-if="!quizOver">

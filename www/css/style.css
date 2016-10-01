@@ -57,13 +57,12 @@ body {
 }
 
 .tabela-header {
-    border: 1px;
-    background-color: #fff;
-    border-radius: 2px;
-    padding: 20px;
-    margin: 30px 10px;
+  border: 1px;
+  background-color: #fff;
+  border-radius: 2px;
+  padding: 20px;
+  margin: 30px 10px;
 }
-
 
 .button.ng-hide {
   display: none;
@@ -1200,7 +1199,8 @@ fieldset {
 }
 
 .button-next {
-  background: #ffe8a3;
+  /*background: #ffe8a3;*/
+  background: #fec659;
   border-radius: 1em;
   font-size: 0.9em;
 }
@@ -1210,7 +1210,8 @@ legend {
   /*color: #fff;*/
   font-size: 1em;
   margin-top: 15px;
-  background: #ffe8a3;
+  background: #fec659;
+  /*background: #ffe8a3;*/
   padding: 0em 1em;
   border-radius: 1em;
 }
@@ -1276,28 +1277,37 @@ legend {
 }
 
 .APPimgPI {
-  width:  420px;
+  width: 420px;
 }
 
 /* CSS para listas dos níveis, badges e recompensas*/
 
+<<<<<<< HEAD
 .desafios_help ul
  {
+=======
+.desafios_help ul {
+>>>>>>> refs/remotes/dakarpt/master
   list-style-type: none;
   padding: 0px
 }
 
-li img {
+.desafios_help li img {
   float: left;
 }
+<<<<<<< HEAD
 
 
 
 li {
+=======
+
+.desafios_help li {
+>>>>>>> refs/remotes/dakarpt/master
   overflow: auto;
 }
 
-li:hover {
+.desafios_help li:hover {
   background: #eee;
   cursor: pointer;
 }
@@ -1305,34 +1315,33 @@ li:hover {
 /* CSS para tabela do status dos desafios*/
 
 div.table-title {
-   display: block;
+  display: block;
   margin: auto;
   max-width: 600px;
-  padding:5px;
+  padding: 5px;
   width: 100%;
 }
 
 .table-title h3 {
-   color: #000000;
-   font-size: 30px;
-   font-weight: 400;
-   font-style:normal;
-   font-family: "Brandon", helvetica, arial, sans-serif;
-   text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-   text-transform:uppercase;
+  color: #000000;
+  font-size: 30px;
+  font-weight: 400;
+  font-style: normal;
+  font-family: "Brandon", helvetica, arial, sans-serif;
+  text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
 }
-
 
 /*** Table Styles **/
 
 .table-fill {
   background: white;
-  border-radius:3px;
+  border-radius: 3px;
   border-collapse: collapse;
   height: 320px;
   margin: auto;
   max-width: 600px;
-  padding:5px;
+  padding: 5px;
   width: 100%;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   animation: float 5s infinite;
@@ -1353,56 +1362,68 @@ th {
 }
 
 th:first-child {
-  border-top-left-radius:3px;
+  border-top-left-radius: 3px;
 }
 
 th:last-child {
-  border-top-right-radius:3px;
-  border-right:none;
+  border-top-right-radius: 3px;
+  border-right: none;
 }
 
 tr {
   border-top: 1px solid #C1C3D1;
   border-bottom-: 1px solid #C1C3D1;
+<<<<<<< HEAD
   font-size:16px;
   font-weight:normal;
+=======
+  font-size: 16px;
+  font-weight: normal;
+>>>>>>> refs/remotes/dakarpt/master
   text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
 }
 
 tr:hover td {
-  background:#4E5066;
-  color:#FFFFFF;
+  background: #4E5066;
+  color: #FFFFFF;
   border-top: 1px solid #22262e;
   border-bottom: 1px solid #22262e;
 }
 
 tr:first-child {
-  border-top:none;
+  border-top: none;
 }
 
 tr:last-child {
-  border-bottom:none;
+  border-bottom: none;
 }
 
-
 tr:nth-child(odd):hover td {
-  background:#4E5066;
+  background: #4E5066;
 }
 
 tr:last-child td:first-child {
-  border-bottom-left-radius:3px;
+  border-bottom-left-radius: 3px;
 }
 
 tr:last-child td:last-child {
-  border-bottom-right-radius:3px;
+  border-bottom-right-radius: 3px;
 }
 
 td {
+<<<<<<< HEAD
   background:#FFFFFF;
   padding:5px;
   text-align:left;
   vertical-align:middle;
   font-size:14px;
+=======
+  background: #FFFFFF;
+  padding: 5px;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 14px;
+>>>>>>> refs/remotes/dakarpt/master
   text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
   border-right: 1px solid #C1C3D1;
 }
