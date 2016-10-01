@@ -126,6 +126,55 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     var newsres = null;
     if (debug) alert("start");
 
+    $timeout(function () {
+      var confirmPopup = $ionicPopup.confirm({
+        cssClass: "myPopup",
+        // title: 'RI: ' + $scope.currentRI,
+        templateUrl: 'templates/popups/desafio_nok.html',
+        scope: $scope,
+        buttons: [
+          // {
+          //   text: 'Ficar',
+          //   type: 'button-next'
+          // },
+          {
+            text: '<b>Ok!</b>',
+            type: 'button button-popup',
+            onTap: function (e) {
+              console.log("Confirmed navigation to region", $state);
+              // if ($state.current.name != "tab.mapa") {
+              //   // $state.go("tab.mapa", {});
+              //   $ionicTabsDelegate.select(3);
+              //   $timeout(function () {
+              //     $rootScope.$broadcast('GO_REGIAO', {regiao: $regioes.convertRegiaoLongToShort($scope.currentRI)});
+              //   }, 300);
+              // } else {
+              //   $rootScope.$broadcast('GO_REGIAO', {regiao: $regioes.convertRegiaoLongToShort($scope.currentRI)});
+              // }
+              return 1;
+            }
+          }
+        ]
+      });
+
+      confirmPopup.then(function (res) {
+        if (res) {
+          console.log('resposta confirmacao de regiao - sim, ver conteudo', res);
+        } else {
+          console.log('Nao, ficar onde estou - nao', res);
+        }
+        $scope.popupON = 0;
+        $rootScope.popupON = 0;
+      });
+
+      $timeout(function () {
+        confirmPopup.close();
+        $scope.popupON = 0;
+        $rootScope.popupON = 0;
+      }, 1000000);
+
+    }, 5000);
+
     $scope.goAtividades = function () {
       console.log("Go Atividades");
       // $ionicHistory.goBack();
@@ -592,7 +641,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     });
 
   })
-  .controller('PopupCtrl', function ($rootScope, $scope, $ionicPopup, $timeout, $regioes, $state) {
+  .controller('PopupCtrl', function ($rootScope, $scope, $ionicPopup, $timeout, $regioes, $state, $ionicTabsDelegate) {
 
 // Triggered on a button click, or some other target
     $scope.showPopup = function (mypop) {
@@ -656,23 +705,27 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       $rootScope.popupON = 1;
       var confirmPopup = $ionicPopup.confirm({
         cssClass: "myPopup",
-        title: 'RI: ' + $scope.currentRI,
-        template: 'Estás perto da ' + $scope.currentRI + ', queres ver o conteudo?',
+        // title: 'RI: ' + $scope.currentRI,
+        templateUrl: 'templates/popups/nova_regiao.html',
         scope: $scope,
         buttons: [
-          {text: 'FICAR'},
           {
-            text: '<b>IR</b>',
-            type: 'button-positive',
+            text: 'Ficar',
+            type: 'button-popup'
+          },
+          {
+            text: '<b>Visitar</b>',
+            type: 'button-popup',
             onTap: function (e) {
               console.log("Confirmed navigation to region", $state);
               if ($state.current.name != "tab.mapa") {
-                $state.go("tab.mapa", {
-                  RI: "ALL",
-                  PI: $regioes.convertRegiaoLongToShort($scope.currentRI)
-                });
+                // $state.go("tab.mapa", {});
+                $ionicTabsDelegate.select(3);
+                $timeout(function () {
+                  $rootScope.$broadcast('GO_REGIAO', {regiao: $regioes.convertRegiaoLongToShort($scope.currentRI)});
+                }, 300);
               } else {
-                $rootScope.$broadcast('GO_REGIAO', { regiao: $regioes.convertRegiaoLongToShort($scope.currentRI) });
+                $rootScope.$broadcast('GO_REGIAO', {regiao: $regioes.convertRegiaoLongToShort($scope.currentRI)});
               }
               return 1;
             }
@@ -694,7 +747,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         confirmPopup.close();
         $scope.popupON = 0;
         $rootScope.popupON = 0;
-      }, 10000);
+      }, 15000);
     };
 
     $scope.$on('RI_FOUND', function (e) {
