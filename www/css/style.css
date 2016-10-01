@@ -1308,7 +1308,7 @@ li p {
 
 li {
   padding: 10px;
-  overflow: auto;
+  /*overflow: auto;*/
 }
 
 li:hover {
