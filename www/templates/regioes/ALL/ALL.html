@@ -2,7 +2,7 @@
   <!--<ion-floating-menu has-footer="true">-->
     <!--<ion-floating-button class="" click="" has-footer="true" button-color="#2AC9AA" icon="ion-clipboard"-->
     <!--<ion-floating-button button-class="" click="" has-footer="true" button-color="#4CAF50" icon="ion-clipboard"-->
-    <ion-floating-button button-class="" click="goQuiz()" has-footer="true" button-color="{{regiao.completed ? '#33cd5f': '#ec6157'}}" icon="ion-clipboard"
+    <ion-floating-button ng-if="regiao.radius" button-class="" click="goQuiz()" has-footer="true" button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}" icon="ion-clipboard"
                          iconColor="#fff">
     </ion-floating-button>
     <!--<div class="floatUp"><ion-floating-button class="" click="" button-color="#ef473a" icon="ion-qr-scanner"-->
@@ -44,7 +44,7 @@
     <ion-item ng-show="regiao.headeron" id="headerOn" class="item-thumbnail-left item-borderless list-item">
       <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
       <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">{{regiao.banner}}</p>
-      <span ng-click="closeHeder()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;"
+      <span ng-click="closeHeader()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;"
                                                                                     class="subdued button-small button-light ion-close"></a> ]
       </span>
     </ion-item>
