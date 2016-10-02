@@ -109,6 +109,12 @@ body {
   max-height: 331px;
 }
 
+.myPopupLegenda  > .popup {
+  border-radius: 5px !important;
+  width: 330px;
+  max-height: 400px;
+}
+
 .image-list-thumb {
   padding: 2px 2px 2px 2px;
   height: 100px;
@@ -1469,7 +1475,10 @@ td.text-right {
 /* popups */
 
 .popup-container .popup {
-  max-height: 340px;
+  max-width: 85%;
+  max-height: 400px;
+  solid-opacity: 1;
+  opacity: 1;
 }
 
 .popup-head {
