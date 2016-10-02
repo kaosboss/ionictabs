@@ -129,8 +129,10 @@ angular.module('starter.services', [])
       },
 
       isOnline: function () {
-        var networkState = navigator.connection.type;
-        return networkState !== Connection.UNKNOWN && networkState !== Connection.NONE;
+        if (navigator.connection){
+          var networkState = navigator.connection.type;
+          return networkState !== Connection.UNKNOWN && networkState !== Connection.NONE;
+        } else return false;
       },
 
       isOffline: function () {
