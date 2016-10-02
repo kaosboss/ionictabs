@@ -84,9 +84,49 @@
     <div ng-if="!regiao.radius" class="padding">
       <br>
       <br>
-      <p align="center" class="title">Texto de ajuda</p>
-      <p align="center" class="popup-sub-title">Texto de ajuda com legend</p>
+      <div class="game_help">
+
+          <h3>O que significam as cores no mapa?</h3>
+          <p style="text-align: left;">
+            Aqui vamos te explicar o que é necessário fazer para teres acesso a todos os conteudos e desafios que temos para ti.
+          </p>
+
+          <br>
+
+          <ul>
+            <li>
+              <h3 align="center">Região com acesso ao conteúdo e acesso aos desafios</h3>
+              <img src="img/mapa/marcadores/RI_A_green.png">
+
+
+              <p>Passou fisicamente pela região </p>
+              <p>Visualizou conteúdos de todos os pontos de interesse</p>
+              <p>Tem acesso aos desafios</p>
+            </li>
+              <br>
+            <li>
+              <h3 align="center">Região com acesso ao conteúdo mas sem acesso aos desafios</h3>
+              <img src="img/mapa/marcadores/RI_A_orange.png">
+
+              <p>Passou fisicamente pela região</p>
+              <p>Não visualizou conteúdos de todos os pontos de interesse</p>
+              <p>Não tem acesso aos desafios</p>
+            </li>
+            <br>
+            <li>
+              <h3 align="center">Região sem acesso ao conteúdo e sem acesso aos desafios</h3>
+              <img src="img/mapa/marcadores/RI_A_red.png">
+
+              <p>Não passou fisicamente pela região</p>
+              <p>Não tem acesso aos conteúdos</p>
+              <p>Não tem acesso aos desafios</p>
+            </li>
+          </ul>
     </div>
+
+
+  </div>
+
     <!--<button type="button" ng-click="unlock_regiao()" class="button button-balanced APPcenter">Desbloquear Regiao D</button>-->
     <!--</ion-item>-->
 
