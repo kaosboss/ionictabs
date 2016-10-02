@@ -1305,6 +1305,10 @@ legend {
 .desafios_help li img {
   float: left;
 }
+.desafios_help p {
+    padding-left: 4px;
+
+}
 
 .desafios_help li {
     overflow: auto;
@@ -1313,6 +1317,7 @@ legend {
     border-radius: 4px;
     /* color: #999999; */
     /* line-height: 90px; */
+    padding-top: 10px;
     padding-left: 2px;
     padding-bottom: 20px;
     padding-right: 7px;
