@@ -97,9 +97,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $rootScope.mypop = {
           cssClass: "myPopup",
           template: msg || '',
-          title: 'INFORMAÇÃO',
+          title: 'Notificação',
           subTitle: '',
-          buttonText: "OK"
+          buttonText: "Ok"
         };
         $rootScope.$broadcast("SHOW_POPUP");
       };
@@ -126,54 +126,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     var newsres = null;
     if (debug) alert("start");
 
-    $timeout(function () {
-      var confirmPopup = $ionicPopup.confirm({
-        cssClass: "myPopup",
-        // title: 'RI: ' + $scope.currentRI,
-        templateUrl: 'templates/popups/desafio_nok.html',
-        scope: $scope,
-        buttons: [
-          // {
-          //   text: 'Ficar',
-          //   type: 'button-next'
-          // },
-          {
-            text: '<b>Ok!</b>',
-            type: 'button button-popup',
-            onTap: function (e) {
-              console.log("Confirmed navigation to region", $state);
-              // if ($state.current.name != "tab.mapa") {
-              //   // $state.go("tab.mapa", {});
-              //   $ionicTabsDelegate.select(3);
-              //   $timeout(function () {
-              //     $rootScope.$broadcast('GO_REGIAO', {regiao: $regioes.convertRegiaoLongToShort($scope.currentRI)});
-              //   }, 300);
-              // } else {
-              //   $rootScope.$broadcast('GO_REGIAO', {regiao: $regioes.convertRegiaoLongToShort($scope.currentRI)});
-              // }
-              return 1;
-            }
-          }
-        ]
-      });
-
-      confirmPopup.then(function (res) {
-        if (res) {
-          console.log('resposta confirmacao de regiao - sim, ver conteudo', res);
-        } else {
-          console.log('Nao, ficar onde estou - nao', res);
-        }
-        $scope.popupON = 0;
-        $rootScope.popupON = 0;
-      });
-
-      $timeout(function () {
-        confirmPopup.close();
-        $scope.popupON = 0;
-        $rootScope.popupON = 0;
-      }, 1000000);
-
-    }, 5000);
 
     $scope.goAtividades = function () {
       console.log("Go Atividades");
@@ -194,19 +146,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       $state.go('tab.dash');
     };
 
-    // $scope.netWork = {
-    //   type: "",
-    //   isOnline: false,
-    //   isOffline: true,
-    //   onlineState: "",
-    //   offLineState: ""
-    // };
-
-    // console.log(typeof cordova);
-
-    // if (cordova !== undefined)
-    //   $ionicLoading.show();
-
     $ionicPlatform.ready(function () {
         cw("ionic platform ready");
 
@@ -217,6 +156,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         //     console.warn("swipper init");
         //   }
         // });
+
+        // $rootScope.showPopup({
+        //   // cssClass: "myPopup",
+        //   // template: '',
+        //   // title: '',
+        //   // subTitle: '',
+        //   // timeout: 100000,
+        //   templateUrl: 'templates/popups/desafio_nok.html',
+        //   // buttonText: "OK",
+        // });
+        // $rootScope.showPopup({ template: "Tens de visitar todos os pontos de interesse da região, para poder jogar o desafio"  });
+        $rootScope.showPopup({templateUrl: 'templates/popups/desafio_ok.html'});
 
         $rootScope.isOnline = $cordovaNetwork.isOnline();
 
@@ -523,12 +474,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               if ($IbeaconScanner.isScanning())
                 $IbeaconScanner.stopBeaconScan();
 
-              $rootScope.showPopup({
-                cssClass: "myPopup",
-                title: "INFORMAÇÃO",
-                buttonText: "OK",
-                template: "O bluetooth está desligado, sem alertas de interesse"
-              });
+              // $rootScope.showPopup({
+              //   cssClass: "myPopup",
+              //   title: "INFORMAÇÃO",
+              //   buttonText: "OK",
+              //   template: "O bluetooth está desligado, sem alertas de interesse"
+              // });
+              $rootScope.showAlert("O bluetooth está desligado, sem alertas de interesse");
             });
 
             if (device.platform === 'iOS') {
@@ -651,22 +603,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         mypop = {};
 
       if (!mypop.timeout)
-        mypop.timeout = 5000;
+        mypop.timeout = 15000;
 
-      var buttonText = mypop.buttonText || "OK";
+      var buttonText = mypop.buttonText || "Ok";
       var oButtons = mypop.oButtons || [
           {
-            text: '<b>' + mypop.buttonText + '</b>',
-            type: 'button-positive',
+            text: '<b>' + buttonText + '</b>',
+            type: 'button-popup'
           }
         ];
       var myPopup = $ionicPopup.show({
         cssClass: "myPopup",
         template: mypop.template || '',
-        title: mypop.title || 'INFORMAÇÃO',
+        templateUrl: mypop.templateUrl || '',
+        title: mypop.title || '',
         subTitle: mypop.subTitle || '',
         scope: $scope,
-        buttons: oButtons
+        buttons: oButtons,
+        buttonText: buttonText
       });
 
       myPopup.then(function (res) {
@@ -1921,7 +1875,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                         modelo: ionic.Platform.device().model
                       })
                     }
-                    $rootScope.showAlert("Facebook Logged IN com o nome: " + profileInfo.name + " email: " + profileInfo.email);
+                    // $rootScope.showAlert("Facebook Logged IN com o nome: " + profileInfo.name + " email: " + profileInfo.email);
                     $rootScope.enableBeacons = true;
                     $state.go("tab.dash");
 
@@ -1971,7 +1925,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       $scope.showLogOutMenu = function () {
 
         if (!$cordovaNetwork.isOnline()) {
-          $rootScope.showAlert("Ligue a Internet e tente novamente");
+          $rootScope.showAlert("Liga a Internet e tente novamente");
           return;
         }
 
@@ -1992,7 +1946,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             // Facebook logout
             facebookConnectPlugin.logout(function () {
                 $ionicLoading.hide();
-                $rootScope.showAlert("Facebook Logged OUT!");
+                // $rootScope.showAlert("Facebook Logged OUT!");
                 $state.go('tab.dash');
               },
               function (fail) {
@@ -2018,7 +1972,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.goQuiz = function () {
       console.log("Go Quiz", $scope.regiao);
       if (!$scope.regiao.completed) {
-        $rootScope.showAlert("Tens de visitar todos os pontos de interesse da região, para poder jogar o desafio");
+        $rootScope.showPopup({templateUrl: 'templates/popups/desafio_locked.html'});
         return;
       }
       // $ionicHistory.goBack();
@@ -2330,7 +2284,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           if (dist < circleRadius) {
             console.log("in circle: %s", aCircles[f].nome);
             if (aCircles[f].locked) {
-              $rootScope.showAlert("A " + aCircles[f].descricao + " está por descobrir");
+              // $rootScope.showAlert("A " + aCircles[f].descricao + " está por descobrir");
+              $rootScope.showPopup({templateUrl: 'templates/popups/regiao_locked.html'});
               // context.beginPath();
               // context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
               // context.lineWidth = 1;
