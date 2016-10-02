@@ -1338,6 +1338,13 @@ legend {
   cursor: pointer;
 }
 
+.desafios_help table {
+    table-layout: fixed;
+    width: 300px;
+}
+
+
+
 /* CSS para tabela do status dos desafios*/
 
 div.table-title {
