@@ -1,10 +1,8 @@
-<ion-view view-title="Mapa">
+<ion-view view-title="Mapa" >
   <!--<ion-floating-menu has-footer="true">-->
   <!--<ion-floating-button class="" click="" has-footer="true" button-color="#2AC9AA" icon="ion-clipboard"-->
   <!--<ion-floating-button button-class="" click="" has-footer="true" button-color="#4CAF50" icon="ion-clipboard"-->
-  <ion-floating-button ng-if="regiao.radius" button-class="" click="goQuiz()" has-footer="true"
-                       button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}"
-                       icon="ion-clipboard"
+  <ion-floating-button ng-if="regiao.radius" button-class="" click="goQuiz()" has-footer="true" button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}" icon="ion-clipboard"
                        iconColor="#fff">
   </ion-floating-button>
   <!--<div class="floatUp"><ion-floating-button class="" click="" button-color="#ef473a" icon="ion-qr-scanner"-->
@@ -27,14 +25,6 @@
       <img class="captionCanvas animated bounce" id="marcador"
            ng-src="img/mapa/marcadores/{{marcador ? marcador : 'marcador_galo.png'}}"
            style="width: 60px; height: 65px">
-      <!--<div class="helpCanvas" id="legenda">-->
-        <!--<button class="button-small button-icon button-popup button-light" ng-click="showLegenda()">-->
-          <!--<i class="icon ion-help"></i>-->
-        <!--</button>-->
-      <!--</div>-->
-      <img class="helpCanvas" id="legenda" ng-click="showLegenda()"
-           ng-src="img/mapa/marcadores/legenda.png"
-           style="width: 30px; height: auto">
     </div>
     <!--<HR style="box-shadow: 0 8px 6px -6px #999;">-->
     <div style="width: 100%; height: 20px; box-shadow: 0 10px 20px -6px #999;"></div>
@@ -92,48 +82,47 @@
       </ion-scroll>
     </div>
     <div ng-if="!regiao.radius" class="padding">
-      <!--<br>-->
-      <!--<br>-->
-      <!--<div class="game_help">-->
+      <br>
+      <br>
+      <div class="desafios_help">
 
-        <!--<h3>O que significam as cores no mapa?</h3>-->
-        <!--<p style="text-align: left;">-->
-          <!--Aqui vamos te explicar o que é necessário fazer para teres acesso a todos os conteudos e desafios que temos-->
-          <!--para ti.-->
-        <!--</p>-->
+        <h3>O que significam as cores no mapa?</h3>
+        <p style="text-align: left;">
+          Aqui vamos te explicar o que é necessário fazer para teres acesso a todos os conteudos e desafios que temos para ti.
+        </p>
 
-        <!--<br>-->
+        <br>
 
-        <!--<ul>-->
-          <!--<li>-->
-            <!--<h3 align="center">Região com acesso ao conteúdo e acesso aos desafios</h3>-->
-            <!--<img src="img/mapa/marcadores/RI_A_green.png">-->
+        <ul>
+          <li>
+            <h3 align="center">Região com acesso ao conteúdo e acesso aos desafios</h3>
+            <img src="img/mapa/marcadores/RI_A_90_green.png">
 
 
-            <!--<p>Passou fisicamente pela região </p>-->
-            <!--<p>Visualizou conteúdos de todos os pontos de interesse</p>-->
-            <!--<p>Tem acesso aos desafios</p>-->
-          <!--</li>-->
-          <!--<br>-->
-          <!--<li>-->
-            <!--<h3 align="center">Região com acesso ao conteúdo mas sem acesso aos desafios</h3>-->
-            <!--<img src="img/mapa/marcadores/RI_A_orange.png">-->
+            <p>Passou fisicamente pela região </p>
+            <p>Visualizou conteúdos de todos os pontos de interesse</p>
+            <p>Tem acesso aos desafios</p>
+          </li>
+          <br>
+          <li>
+            <h3 align="center">Região com acesso ao conteúdo mas sem acesso aos desafios</h3>
+            <img src="img/mapa/marcadores/RI_A_90_orange.png">
 
-            <!--<p>Passou fisicamente pela região</p>-->
-            <!--<p>Não visualizou conteúdos de todos os pontos de interesse</p>-->
-            <!--<p>Não tem acesso aos desafios</p>-->
-          <!--</li>-->
-          <!--<br>-->
-          <!--<li>-->
-            <!--<h3 align="center">Região sem acesso ao conteúdo e sem acesso aos desafios</h3>-->
-            <!--<img src="img/mapa/marcadores/RI_A_red.png">-->
+            <p>Passou fisicamente pela região</p>
+            <p>Não visualizou conteúdos de todos os pontos de interesse</p>
+            <p>Não tem acesso aos desafios</p>
+          </li>
+          <br>
+          <li>
+            <h3 align="center">Região sem acesso ao conteúdo e sem acesso aos desafios</h3>
+            <img src="img/mapa/marcadores/RI_A_90_red.png">
 
-            <!--<p>Não passou fisicamente pela região</p>-->
-            <!--<p>Não tem acesso aos conteúdos</p>-->
-            <!--<p>Não tem acesso aos desafios</p>-->
-          <!--</li>-->
-        <!--</ul>-->
-      <!--</div>-->
+            <p>Não passou fisicamente pela região</p>
+            <p>Não tem acesso aos conteúdos</p>
+            <p>Não tem acesso aos desafios</p>
+          </li>
+        </ul>
+      </div>
 
 
     </div>
