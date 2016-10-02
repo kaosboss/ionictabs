@@ -173,7 +173,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // $rootScope.showPopup({ template: "Tens de visitar todos os pontos de interesse da região, para poder jogar o desafio"  });
         // $rootScope.showPopup({templateUrl: 'templates/popups/desafio_ok.html'});
         // $rootScope.showPopup({templateUrl: 'templates/popups/mapa_legenda.html', timeout: 600000});
-        $rootScope.isOnline = $cordovaNetwork.isOnline();
+        if (($cordovaNetwork))
+          if ($cordovaNetwork.isOnline)
+          $rootScope.isOnline = $cordovaNetwork.isOnline();
 
         $window.document.addEventListener("pause", function (event) {
           console.log('run() -> cordovaPauseEvent');
@@ -1970,7 +1972,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     console.log("Mapa controller ready");
 
     $scope.showLegenda = function () {
-      $rootScope.showPopup({templateUrl: 'templates/popups/mapa_legenda.html', cssClass: 'myPopupLegenda', timeout: 600000});
+      $rootScope.showPopup({
+        templateUrl: 'templates/popups/mapa_legenda.html',
+        cssClass: 'myPopupLegenda',
+        timeout: 600000
+      });
     };
 
     scrollToTop = function () { //ng-click for back to top button
@@ -2177,7 +2183,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // $regioes.drawedMapa('OFF');
       // createCircles();
       // $timeout(function () {
-        loadRegiao(args.regiao);
+      loadRegiao(args.regiao);
       // }, 200);
     });
 
@@ -2596,6 +2602,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   })
   .controller('DebugCtrl', function ($scope, $rootScope) {
 
+    $scope.showDesafios_help = function () {
+      $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+    };
     // $scope.Login = {
     //   nome: $rootScope.APP.user.name,
     //   email: $rootScope.APP.user.email,
