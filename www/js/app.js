@@ -126,6 +126,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     var newsres = null;
     if (debug) alert("start");
 
+    $scope.showDesafios_help = function () {
+      $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+    };
+
 
     $scope.goAtividades = function () {
       console.log("Go Atividades");
