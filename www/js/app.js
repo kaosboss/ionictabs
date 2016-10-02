@@ -3338,7 +3338,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         scope.goMapa = function () {
           $state.go("tab.mapa", {
             RI: "ALL",
-            PI: ""
+            PI: RI
           });
         };
 
@@ -3409,9 +3409,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             if (scope.score >= 3) {
               scope.banner += ". Parabéns, atingiste a pontuação máxima e concluiste este desafio!";
               scope.quizCompleto();
-            } else
-            // scope.goMapa();
+            } else {
+              // scope.goMapa();
+              // $timeout(function () {
+              //   $rootScope.$broadcast("GO_REGIAO", { regiao: RI });
               $ionicHistory.goBack();
+              // }, 500);
+            }
+
             scope.banner += ". A pontuação máxima para este desafio é de 3 pontos.";
             // t1 = 2000;
             // t2 = 4000;
