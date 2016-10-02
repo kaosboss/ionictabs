@@ -106,7 +106,7 @@ body {
 .myPopup  > .popup {
   border-radius: 5px !important;
   width: 250px;
-  height: 331px;
+  max-height: 331px;
 }
 
 .image-list-thumb {
