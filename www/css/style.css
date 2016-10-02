@@ -1475,3 +1475,9 @@ td.text-right {
 .popup-head {
   padding: 5px;
 }
+
+.helpCanvas {
+  right: 14px;
+  top: 140px;
+  position: absolute;
+}
