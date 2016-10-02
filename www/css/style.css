@@ -1307,7 +1307,19 @@ legend {
 }
 
 .desafios_help li {
-  overflow: auto;
+    overflow: auto;
+    height: 100%;
+    border: 0px solid rgba(123, 123, 123, 0.49804);
+    border-radius: 4px;
+    /* color: #999999; */
+    /* line-height: 90px; */
+    padding-left: 2px;
+    padding-bottom: 20px;
+    padding-right: 7px;
+    /* font-size: 24px; */
+    /* font-weight: 400; */
+    background-color: ghostwhite;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 0px;
 }
 
 .desafios_help li:hover {
