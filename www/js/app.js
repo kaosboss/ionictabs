@@ -172,7 +172,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // });
         // $rootScope.showPopup({ template: "Tens de visitar todos os pontos de interesse da região, para poder jogar o desafio"  });
         // $rootScope.showPopup({templateUrl: 'templates/popups/desafio_ok.html'});
-        // $rootScope.showPopup({templateUrl: 'templates/popups/mapa_legenda.html', timeout: 600000});
+      // $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+
         if (($cordovaNetwork))
           if ($cordovaNetwork.isOnline)
           $rootScope.isOnline = $cordovaNetwork.isOnline();
