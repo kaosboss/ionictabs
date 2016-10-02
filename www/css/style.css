@@ -935,7 +935,7 @@ form *:focus {
 
 .APPmain {
   font-size: 18px;
-  opacity: 0.85;
+  /*opacity: 0.85;*/
 }
 
 /* progress bar */
@@ -945,6 +945,7 @@ form *:focus {
   color: #404040;
   font-size: medium;
   /*background: #2a2a2a;*/
+  margin-top: -15px;
 }
 
 .container {
@@ -1110,14 +1111,14 @@ form *:focus {
 
 .radialLabelRegioes {
   position: relative;
-  top: -20px;
-  left: -30px;
+  top: -25px;
+  left: -5px;
 }
 
 .radialLabelPontos {
   position: relative;
-  top: -20px;
-  left: -30px;
+  top: -25px;
+  left: -40px;
 }
 
 /* quiz */
