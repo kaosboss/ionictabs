@@ -1,16 +1,16 @@
 <ion-view view-title="Mapa" >
   <!--<ion-floating-menu has-footer="true">-->
-  <!--<ion-floating-button class="" click="" has-footer="true" button-color="#2AC9AA" icon="ion-clipboard"-->
-  <!--<ion-floating-button button-class="" click="" has-footer="true" button-color="#4CAF50" icon="ion-clipboard"-->
-  <ion-floating-button ng-if="regiao.radius" button-class="" click="goQuiz()" has-footer="true" button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}" icon="ion-clipboard"
-                       iconColor="#fff">
-  </ion-floating-button>
-  <!--<div class="floatUp"><ion-floating-button class="" click="" button-color="#ef473a" icon="ion-qr-scanner"-->
-  <!--iconColor="#fff">-->
-  <!--</ion-floating-button></div>-->
-  <!--<ion-floating-button class="" click="" has-footer="" button-color="#ef473a" icon="ion-qr-scanner"-->
-  <!--iconColor="#fff">-->
-  <!--</ion-floating-button>-->
+    <!--<ion-floating-button class="" click="" has-footer="true" button-color="#2AC9AA" icon="ion-clipboard"-->
+    <!--<ion-floating-button button-class="" click="" has-footer="true" button-color="#4CAF50" icon="ion-clipboard"-->
+    <ion-floating-button ng-if="regiao.radius" button-class="" click="goQuiz()" has-footer="true" button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}" icon="ion-clipboard"
+                         iconColor="#fff">
+    </ion-floating-button>
+    <!--<div class="floatUp"><ion-floating-button class="" click="" button-color="#ef473a" icon="ion-qr-scanner"-->
+                         <!--iconColor="#fff">-->
+    <!--</ion-floating-button></div>-->
+    <!--<ion-floating-button class="" click="" has-footer="" button-color="#ef473a" icon="ion-qr-scanner"-->
+                         <!--iconColor="#fff">-->
+    <!--</ion-floating-button>-->
   <!--</ion-floating-menu>-->
 
   <ion-content class="APPmain has-bouncing" has-bouncing="true">
@@ -45,7 +45,7 @@
       <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
       <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">{{regiao.banner}}</p>
       <span ng-click="closeHeader()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;"
-                                                                                     class="subdued button-small button-light ion-close"></a> ]
+                                                                                    class="subdued button-small button-light ion-close"></a> ]
       </span>
     </ion-item>
     <!--<ion-item ng-if="!headeron">-->
@@ -84,48 +84,48 @@
     <div ng-if="!regiao.radius" class="padding">
       <br>
       <br>
-      <div class="desafios_help">
+      <div class="game_help">
 
-        <h3>O que significam as cores no mapa?</h3>
-        <p style="text-align: left;">
-          Aqui vamos te explicar o que é necessário fazer para teres acesso a todos os conteudos e desafios que temos para ti.
-        </p>
+          <h3>O que significam as cores no mapa?</h3>
+          <p style="text-align: left;">
+            Aqui vamos te explicar o que é necessário fazer para teres acesso a todos os conteudos e desafios que temos para ti.
+          </p>
 
-        <br>
-
-        <ul>
-          <li>
-            <h3 align="center">Região com acesso ao conteúdo e acesso aos desafios</h3>
-            <img src="img/mapa/marcadores/RI_A_90_green.png">
-
-
-            <p>Passou fisicamente pela região </p>
-            <p>Visualizou conteúdos de todos os pontos de interesse</p>
-            <p>Tem acesso aos desafios</p>
-          </li>
           <br>
-          <li>
-            <h3 align="center">Região com acesso ao conteúdo mas sem acesso aos desafios</h3>
-            <img src="img/mapa/marcadores/RI_A_90_orange.png">
 
-            <p>Passou fisicamente pela região</p>
-            <p>Não visualizou conteúdos de todos os pontos de interesse</p>
-            <p>Não tem acesso aos desafios</p>
-          </li>
-          <br>
-          <li>
-            <h3 align="center">Região sem acesso ao conteúdo e sem acesso aos desafios</h3>
-            <img src="img/mapa/marcadores/RI_A_90_red.png">
-
-            <p>Não passou fisicamente pela região</p>
-            <p>Não tem acesso aos conteúdos</p>
-            <p>Não tem acesso aos desafios</p>
-          </li>
-        </ul>
-      </div>
+          <ul>
+            <li>
+              <h3 align="center">Região com acesso ao conteúdo e acesso aos desafios</h3>
+              <img src="img/mapa/marcadores/RI_A_green.png">
 
 
+              <p>Passou fisicamente pela região </p>
+              <p>Visualizou conteúdos de todos os pontos de interesse</p>
+              <p>Tem acesso aos desafios</p>
+            </li>
+              <br>
+            <li>
+              <h3 align="center">Região com acesso ao conteúdo mas sem acesso aos desafios</h3>
+              <img src="img/mapa/marcadores/RI_A_orange.png">
+
+              <p>Passou fisicamente pela região</p>
+              <p>Não visualizou conteúdos de todos os pontos de interesse</p>
+              <p>Não tem acesso aos desafios</p>
+            </li>
+            <br>
+            <li>
+              <h3 align="center">Região sem acesso ao conteúdo e sem acesso aos desafios</h3>
+              <img src="img/mapa/marcadores/RI_A_red.png">
+
+              <p>Não passou fisicamente pela região</p>
+              <p>Não tem acesso aos conteúdos</p>
+              <p>Não tem acesso aos desafios</p>
+            </li>
+          </ul>
     </div>
+
+
+  </div>
 
     <!--<button type="button" ng-click="unlock_regiao()" class="button button-balanced APPcenter">Desbloquear Regiao D</button>-->
     <!--</ion-item>-->
