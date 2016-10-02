@@ -2619,12 +2619,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // };
 
   })
-  .controller('GameCtrl', function ($scope, $state, $window, $timeout) {
+  .controller('GameCtrl', function ($rootScope, $scope, $state, $window, $timeout) {
     console.log("Game controller ready");
 
     $timeout(function () {
       $window.document.getElementById("twentyfive").checked = true;
     }, 300);
+
+    $scope.showDesafios_help = function () {
+      $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+    };
 
   })
   .controller('RadialCtrl', function ($scope, $state, $window, $timeout, $regioes) {
