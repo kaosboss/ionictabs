@@ -167,8 +167,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         //   // buttonText: "OK",
         // });
         // $rootScope.showPopup({ template: "Tens de visitar todos os pontos de interesse da região, para poder jogar o desafio"  });
-        $rootScope.showPopup({templateUrl: 'templates/popups/desafio_ok.html'});
-
+        // $rootScope.showPopup({templateUrl: 'templates/popups/desafio_ok.html'});
+        $rootScope.showPopup({templateUrl: 'templates/popups/mapa_legenda.html', timeout: 600000});
         $rootScope.isOnline = $cordovaNetwork.isOnline();
 
         $window.document.addEventListener("pause", function (event) {
@@ -1965,6 +1965,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // });
     console.log("Mapa controller ready");
 
+    $scope.showLegenda = function () {
+      $rootScope.showPopup({templateUrl: 'templates/popups/mapa_legenda.html', timeout: 600000});
+    };
+
     scrollToTop = function () { //ng-click for back to top button
       $ionicScrollDelegate.scrollTop();
     };
@@ -2168,7 +2172,20 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // drawedMapa = false;
       // $regioes.drawedMapa('OFF');
       // createCircles();
-      loadRegiao(args.regiao);
+      // $timeout(function () {
+        loadRegiao(args.regiao);
+      // }, 200);
+    });
+
+    $scope.$on('QUIZ_POPUP', function (e, args) {
+      console.log("QUIZ_POPUP refresh: ", args);
+      // drawedMapa = false;
+      // $regioes.drawedMapa('OFF');
+      // createCircles();
+      $timeout(function () {
+        // loadRegiao(args.regiao);
+        $rootScope.showPopup({templateUrl: 'templates/popups/desafio_' + args.desafio + '.html'});
+      }, 200);
     });
 
     $scope.closeHeader = function () {
@@ -3315,7 +3332,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
     };
   })
-  .directive('quiz', function ($timeout, $state, $regioes, $gameFactory, $ionicHistory) {
+  .directive('quiz', function ($timeout, $state, $regioes, $gameFactory, $ionicHistory, $rootScope) {
     return {
       restrict: 'AE',
       scope: {},
@@ -3335,11 +3352,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // $scope.headeron = false;
         };
 
-        scope.goMapa = function () {
-          $state.go("tab.mapa", {
-            RI: "ALL",
-            PI: RI
-          });
+        scope.goMapa = function (res) {
+          $timeout(function () {
+            $rootScope.$broadcast("QUIZ_POPUP", {desafio: res});
+          }, 500);
+          $ionicHistory.goBack();
+          // $state.go("tab.mapa", {
+          //   RI: "ALL",
+          //   PI: RI
+          // });
         };
 
         scope.start = function () {
@@ -3410,11 +3431,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               scope.banner += ". Parabéns, atingiste a pontuação máxima e concluiste este desafio!";
               scope.quizCompleto();
             } else {
-              // scope.goMapa();
+              scope.goMapa('nok');
               // $timeout(function () {
               //   $rootScope.$broadcast("GO_REGIAO", { regiao: RI });
-              $ionicHistory.goBack();
               // }, 500);
+              // $ionicHistory.goBack();
             }
 
             scope.banner += ". A pontuação máxima para este desafio é de 3 pontos.";
@@ -3439,8 +3460,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             if (found) {
               console.log("quizCompleto: UPDATE: ", regioes);
               $regioes.setRegioesPromise(regioes).then(function () {
-
-                $ionicHistory.goBack();
+                scope.goMapa('ok');
+                // $ionicHistory.goBack();
               });
               // $timeout(function () {
               //   scope.goMapa();
