@@ -172,9 +172,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // });
         // $rootScope.showPopup({ template: "Tens de visitar todos os pontos de interesse da região, para poder jogar o desafio"  });
         // $rootScope.showPopup({templateUrl: 'templates/popups/desafio_ok.html'});
-  // $timeout(function () {
-  //   $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
-  // }, 1000);
+  $timeout(function () {
+    $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+  }, 1000);
 
         if (($cordovaNetwork))
           if ($cordovaNetwork.isOnline)
@@ -602,8 +602,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     });
 
   })
-  .controller('PopupCtrl', function ($rootScope, $scope, $ionicPopup, $timeout, $regioes, $state, $ionicTabsDelegate) {
+  .controller('PopupCtrl', function ($rootScope, $scope, $ionicPopup, $timeout, $state, $ionicTabsDelegate) {
 
+    console.log("PopupCtrl startted");
 // Triggered on a button click, or some other target
     $scope.showPopup = function (mypop) {
       $rootScope.popupON = 1;
@@ -645,7 +646,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.$on('SHOW_POPUP', function (e) {
       // do something
-      // console.log("POPUP controller scope.on RI_FOUND, enter.");
+      console.log("POPUP controller enter.");
       if (!$scope.popupON) {
         $scope.popupON = 1;
         $scope.showPopup($rootScope.mypop);
@@ -685,10 +686,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 // $state.go("tab.mapa", {});
                 $ionicTabsDelegate.select(3);
                 $timeout(function () {
-                  $rootScope.$broadcast('GO_REGIAO', {regiao: $regioes.convertRegiaoLongToShort($scope.currentRI)});
+                  $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI})
                 }, 300);
               } else {
-                $rootScope.$broadcast('GO_REGIAO', {regiao: $regioes.convertRegiaoLongToShort($scope.currentRI)});
+                $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI})
               }
               return 1;
             }
@@ -2186,7 +2187,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // $regioes.drawedMapa('OFF');
       // createCircles();
       // $timeout(function () {
-      loadRegiao(args.regiao);
+      loadRegiao($regioes.convertRegiaoLongToShort(args.regiao));
       // }, 200);
     });
 
