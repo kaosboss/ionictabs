@@ -2197,7 +2197,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // createCircles();
       $timeout(function () {
         // loadRegiao(args.regiao);
-        $rootScope.showPopup({templateUrl: 'templates/popups/desafio_' + args.desafio + '.html'});
+        $rootScope.showPopup({ templateUrl: 'templates/popups/desafio_' + args.desafio + '.html'});
       }, 200);
     });
 
@@ -3375,7 +3375,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         scope.goMapa = function (res) {
           $timeout(function () {
             $rootScope.$broadcast("QUIZ_POPUP", {desafio: res});
-          }, 500);
+          }, 600);
           $ionicHistory.goBack();
           // $state.go("tab.mapa", {
           //   RI: "ALL",
