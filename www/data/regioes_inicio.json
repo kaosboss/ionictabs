@@ -6,7 +6,7 @@
     "centerY": 105,
     "radius": 20,
     "locked": false,
-    "banner": "Bem-vindo à “Região A”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!",
+    "banner": "É aqui que vamos iniciar a nossa visita à Quinta Pedagógica. Eu vou estar sempre ao pé de ti para garantir que tiras o máximo de partido desta visita!",
     "PIs": [
       {
         "id": 1,
@@ -67,7 +67,7 @@
     "centerY": 95,
     "radius": 20,
     "locked": false,
-    "banner": "Bem-vindo à “região B”! Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos! ",
+    "banner": "Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!",
     "PIs": [
       {
         "id": 5,
@@ -133,7 +133,7 @@
     "centerY": 88,
     "radius": 22,
     "locked": false,
-    "banner" : "Bem-vindo à região C! Agora que já conheceste a minha casa e os meus vizinhos do lado, vou dar-te a conhecer excelentes frutos e árvores, bem como os meus vizinhos mais saloios ... ",
+    "banner" : "Agora que já conheceste a minha casa e os meus vizinhos do lado, vou dar-te a conhecer excelentes frutos e árvores, bem como os meus vizinhos mais saloios ... ",
     "PIs": [
       {
         "id": 10,
@@ -204,7 +204,7 @@
     "centerY": 70,
     "radius": 32,
     "locked": false,
-    "banner": "Estás agora a entrar na região D! Esta é a região com mais água da Quinta! Para além da água vais também ficar a saber mais de uma das árvores mais inteligentes de todas!",
+    "banner": "Esta é a região com mais água da Quinta! Para além da água vais também ficar a saber mais de uma das árvores mais inteligentes que existe!",
     "PIs": [
       {
         "id": 16,
@@ -259,7 +259,7 @@
     "centerX": 53,
     "centerY": 50,
     "radius": 36,
-    "banner": "Chegaste à região E! Depois de já teres ficado a conhecer o Eucalipto, vais agora conhecer as duas outras árvores mais abundantes em Portugal e com uma grande importância. Vou-te ensinar muitas coisas!",
+    "banner": "Depois de já teres ficado a conhecer o Eucalipto, vais agora conhecer as duas outras árvores mais abundantes em Portugal e com uma grande importância. Vou-te ensinar muitas coisas!",
     "locked": true,
     "PIs": [
       {
@@ -311,9 +311,9 @@
       {
         "question": " Cerca de quantas sementes estão dentro da alfarroba?",
         "options": [
-          "13",
-          "33",
-          "100"
+          "10 a 16",
+          "30 a 36",
+          "100 a 120"
         ],
         "answer": 0
       }
@@ -326,7 +326,7 @@
     "centerY": 110,
     "radius": 31,
     "locked": false,
-    "banner": "Nesta região F vais ficar a conhecer a Romã e vais também ficar a saber quais as características do Montado.",
+    "banner": "Nesta região vais ficar a conhecer a Romã e vais também ficar a saber quais as características do Montado.",
     "PIs": [
       {
         "id": 24,
@@ -377,7 +377,7 @@
     "centerY": 125,
     "radius": 20,
     "locked": false,
-    "banner": "Estamos quase a chegar ao fim, mas nesta região G ainda vais poder aprender muitas coisas interessantes! Prepara-te para conhecer mais sobre frutas deliciosas e sobre o famoso Pinheiro!",
+    "banner": "Nesta região ainda vais poder aprender muitas coisas interessantes! Prepara-te para conhecer mais sobre frutas deliciosas e sobre o famoso Pinheiro!",
     "PIs": [
       {
         "id": 26,
@@ -433,7 +433,7 @@
     "centerY": 125,
     "radius": 20,
     "locked": false,
-    "banner": "Chegámos à última região, a H! Nesta região vou mostrar-te árvores que vieram da China, vou-te falar de árvores que vivem mais de 2.000 anos e de plantas que se movem com o sol...",
+    "banner": "Aqui, vou mostrar-te árvores que vieram da China, vou-te falar de árvores que vivem mais de 2.000 anos e de plantas que se movem com o sol...",
     "PIs": [
       {
         "id": 29,
