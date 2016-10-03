@@ -109,6 +109,11 @@ body {
   max-height: 331px;
 }
 
+.myPopup .popup-head {
+  padding: 5px;
+  opacity: 0;
+}
+
 .myPopupLegenda  > .popup {
   border-radius: 5px !important;
   width: 330px;
