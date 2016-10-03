@@ -172,7 +172,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // });
         // $rootScope.showPopup({ template: "Tens de visitar todos os pontos de interesse da região, para poder jogar o desafio"  });
         // $rootScope.showPopup({templateUrl: 'templates/popups/desafio_ok.html'});
-      // $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+  // $timeout(function () {
+  //   $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+  // }, 1000);
 
         if (($cordovaNetwork))
           if ($cordovaNetwork.isOnline)
@@ -2195,7 +2197,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // createCircles();
       $timeout(function () {
         // loadRegiao(args.regiao);
-        $rootScope.showPopup({templateUrl: 'templates/popups/desafio_' + args.desafio + '.html'});
+        $rootScope.showPopup({ templateUrl: 'templates/popups/desafio_' + args.desafio + '.html'});
       }, 200);
     });
 
@@ -3373,7 +3375,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         scope.goMapa = function (res) {
           $timeout(function () {
             $rootScope.$broadcast("QUIZ_POPUP", {desafio: res});
-          }, 500);
+          }, 600);
           $ionicHistory.goBack();
           // $state.go("tab.mapa", {
           //   RI: "ALL",
