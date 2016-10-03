@@ -24,18 +24,20 @@ function clone(obj) {
 
 angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCacheFactory', 'angular-timeline', 'ngImageAppear', 'angular-scroll-animate', 'ion-floating-menu', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
 
+  .config(function ($ionicConfigProvider) {
+    if (ionic.Platform.platform() == "android") {
+      console.log("jsScrolling(false)");
+      $ionicConfigProvider.scrolling.jsScrolling(false);
+    }
+  })
   .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window, $ImageCacheFactory, $state) {
     $rootScope.APP = {
       logged: false,
       firstTime: false,
       user: {
         picture: 'img/SNP_small.jpg'
-      },
-      goDefinicoes: function () {
-        console.log("Go definicoes");
-        $state.go('tab.account')
       }
-    }
+    };
 
     var preLoadImages = [
       'img/atividades_quinta_pedagogica_small.jpg',
@@ -103,7 +105,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         };
         $rootScope.$broadcast("SHOW_POPUP");
       };
-
+      // $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
       // ionic.Platform.isFullScreen = true;
       // ionic.Platform.fullScreen();
 
@@ -125,6 +127,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     var swiper = null;
     var newsres = null;
     if (debug) alert("start");
+
+    $timeout(function () {
+      //   $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+      // }, 1000);
+      $ionicPopup.confirm({
+        cssClass: "myPopupLegenda",
+        // title: 'RI: ' + $scope.currentRI,
+        templateUrl: 'templates/tab-game_help.html',
+        // scope: $scope,
+        buttons: [
+          {
+            text: 'OK',
+            type: 'button-popup'
+          }
+        ]
+      });
+
+    }, 3000);
 
     $scope.showDesafios_help = function () {
       $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
@@ -172,13 +192,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // });
         // $rootScope.showPopup({ template: "Tens de visitar todos os pontos de interesse da região, para poder jogar o desafio"  });
         // $rootScope.showPopup({templateUrl: 'templates/popups/desafio_ok.html'});
-  $timeout(function () {
-    $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
-  }, 1000);
 
         if (($cordovaNetwork))
           if ($cordovaNetwork.isOnline)
-          $rootScope.isOnline = $cordovaNetwork.isOnline();
+            $rootScope.isOnline = $cordovaNetwork.isOnline();
 
         $window.document.addEventListener("pause", function (event) {
           console.log('run() -> cordovaPauseEvent');
@@ -686,6 +703,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 // $state.go("tab.mapa", {});
                 $ionicTabsDelegate.select(3);
                 $timeout(function () {
+                  $ionicTabsDelegate.select(3);
                   $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI})
                 }, 300);
               } else {
@@ -2198,7 +2216,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // createCircles();
       $timeout(function () {
         // loadRegiao(args.regiao);
-        $rootScope.showPopup({ templateUrl: 'templates/popups/desafio_' + args.desafio + '.html'});
+        $rootScope.showPopup({templateUrl: 'templates/popups/desafio_' + args.desafio + '.html'});
       }, 200);
     });
 
