@@ -1398,7 +1398,501 @@ angular.module('starter.services', [])
   .factory('perguntas', function ($http, $rootScope) {
 
     var perguntas = [];
-    var regioes_inicio = [];
+    var regioes_inicio = [
+        {
+          "nome": "RI_A",
+          "descricao": "Região de interesse A",
+          "centerX": 273,
+          "centerY": 105,
+          "radius": 20,
+          "locked": false,
+          "banner": "É aqui que vamos iniciar a nossa visita à Quinta Pedagógica. Eu vou estar sempre ao pé de ti para garantir que tiras o máximo de partido desta visita!",
+          "PIs": [
+            {
+              "id": 1,
+              "nome": "PI_1",
+              "descricao": "Início do percurso"
+            },
+            {
+              "id": 2,
+              "nome": "PI_2",
+              "descricao": "Horta de Aromáticas"
+            },
+            {
+              "id": 3,
+              "nome": "PI_3",
+              "descricao": "Poço - Elemento de água típico da Quinta"
+            },
+            {
+              "id": 4,
+              "nome": "PI_4",
+              "descricao": "Pássaros"
+            }
+          ],
+          "quizDone": false,
+          "Quiz": [
+            {
+              "question": "Qual das plantas tem uma cor lilás?",
+              "options": [
+                "Alfazema",
+                "Coentros",
+                "Manjerico"
+              ],
+              "answer": 0
+            },
+            {
+              "question": "Qual a planta usada para dores musculares?",
+              "options": [
+                "Alecrim",
+                "Salsa",
+                "Rosmaninho"
+              ],
+              "answer": 2
+            },
+            {
+              "question": "Como se chamam os pássaros brancos?",
+              "options": [
+                "Piriquitos",
+                "Rolas",
+                "Pombas"
+              ],
+              "answer": 1
+            }
+          ]
+        },
+        {
+          "nome": "RI_B",
+          "descricao": "Região de interesse B",
+          "centerX": 230,
+          "centerY": 95,
+          "radius": 20,
+          "locked": false,
+          "banner": "Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!",
+          "PIs": [
+            {
+              "id": 5,
+              "nome": "PI_5",
+              "descricao": "Horta de Aromáticas - Rosmaninho"
+            },
+            {
+              "id": 6,
+              "nome": "PI_6",
+              "descricao": "Horta Pedagógica"
+            },
+            {
+              "id": 7,
+              "nome": "PI_7",
+              "descricao": "Pombal"
+            },
+            {
+              "id": 8,
+              "nome": "PI_8",
+              "descricao": "Capoeira de Galinhas"
+            },
+            {
+              "id": 9,
+              "nome": "PI_9",
+              "descricao": "Capoeira de Gansos, Patos mudos e Patos marrecos "
+            }
+          ],
+          "quizDone": false,
+          "Quiz": [
+            {
+              "question": "Quantos dedos tem cada pata do Pantufas?",
+              "options": [
+                "3",
+                "4",
+                "5"
+              ],
+              "answer": 1
+            },
+            {
+              "question": "Qual a vitamina que a cenoura tem e que faz bem à visão?",
+              "options": [
+                "Vitamina A",
+                "Vitamina B",
+                "Vitamina C"
+              ],
+              "answer": 0
+            },
+            {
+              "question": "Quantos ovos em média pôem as galinhas por dia?",
+              "options": [
+                "1",
+                "3",
+                "4"
+              ],
+              "answer": 0
+            }
+          ]
+        },
+        {
+          "nome": "RI_C",
+          "descricao": "Região de interesse C",
+          "centerX": 187,
+          "centerY": 88,
+          "radius": 22,
+          "locked": false,
+          "banner" : "Agora que já conheceste a minha casa e os meus vizinhos do lado, vou dar-te a conhecer excelentes frutos e árvores, bem como os meus vizinhos mais saloios ... ",
+          "PIs": [
+            {
+              "id": 10,
+              "nome": "PI_10",
+              "descricao": "Pessegueiros e Nectarinas"
+            },
+            {
+              "id": 11,
+              "nome": "PI_11",
+              "descricao": "Diospireiros"
+            },
+            {
+              "id": 12,
+              "nome": "PI_12",
+              "descricao": "Damasqueiros"
+            },
+            {
+              "id": 13,
+              "nome": "PI_13",
+              "descricao": "Cabras, cabras anãs e ovelha saloia"
+            },
+            {
+              "id": 14,
+              "nome": "PI_14",
+              "descricao": "Pomar de citrinos"
+            },
+            {
+              "id": 15,
+              "nome": "PI_15",
+              "descricao": "Sobreiro"
+            }
+          ],
+          "quizDone": false,
+          "Quiz": [
+            {
+              "question": "Como se chama a árvore da cortiça?",
+              "options": [
+                "Sobreiro",
+                "Corticeiro",
+                "Pinheiro"
+              ],
+              "answer": 0
+            },
+            {
+              "question": "Qual a origem dos damascos?",
+              "options": [
+                "Médio Oriente",
+                "África",
+                "Ásia"
+              ],
+              "answer": 0
+            },
+            {
+              "question": "De quantos em quantos anos é retirada a cortiça?",
+              "options": [
+                "8 em 8",
+                "9 em 9",
+                "10 em 10"
+              ],
+              "answer": 1
+            }
+          ]
+        },
+        {
+          "nome": "RI_D",
+          "descricao": "Região de interesse D",
+          "centerX": 135,
+          "centerY": 70,
+          "radius": 32,
+          "locked": false,
+          "banner": "Esta é a região com mais água da Quinta! Para além da água vais também ficar a saber mais de uma das árvores mais inteligentes que existe!",
+          "PIs": [
+            {
+              "id": 16,
+              "nome": "PI_16",
+              "descricao": "Eucaliptal"
+            },
+            {
+              "id": 17,
+              "nome": "PI_17",
+              "descricao": "Nascente"
+            },
+            {
+              "id": 18,
+              "nome": "PI_18",
+              "descricao": "Charca"
+            }
+          ],
+          "quizDone": false,
+          "Quiz": [
+            {
+              "question": "Quantos anos demora o Eucalipto a ficar pronto para cortar?",
+              "options": [
+                "30",
+                "20",
+                "10"
+              ],
+              "answer": 2
+            },
+            {
+              "question": "De que país é originário o Eucalipto?",
+              "options": [
+                "Brasil",
+                "Canadá",
+                "Austrália"
+              ],
+              "answer": 2
+            },
+            {
+              "question": "Quantas nascentes permanentes existem na Quinta Pedagógica?",
+              "options": [
+                "1",
+                "2",
+                "3"
+              ],
+              "answer": 0
+            }
+          ]
+        },
+        {
+          "nome": "RI_E",
+          "descricao": "Região de interesse E",
+          "centerX": 53,
+          "centerY": 50,
+          "radius": 36,
+          "banner": "Depois de já teres ficado a conhecer o Eucalipto, vais agora conhecer as duas outras árvores mais abundantes em Portugal e com uma grande importância. Vou-te ensinar muitas coisas!",
+          "locked": true,
+          "PIs": [
+            {
+              "id": 19,
+              "nome": "PI_19",
+              "descricao": "Sobreiral"
+            },
+            {
+              "id": 20,
+              "nome": "PI_20",
+              "descricao": "Alfarrobeira"
+            },
+            {
+              "id": 21,
+              "nome": "PI_21",
+              "descricao": "Charca"
+            },
+            {
+              "id": 22,
+              "nome": "PI_22",
+              "descricao": "Pinheiro bravo"
+            },
+            {
+              "id": 23,
+              "nome": "PI_23",
+              "descricao": "Marmeleiros"
+            }
+          ],
+          "quizDone": false,
+          "Quiz": [
+            {
+              "question": "Em que região existem mais alfarrobeiras em Portugal?",
+              "options": [
+                "Alentejo",
+                "Santarém",
+                "Algarve"
+              ],
+              "answer": 2
+            },
+            {
+              "question": "De que planta é que os egípcios utilizavam para diminuir dores e febre?",
+              "options": [
+                "Salgueiro",
+                "Sobreiro",
+                "Alfarrobeira"
+              ],
+              "answer": 0
+            },
+            {
+              "question": " Cerca de quantas sementes estão dentro da alfarroba?",
+              "options": [
+                "10 a 16",
+                "30 a 36",
+                "100 a 120"
+              ],
+              "answer": 0
+            }
+          ]
+        },
+        {
+          "nome": "RI_F",
+          "descricao": "Região de interesse F",
+          "centerX": 75,
+          "centerY": 110,
+          "radius": 31,
+          "locked": false,
+          "banner": "Nesta região vais ficar a conhecer a Romã e vais também ficar a saber quais as características do Montado.",
+          "PIs": [
+            {
+              "id": 24,
+              "nome": "PI_24",
+              "descricao": "Romãzeira"
+            },
+            {
+              "id": 25,
+              "nome": "PI_25",
+              "descricao": "Prado e montado"
+            }
+          ],
+          "quizDone": false,
+          "Quiz": [
+            {
+              "question": "Qual a árvore que dá bolotas?",
+              "options": [
+                "Sobreiro e Carvalho",
+                "Carvalho e Azinheira",
+                "Sobreiro, Carvalho e Azinheira"
+              ],
+              "answer": 2
+            },
+            {
+              "question": "O que há no Montado que não há no Sobreiral?",
+              "options": [
+                "Cultivo agrícola",
+                "Bolotas",
+                "Sobreiros"
+              ],
+              "answer": 0
+            },
+            {
+              "question": "A Romã é rica em que vitaminas?",
+              "options": [
+                "Vitaminas A,C e E",
+                "Complexo B e C",
+                "Vitaminas A e D"
+              ],
+              "answer": 0
+            }
+          ]
+        },
+        {
+          "nome": "RI_G",
+          "descricao": "Região de interesse G",
+          "centerX": 178,
+          "centerY": 125,
+          "radius": 20,
+          "locked": false,
+          "banner": "Nesta região ainda vais poder aprender muitas coisas interessantes! Prepara-te para conhecer mais sobre frutas deliciosas e sobre o famoso Pinheiro!",
+          "PIs": [
+            {
+              "id": 26,
+              "nome": "PI_26",
+              "descricao": "Figueiras"
+            },
+            {
+              "id": 27,
+              "nome": "PI_27",
+              "descricao": "Pomar de citrinos"
+            },
+            {
+              "id": 28,
+              "nome": "PI_28",
+              "descricao": "Pinheiro Manso"
+            }
+          ],
+          "quizDone": false,
+          "Quiz": [
+            {
+              "question": "Desde quando se come o Figo?",
+              "options": [
+                "Idade do Gelo",
+                "Idade da Pedra",
+                "Idade do Bronze"
+              ],
+              "answer": 1
+            },
+            {
+              "question": "Que fruto não é considerado um citrino?",
+              "options": [
+                "Figo",
+                "Limão",
+                "Tangerina"
+              ],
+              "answer": 0
+            },
+            {
+              "question": "Qual a árvore mais cultivada do Mundo?",
+              "options": [
+                "Limoeiro",
+                "Marmeleiro",
+                "Laranjeira"
+              ],
+              "answer": 2
+            }
+          ]
+        },
+        {
+          "nome": "RI_H",
+          "descricao": "Região de interesse H",
+          "centerX": 225,
+          "centerY": 125,
+          "radius": 20,
+          "locked": false,
+          "banner": "Aqui, vou mostrar-te árvores que vieram da China, vou-te falar de árvores que vivem mais de 2.000 anos e de plantas que se movem com o sol...",
+          "PIs": [
+            {
+              "id": 29,
+              "nome": "PI_29",
+              "descricao": "Olival"
+            },
+            {
+              "id": 30,
+              "nome": "PI_30",
+              "descricao": "Amoreira e Abóboras"
+            },
+            {
+              "id": 31,
+              "nome": "PI_31",
+              "descricao": "Nespereiras e Romãzeiras"
+            },
+            {
+              "id": 32,
+              "nome": "PI_32",
+              "descricao": "Campo de cereais"
+            },
+            {
+              "id": 33,
+              "nome": "PI_33",
+              "descricao": "Girasol"
+            }
+          ],
+          "quizDone": false,
+          "Quiz": [
+            {
+              "question": "Quantos anos tem a oliveira mais velha em Portugal?",
+              "options": [
+                "100 anos",
+                "1000 anos",
+                "mais de 2000 anos"
+              ],
+              "answer": 2
+            },
+            {
+              "question": "De que país é originária a nespereira?",
+              "options": [
+                "China",
+                "Marrocos",
+                "Grécia"
+              ],
+              "answer": 0
+            },
+            {
+              "question": "Para que não são usadas as abóboras?",
+              "options": [
+                "Máscaras",
+                "Óleo",
+                "Compotas"
+              ],
+              "answer": 1
+            }
+          ]
+        }
+      ];
     var tdcards = [];
     var url = "";
 
