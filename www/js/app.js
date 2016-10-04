@@ -724,10 +724,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               if ($state.current.name != "tab.mapa") {
                 // $state.go("tab.mapa", {});
                 $ionicTabsDelegate.select(3);
+                $ionicTabsDelegate.select(3);
                 // $rootScope.APP.start_qr = true;
                 $timeout(function () {
-                  $ionicTabsDelegate.select(3);
-                  $rootScope.APP.start_qr = true;
+                  // $ionicTabsDelegate.select(3);
+                  // $rootScope.APP.start_qr = true;
                   // $rootScope.APP.regiao_descoberta = true;
                   // $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})
                   $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})
@@ -2266,7 +2267,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       if (args.qr)
         $timeout(function () {
           goQR();
-        }, 200);
+        }, 300);
     });
 
     $scope.$on('QUIZ_POPUP', function (e, args) {
