@@ -24,6 +24,12 @@ function clone(obj) {
 
 angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCacheFactory', 'angular-timeline', 'ngImageAppear', 'angular-scroll-animate', 'ion-floating-menu', 'ionic.contrib.ui.tinderCards', 'starter.controllers', 'starter.services'])
 
+  .config(function ($ionicConfigProvider) {
+    if (ionic.Platform.platform() == "android") {
+      console.log("jsScrolling(false)");
+      $ionicConfigProvider.scrolling.jsScrolling(false);
+    }
+  })
   .run(function ($ionicPlatform, $rootScope, $ionicHistory, $window, $ImageCacheFactory, $state) {
     $rootScope.APP = {
       logged: false,
@@ -31,11 +37,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       user: {
         picture: 'img/SNP_small.jpg'
       },
-      goDefinicoes: function () {
-        console.log("Go definicoes");
-        $state.go('tab.account')
-      }
-    }
+      regiao_descoberta: false,
+      start_qr: false
+    };
 
     var preLoadImages = [
       'img/atividades_quinta_pedagogica_small.jpg',
@@ -103,7 +107,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         };
         $rootScope.$broadcast("SHOW_POPUP");
       };
-
+      // $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
       // ionic.Platform.isFullScreen = true;
       // ionic.Platform.fullScreen();
 
@@ -125,6 +129,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     var swiper = null;
     var newsres = null;
     if (debug) alert("start");
+
+    // $timeout(function () {
+    //   //   $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+    //   // }, 1000);
+    //   $ionicPopup.confirm({
+    //     cssClass: "myPopupLegenda",
+    //     // title: 'RI: ' + $scope.currentRI,
+    //     templateUrl: 'templates/tab-game_help.html',
+    //     // scope: $scope,
+    //     buttons: [
+    //       {
+    //         text: 'OK',
+    //         type: 'button-popup'
+    //       }
+    //     ]
+    //   });
+    //
+    // }, 3000);
 
     $scope.showDesafios_help = function () {
       $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
@@ -172,13 +194,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // });
         // $rootScope.showPopup({ template: "Tens de visitar todos os pontos de interesse da região, para poder jogar o desafio"  });
         // $rootScope.showPopup({templateUrl: 'templates/popups/desafio_ok.html'});
-  $timeout(function () {
-    $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
-  }, 1000);
 
         if (($cordovaNetwork))
           if ($cordovaNetwork.isOnline)
-          $rootScope.isOnline = $cordovaNetwork.isOnline();
+            $rootScope.isOnline = $cordovaNetwork.isOnline();
 
         $window.document.addEventListener("pause", function (event) {
           console.log('run() -> cordovaPauseEvent');
@@ -685,11 +704,36 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               if ($state.current.name != "tab.mapa") {
                 // $state.go("tab.mapa", {});
                 $ionicTabsDelegate.select(3);
+                $rootScope.APP.regiao_descoberta = true;
                 $timeout(function () {
-                  $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI})
-                }, 300);
+                  $ionicTabsDelegate.select(3);
+                  // $rootScope.APP.regiao_descoberta = true;
+                  // $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI})
+                }, 200);
               } else {
-                $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI})
+                $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: false})
+              }
+              return 1;
+            }
+          },
+          {
+            text: '<b><i class="icon ion-qr-scanner"></i></b>',
+            type: 'button-popup',
+            onTap: function (e) {
+              console.log("Confirmed navigation to qr", $state);
+              if ($state.current.name != "tab.mapa") {
+                // $state.go("tab.mapa", {});
+                $ionicTabsDelegate.select(3);
+                // $rootScope.APP.start_qr = true;
+                $timeout(function () {
+                  $ionicTabsDelegate.select(3);
+                  $rootScope.APP.start_qr = true;
+                  // $rootScope.APP.regiao_descoberta = true;
+                  // $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})
+                  $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})
+                }, 200);
+              } else {
+                $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})
               }
               return 1;
             }
@@ -1999,6 +2043,19 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         PI: $scope.RI + "_Q"
       });
     };
+
+    goQR = function () {
+      console.log("Go QR");
+      // if (!$scope.regiao.completed) {
+      //   $rootScope.showPopup({templateUrl: 'templates/popups/desafio_locked.html'});
+      //   return;
+      // }
+      // $ionicHistory.goBack();
+      $state.go("tab.mapa", {
+        RI: $scope.RI,
+        PI: $scope.RI + "_QR"
+      });
+    };
     // if ($stateParams.RI != "ALL")
     //   quizFactory.init($stateParams.RI);
 
@@ -2114,8 +2171,25 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.$on("$ionicView.beforeEnter", function (event, data) {
       console.log("State $ionicView.beforeEnter MApa Params: ", data);
       // if ($stateParams.PI)
+
       //   perguntas.init($stateParams.RI, $stateParams.PI);
+      if ($rootScope.APP.regiao_descoberta) {
+        $rootScope.APP.regiao_descoberta = false;
+        console.log("Regiao descoberta, loading regiao");
+        $scope.RI = $regioes.convertRegiaoLongToShort($rootScope.currentRI);
+        loadRegiao($scope.RI);
+      }
+      if ($rootScope.APP.start_qr) {
+        $rootScope.APP.start_qr = false;
+        console.log("mapa onbefore enter, start qr");
+        $scope.RI = $regioes.convertRegiaoLongToShort($rootScope.currentRI);
+        // loadRegiao($regioes.convertRegiaoLongToShort($rootScope.currentRI));
+        goQR();
+      }
+
       if ($stateParams.RI == "ALL") {
+        // if ($rootScope.APP.regiao_descoberta)
+
         createCircles();
         $timeout(function () {
           var idMarcador = $window.document.getElementById('marcador');
@@ -2189,6 +2263,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // $timeout(function () {
       loadRegiao($regioes.convertRegiaoLongToShort(args.regiao));
       // }, 200);
+      if (args.qr)
+        $timeout(function () {
+          goQR();
+        }, 200);
     });
 
     $scope.$on('QUIZ_POPUP', function (e, args) {
@@ -2198,7 +2276,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // createCircles();
       $timeout(function () {
         // loadRegiao(args.regiao);
-        $rootScope.showPopup({ templateUrl: 'templates/popups/desafio_' + args.desafio + '.html'});
+        $rootScope.showPopup({templateUrl: 'templates/popups/desafio_' + args.desafio + '.html'});
       }, 200);
     });
 
