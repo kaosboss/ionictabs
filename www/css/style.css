@@ -640,6 +640,15 @@ td-card img {
   /*bottom: -15px;*/
 }
 
+.avatarLogin img {
+  width: 65px;
+  height: 65px;
+  border-radius: 65px;
+  margin: auto;
+  border: 3px solid #fff;
+  display: block;
+}
+
 .avatar img {
   width: 65px;
   height: 65px;
@@ -658,7 +667,7 @@ form {
   padding-top: 2em;
   /*min-width: 440px;*/
   max-width: 700px;
-  width: 80%;
+  width: 90%;
   margin: auto;
   /* easeInOutQuart */
   opacity: 0;
@@ -935,7 +944,7 @@ form *:focus {
 
 .detalheAtividade {
   font-size: 18px;
-  opacity: 0.9;
+  /*opacity: 0.9;*/
 }
 
 .APPmain {
@@ -1213,7 +1222,28 @@ fieldset {
 
 .button-next {
   /*background: #ffe8a3;*/
+  color: #000;
   background: #fec659;
+  border-radius: 1em;
+  font-size: 0.9em;
+}
+
+.button-desafios {
+  border-radius: 50%;
+}
+
+.button-next-login {
+  color: #000;
+  /*background: #ffe8a3;*/
+  background: #fec659;
+  border-radius: 1em;
+  font-size: 0.9em;
+}
+
+.button-next-loginfb {
+  color: #000;
+  /*background: #ffe8a3;*/
+  background: #8b9dc3;
   border-radius: 1em;
   font-size: 0.9em;
 }
@@ -1506,4 +1536,8 @@ legend {
   right: 14px;
   top: 140px;
   position: absolute;
+}
+
+.speedGPU {
+  -webkit-transform: translateZ(0);
 }

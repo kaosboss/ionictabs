@@ -15,17 +15,17 @@
   <!--</ion-floating-button>-->
   <!--</ion-floating-menu>-->
 
-  <ion-content class="APPmain" overflow-scroll=”true”>
+  <ion-content class="APPmain">
     <!--<ion-item class="item">-->
     <!--<button type="button" class="button button-block button-assertive">{{$root.currentRI}}</button>-->
     <!--</ion-item>-->
 
     <div class="APPcenter">
       <!--<img class="imageView" src="img/mapaqtapedagogica2.png">-->
-      <canvas class="" id="imageView" style="width: 320px; height: auto; position: relative;"></canvas>
+      <canvas class="speedGPU" id="imageView" style="width: 320px; height: auto; position: relative;"></canvas>
       <!--<img class="caption" ng-src="{{regiao.nome}}.jpg">-->
       <img class="captionCanvas animated bounce" id="marcador"
-           ng-src="img/mapa/marcadores/{{marcador ? marcador : 'marcador_galo.png'}}"
+           ng-image-appear ng-src="img/mapa/marcadores/{{marcador}}"
            style="width: 60px; height: 65px">
       <!--<div class="helpCanvas" id="legenda">-->
       <!--<button class="button-small button-icon button-popup button-light" ng-click="showLegenda()">-->
@@ -37,7 +37,9 @@
            style="width: 30px; height: auto">
     </div>
     <!--<HR style="box-shadow: 0 8px 6px -6px #999;">-->
-    <div style="width: 100%; height: 20px; box-shadow: 0 10px 20px -6px #999;"></div>
+    <!--<div style="width: 100%; height: 20px; box-shadow: 0 10px 20px -6px #999;"></div>-->
+    <div style="width: 100%; height: 20px;"></div>
+    <!--<div style="width: 100%; height: 10px; box-shadow: 0 5px 10px -3px #999;"></div>-->
     <!--<div style="width: 320px; height: 220px"></div>-->
     <!--<ion-item class="item">-->
     <!--<p>Nome Região de interesse: {{nome}}</p>-->
@@ -63,8 +65,8 @@
     <!--</ion-item>-->
 
     <!--<ion-scroll style="height: 150px">-->
-    <div>
-      <ion-scroll ng-show="regiao.radius" style="height: 298px">
+    <div class="-webkit-transform: translateZ(0);">
+      <ion-scroll style="height: 298px">
         <ion-list class="list-borderless">
 
           <ion-item ng-click="goPI(PI)" ng-repeat="PI in regiao.PIs"
