@@ -1325,6 +1325,7 @@ legend {
   background-image: none;
   background-color: rgb(219, 219, 219);
   background-size: auto;
+  border-radius: 4px;
   background-position: center center;
   background-repeat: repeat;
   padding: 10px;
