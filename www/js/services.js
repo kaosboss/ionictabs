@@ -1905,12 +1905,12 @@ angular.module('starter.services', [])
         //  return tdcards;
       });
 
-      url = "data/" + RI + "/" + PI + "/verdade_mentira.json";
-      $http.get(url).then(function (response) {
-        $rootScope.perguntas = response.data;
-        console.log("response preload verdade mentira: ", $rootScope.perguntas);
-        //  return perguntas;
-      });
+      // url = "data/" + RI + "/" + PI + "/verdade_mentira.json";
+      // $http.get(url).then(function (response) {
+      //   $rootScope.perguntas = response.data;
+      //   console.log("response preload verdade mentira: ", $rootScope.perguntas);
+      //   //  return perguntas;
+      // });
 
       if (regioes_inicio.length == 0) {
         console.log("First load regioes inicio");
@@ -1930,16 +1930,16 @@ angular.module('starter.services', [])
           return $rootScope.perguntas;
       },
       getRegioesInicio: function () {
-        if ((regioes_inicio) && (regioes_inicio.length > 0))
-          return regioes_inicio;
+        // if ((regioes_inicio) && (regioes_inicio.length > 0))
+        //   return regioes_inicio;
 
         url = "data/regioes_inicio.json";
         return $http.get(url).then(function (response) {
-          console.log("response xxx regios inicio: ", response.data);
+          console.log("response xxx regioes inicio: ", response.data);
           regioes_inicio = response.data;
-          //$regioes.setRegioes(response.data);
           return regioes_inicio;
         });
+
       },
       getTdcards: function () {
         console.log("factory: tdcards: ", $rootScope.tdcards);
@@ -2026,6 +2026,7 @@ angular.module('starter.services', [])
     var newsGotNews = false;
     var newsChecked = false;
     var newsArray = [];
+    var newsChecking = false;
 
     var setNews = function (newsres) {
       console.warn("updating news with: ", newsres);
@@ -2065,8 +2066,9 @@ angular.module('starter.services', [])
         }, 60000);
       },
       checkNews: function () {
-        if (newsChecked)
+        if ((newsChecked) || (newsChecking))
           return;
+        newsChecking = true;
 
         var online = $cordovaNetwork.isOnline();
         console.log("FIREBASE: news online: %s", online);
@@ -2081,6 +2083,7 @@ angular.module('starter.services', [])
             console.warn("Got news list", newsList);
             newsGotNews = true;
             newsChecked = true;
+            newsChecking = false;
             newsArray = [];
             newsList.forEach(function (slide) {
               newsArray.push({
@@ -2121,6 +2124,29 @@ angular.module('starter.services', [])
     console.log("gameFactory enter");
 
     var quizHeader = true;
+    var QRHeader = true;
+
+    var QRHeaderValue = function (value) {
+
+      var ret = false;
+
+      if (value == "ON")
+        value = true;
+      else if (value == "OFF")
+        value = false;
+      else if (value == undefined)
+        ret = true;
+
+      if (!ret)
+        console.warn("gameFactory setting qr header:", value, QRHeader);
+      else
+        console.warn("gameFactory getting qr header:", value, QRHeader);
+
+      if (!ret)
+        QRHeader = value;
+      else
+        return QRHeader;
+    };
 
     var quizHeaderValue = function (value) {
 
@@ -2151,7 +2177,8 @@ angular.module('starter.services', [])
       isHeaderOn: function (RI) {
         return headers[RI];
       },
-      quizHeaderValue: quizHeaderValue
+      quizHeaderValue: quizHeaderValue,
+      QRHeaderValue: QRHeaderValue
     }
   });
 // .factory('quizFactory', function ($regioes, $state) {
