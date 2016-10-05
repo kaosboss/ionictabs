@@ -640,9 +640,9 @@ td-card img {
   /*bottom: -15px;*/
 }
 
-.avatarLogin {
-  width: 100px;
-  height: auto;
+.avatarLogin img {
+  width: 65px;
+  height: 65px;
   border-radius: 65px;
   margin: auto;
   border: 3px solid #fff;
@@ -651,7 +651,7 @@ td-card img {
 
 .avatar img {
   width: 65px;
-  height: auto;
+  height: 65px;
   border-radius: 65px;
   margin: auto;
   border: 3px solid #fff;
@@ -944,7 +944,7 @@ form *:focus {
 
 .detalheAtividade {
   font-size: 18px;
-  opacity: 0.9;
+  /*opacity: 0.9;*/
 }
 
 .APPmain {
@@ -1226,6 +1226,10 @@ fieldset {
   background: #fec659;
   border-radius: 1em;
   font-size: 0.9em;
+}
+
+.button-desafios {
+  border-radius: 50%;
 }
 
 .button-next-login {

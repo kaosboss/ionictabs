@@ -130,23 +130,23 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     var newsres = null;
     if (debug) alert("start");
 
-    // $timeout(function () {
-    //   //   $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
-    //   // }, 1000);
-    //   $ionicPopup.confirm({
-    //     cssClass: "myPopupLegenda",
-    //     // title: 'RI: ' + $scope.currentRI,
-    //     templateUrl: 'templates/tab-game_help.html',
-    //     // scope: $scope,
-    //     buttons: [
-    //       {
-    //         text: 'OK',
-    //         type: 'button-popup'
-    //       }
-    //     ]
-    //   });
-    //
-    // }, 3000);
+    $timeout(function () {
+      //   $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+      // }, 1000);
+      $ionicPopup.confirm({
+        cssClass: "myPopupLegenda",
+        // title: 'RI: ' + $scope.currentRI,
+        templateUrl: 'templates/tab-game_help.html',
+        // scope: $scope,
+        buttons: [
+          {
+            text: 'OK',
+            type: 'button-popup'
+          }
+        ]
+      });
+
+    }, 3000);
 
     $scope.showDesafios_help = function () {
       $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
@@ -2062,18 +2062,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     goQR = function () {
       console.log("Go QR");
-      // if (!$scope.regiao.completed) {
-      //   $rootScope.showPopup({templateUrl: 'templates/popups/desafio_locked.html'});
-      //   return;
-      // }
-      // $ionicHistory.goBack();
       $state.go("tab.mapa", {
         RI: $scope.RI,
         PI: $scope.RI + "_QR"
       });
     };
-    // if ($stateParams.RI != "ALL")
-    //   quizFactory.init($stateParams.RI);
 
     var aCircles = [];
     // var drawedMapa = false;
@@ -2083,9 +2076,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       buttonColor: "#ec6157"
     };
 
-    // $scope.count = 0;
-    // $scope.start = 0;
-    // $scope.showQR = false;
 
     loadRegiao = function (RI, QR) {
 
@@ -2135,7 +2125,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 // $scope.data = {
                 //   PI_descricao: tpi.descricao
                 // };
-                $scope.data.PI_descricao = tpi.descricao;
+                // $scope.data.PI_descricao = tpi.descricao;
                 $rootScope.PI_descricao = tpi.descricao;
                 // $scope.$apply();
                 console.warn("Setting pi desc", tpi.descricao);
@@ -2340,7 +2330,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                       console.log("Mapa updateRegiaoVisitada Found updated PI: ", PI, count, total);
                       // $regioes.setTempRegioes(aCircles);
                     } else {
-                      console.log("Mapa updateRegiaoVisitada Found updated PI: ", $scope.data.PI_descricao);
+                      console.log("Mapa updateRegiaoVisitada Found updated PI: ", PI);
                     }
                   }
                 }
@@ -2730,10 +2720,19 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // };
 
   })
-  .controller('GameCtrl', function ($rootScope, $scope, $state, $window, $timeout, $ionicTabsDelegate) {
+  .controller('GameCtrl', function ($rootScope, $scope, $state, $window, $timeout, $ionicTabsDelegate, $regioes) {
     console.log("Game controller ready");
 
-    scope.goMapa = function (res) {
+    $state.goMapaQuiz = function () {
+      $state.go("tab.mapa", {
+        // RI: $regioes.convertRegiaoLongToShort(args.regiao),
+        RI: "RI_E",
+        PI: "RI_E_Q"
+        // PI: $scope.RI + "_Q"
+      });
+    };
+
+    $scope.goMapa = function (res) {
       // $ionicHistory.goBack();
       // $state.go("tab.mapa", {
       //   RI: "ALL",
