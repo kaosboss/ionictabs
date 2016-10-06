@@ -1,0 +1,60 @@
+<ion-view view-title="Caça ao código QR">
+  <ion-content class="QRcode" class="padding" ng-controller="BarCodeReaderController">
+
+    <div ng-init="startQR();" ng-if="!startted">
+    </div>
+    <!--<div ng-init="start();" ng-if="!startted">-->
+    <!--<h4 align="center" style="color: #444;">Caça ao código QR?</h4>-->
+    <!--<h5 align="center" style="color: #444;">Ganhas 20 pontos por cada código QR encontrado,-->
+    <!--vamos à caça?</h5>-->
+
+    <!--<button ng-click="startQR()" class="button button-balanced APPcenter">Vamos!</button>-->
+    <!--</div>-->
+
+    <div ng-if="startted" class="button-bar APPmain">
+      <ion-item id="headerQR" ng-show="header" class="item-thumbnail-left item-borderless list-item">
+        <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
+        <p style="margin-left: -30px; margin-top: 0px;" align="left" class="textWrap">Esta charca não é para vir
+          tomar banho!
+          É aqui que as minhas vizinhas cabras e ovelhas vêm beber água! </p>
+        <span ng-click="closeQRHeader()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;"
+                                                                                         class="subdued button-small button-light ion-close"></a> ]
+      </span>
+      </ion-item>
+
+      <!--<div class="score" ng-class="view.buttonClass">-->
+      <!--<span>Pontuação {{view.buttonStart}}</span>-->
+      <!--</div>-->
+      <!--<div class="score APPcenter" ng-class="view.buttonClass">-->
+      <!--<span>Pontuação {{score}}</span>-->
+      <!--</div>-->
+      <!--<div class="score energized">-->
+      <!--<span ng-click="stopQR()">Stop</span>-->
+      <!--</div>-->
+    </div>
+
+    <div class="QRList" ng-if="startted">
+      <div class="score APPcenter" ng-class="view.buttonClass">
+        <span>Pontuação {{score}}</span>
+      </div>
+
+      <br>
+      <button ng-click="getBarcode()" class="button button-next APPcenter">Caça QRodes  <i
+        class="icon ion-qr-scanner"></i>
+      </button>
+      <br>
+      <ion-list class="list-borderless">
+
+        <ion-item id="PI_{{item.id}}" ng-click="listClick($index)" ng-repeat="item in PIs"
+                  class="animated fadeInLeft">
+
+          <h3 align="center" style="width: 100%" class="">{{item.descricao}} - Pontos: {{item.score}}</h3>
+
+        </ion-item>
+      </ion-list>
+
+    </div>
+
+    <div ng-controller="PopupCtrl"></div>
+  </ion-content>
+</ion-view>
