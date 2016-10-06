@@ -164,8 +164,14 @@ angular.module('starter.services', [])
     var minor = 64001; // optional, defaults to wildcard if left empty
     var major = 4660; // optional, defaults to wildcard if left empty
     var nomes = {
-      "64001": "Regiao de interesse B",
-      "64003": "Regiao de interesse E"
+      "64001": "Regiao de interesse A",
+      "64002": "Regiao de interesse B",
+      "64003": "Regiao de interesse C",
+      "64004": "Regiao de interesse D",
+      "64005": "Regiao de interesse E",
+      "64006": "Regiao de interesse F",
+      "64007": "Regiao de interesse G",
+      "64008": "Regiao de interesse H",
     };
 
     var scanning = false;
