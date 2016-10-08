@@ -66,7 +66,7 @@
     "centerX": 230,
     "centerY": 95,
     "radius": 20,
-    "locked": false,
+    "locked": true,
     "banner": "Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!",
     "PIs": [
       {
@@ -132,7 +132,7 @@
     "centerX": 187,
     "centerY": 88,
     "radius": 22,
-    "locked": false,
+    "locked": true,
     "banner" : "Agora que já conheceste a minha casa e os meus vizinhos do lado, vou dar-te a conhecer excelentes frutos e árvores, bem como os meus vizinhos mais saloios ... ",
     "PIs": [
       {
@@ -203,7 +203,7 @@
     "centerX": 135,
     "centerY": 70,
     "radius": 32,
-    "locked": false,
+    "locked": true,
     "banner": "Esta é a região com mais água da Quinta! Para além da água vais também ficar a saber mais de uma das árvores mais inteligentes que existe!",
     "PIs": [
       {
@@ -325,7 +325,7 @@
     "centerX": 75,
     "centerY": 110,
     "radius": 31,
-    "locked": false,
+    "locked": true,
     "banner": "Nesta região vais ficar a conhecer a Romã e vais também ficar a saber quais as características do Montado.",
     "PIs": [
       {
@@ -373,10 +373,10 @@
   {
     "nome": "RI_G",
     "descricao": "Região de interesse G",
-    "centerX": 178,
+    "centerX": 158,
     "centerY": 125,
     "radius": 20,
-    "locked": false,
+    "locked": true,
     "banner": "Nesta região ainda vais poder aprender muitas coisas interessantes! Prepara-te para conhecer mais sobre frutas deliciosas e sobre o famoso Pinheiro!",
     "PIs": [
       {
@@ -429,10 +429,10 @@
   {
     "nome": "RI_H",
     "descricao": "Região de interesse H",
-    "centerX": 225,
-    "centerY": 125,
+    "centerX": 205,
+    "centerY": 130,
     "radius": 20,
-    "locked": false,
+    "locked": true,
     "banner": "Aqui, vou mostrar-te árvores que vieram da China, vou-te falar de árvores que vivem mais de 2.000 anos e de plantas que se movem com o sol...",
     "PIs": [
       {
