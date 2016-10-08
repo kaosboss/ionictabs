@@ -212,7 +212,7 @@ angular.module('starter.services', [])
           if ((!beacons[uniqueBeaconKey])) {
             $rootScope.currentRI = pluginResult.beacons[i].nome;
             // console.log("Device busy: %s", $rootScope.deviceBUSY);
-            if (!$rootScope.deviceBUSY) {
+            // if (!$rootScope.deviceBUSY) {
               // console.log("Device free not busy");
               beacons[uniqueBeaconKey] = pluginResult.beacons[i];
               $rootScope.beacons = beacons;
@@ -222,13 +222,17 @@ angular.module('starter.services', [])
                   var found = false;
                   var aCircles = JSON.parse(res || [{}]);
                   console.log("IBEACON: GOT regioes from cordova service to aCircles", aCircles);
+                  var change = false;
                   for (var f = 0; f <= aCircles.length - 1; f++) {
                     if (aCircles[f].nome == regioes[$rootScope.currentRI]) {
-                      aCircles[f].locked = false;
+                      if (aCircles[f].locked){
+                        aCircles[f].locked = false;
+                        change = true;
+                      }
                       found = true;
                     }
                   }
-                  if (found) {
+                  if (change) {
                     console.log("IBEACON: UPDATE: GOT regioes from cordova service to aCircles", aCircles);
                     // $rootScope.regioes = aCircles;
                     $regioes.setRegioes(aCircles);
@@ -239,7 +243,7 @@ angular.module('starter.services', [])
 
               } else
                 console.log("Disabled: enabled beacons for broadcast RI_FOUND");
-            } else console.log("Device BUSY for broadcast RI_FOUND, queue?");
+            // } else console.log("Device BUSY for broadcast RI_FOUND, queue?");
           } else {
             beacons[uniqueBeaconKey] = pluginResult.beacons[i];
             $rootScope.beacons = beacons;
