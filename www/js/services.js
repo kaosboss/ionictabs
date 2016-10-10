@@ -2119,7 +2119,7 @@ angular.module('starter.services', [])
     }
 
   })
-  .factory('$gameFactory', function () {
+  .factory('$gameFactory', function ($http, $cordovaSQLite) {
 
     var headers = {
       "RI_A": true,
@@ -2135,6 +2135,38 @@ angular.module('starter.services', [])
 
     var quizHeader = true;
     var QRHeader = true;
+    var gameInfo = null;
+
+    var processGameInfo = function (info) {
+      var gameInfo = info;
+      for (var levelName in gameInfo) {
+        if (!gameInfo.hasOwnProperty(levelName)) continue;
+
+        var level = gameInfo[levelName];
+        console.log("gameInfo Sevice: ", levelName, level);
+
+        if (!level.locked) {
+          // var elem = $window.document.getElementById(levelName);
+          // if (elem)
+          //   elem.classList.add("clearBadge");
+          // console.warn("GameInfo unlocked: " + levelName + " = " + level);
+        }
+      }
+    };
+
+    var getGameInicio= function () {
+      url = "data/game_inicio.json";
+      return $http.get(url).then(function (response) {
+        console.log("response xxx regioes inicio: ", response.data);
+        gameInfo = response.data;
+        return gameInfo;
+      });
+    };
+
+    var saveGameInfo = function (info) {
+        console.warn("updating gameinfo with: ", info);
+        $cordovaSQLite.updateOrInsertValueToDB("info", [JSON.stringify(info), "gameInfo"]);
+    };
 
     var QRHeaderValue = function (value) {
 
@@ -2188,7 +2220,10 @@ angular.module('starter.services', [])
         return headers[RI];
       },
       quizHeaderValue: quizHeaderValue,
-      QRHeaderValue: QRHeaderValue
+      QRHeaderValue: QRHeaderValue,
+      getGameInicio: getGameInicio,
+      saveGameInfo: saveGameInfo,
+      processGameInfo: processGameInfo
     }
   });
 // .factory('quizFactory', function ($regioes, $state) {
