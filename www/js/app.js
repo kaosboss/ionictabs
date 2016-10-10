@@ -123,7 +123,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
   // .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout, $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork, UserService, users, $regioes, $ionicLoading) {
   .controller('DashCtrl', function ($window, $rootScope, $scope, $ionicPopup, $timeout,
                                     $ionicPlatform, $cordovaSQLite, $IbeaconScanner, $cordovaNetwork,
-                                    UserService, users, $regioes, $state, perguntas, $ionicLoading, likes, news) {
+                                    UserService, users, $regioes, $state, perguntas, $ionicLoading, likes, news, $gameFactory) {
 
     dbres = 0;
     var query = "";
@@ -131,23 +131,23 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     var newsres = null;
     if (debug) alert("start");
 
-    // $timeout(function () {
-    //   //   $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
-    //   // }, 1000);
-    //   $ionicPopup.confirm({
-    //     cssClass: "myPopupLegenda",
-    //     // title: 'RI: ' + $scope.currentRI,
-    //     templateUrl: 'templates/tab-game_help.html',
-    //     // scope: $scope,
-    //     buttons: [
-    //       {
-    //         text: 'OK',
-    //         type: 'button-popup'
-    //       }
-    //     ]
-    //   });
-    //
-    // }, 3000);
+    $timeout(function () {
+      //   $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
+      // }, 1000);
+      $ionicPopup.confirm({
+        cssClass: "myPopupLegenda",
+        // title: 'RI: ' + $scope.currentRI,
+        templateUrl: 'templates/tab-game_help.html',
+        // scope: $scope,
+        buttons: [
+          {
+            text: 'OK',
+            type: 'button-popup'
+          }
+        ]
+      });
+
+    }, 3000);
 
     $scope.showDesafios_help = function () {
       $rootScope.showPopup({templateUrl: 'templates/tab-game_help.html', cssClass: 'myPopupLegenda', timeout: 600000});
@@ -353,6 +353,25 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               });
             });
 
+            $cordovaSQLite.getVarFromDB("info", "gameInfo").then(function (res) {
+              var gameInfo = JSON.parse(res || '{}');
+              $gameFactory.processGameInfo(gameInfo);
+              console.log("Got game info", gameInfo);
+              for (var levelName in gameInfo) {
+                if (!gameInfo.hasOwnProperty(levelName)) continue;
+
+                var level = gameInfo[levelName];
+                console.log("gameInfo2: ", levelName, level);
+
+                  if (!level.locked) {
+                    var elem = $window.document.getElementById(levelName);
+                    if (elem)
+                      elem.classList.add("clearBadge");
+                      console.warn("GameInfo unlocked: " + levelName + " = " + level);
+                  }
+              }
+            });
+
             $cordovaSQLite.getVarFromDB("info", "news").then(function (res) {
               newsres = JSON.parse(res || '{}');
 
@@ -419,6 +438,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
             perguntas.getRegioesInicio().then(function (res) {
               $regioes.setRegioes(res);
+            });
+
+            $gameFactory.getGameInicio().then(function (res) {
+              var gameInfo = res;
+              for (var levelName in gameInfo) {
+                if (!gameInfo.hasOwnProperty(levelName)) continue;
+
+                var level = gameInfo[levelName];
+                console.log("gameInfo2: ", levelName, level);
+
+                if (!level.locked) {
+                  var elem = $window.document.getElementById(levelName);
+                  if (elem)
+                    elem.classList.add("clearBadge");
+                  console.warn("GameInfo unlocked: " + levelName + " = " + level);
+                }
+              }
+              $gameFactory.saveGameInfo(res);
             });
 
             news.getNewsInicio().then(function (res) {
@@ -2077,11 +2114,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         //       $rootScope.showPopup({templateUrl: 'templates/popups/desafio_locked.html'});
         //       return;
         //     }
-            // $ionicHistory.goBack();
-            $state.go("tab.mapa", {
-              RI: RI,
-              PI: RI + "_Q"
-            });
+        // $ionicHistory.goBack();
+        $state.go("tab.mapa", {
+          RI: RI,
+          PI: RI + "_Q"
+        });
         //   }, 300);
         // } else {
         //   if (!$scope.regiao.completed) {
@@ -2102,10 +2139,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // if ($stateParams.RI != "ALL") {
         //   $ionicTabsDelegate.select(3);
         //   $timeout(function () {
-            $state.go("tab.mapa", {
-              RI: RI,
-              PI: RI + "_QR"
-            });
+        $state.go("tab.mapa", {
+          RI: RI,
+          PI: RI + "_QR"
+        });
         //   }, 300);
         // } else {
         //   $state.go("tab.mapa", {
@@ -2127,14 +2164,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       loadRegiao = function (RI, QR, QUIZ, JUSTGO) {
 
         if (JUSTGO) {
-        if (QR)
-          $timeout(function () {
-            goQR(RI);
-          }, 300);
-        if (QUIZ)
-          $timeout(function () {
-            $scope.goQuiz(RI);
-          }, 300);
+          if (QR)
+            $timeout(function () {
+              goQR(RI);
+            }, 300);
+          if (QUIZ)
+            $timeout(function () {
+              $scope.goQuiz(RI);
+            }, 300);
         }
         // if (CIRCLES)
         //   $timeout(function () {
@@ -2352,9 +2389,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // $regioes.drawedMapa('OFF');
         // loadRegiao($regioes.convertRegiaoLongToShort($rootScope.currentRI), 0, 0, 1);
         if ($stateParams.RI == "ALL")
-        $timeout(function () {
-          createCircles();
-        }, 200)
+          $timeout(function () {
+            createCircles();
+          }, 200)
       });
 
       $scope.$on('GO_REGIAO', function (e, args) {
