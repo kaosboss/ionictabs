@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Brandon';
-  src: url("font/Brandon_bld.otf") format("opentype");
+  src: url("font/Brandon_thin.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
   font-size: 22px;
@@ -17,7 +17,7 @@ body {
   /*cursor: url('../img/finger.png'), auto;*/
   /*cursor: pointer;*/
   /** {*/
-  /*font-family: 'Brandon';*/
+  font-family: 'Brandon';
   /*font-size:16px;*/
   /*}*/
 }
@@ -948,7 +948,7 @@ form *:focus {
 }
 
 .APPmain {
-  font-size: 18px;
+  font-size: 20px;
   /*opacity: 0.85;*/
 }
 
