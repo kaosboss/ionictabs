@@ -6,6 +6,7 @@
     "centerY": 105,
     "radius": 20,
     "locked": false,
+    "visited": false,
     "banner": "É aqui que vamos iniciar a nossa visita à Quinta Pedagógica. Eu vou estar sempre ao pé de ti para garantir que tiras o máximo de partido desta visita!",
     "PIs": [
       {
@@ -67,6 +68,7 @@
     "centerY": 95,
     "radius": 20,
     "locked": true,
+    "visited": false,
     "banner": "Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!",
     "PIs": [
       {
@@ -133,7 +135,8 @@
     "centerY": 88,
     "radius": 22,
     "locked": true,
-    "banner" : "Agora que já conheceste a minha casa e os meus vizinhos do lado, vou dar-te a conhecer excelentes frutos e árvores, bem como os meus vizinhos mais saloios ... ",
+    "visited": false,
+    "banner": "Agora que já conheceste a minha casa e os meus vizinhos do lado, vou dar-te a conhecer excelentes frutos e árvores, bem como os meus vizinhos mais saloios ... ",
     "PIs": [
       {
         "id": 10,
@@ -204,6 +207,7 @@
     "centerY": 70,
     "radius": 32,
     "locked": true,
+    "visited": false,
     "banner": "Esta é a região com mais água da Quinta! Para além da água vais também ficar a saber mais de uma das árvores mais inteligentes que existe!",
     "PIs": [
       {
@@ -261,6 +265,7 @@
     "radius": 36,
     "banner": "Depois de já teres ficado a conhecer o Eucalipto, vais agora conhecer as duas outras árvores mais abundantes em Portugal e com uma grande importância. Vou-te ensinar muitas coisas!",
     "locked": true,
+    "visited": false,
     "PIs": [
       {
         "id": 19,
@@ -326,6 +331,7 @@
     "centerY": 110,
     "radius": 31,
     "locked": true,
+    "visited": false,
     "banner": "Nesta região vais ficar a conhecer a Romã e vais também ficar a saber quais as características do Montado.",
     "PIs": [
       {
@@ -377,6 +383,7 @@
     "centerY": 125,
     "radius": 20,
     "locked": true,
+    "visited": false,
     "banner": "Nesta região ainda vais poder aprender muitas coisas interessantes! Prepara-te para conhecer mais sobre frutas deliciosas e sobre o famoso Pinheiro!",
     "PIs": [
       {
@@ -433,6 +440,7 @@
     "centerY": 130,
     "radius": 20,
     "locked": true,
+    "visited": false,
     "banner": "Aqui, vou mostrar-te árvores que vieram da China, vou-te falar de árvores que vivem mais de 2.000 anos e de plantas que se movem com o sol...",
     "PIs": [
       {
