@@ -363,12 +363,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 var level = gameInfo[levelName];
                 console.log("gameInfo2: ", levelName, level);
 
-                  if (!level.locked) {
-                    var elem = $window.document.getElementById(levelName);
-                    if (elem)
-                      elem.classList.add("clearBadge");
-                      console.warn("GameInfo unlocked: " + levelName + " = " + level);
-                  }
+                if (!level.locked) {
+                  var elem = $window.document.getElementById(levelName);
+                  if (elem)
+                    elem.classList.add("clearBadge");
+                  console.warn("GameInfo unlocked: " + levelName + " = " + level);
+                }
               }
             });
 
@@ -417,7 +417,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               var message = "INSERT ID -> " + res.insertId;
               // console.log(message);
               console.log("Inserted APP tutorial: Sim");
-              APPtutorial = 1;
+              $rootScope.APP.APPtutorial = 1;
               // alert(message);
             }, function (err) {
               console.error(err);
@@ -442,6 +442,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
             $gameFactory.getGameInicio().then(function (res) {
               var gameInfo = res;
+              $gameFactory.processGameInfo(gameInfo);
               for (var levelName in gameInfo) {
                 if (!gameInfo.hasOwnProperty(levelName)) continue;
 
@@ -494,6 +495,27 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // alert(err);
           console.error("ERROR ON get app version", err);
         });
+
+      $scope.$on('LEVELUP', function (e, args) {
+
+        // $cordovaSQLite.getVarFromDB("info", "gameInfo").then(function (res) {
+        var gameInfo = args.gameInfo;
+        console.log("Got game info: level up", gameInfo);
+        for (var levelName in gameInfo) {
+          if (!gameInfo.hasOwnProperty(levelName)) continue;
+
+          var level = gameInfo[levelName];
+          console.log("gameInfo2: ", levelName, level);
+
+          if (!level.locked) {
+            var elem = $window.document.getElementById(levelName);
+            if (elem)
+              elem.classList.add("clearBadge");
+            console.warn("GameInfo unlocked: " + levelName + " = " + level);
+          }
+        }
+        // });
+      });
 
         $scope.$on("$ionicView.afterEnter", function (event, data) {
           console.log("State $ionicView.afterEnter dash Params: ", data, news.updated());
@@ -847,7 +869,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                                       $cordovaDevice, $cordovaSQLite, $ionicPlatform,
                                       $ionicPopup, $timeout, $ionicBackdrop,
                                       $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate,
-                                      $window, $q, $ionicLoading, blob) {
+                                      $window, $q, $ionicLoading, blob, $gameFactory) {
 
     var query = "";
     var lorem = "Aqui está a familia Ramos num Domingo muito divertido e diferente!";
@@ -1063,7 +1085,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // }
     ];
 
-    $scope.addInHouseEvent = function (title, pic_src, caption, thumb_src, NO_PUSH) {
+    $scope.addInHouseEvent = function (title, pic_src, caption, thumb_src, NOTI_PUSH) {
       var d = new Date();
       var when = d.toDateString();
       // $scope.events.push(
@@ -1078,7 +1100,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       //     footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
       //   });
 
-      if (NO_PUSH)
+      if (NOTI_PUSH)
         $scope.events.push(
           {
             id: 0,
@@ -1119,6 +1141,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         when = d.toDateString();
       }
       if (auto == "NO") {
+
+        $gameFactory.addPoints("foto");
+
         $scope.events.push({
           // image: thumb,
           id: id,
@@ -1128,7 +1153,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // badgeIconClass : 'ion-checkmark',
           title: title || 'Foto - Album',
           titleContentHtml: '<img class="img-responsive img-thumbnail" src="' + thumb + '">',
-          when: when + " na " + $rootScope.currentRI,
+          when: when + " na " + $rootScope.currentRI_descricao,
           contentHtml: caption
         });
       } else
@@ -1330,6 +1355,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           alertPopup.close();
         }, 5000);
       };
+
+      $scope.$on('ADD_JOURNAL', function (e, args) {
+        console.log("ADD_JOURNAL: ", args);
+        // $scope.addInHouseEvent("Welcome Back!", "img/journal/atividades_quinta_pedagogica_small.jpg", "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia!", "img/journal/atividades_quinta_pedagogica_small.jpg", true);
+        $scope.addInHouseEvent(args.title, args.image, args.caption, args.thumb, true);
+      });
 
       console.log("camera controller ready 1");
       $ionicPlatform.ready(function () {
@@ -3249,14 +3280,31 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       return false;
     };
   })
-  .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate) {
+  .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate, $rootScope, $gameFactory, $cordovaSQLite) {
 
     $scope.goLogin = function () {
       $state.go('tab.account');
+      // $timeout(function () {
+      //   $rootScope.showPopup({templateUrl: 'templates/popups/fim_onboarding.html'});
+      $gameFactory.addPoints("onboarding");
+      $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
+        if (res == "Sim")
+          $gameFactory.addPoints("presencial");
+      });
+
+      // },300);
     };
 
     $scope.goHome = function () {
       $state.go('tab.dash');
+      // $timeout(function () {
+      //   $rootScope.showPopup({templateUrl: 'templates/popups/fim_onboarding.html'});
+      $gameFactory.addPoints("onboarding");
+      $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
+        if (res == "Sim")
+          $gameFactory.addPoints("presencial");
+      });
+      // },300);
     };
     // Called to navigate to the main app
     $scope.startApp = function () {

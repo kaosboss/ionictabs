@@ -1,23 +1,27 @@
 {
   "nivel1": {
+    "nivel": true,
     "imagem": "img/game/badges/badge_nivel1.png",
-    "locked": false,
-    "pontos": 6,
+    "locked": true,
+    "pontos": 9,
     "tipo": "badge"
   },
   "nivel2": {
+    "nivel": true,
     "imagem": "img/game/badges/badge_nivel2.png",
-    "locked": false,
+    "locked": true,
     "pontos": 31,
     "tipo": "badge"
   },
   "nivel3": {
+    "nivel": true,
     "imagem": "img/game/badges/badge_nivel3.png",
     "locked": true,
     "pontos": 93,
     "tipo": "badge"
   },
   "nivel4": {
+    "nivel": true,
     "imagem": "img/game/badges/badge_nivel4.png",
     "locked": true,
     "pontos": 260,
@@ -71,6 +75,13 @@
     "tipo": "reward"
   },
   "playerInfo" : {
-    "pontos": 0
+    "pontos": 1,
+    "nivelAtual" : "",
+    "scoreCard": {
+      "onboarding": [5,1],
+      "presencial": [10,8],
+      "desafios": [15,16],
+      "foto": [5,8]
+    }
   }
 }
