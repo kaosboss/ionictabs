@@ -17,7 +17,7 @@ body {
   /*cursor: url('../img/finger.png'), auto;*/
   /*cursor: pointer;*/
   /** {*/
-  font-family: 'Brandon';
+  /*font-family: 'Brandon';*/
   /*font-size:16px;*/
   /*}*/
 }
@@ -949,6 +949,8 @@ form *:focus {
 
 .APPmain {
   font-size: 20px;
+  line-height: 150%;
+
   /*opacity: 0.85;*/
 }
 
@@ -1334,6 +1336,11 @@ legend {
 .APPimgPI {
   width: 420px;
 }
+
+
+
+
+
 
 /* CSS para listas dos níveis, badges e recompensas*/
 
