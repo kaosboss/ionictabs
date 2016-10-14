@@ -1031,7 +1031,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         }
 
         $scope.events[f].contentHtml = res;
-        fotoDone();
+
         $cordovaSQLite.updateValueToDB("journal", [res, $scope.id]).then(function (res) {
 
           if (!res.rowsAffected)
@@ -1483,6 +1483,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
           // $scope.addEvent(entry.toURL(), thumbNailName);
           // $ionicScrollDelegate.resize();
+          fotoDone();
 
           query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto) VALUES (?,?,?,?,?)";
           // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
@@ -1526,7 +1527,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           var regioes = JSON.parse(res || [{}]);
           console.log("fotoCompleto: GOT regioes from cordova service");
           for (var f = 0; f < regioes.length; f++) {
-            if (regioes[f].nome == RI) {
+            if (regioes[f].descricao == RI) {
               if (!regioes[f].fotoDone) {
                 regioes[f].fotoDone = true;
                 $gameFactory.addPoints("foto");
@@ -1690,7 +1691,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             if ($scope.PIs[f].descricao == res[1]) {
               $scope.PIs[f].score += 1;
               id = $scope.PIs[f].id;
-
+              QRcompleto();
             }
           }
           if ($scope.view.buttonClass != "animated tada balanced")
