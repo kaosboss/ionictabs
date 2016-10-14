@@ -94,6 +94,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       $rootScope.smallDevice = false;
       $rootScope.currentRI = "região de interesse";
+      $rootScope.currentRI_descricao = "Quinta pedagógica";
       $rootScope.showPopup = function (popup) {
         $rootScope.mypop = popup;
         $rootScope.$broadcast("SHOW_POPUP");
@@ -496,26 +497,26 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           console.error("ERROR ON get app version", err);
         });
 
-      $scope.$on('LEVELUP', function (e, args) {
+        $scope.$on('LEVELUP', function (e, args) {
 
-        // $cordovaSQLite.getVarFromDB("info", "gameInfo").then(function (res) {
-        var gameInfo = args.gameInfo;
-        console.log("Got game info: level up", gameInfo);
-        for (var levelName in gameInfo) {
-          if (!gameInfo.hasOwnProperty(levelName)) continue;
+          // $cordovaSQLite.getVarFromDB("info", "gameInfo").then(function (res) {
+          var gameInfo = args.gameInfo;
+          console.log("Got game info: level up", gameInfo);
+          for (var levelName in gameInfo) {
+            if (!gameInfo.hasOwnProperty(levelName)) continue;
 
-          var level = gameInfo[levelName];
-          console.log("gameInfo2: ", levelName, level);
+            var level = gameInfo[levelName];
+            console.log("gameInfo2: ", levelName, level);
 
-          if (!level.locked) {
-            var elem = $window.document.getElementById(levelName);
-            if (elem)
-              elem.classList.add("clearBadge");
-            console.warn("GameInfo unlocked: " + levelName + " = " + level);
+            if (!level.locked) {
+              var elem = $window.document.getElementById(levelName);
+              if (elem)
+                elem.classList.add("clearBadge");
+              console.warn("GameInfo unlocked: " + levelName + " = " + level);
+            }
           }
-        }
-        // });
-      });
+          // });
+        });
 
         $scope.$on("$ionicView.afterEnter", function (event, data) {
           console.log("State $ionicView.afterEnter dash Params: ", data, news.updated());
@@ -869,7 +870,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                                       $cordovaDevice, $cordovaSQLite, $ionicPlatform,
                                       $ionicPopup, $timeout, $ionicBackdrop,
                                       $ionicModal, $ionicSlideBoxDelegate, $ionicScrollDelegate,
-                                      $window, $q, $ionicLoading, blob, $gameFactory) {
+                                      $window, $q, $ionicLoading, blob, $gameFactory, $regioes) {
 
     var query = "";
     var lorem = "Aqui está a familia Ramos num Domingo muito divertido e diferente!";
@@ -1030,7 +1031,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         }
 
         $scope.events[f].contentHtml = res;
+
         $cordovaSQLite.updateValueToDB("journal", [res, $scope.id]).then(function (res) {
+
           if (!res.rowsAffected)
             console.warn("ALERT: Update db got 0 affected rows");
           // console.log("Client side, returned update", res);
@@ -1103,7 +1106,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       if (NOTI_PUSH)
         $scope.events.push(
           {
-            id: 0,
+            // id: 0,
             badgeClass: 'mascoteAvatar',
             badgeIconClass: 'bg-dark',
             // badgeIconClass : 'ion-ionic',
@@ -1142,8 +1145,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
       if (auto == "NO") {
 
-        $gameFactory.addPoints("foto");
-
         $scope.events.push({
           // image: thumb,
           id: id,
@@ -1157,6 +1158,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           contentHtml: caption
         });
       } else
+
+      // $gameFactory.addPoints("foto");
+
         $scope.events.push(
           {
             id: 0,
@@ -1479,6 +1483,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
           // $scope.addEvent(entry.toURL(), thumbNailName);
           // $ionicScrollDelegate.resize();
+          fotoDone();
 
           query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto) VALUES (?,?,?,?,?)";
           // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
@@ -1514,6 +1519,35 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         console.log("COPY ERROR: ", error, error.code);
         $rootScope.deviceBUSY = 0;
       }
+
+      var fotoDone = function () {
+        $regioes.getRegioes().then(function (res) {
+          var found = false;
+          var RI = $rootScope.currentRI;
+          var regioes = JSON.parse(res || [{}]);
+          console.log("fotoCompleto: GOT regioes from cordova service");
+          for (var f = 0; f < regioes.length; f++) {
+            if (regioes[f].descricao == RI) {
+              if (!regioes[f].fotoDone) {
+                regioes[f].fotoDone = true;
+                $gameFactory.addPoints("foto");
+                found = true;
+              }
+            }
+          }
+          if (found) {
+            console.log("fotoCompleto: UPDATE: ", regioes);
+            $regioes.setRegioesPromise(regioes).then(function () {
+              // scope.goMapa('ok');
+              // $ionicHistory.goBack();
+            });
+            // $timeout(function () {
+            //   scope.goMapa();
+            // }, 200);
+          } else
+            console.warn("fotoCompleto RI not found", RI);
+        });
+      };
 
       $scope.takePicture = function () {
         console.log("take picture ready");
@@ -1574,7 +1608,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // }
     }, false);
   })
-  .controller("BarCodeReaderController", function ($rootScope, $scope, $cordovaBarcodeScanner, $ionicSlideBoxDelegate, perguntas, $stateParams, $timeout, $gameFactory) {
+  .controller("BarCodeReaderController", function ($rootScope, $scope, $cordovaBarcodeScanner, $ionicSlideBoxDelegate, perguntas, $stateParams, $timeout, $gameFactory, $ionicHistory) {
     console.log("ionic controller BarCodeReaderController ready");
 
     var stopped = true;
@@ -1602,6 +1636,46 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // }
     };
 
+    $scope.goMapa = function (res) {
+      $timeout(function () {
+        $rootScope.$broadcast("QUIZ_POPUP", {desafio: res});
+      }, 600);
+      $ionicHistory.goBack();
+      // $state.go("tab.mapa", {
+      //   RI: "ALL",
+      //   PI: RI
+      // });
+    };
+
+    QRcompleto = function () {
+      $regioes.getRegioes().then(function (res) {
+        var found = false;
+        var RI = $rootScope.APP.regiaoLoaded;
+        regioes = JSON.parse(res || [{}]);
+        console.log("qrCompleto: GOT regioes from cordova service");
+        for (var f = 0; f < regioes.length; f++) {
+          if (regioes[f].nome == RI) {
+            if (!regioes[f].qrDone) {
+              regioes[f].qrDone = true;
+              $gameFactory.addPoints("desafio");
+              found = true;
+            }
+          }
+        }
+        if (found) {
+          console.log("qrCompleto: UPDATE: ", regioes);
+          $regioes.setRegioesPromise(regioes).then(function () {
+            scope.goMapa('ok');
+            // $ionicHistory.goBack();
+          });
+          // $timeout(function () {
+          //   scope.goMapa();
+          // }, 200);
+        } else
+          console.warn("QuizCompleto RI not found", quizRI);
+      });
+    };
+
     checkQR = function (BCD) {
       if (BCD == "")
         return;
@@ -1612,11 +1686,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       console.log(res);
       if ((res[0]) && (res[1])) {
         if (res[0] == $rootScope.APP.regiaoLoaded) {
-          score += 20;
+          // score += 20;
           for (var f = 0; f < $scope.PIs.length; f++) {
             if ($scope.PIs[f].descricao == res[1]) {
-              $scope.PIs[f].score += 20;
+              $scope.PIs[f].score += 1;
               id = $scope.PIs[f].id;
+              QRcompleto();
             }
           }
           if ($scope.view.buttonClass != "animated tada balanced")
@@ -1640,6 +1715,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               elem.classList.remove("animated", "tada");
             }, 1000);
           }
+
+          $timeout(function () {
+            QRcompleto();
+          }, 300);
 
         }
       } else {
@@ -1673,11 +1752,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.stopQR = function () {
       // $rootScope.$broadcast('QR_CODE_SCAN', { showQR: false });
-      $scope.enableSwipe();
+      // $scope.enableSwipe();
       stopped = true;
       console.log("atopped QR caça: ");
       $scope.startted = false;
       $scope.PIs = [];
+      $scope.goMapa("nok");
     };
 
     $scope.getBarcode = function () {
@@ -2569,8 +2649,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             if (dist < circleRadius) {
               console.log("in circle: %s", aCircles[f].nome);
               if (aCircles[f].locked) {
-                // $rootScope.showAlert("A " + aCircles[f].descricao + " está por descobrir");
-                $rootScope.showPopup({templateUrl: 'templates/popups/regiao_locked.html'});
+                // $rootScope.showPopup({templateUrl: 'templates/popups/regiao_locked.html'});
+                aCircles[f].locked = false;
+                aCircles[f].visited = true;
+
+                $regioes.setRegioes(aCircles);
                 // context.beginPath();
                 // context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
                 // context.lineWidth = 1;
@@ -2892,8 +2975,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // };
 
   })
-  .controller('GameCtrl', function ($rootScope, $scope, $state, $window, $timeout, $ionicTabsDelegate, $regioes) {
+  // .controller('GameCtrl', function ($rootScope, $scope, $state, $window, $timeout, $ionicTabsDelegate, $regioes) {
+  .controller('GameCtrl', function ($rootScope, $scope, $state, $window, $timeout, $gameFactory) {
     console.log("Game controller ready");
+
+    $scope.score = $gameFactory.getScore();
+    $scope.header = $gameFactory.gameHeaderValue();
+
+    $scope.closeGameHeader = function () {
+      $scope.header = false;
+      $gameFactory.gameHeaderValue('OFF');
+      // $scope.headeron = false;
+    };
 
     $scope.goMapaQRGame = function () {
       // $ionicHistory.goBack();
@@ -3673,7 +3766,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
     };
   })
-  .directive('quiz', function ($timeout, $state, $regioes, $gameFactory, $ionicHistory, $rootScope) {
+  .directive('quiz', function ($timeout, $state, $regioes, $gameFactory, $ionicHistory, $rootScope, $gameFactory) {
     return {
       restrict: 'AE',
       scope: {},
@@ -3788,14 +3881,18 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         };
 
         scope.quizCompleto = function () {
+
           $regioes.getRegioes().then(function (res) {
             var found = false;
             regioes = JSON.parse(res || [{}]);
             console.log("quizCompleto: GOT regioes from cordova service");
             for (var f = 0; f < regioes.length; f++) {
               if (regioes[f].nome == RI) {
-                regioes[f].quizDone = true;
-                found = true;
+                if (!regioes[f].quizDone) {
+                  regioes[f].quizDone = true;
+                  $gameFactory.addPoints("desafio");
+                  found = true;
+                }
               }
             }
             if (found) {

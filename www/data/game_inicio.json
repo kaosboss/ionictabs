@@ -4,28 +4,28 @@
     "imagem": "img/game/badges/badge_nivel1.png",
     "locked": true,
     "pontos": 9,
-    "tipo": "badge"
+    "tipo": "nivel"
   },
   "nivel2": {
     "nivel": true,
     "imagem": "img/game/badges/badge_nivel2.png",
     "locked": true,
     "pontos": 31,
-    "tipo": "badge"
+    "tipo": "nivel"
   },
   "nivel3": {
     "nivel": true,
     "imagem": "img/game/badges/badge_nivel3.png",
     "locked": true,
     "pontos": 93,
-    "tipo": "badge"
+    "tipo": "nivel"
   },
   "nivel4": {
     "nivel": true,
     "imagem": "img/game/badges/badge_nivel4.png",
     "locked": true,
     "pontos": 260,
-    "tipo": "badge"
+    "tipo": "nivel"
   },
   "foto": {
     "imagem": "img/game/badges/badge_foto.png",
@@ -46,7 +46,7 @@
     "tipo": "badge"
   },
   "reward_entrada": {
-    "imagem": "img/game/badges/reward.png",
+    "imagem": "img/game/badges/badge_reward_entrada.png",
     "locked": true,
     "combos": [
       "nivel2"
@@ -54,7 +54,7 @@
     "tipo": "reward"
   },
   "reward_grupo": {
-    "imagem": "img/game/badges/reward.png",
+    "imagem": "img/game/badges/badge_reward_grupo.png",
     "locked": true,
     "combos": [
       "foto",
@@ -64,7 +64,7 @@
     "tipo": "reward"
   },
   "reward_merchandize": {
-    "imagem": "img/game/badges/reward.png",
+    "imagem": "img/game/badges/badge_reward_merchandize.png",
     "locked": true,
     "combos": [
       "nivel1",
@@ -74,14 +74,22 @@
     ],
     "tipo": "reward"
   },
-  "playerInfo" : {
+  "playerInfo": {
     "pontos": 1,
-    "nivelAtual" : "",
+    "nivelAtual": "",
     "scoreCard": {
-      "onboarding": [5,1],
-      "presencial": [10,8],
-      "desafios": [15,16],
-      "foto": [5,8]
+      "onboarding": [
+        5,
+        1
+      ],
+      "desafio": [
+        15,
+        16
+      ],
+      "foto": [
+        5,
+        8
+      ]
     }
   }
 }
