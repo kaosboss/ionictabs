@@ -31,6 +31,8 @@
       }
     ],
     "quizDone": false,
+    "qrDone": false,
+    "fotoDone": false,
     "Quiz": [
       {
         "question": "Qual das plantas tem uma cor lilás?",
@@ -67,7 +69,7 @@
     "centerX": 230,
     "centerY": 95,
     "radius": 20,
-    "locked": true,
+    "locked": false,
     "visited": false,
     "banner": "Aqui vais conhecer pequenas plantas capazes de fazer grandes efeitos nos teus sentidos, os melhores mensageiros, a minha casa, a minha horta e os meus vizinhos marrecos e mudos!",
     "PIs": [
@@ -98,6 +100,8 @@
       }
     ],
     "quizDone": false,
+    "qrDone": false,
+    "fotoDone": false,
     "Quiz": [
       {
         "question": "Quantos dedos tem cada pata do Pantufas?",
@@ -134,7 +138,7 @@
     "centerX": 187,
     "centerY": 88,
     "radius": 22,
-    "locked": true,
+    "locked": false,
     "visited": false,
     "banner": "Agora que já conheceste a minha casa e os meus vizinhos do lado, vou dar-te a conhecer excelentes frutos e árvores, bem como os meus vizinhos mais saloios ... ",
     "PIs": [
@@ -170,6 +174,8 @@
       }
     ],
     "quizDone": false,
+    "qrDone": false,
+    "fotoDone": false,
     "Quiz": [
       {
         "question": "Como se chama a árvore da cortiça?",
@@ -227,6 +233,8 @@
       }
     ],
     "quizDone": false,
+    "qrDone": false,
+    "fotoDone": false,
     "Quiz": [
       {
         "question": "Quantos anos demora o Eucalipto a ficar pronto para cortar?",
@@ -264,7 +272,7 @@
     "centerY": 50,
     "radius": 36,
     "banner": "Depois de já teres ficado a conhecer o Eucalipto, vais agora conhecer as duas outras árvores mais abundantes em Portugal e com uma grande importância. Vou-te ensinar muitas coisas!",
-    "locked": true,
+    "locked": false,
     "visited": false,
     "PIs": [
       {
@@ -294,6 +302,8 @@
       }
     ],
     "quizDone": false,
+    "qrDone": false,
+    "fotoDone": false,
     "Quiz": [
       {
         "question": "Em que região existem mais alfarrobeiras em Portugal?",
@@ -346,6 +356,8 @@
       }
     ],
     "quizDone": false,
+    "qrDone": false,
+    "fotoDone": false,
     "Quiz": [
       {
         "question": "Qual a árvore que dá bolotas?",
@@ -382,7 +394,7 @@
     "centerX": 158,
     "centerY": 125,
     "radius": 20,
-    "locked": true,
+    "locked": false,
     "visited": false,
     "banner": "Nesta região ainda vais poder aprender muitas coisas interessantes! Prepara-te para conhecer mais sobre frutas deliciosas e sobre o famoso Pinheiro!",
     "PIs": [
@@ -403,6 +415,8 @@
       }
     ],
     "quizDone": false,
+    "qrDone": false,
+    "fotoDone": false,
     "Quiz": [
       {
         "question": "Desde quando se come o Figo?",
@@ -470,6 +484,8 @@
       }
     ],
     "quizDone": false,
+    "qrDone": false,
+    "fotoDone": false,
     "Quiz": [
       {
         "question": "Quantos anos tem a oliveira mais velha em Portugal?",

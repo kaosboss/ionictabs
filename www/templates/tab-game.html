@@ -5,7 +5,10 @@
     <ion-item class="APPmain item-thumbnail-left item-borderless list-item">
       <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
       <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">Olá Explorador da Natureza, estas
-        mesmo perto de seres o mestre do parque! Queres melhorar o teu resultado? </p>
+        mesmo perto de seres o mestre do parque! Queres melhorar o teu resultado? {{score}} pontos</p>
+      <span ng-click="closeGameHeader()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;"
+                                                                                         class="subdued button-small button-light ion-close"></a> ]
+      </span>
     </ion-item>
     <ion-item class="item-borderless" style="margin-top: -10px;">
       <div class="container animated fadeIn">
@@ -83,12 +86,12 @@
           <td class="text-center"> A</td>
           <td class="text-center"> 4/4</td>
           <td class="text-center">
-            <button ng-click="goMapaQuizGame()" class="button button-small button-balanced APPcenter button-desafios"><i
+            <button ng-click="goMapaQuizGame()" class="button button-small balanced APPcenter button-desafios"><i
               class="icon ion-clipboard"></i>
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame()" class="button button-small button-balanced APPcenter button-desafios"><i
+            <button ng-click="goMapaQRGame()" class="button button-small balanced APPcenter button-desafios"><i
               class="icon ion-qr-scanner"></i>
             </button>
           </td>
@@ -97,12 +100,12 @@
           <td class="text-center"> B</td>
           <td class="text-center"> 5/5</td>
           <td class="text-center">
-            <button ng-click="goMapaQuizGame()" class="button button-small button-next APPcenter button-desafios"><i
+            <button ng-click="goMapaQuizGame()" class="button button-small balanced APPcenter button-desafios"><i
               class="icon ion-clipboard"></i>
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame()" class="button button-small button-assertive APPcenter button-desafios"><i
+            <button ng-click="goMapaQRGame()" class="button button-small balanced APPcenter button-desafios"><i
               class="icon ion-qr-scanner"></i>
             </button>
           </td>
