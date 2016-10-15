@@ -2124,7 +2124,7 @@ angular.module('starter.services', [])
     }
 
   })
-  .factory('$gameFactory', function ($http, $cordovaSQLite, $rootScope, $regioes) {
+  .factory('$gameFactory', function ($http, $cordovaSQLite, $rootScope, $timeout) {
 
     var headers = {
       "RI_A": true,
@@ -2208,10 +2208,13 @@ angular.module('starter.services', [])
     };
 
     var processGameInfo = function (info) {
-      gameInfo = clone(info);
+      if (info)
+        gameInfo = clone(info);
+
       var temp = gameInfo["playerInfo"].nivelAtual;
       var latestLevel = "";
       var change = false;
+      var delay = false;
       for (var levelName in gameInfo) {
         if (!gameInfo.hasOwnProperty(levelName) || (!gameInfo[levelName].nivel)) continue;
 
@@ -2221,10 +2224,12 @@ angular.module('starter.services', [])
         switch (level.tipo) {
           case "nivel":
             if (gameInfo["playerInfo"].pontos >= level.pontos) {
-              latestLevel = levelName;
               if (level.locked) {
-                level.locked = false;
-                change = true;
+                if (!change) {
+                  level.locked = false;
+                  change = true;
+                  latestLevel = levelName;
+                } else delay = true;
               }
               console.warn("process gameinfo: " + levelName + " = " + level);
             }
@@ -2240,9 +2245,11 @@ angular.module('starter.services', [])
                     count++;
                 });
                 if (count == total) {
-                  level.locked = false;
-                  change = true;
-                  latestLevel = levelName;
+                  if (!change) {
+                    level.locked = false;
+                    change = true;
+                    latestLevel = levelName;
+                  } else delay = true;
                 }
               }
             }
@@ -2251,11 +2258,13 @@ angular.module('starter.services', [])
           case "badge":
 
             if (level.locked)
-            if (gameInfo["playerInfo"].scoreCard[levelName][1] == 0) {
-              level.locked = false;
-              change = true;
-              latestLevel = levelName;
-            }
+              if (gameInfo["playerInfo"].scoreCard[levelName][1] == 0) {
+                if (!change) {
+                  level.locked = false;
+                  change = true;
+                  latestLevel = levelName;
+                } else delay = true;
+              }
 
             // $regioes.getRegioes().then(function (res) {
             //   var regioes = JSON.parse(res || [{}]);
@@ -2280,12 +2289,20 @@ angular.module('starter.services', [])
           title: "Título de progressão",
           image: "img/game/badges/badge_" + latestLevel + ".png",
           caption: "Parabéns! Atingiste o nível",
-          thumb: "img/game/badges/badge_" + latestLevel + ".png",
+          thumb: "img/game/badges/badge_" + latestLevel + ".png"
         });
         $rootScope.showPopup({templateUrl: 'templates/popups/badge_' + latestLevel + '.html'});
         saveGameInfo();
         $rootScope.$broadcast('LEVELUP', {gameInfo: gameInfo});
-      } else console.warn("process gameinfo: no level change");
+        change=false;
+      } else
+        console.warn("process gameinfo: no level change");
+
+      if (delay)
+        $timeout(function () {
+          processGameInfo();
+          delay = false;
+        }, 60000);
     };
 
     var getGameInicio = function () {
