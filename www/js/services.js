@@ -2229,6 +2229,7 @@ angular.module('starter.services', [])
                   level.locked = false;
                   change = true;
                   latestLevel = levelName;
+                  gameInfo["playerInfo"].nivelAtual = latestLevel;
                 } else delay = true;
               }
               console.warn("process gameinfo: " + levelName + " = " + level);
@@ -2282,8 +2283,8 @@ angular.module('starter.services', [])
         }
       }
 
-      gameInfo["playerInfo"].nivelAtual = latestLevel;
-      if ((temp != gameInfo["playerInfo"].nivelAtual) || (change)) {
+      // gameInfo["playerInfo"].nivelAtual = latestLevel;
+      if ((change)) {
         // alert lastest level popup badge
         $rootScope.$broadcast('ADD_JOURNAL', {
           title: "Título de progressão",
@@ -2298,11 +2299,11 @@ angular.module('starter.services', [])
       } else
         console.warn("process gameinfo: no level change");
 
-      if (delay)
-        $timeout(function () {
-          processGameInfo();
-          delay = false;
-        }, 60000);
+      // if (delay)
+      //   $timeout(function () {
+      //     processGameInfo();
+      //     delay = false;
+      //   }, 60000);
     };
 
     var getGameInicio = function () {
