@@ -499,7 +499,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             // checkBT();
             $timeout(function () {
               checkBT();
-            }, 10000);
+            }, 30000);
 
             $state.go("tab.intro");
 
@@ -838,12 +838,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               //   $timeout(function () {
               //     // $ionicTabsDelegate.select(3);
               //     // $rootScope.APP.start_qr = true;
-              //     // $rootScope.APP.regiao_descoberta = true;
+              //     /$rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})/ $rootScope.APP.regiao_descoberta = true;
               //     // $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})
               //     $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})
               //   }, 200);
               // } else {
-              //   $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})
+              //
               // }
               return 1;
             }
@@ -2272,10 +2272,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // if ($stateParams.RI != "ALL") {
         //   $ionicTabsDelegate.select(3);
         //   $timeout(function () {
-        if ($scope.regiao.locked) {
-          $rootScope.showPopup({templateUrl: 'templates/popups/desafio_locked.html'});
-          return;
-        }
+        // if ($scope.regiao.locked) {
+        //   $rootScope.showPopup({templateUrl: 'templates/popups/desafio_locked.html'});
+        //   return;
+        // }
 
         $state.go("tab.mapa", {
           RI: RI,
@@ -2326,8 +2326,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           aCircles.some(function (reg) {
 
             if (reg.nome == RI) {
-              $scope.regiao = reg;
+              console.log("Loading regiao: found");
+              $scope.regiao = clone(reg);
               $scope.RI = reg.nome;
+              // $scope.$apply();
               var file = reg.nome;
               if (reg.locked)
                 file += "_red";
@@ -2345,6 +2347,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 // $scope.$apply();
               // $regioes.drawedMapa("OFF");
               // drawedMapa = false;
+              if (QR)
+                $timeout(function () {
+                  goQR(RI);
+                }, 300);
+              if (QUIZ)
+                $timeout(function () {
+                  $scope.goQuiz(RI);
+                }, 300);
               return true;
             }
           });
@@ -2462,15 +2472,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         if ($stateParams.RI == "ALL") {
           // if ($rootScope.APP.regiao_descoberta)
+          $timeout(function () {
+            createCircles();
+          }, 300);
 
           $timeout(function () {
             var idMarcador = $window.document.getElementById('marcador');
             if (idMarcador)
               idMarcador.classList.remove('animated', 'bounce');
           }, 2000);
-          $timeout(function () {
-            createCircles();
-          }, 300);
         }
       });
 
@@ -2543,11 +2553,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // $regioes.drawedMapa('OFF');
         // createCircles();
         if ($stateParams.RI != "ALL") {
-          // $ionicTabsDelegate.select(3);
-          $ionicHistory.goBack();
+          $ionicTabsDelegate.select(3);
+          // $ionicHistory.goBack();
           $timeout(function () {
-            loadRegiao($regioes.convertRegiaoLongToShort(args.regiao), args.qr, args.quiz);
-          }, 200);
+            // loadRegiao($regioes.convertRegiaoLongToShort(args.regiao), args.qr, args.quiz);
+            $rootScope.$broadcast('GO_REGIAO', {regiao: args.regiao})
+          }, 300);
         } else {
           loadRegiao($regioes.convertRegiaoLongToShort(args.regiao), args.qr, args.quiz);
         }
@@ -2678,16 +2689,25 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             var x = e.offsetX - circleX;
             var dist = Math.sqrt(y * y + x * x);
             //console.log("circle: %s dist: ", $scope.aCircles[f].nome, dist);
+
+            if (aCircles[f].locked || !aCircles[f].visited) {
+              aCircles[f].locked = false;
+              aCircles[f].visited = true;
+              $regioes.setRegioes(aCircles);
+              $gameFactory.addPoints("regioes");
+              // createCircles();
+            }
+
             if (dist < circleRadius) {
               console.log("in circle: %s", aCircles[f].nome);
               $gameFactory.addPoints("regiao");
               if (aCircles[f].locked) {
                 // $rootScope.showPopup({templateUrl: 'templates/popups/regiao_locked.html'});
-                aCircles[f].locked = false;
-                aCircles[f].visited = true;
-
-                $regioes.setRegioes(aCircles);
-                createCircles();
+                // aCircles[f].locked = false;
+                // aCircles[f].visited = true;
+                //
+                // $regioes.setRegioes(aCircles);
+                // createCircles();
                 // context.beginPath();
                 // context.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI, false);
                 // context.lineWidth = 1;
@@ -2819,9 +2839,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 file += ".png";
                 reg.marcador = file;
                 $scope.marcador = file;
-                $scope.regiao = aCircles[i];
-                $scope.regiao.completed = aCircles[i].completed;
-                $scope.regiao.headeron = $gameFactory.isHeaderOn($scope.regiao.nome);
+                $scope.regiao = clone(aCircles[i]);
+                // $scope.regiao.completed = aCircles[i].completed;
+                $scope.regiao.headeron = $gameFactory.isHeaderOn(reg.nome);
 
 
                 $timeout(function () {
@@ -3094,7 +3114,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // });
       // if ($state.current.name != "tab.mapa") {
       //   // $state.go("tab.mapa", {});
-      $rootScope.APP.start_qr = true;
+      // $rootScope.APP.start_qr = true;
       //   $state.go("tab.mapa", {
       //     RI: "ALL",
       //     PI: ""
@@ -3105,7 +3125,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         PI: ""
       });
       // $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse E", quiz: true})
-      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI, qr: true})
+      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI});
       // } else {
       //   $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse E", qr: true})
       // }
@@ -3119,12 +3139,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // });
       // if ($state.current.name != "tab.mapa") {
       //   // $state.go("tab.mapa", {});
-      $rootScope.APP.start_quiz = true;
+      // $rootScope.APP.start_quiz = true;
       $state.go("tab.mapa", {
         RI: "ALL",
         PI: ""
       });
-      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI, quiz: true})
+      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI})
       // } else {
       //   $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse E", quiz: true})
       // }
