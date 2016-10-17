@@ -7,7 +7,7 @@
 }
 
 * {
-  font-family: 'Brandon', SansSerif !important;
+  /*font-family: 'Brandon', SansSerif !important;*/
   /*font-size:16px;*/
 }
 
@@ -948,8 +948,8 @@ form *:focus {
 }
 
 .APPmain {
-  font-size: 20px;
-  line-height: 125%;
+  font-size: 18px;
+  /*line-height: 110%;*/
 
   /*opacity: 0.85;*/
 }
@@ -998,6 +998,12 @@ form *:focus {
  *       See this article for more info and a potential fix:
  *       http://css-tricks.com/webkit-sibling-bug/
  */
+#zero:checked ~ .progress > .progress-bar {
+  width: 0%;
+  background-color: #FFFFFF;
+  color: #FFFFFF;
+  /*background-color: #f63a0f;*/
+}
 
 #five:checked ~ .progress > .progress-bar {
   width: 5%;
@@ -1564,4 +1570,10 @@ legend {
 
 .item-thumbnail-left {
   /*margin-left: 25px;*/
+}
+
+/* current RI*/
+
+.here {
+  filter:brightness(200%);
 }
