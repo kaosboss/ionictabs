@@ -154,7 +154,348 @@ angular.module('starter.services', [])
   .run(['$injector', function ($injector) {
     $injector.get('$cordovaNetwork'); //ensure the factory always gets initialised
   }])
-  .factory('$IbeaconScanner', ['$rootScope', '$window', '$regioes', function ($rootScope, $window, $regioes) {
+  .factory('$eventFactory', function ($cordovaSQLite, $rootScope) {
+
+    var eventHanlder = false;
+    var DB = $cordovaSQLite.getDB();
+
+    return {
+      addInHouseEvent: function (args) {
+        console.log("$eventFactory: addInHouseEvent enter: ", args);
+        if (eventHanlder){
+          $rootScope.$broadcast('ADD_JOURNAL', args);
+          console.warn("$eventFactory: broadcast ADD_JOURNAL");
+        }
+        else {
+          console.warn("$eventFactory: no event handler, inserting: ", args);
+          var query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto) VALUES (?,?,?,?,?)";
+          // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
+          $cordovaSQLite.execute($cordovaSQLite.getDB(), query, [args.image, args.caption, args.thumb, args.title, 'YES']).then(function (res) {
+            var message = "addInHouseEvent: INSERT ID -> " + res.insertId;
+            // $scope.captureImageId = res.insertId;
+            console.log(message, args.image, res);
+            // alert(message);
+          }, function (err) {
+            console.error(err);
+          });
+        }
+      },
+      addEventHandler: function () {
+        eventHanlder = true;
+      }
+      // isEventHandler: function () {
+      //   return eventHanlder;
+      // }
+    }
+  })
+  .factory('$gameFactory', function ($http, $cordovaSQLite, $rootScope, $eventFactory) {
+
+    var headers = {
+      "RI_A": true,
+      "RI_B": true,
+      "RI_C": true,
+      "RI_D": true,
+      "RI_E": true,
+      "RI_F": true,
+      "RI_G": true,
+      "RI_H": true
+    };
+
+    // var pontos = {
+    //   "pnboarding": 5,
+    //   "presencial": 10,
+    //   "desafios": 10,
+    //   "foto": 5
+    // };
+
+    console.log("gameFactory enter");
+
+    var quizHeader = true;
+    var gameHeader = true;
+    var QRHeader = true;
+    var gameInfo = null;
+    var playerInfo = null;
+
+    var getScore = function () {
+      return gameInfo["playerInfo"].pontos;
+    };
+    var getNivelAtual = function () {
+      return gameInfo["playerInfo"].nivelAtual;
+    };
+
+    var addPoints = function (value) {
+      var temp = gameInfo["playerInfo"];
+      console.log("$gamefac: add points, playerinfo : ", value, gameInfo["playerInfo"], gameInfo["playerInfo"]["scoreCard"]);
+      switch (value) {
+
+        case "onboarding":
+          $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
+            if (res == "Sim") {
+              if (gameInfo["playerInfo"]["scoreCard"][value][1]) {
+                gameInfo["playerInfo"].pontos += gameInfo["playerInfo"]["scoreCard"][value][0];
+                gameInfo["playerInfo"]["scoreCard"][value][1]--;
+                console.log("$gamefac: added points, playerinfo , pontos : ", value, gameInfo["playerInfo"], gameInfo["playerInfo"]["scoreCard"][value]);
+                saveGameInfo(gameInfo);
+                $cordovaSQLite.updateOrInsertValueToDB("info", ["Não", "APPtutorial"]);
+                processGameInfo(gameInfo);
+              }
+            } else console.warn("tutorial points already given")
+          });
+          break;
+
+        case "desafio":
+          // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
+          //   if (res == "Sim") {
+          if (gameInfo["playerInfo"]["scoreCard"][value][1]) {
+            gameInfo["playerInfo"].pontos += gameInfo["playerInfo"]["scoreCard"][value][0];
+            gameInfo["playerInfo"]["scoreCard"][value][1]--;
+            console.log("$gamefac: added points, playerinfo , pontos : ", value, gameInfo["playerInfo"], gameInfo["playerInfo"]["scoreCard"][value]);
+            saveGameInfo(gameInfo);
+            // $cordovaSQLite.updateOrInsertValueToDB("info", ["Não", "APPtutorial"]);
+            processGameInfo(gameInfo);
+          }
+          // } else console.warn("tutorial points already given")
+          // });
+          break;
+        case "foto":
+          // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
+          //   if (res == "Sim") {
+          if (gameInfo["playerInfo"]["scoreCard"][value][1]) {
+            gameInfo["playerInfo"].pontos += gameInfo["playerInfo"]["scoreCard"][value][0];
+            gameInfo["playerInfo"]["scoreCard"][value][1]--;
+            console.log("$gamefac: added points, playerinfo , pontos : ", value, gameInfo["playerInfo"], gameInfo["playerInfo"]["scoreCard"][value]);
+            saveGameInfo(gameInfo);
+            // $cordovaSQLite.updateOrInsertValueToDB("info", ["Não", "APPtutorial"]);
+            processGameInfo(gameInfo);
+          }
+          // } else console.warn("tutorial points already given")
+          // });
+          break;
+
+        case "regioes":
+          // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
+          //   if (res == "Sim") {
+          if (gameInfo["playerInfo"]["scoreCard"][value][1]) {
+            gameInfo["playerInfo"].pontos += gameInfo["playerInfo"]["scoreCard"][value][0];
+            gameInfo["playerInfo"]["scoreCard"][value][1]--;
+            console.log("$gamefac: added points, playerinfo , pontos : ", value, gameInfo["playerInfo"], gameInfo["playerInfo"]["scoreCard"][value]);
+            saveGameInfo(gameInfo);
+            // $cordovaSQLite.updateOrInsertValueToDB("info", ["Não", "APPtutorial"]);
+            processGameInfo(gameInfo);
+          }
+          // } else console.warn("tutorial points already given")
+          // });
+          break;
+      }
+    };
+
+    var processGameInfo = function (info) {
+      if (info)
+        gameInfo = clone(info);
+
+      var temp = gameInfo["playerInfo"].nivelAtual;
+      var latestLevel = "";
+      var change = false;
+      var delay = false;
+      for (var levelName in gameInfo) {
+        if (!gameInfo.hasOwnProperty(levelName) || (!gameInfo[levelName].nivel)) continue;
+
+        var level = gameInfo[levelName];
+        console.log("gameInfo Sevice: ", levelName, level);
+
+        switch (level.tipo) {
+          case "nivel":
+            if (gameInfo["playerInfo"].pontos >= level.pontos) {
+              if (level.locked) {
+                if (!change) {
+                  level.locked = false;
+                  change = true;
+                  latestLevel = levelName;
+                  gameInfo["playerInfo"].nivelAtual = latestLevel;
+                } else delay = true;
+              }
+              console.warn("process gameinfo: " + levelName + " = " + level);
+            }
+            break;
+
+          case "reward":
+            if (level.locked) {
+              if (level.combos) {
+                var count = 0, total = 0;
+                level.combos.forEach(function (item) {
+                  total++;
+                  if (!gameInfo[item].locked)
+                    count++;
+                });
+                if (count == total) {
+                  if (!change) {
+                    level.locked = false;
+                    change = true;
+                    latestLevel = levelName;
+                  } else delay = true;
+                }
+              }
+            }
+            break;
+
+          case "badge":
+
+            if (level.locked)
+              if (gameInfo["playerInfo"].scoreCard[levelName][1] == 0) {
+                if (!change) {
+                  level.locked = false;
+                  change = true;
+                  latestLevel = levelName;
+                } else delay = true;
+              }
+
+            // $regioes.getRegioes().then(function (res) {
+            //   var regioes = JSON.parse(res || [{}]);
+            //   console.log("got regioes: ", regioes);
+            //   var r_total = 0, r_atual = 0, r_foto = 0, r_regioes = 0;
+            //   regioes.forEach(function (reg) {
+            //     if (reg.locked == false)
+            //       r_atual++;
+            //     r_total++;
+            //   });
+            //
+            // });
+            break;
+
+        }
+      }
+
+      // gameInfo["playerInfo"].nivelAtual = latestLevel;
+      if ((change)) {
+        // alert lastest level popup badge
+        $eventFactory.addInHouseEvent({
+          title: "Título de progressão",
+          image: "img/game/badges/badge_" + latestLevel + ".png",
+          caption: "Parabéns! Atingiste o nível",
+          thumb: "img/game/badges/badge_" + latestLevel + ".png"
+        });
+        // $rootScope.$broadcast('ADD_JOURNAL', {
+        //   title: "Título de progressão",
+        //   image: "img/game/badges/badge_" + latestLevel + ".png",
+        //   caption: "Parabéns! Atingiste o nível",
+        //   thumb: "img/game/badges/badge_" + latestLevel + ".png"
+        // });
+        $rootScope.showPopup({templateUrl: 'templates/popups/badge_' + latestLevel + '.html'});
+        saveGameInfo();
+        $rootScope.$broadcast('LEVELUP', {gameInfo: gameInfo});
+        change = false;
+      } else
+        console.warn("process gameinfo: no level change");
+
+      // if (delay)
+      //   $timeout(function () {
+      //     processGameInfo();
+      //     delay = false;
+      //   }, 60000);
+    };
+
+    var getGameInicio = function () {
+      url = "data/game_inicio.json";
+      return $http.get(url).then(function (response) {
+        console.log("response xxx regioes inicio: ", response.data);
+        gameInfo = response.data;
+        playerInfo = gameInfo.playerInfo;
+        return gameInfo;
+      });
+    };
+
+    var saveGameInfo = function (info) {
+      if (!info)
+        info = gameInfo;
+      console.warn("updating gameinfo with: ", info);
+      $cordovaSQLite.updateOrInsertValueToDB("info", [JSON.stringify(info), "gameInfo"]);
+    };
+
+    var QRHeaderValue = function (value) {
+
+      var ret = false;
+
+      if (value == "ON")
+        value = true;
+      else if (value == "OFF")
+        value = false;
+      else if (value == undefined)
+        ret = true;
+
+      if (!ret)
+        console.warn("gameFactory setting qr header:", value, QRHeader);
+      else
+        console.warn("gameFactory getting qr header:", value, QRHeader);
+
+      if (!ret)
+        QRHeader = value;
+      else
+        return QRHeader;
+    };
+
+    var quizHeaderValue = function (value) {
+
+      var ret = false;
+
+      if (value == "ON")
+        value = true;
+      else if (value == "OFF")
+        value = false;
+      else if (value == undefined)
+        ret = true;
+
+      if (!ret)
+        console.warn("gameFactory setting quiz header:", value, quizHeader);
+      else
+        console.warn("gameFactory getting quiz header:", value, quizHeader);
+
+      if (!ret)
+        quizHeader = value;
+      else
+        return quizHeader;
+    };
+
+    var gameHeaderValue = function (value) {
+
+      var ret = false;
+
+      if (value == "ON")
+        value = true;
+      else if (value == "OFF")
+        value = false;
+      else if (value == undefined)
+        ret = true;
+
+      if (!ret)
+        console.warn("gameFactory setting game header:", value, gameHeader);
+      else
+        console.warn("gameFactory getting game header:", value, gameHeader);
+
+      if (!ret)
+        gameHeader = value;
+      else
+        return gameHeader;
+    };
+
+    return {
+      setHeaderOff: function (RI) {
+        headers[RI] = false;
+      },
+      isHeaderOn: function (RI) {
+        return headers[RI];
+      },
+      quizHeaderValue: quizHeaderValue,
+      gameHeaderValue: gameHeaderValue,
+      QRHeaderValue: QRHeaderValue,
+      getGameInicio: getGameInicio,
+      saveGameInfo: saveGameInfo,
+      processGameInfo: processGameInfo,
+      addPoints: addPoints,
+      getScore: getScore,
+      getNivelAtual: getNivelAtual
+    }
+  })
+  .factory('$IbeaconScanner', ['$rootScope', '$window', '$regioes', '$gameFactory', '$timeout', function ($rootScope, $window, $regioes, $gameFactory, $timeout) {
     var beacons = {};
     var myRegion = null;
     var myRegion = null;
@@ -232,6 +573,9 @@ angular.module('starter.services', [])
                     }
                     if (!aCircles[f].visited) {
                       aCircles[f].visited = true;
+                      $timeout(function () {
+                        $gameFactory.addPoints("regioes");
+                      }, 500);
                       change = true;
                     }
                     found = true;
@@ -448,6 +792,7 @@ angular.module('starter.services', [])
     cw("ionic platform db: init, factory"); // #### DB #########
 
     var result = {};
+    var DB = null;
 
     openDB = function (options, background) {
 
@@ -456,7 +801,8 @@ angular.module('starter.services', [])
           options.bgType = background;
         }
         // if ($window.sqlitePlugin)
-        return $window.sqlitePlugin.openDatabase(options);
+        DB = $window.sqlitePlugin.openDatabase(options);
+        return DB;
       }
       // if ($window.sqlitePlugin)
       return $window.sqlitePlugin.openDatabase({
@@ -714,6 +1060,10 @@ angular.module('starter.services', [])
 
     return {
       openDB: openDB,
+
+      getDB: function () {
+        return DB;
+      },
 
       execute: execute,
 
@@ -2123,272 +2473,7 @@ angular.module('starter.services', [])
       }
     }
 
-  })
-  .factory('$gameFactory', function ($http, $cordovaSQLite, $rootScope, $regioes) {
-
-    var headers = {
-      "RI_A": true,
-      "RI_B": true,
-      "RI_C": true,
-      "RI_D": true,
-      "RI_E": true,
-      "RI_F": true,
-      "RI_G": true,
-      "RI_H": true
-    };
-
-    // var pontos = {
-    //   "pnboarding": 5,
-    //   "presencial": 10,
-    //   "desafios": 10,
-    //   "foto": 5
-    // };
-
-    console.log("gameFactory enter");
-
-    var quizHeader = true;
-    var gameHeader = true;
-    var QRHeader = true;
-    var gameInfo = null;
-    var playerInfo = null;
-
-    var getScore = function () {
-      return gameInfo["playerInfo"].pontos;
-    };
-
-    var addPoints = function (value) {
-      var temp = gameInfo["playerInfo"];
-      console.log("$gamefac: add points, playerinfo : ", value, gameInfo["playerInfo"], gameInfo["playerInfo"]["scoreCard"]);
-      switch (value) {
-
-        case "onboarding":
-          $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
-            if (res == "Sim") {
-              if (gameInfo["playerInfo"]["scoreCard"][value][1]) {
-                gameInfo["playerInfo"].pontos += gameInfo["playerInfo"]["scoreCard"][value][0];
-                gameInfo["playerInfo"]["scoreCard"][value][1]--;
-                console.log("$gamefac: added points, playerinfo , pontos : ", value, gameInfo["playerInfo"], gameInfo["playerInfo"]["scoreCard"][value]);
-                saveGameInfo(gameInfo);
-                $cordovaSQLite.updateOrInsertValueToDB("info", ["Não", "APPtutorial"]);
-                processGameInfo(gameInfo);
-              }
-            } else console.warn("tutorial points already given")
-          });
-          break;
-
-        case "desafio":
-          // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
-          //   if (res == "Sim") {
-          if (gameInfo["playerInfo"]["scoreCard"][value][1]) {
-            gameInfo["playerInfo"].pontos += gameInfo["playerInfo"]["scoreCard"][value][0];
-            gameInfo["playerInfo"]["scoreCard"][value][1]--;
-            console.log("$gamefac: added points, playerinfo , pontos : ", value, gameInfo["playerInfo"], gameInfo["playerInfo"]["scoreCard"][value]);
-            saveGameInfo(gameInfo);
-            // $cordovaSQLite.updateOrInsertValueToDB("info", ["Não", "APPtutorial"]);
-            processGameInfo(gameInfo);
-          }
-          // } else console.warn("tutorial points already given")
-          // });
-          break;
-        case "foto":
-          // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
-          //   if (res == "Sim") {
-          if (gameInfo["playerInfo"]["scoreCard"][value][1]) {
-            gameInfo["playerInfo"].pontos += gameInfo["playerInfo"]["scoreCard"][value][0];
-            gameInfo["playerInfo"]["scoreCard"][value][1]--;
-            console.log("$gamefac: added points, playerinfo , pontos : ", value, gameInfo["playerInfo"], gameInfo["playerInfo"]["scoreCard"][value]);
-            saveGameInfo(gameInfo);
-            // $cordovaSQLite.updateOrInsertValueToDB("info", ["Não", "APPtutorial"]);
-            processGameInfo(gameInfo);
-          }
-          // } else console.warn("tutorial points already given")
-          // });
-          break;
-      }
-    };
-
-    var processGameInfo = function (info) {
-      gameInfo = clone(info);
-      var temp = gameInfo["playerInfo"].nivelAtual;
-      var latestLevel = "";
-      var change = false;
-      for (var levelName in gameInfo) {
-        if (!gameInfo.hasOwnProperty(levelName) || (!gameInfo[levelName].nivel)) continue;
-
-        var level = gameInfo[levelName];
-        console.log("gameInfo Sevice: ", levelName, level);
-
-        switch (level.tipo) {
-          case "nivel":
-            if (gameInfo["playerInfo"].pontos >= level.pontos) {
-              latestLevel = levelName;
-              if (level.locked) {
-                level.locked = false;
-                change = true;
-              }
-              console.warn("process gameinfo: " + levelName + " = " + level);
-            }
-            break;
-
-          case "reward":
-            if (level.locked) {
-              if (level.combos) {
-                var count = 0, total = 0;
-                level.combos.forEach(function (item) {
-                  total++;
-                  if (!gameInfo[item].locked)
-                    count++;
-                });
-                if (count == total) {
-                  level.locked = false;
-                  change = true;
-                  latestLevel = levelName;
-                }
-              }
-            }
-            break;
-
-          case "badge":
-
-            if (level.locked)
-            if (gameInfo["playerInfo"].scoreCard[levelName][1] == 0) {
-              level.locked = false;
-              change = true;
-              latestLevel = levelName;
-            }
-
-            // $regioes.getRegioes().then(function (res) {
-            //   var regioes = JSON.parse(res || [{}]);
-            //   console.log("got regioes: ", regioes);
-            //   var r_total = 0, r_atual = 0, r_foto = 0, r_regioes = 0;
-            //   regioes.forEach(function (reg) {
-            //     if (reg.locked == false)
-            //       r_atual++;
-            //     r_total++;
-            //   });
-            //
-            // });
-            break;
-
-        }
-      }
-
-      gameInfo["playerInfo"].nivelAtual = latestLevel;
-      if ((temp != gameInfo["playerInfo"].nivelAtual) || (change)) {
-        // alert lastest level popup badge
-        $rootScope.$broadcast('ADD_JOURNAL', {
-          title: "Título de progressão",
-          image: "img/game/badges/badge_" + latestLevel + ".png",
-          caption: "Parabéns! Atingiste o nível",
-          thumb: "img/game/badges/badge_" + latestLevel + ".png",
-        });
-        $rootScope.showPopup({templateUrl: 'templates/popups/badge_' + latestLevel + '.html'});
-        saveGameInfo();
-        $rootScope.$broadcast('LEVELUP', {gameInfo: gameInfo});
-      } else console.warn("process gameinfo: no level change");
-    };
-
-    var getGameInicio = function () {
-      url = "data/game_inicio.json";
-      return $http.get(url).then(function (response) {
-        console.log("response xxx regioes inicio: ", response.data);
-        gameInfo = response.data;
-        playerInfo = gameInfo.playerInfo;
-        return gameInfo;
-      });
-    };
-
-    var saveGameInfo = function (info) {
-      if (!info)
-        info = gameInfo;
-      console.warn("updating gameinfo with: ", info);
-      $cordovaSQLite.updateOrInsertValueToDB("info", [JSON.stringify(info), "gameInfo"]);
-    };
-
-    var QRHeaderValue = function (value) {
-
-      var ret = false;
-
-      if (value == "ON")
-        value = true;
-      else if (value == "OFF")
-        value = false;
-      else if (value == undefined)
-        ret = true;
-
-      if (!ret)
-        console.warn("gameFactory setting qr header:", value, QRHeader);
-      else
-        console.warn("gameFactory getting qr header:", value, QRHeader);
-
-      if (!ret)
-        QRHeader = value;
-      else
-        return QRHeader;
-    };
-
-    var quizHeaderValue = function (value) {
-
-      var ret = false;
-
-      if (value == "ON")
-        value = true;
-      else if (value == "OFF")
-        value = false;
-      else if (value == undefined)
-        ret = true;
-
-      if (!ret)
-        console.warn("gameFactory setting quiz header:", value, quizHeader);
-      else
-        console.warn("gameFactory getting quiz header:", value, quizHeader);
-
-      if (!ret)
-        quizHeader = value;
-      else
-        return quizHeader;
-    };
-
-    var gameHeaderValue = function (value) {
-
-      var ret = false;
-
-      if (value == "ON")
-        value = true;
-      else if (value == "OFF")
-        value = false;
-      else if (value == undefined)
-        ret = true;
-
-      if (!ret)
-        console.warn("gameFactory setting game header:", value, gameHeader);
-      else
-        console.warn("gameFactory getting game header:", value, gameHeader);
-
-      if (!ret)
-        gameHeader = value;
-      else
-        return gameHeader;
-    };
-
-    return {
-      setHeaderOff: function (RI) {
-        headers[RI] = false;
-      },
-      isHeaderOn: function (RI) {
-        return headers[RI];
-      },
-      quizHeaderValue: quizHeaderValue,
-      gameHeaderValue: gameHeaderValue,
-      QRHeaderValue: QRHeaderValue,
-      getGameInicio: getGameInicio,
-      saveGameInfo: saveGameInfo,
-      processGameInfo: processGameInfo,
-      addPoints: addPoints,
-      getScore: getScore
-    }
   });
-// .factory('quizFactory', function ($regioes, $state) {
 //
 //   var questions = null;
 //   var quizRI = null;
