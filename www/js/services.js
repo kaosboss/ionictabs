@@ -215,6 +215,14 @@ angular.module('starter.services', [])
     var QRHeader = true;
     var gameInfo = null;
     var playerInfo = null;
+    var mapaHanlerVar = false;
+
+    var mapaHandler = function (value) {
+      if (value)
+        mapaHanlerVar = true;
+      else
+        return mapaHanlerVar;
+    };
 
     var getScore = function () {
       return gameInfo["playerInfo"].pontos;
@@ -492,7 +500,8 @@ angular.module('starter.services', [])
       processGameInfo: processGameInfo,
       addPoints: addPoints,
       getScore: getScore,
-      getNivelAtual: getNivelAtual
+      getNivelAtual: getNivelAtual,
+      mapaHandler: mapaHandler
     }
   })
   .factory('$IbeaconScanner', ['$rootScope', '$window', '$regioes', '$gameFactory', '$timeout', function ($rootScope, $window, $regioes, $gameFactory, $timeout) {
