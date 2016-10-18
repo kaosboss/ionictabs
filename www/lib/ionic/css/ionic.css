@@ -3006,7 +3006,8 @@ time, mark, audio, video {
   border: 0;
   vertical-align: baseline;
   font: inherit;
-  font-size: 100%; }
+  font-size: 100%;
+  line-height: 130%; }
 
 ol, ul {
   list-style: none; }
@@ -5720,7 +5721,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
     font-size: 10px; }
   .item p {
     color: #666;
-    font-size: 14px;
+/*    font-size: 14px; */
     margin-bottom: 2px; }
   .item h1:last-child,
   .item h2:last-child,
