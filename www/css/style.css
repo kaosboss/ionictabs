@@ -210,6 +210,7 @@ body {
 /*}*/
 .APPmain .textWrap {
   white-space: normal;
+  line-height: 120%;
 }
 
 .APPfull {
@@ -949,6 +950,7 @@ form *:focus {
 
 .APPmain {
   font-size: 18px;
+  line-height: 130%;
   /*line-height: 110%;*/
 
   /*opacity: 0.85;*/
@@ -1332,7 +1334,7 @@ legend {
 
 .paraLembrar {
   background-image: none;
-  background-color: rgb(219, 219, 219);
+  background-color: #b4a797;
   background-size: auto;
   border-radius: 4px;
   background-position: center center;
