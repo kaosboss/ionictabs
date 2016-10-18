@@ -1,6 +1,7 @@
 <ion-view view-title="Mapa">
+  <!--button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}"-->
   <ion-floating-button ng-if="regiao.radius" button-class="" click="goQuiz()" has-footer="true"
-                       button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}"
+                       button-color="#ec6157"
                        icon="ion-clipboard"
                        iconColor="#fff">
   </ion-floating-button>
@@ -17,7 +18,7 @@
     </div>
     <!--<HR style="box-shadow: 0 8px 6px -6px #999;">-->
     <!--<div style="width: 100%; height: 20px; box-shadow: 0 10px 20px -6px #999;"></div>-->
-    <div style="width: 100%; height: 20px;"></div>
+    <div style="width: 100%; height: 10px;"></div>
     <ion-item ng-show="regiao.headeron" id="headerOn" class="item-thumbnail-left item-borderless list-item">
       <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
       <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrap">{{regiao.banner}}</p>
@@ -27,7 +28,7 @@
     </ion-item>
 
     <div class="speedGPU">
-      <ion-scroll style="height: 298px">
+      <ion-scroll style="height: 298px" has-bouncing="true">
         <ion-list class="list-borderless">
 
           <ion-item ng-click="goPI(PI)" ng-repeat="PI in regiao.PIs"
