@@ -2487,7 +2487,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             // if ($rootScope.APP.regiao_descoberta)
             $timeout(function () {
               createCircles();
-            }, 300);
+            }, 600);
 
             $timeout(function () {
               var idMarcador = $window.document.getElementById('marcador');
@@ -2838,11 +2838,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 file += ".png";
                 reg.marcador = file;
                 $scope.marcador = file;
-                if (!$scope.regiaoLoaded) {
+                // if (!$scope.regiaoLoaded) {
                   $scope.regiao = clone(aCircles[i]);
                   $scope.regiaoLoaded = true;
-                  console.warn("Createcircles: regiao not loaded");
-                }
+                  // console.warn("Createcircles: regiao not loaded");
+                // }
                 // $scope.regiao.completed = aCircles[i].completed;
                 $scope.regiao.headeron = $gameFactory.isHeaderOn(reg.nome);
 
