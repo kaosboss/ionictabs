@@ -17,7 +17,7 @@
     "id": 2,
     "img": "img/atividades/atividades_bicicletas_thumb.png",
     "title": "BICICLETAS NO SNP",
-    "description": "Um novo desafio para todos os que têm alguma pedalada e são adeptos de um estilo de vida saudável em contacto com a natureza.",
+    "description": "Um novo desafio para todos os que são adeptos de um estilo de vida saudável em contacto com a natureza.",
     "template": "bicicletas"
   },
   {
@@ -44,7 +44,7 @@
   {
     "id": 6,
     "title": "PAINTBALL",
-    "description": "Paintball num campo em contexto de mato, criado especialmente para esta modalidade.",
+    "description": "Campo em contexto de mato, criado especialmente para esta modalidade.",
     "img": "img/atividades/atividades_painball_thumb.png",
     "template": "paintball"
   },
@@ -73,7 +73,7 @@
     "id": 10,
     "img": "img/atividades/atividades_pomar_variedades_thumb.png",
     "title": "POMAR VARIEDADES",
-    "description": "Pomar com variedades locais e regionais, onde poderão realizar um conjunto diverso de atividades ligadas ao mundo rural.",
+    "description": "Pomar com variedades locais e regionais, onde poderão realizar diversas atividades ligadas ao mundo rural.",
     "template": "pomar_variedades"
   },
   {
