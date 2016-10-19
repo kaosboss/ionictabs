@@ -1,25 +1,21 @@
-<ion-view view-title="Introdução">
+<ion-view view-title="Introdução" cache-view="false">
   <ion-content scroll="false" class="padding has-tabs has-header">
     <ion-slide-box on-slide-changed="slideChanged(index)">
       <ion-slide>
         <ion-content class="has-tabs padding">
           <h3 align="center">BENVINDO!</h3>
-          <br>
           <p class="APPcenter" align="center">
           Eu sou o habitante mais famoso da Quinta Pedagógica e chamo-me Pantufas!
-
           </p>
-          <br>
           <div id="logo1">
             <img src="img/pantufas_intro.png" style="margin:auto;display:block">
             <!--<img src="img/SNP.jpg">-->
           </div>
-          <br>
-          <p class="APPcenter">
+          <p class="APPcenter" align="center">
             Eu vou acompanhar-te em toda a visita e vou
             contar-te muitas coisas interessantes para tornar a tua visita verdadeiramente inesquecível!
           </p>
-          <p class="APPcenter">
+          <p class="APPcenter" align="center">
             Vou começar por te mostrar o que podes esperar desta visita.
           </p>
         </ion-content>
@@ -27,36 +23,29 @@
       <ion-slide>
         <ion-content class="has-tabs padding">
           <h3 align="center">DESCOBRE</h3>
-          <br>
-          <p class="APPcenter":align="center">
+          <p class="APPcenter" align="center">
             Nós estamos no Sesimbra Natura Park!
           </p>
-          <br>
           <div id="logo2">
             <img src="img/pantufas_descobre.png" style="margin:auto;display:block">
             <!--<img src="img/SNP.jpg">-->
           </div>
-          <br>
-          <p class="APPcenter">
+          <p class="APPcenter" align="center">
             Descobre todas as atividades que podes fazer em contacto com a Natureza em segurança, onde tens animais amigáveis, água, árvores e lugares muito bonitos!
           </p>
-
         </ion-content>
       </ion-slide>
       <ion-slide>
         <ion-content class="has-tabs padding">
 
           <h3 align="center">APRENDE</h3>
-          <br>
-          <p class="APPcenter":align="center">
-            Em cada região podes encontrar vários pontos de interesse. Em todos eles eu vou dar-te informações muito interessantes.
+          <p class="APPcenter" align="center">
+            Em cada região podes encontrar vários pontos de interesse.
           </p>
-          <br>
           <div id="logo3">
             <img src="img/pantufas_aprende.png" style="margin:auto;display:block">
           </div>
-          <br>
-          <p class="APPcenter":align="center">
+          <p class="APPcenter" align="center">
             Aprende e fica a conhecer mais sobre os animais e plantas que habitam na Quinta Pedagógica!
           </p>
       <!--<div class="APPlist">
@@ -101,15 +90,12 @@
         <ion-content class="has-tabs padding">
 
           <h3 align="center">RECORDA</h3>
-          <br>
           <p class="APPcenter" align="center">
             Eu gosto muito de fotografias... Especialmente naquelas onde eu apareço com a minha linda crista!
           </p>
-          <br>
           <div id="logo">
             <img src="img/pantufas_recorda.png" style="margin:auto;display:block">
           </div>
-          <br>
           <p class="APPcenter" align="center">
             Tira todas as fotos que quiseres para mais tarde recordares os momentos mais importantes da tua visita!
           </p>
@@ -118,10 +104,8 @@
           <!--Este botão tem duas opções, se o utilizador estiver ligado, o mesmo é redirecionado para a tab de Atividades.-->
           <!--Se não estiver logged, redireciona para o login.-->
           <!--</p>-->
-          <button ng-click="goLogin()" ng-hide=$root.APP.logged class="button button-balanced APPcenter">Concluido - Login</button>
-          <button ng-click="goHome()" ng-show=$root.APP.logged class="button button-balanced APPcenter">Concluido - HomePage</button>
-
-
+          <button ng-click="goLogin()" ng-hide=$root.APP.logged class="button button-small button-next APPcenter">Concluido, Iniciar Sessão</button>
+          <button ng-click="goHome()" ng-show=$root.APP.logged class="button button-small button-next APPcenter">Concluido, HomePage</button>
 
         </ion-content>
       </ion-slide>
