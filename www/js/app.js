@@ -2337,7 +2337,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             if (reg.nome == RI) {
               console.log("Loading regiao: found");
               // if (!$scope.regiaoLoaded)
-                $scope.regiao = clone(reg);
+              $scope.regiao = clone(reg);
               $scope.regiaoLoaded = true;
               $scope.RI = reg.nome;
               // $scope.$apply();
@@ -2407,7 +2407,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // }
 
       if (($scope.RI == "ALL") && ($stateParams.PI == "")) {
-        if (($rootScope.APP.regiao_descoberta) || ($rootScope.APP.start_qr) || ($rootScope.APP.start_quiz)) {
+        if (($rootScope.APP.regiao_descoberta) || ($rootScope.APP.start_qr) || ($rootScope.APP.start_quiz) || ($rootScope.APP.load)) {
           console.log("Loading currentri , starting", $regioes.convertRegiaoLongToShort($rootScope.currentRI));
           loadRegiao($regioes.convertRegiaoLongToShort($rootScope.currentRI));
         } else {
@@ -2838,10 +2838,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 file += ".png";
                 reg.marcador = file;
                 $scope.marcador = file;
-                // if (!$scope.regiaoLoaded) {
-                  $scope.regiao = clone(aCircles[i]);
+                if (!$scope.regiaoLoaded) {
+                  $scope.regiao = {};
+                  // loadRegiao($scope.RI);
+                  $scope.regiao = reg;
+                  $timeout(function () {});
+                  console.warn("Createcircles: regiao not loaded");
                   $scope.regiaoLoaded = true;
-                  // console.warn("Createcircles: regiao not loaded");
+                }
+                // $scope.regiao = clone(aCircles[i]);
+                // $scope.regiaoLoaded = true;
+                // console.warn("Createcircles: regiao not loaded");
                 // }
                 // $scope.regiao.completed = aCircles[i].completed;
                 $scope.regiao.headeron = $gameFactory.isHeaderOn(reg.nome);
@@ -3122,6 +3129,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       //     PI: ""
       //   });
       // $rootScope.APP.start_quiz = true;
+      $rootScope.APP.load = true;
       $state.go("tab.mapa", {
         RI: "ALL",
         PI: ""
@@ -3141,12 +3149,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // });
       // if ($state.current.name != "tab.mapa") {
       //   // $state.go("tab.mapa", {});
-      // $rootScope.APP.start_quiz = true;
+      $rootScope.APP.load = true;
       $state.go("tab.mapa", {
         RI: "ALL",
         PI: ""
       });
-      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI})
+      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI});
       // } else {
       //   $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse E", quiz: true})
       // }
@@ -4030,14 +4038,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           $regioes.getRegioes().then(function (res) {
             var found = false;
             regioes = JSON.parse(res || [{}]);
-            console.log("quizCompleto: GOT regioes from cordova service");
+            console.log("quizCompleto: GOT regioes from cordova service: ", regioes);
             for (var f = 0; f < regioes.length; f++) {
               if (regioes[f].nome == RI) {
                 if (!regioes[f].quizDone) {
                   regioes[f].quizDone = true;
                   $gameFactory.addPoints("desafio");
-                  found = true;
                 }
+                found = true;
               }
             }
             if (found) {
