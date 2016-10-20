@@ -13,23 +13,23 @@
     <ion-item class="item-borderless" style="margin-top: -10px;">
       <div class="container animated fadeIn">
         <span>Nível</span>
-        <input type="radio" disabled class="radio" name="progress" value="zero" id="zero" checked>
-        <label for="zero" class="label">-</label>
-
-        <input type="radio" disabled class="radio" name="progress" value="five" id="five">
-        <label for="five" class="label">1</label>
+        <input type="radio" disabled class="radio" name="progress" value="five" id="zero" checked>
+        <label for="zero" class="label">0</label>
 
         <input type="radio" disabled class="radio" name="progress" value="twentyfive" id="twentyfive">
-        <label for="twentyfive" class="label">2</label>
+        <label for="five" class="label">1</label>
 
         <input type="radio" disabled class="radio" name="progress" value="fifty" id="fifty">
-        <label for="fifty" class="label">3</label>
+        <label for="twentyfive" class="label">2</label>
 
         <input type="radio" disabled class="radio" name="progress" value="seventyfive" id="seventyfive">
+        <label for="fifty" class="label">3</label>
+
+        <input type="radio" disabled class="radio" name="progress" value="onehundred" id="onehundred">
         <label for="seventyfive" class="label">4</label>
 
-        <!--    <input type="radio" disabled class="radio" name="progress" value="onehundred" id="onehundred">
-            <label for="onehundred" class="label">5</label> -->
+        <!--<input type="radio" disabled class="radio" name="progress" value="onehundred" id="onehundred">-->
+            <!--<label for="onehundred" class="label">5</label>-->
 
         <div class="progress">
           <div class="progress-bar"></div>
@@ -86,21 +86,27 @@
           <th>QR CODE</th>
         </tr>
         <tr>
-          <td class="text-center"> A</td>
+          <td class="text-center">
+            <button ng-click="goMapa('A')" class="button button-small APPcenter button-desafios">A
+            </button>
+          </td>
           <td class="text-center"> 4/4</td>
           <td class="text-center">
-            <button ng-click="goMapaQuizGame('A')" class="button button-small balanced APPcenter button-desafios"><i
+            <button ng-click="goMapaQuizGame('A')" class="button button-small APPcenter button-desafios"><i
               class="icon ion-clipboard"></i>
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame('A')" class="button button-small balanced APPcenter button-desafios"><i
+            <button ng-click="goMapaQRGame('A')" class="button button-small APPcenter button-desafios"><i
               class="icon ion-qr-scanner"></i>
             </button>
           </td>
         </tr>
         <tr>
-          <td class="text-center"> B</td>
+          <td class="text-center">
+            <button ng-click="goMapa('B')" class="button button-small APPcenter button-desafios">B
+            </button>
+          </td>
           <td class="text-center"> 5/5</td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('B')" class="button button-small balanced APPcenter button-desafios"><i
@@ -114,7 +120,10 @@
           </td>
         </tr>
         <tr>
-          <td class="text-center"> C</td>
+          <td class="text-center">
+            <button ng-click="goMapa('C')" class="button button-small APPcenter button-desafios">C
+            </button>
+          </td>
           <td class="text-center"> 6/6</td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('C')" class="button button-small balanced APPcenter button-desafios"><i
@@ -128,7 +137,10 @@
           </td>
         </tr>
         <tr>
-          <td class="text-center">D</td>
+          <td class="text-center">
+            <button ng-click="goMapa('D')" class="button button-small APPcenter button-desafios">D
+            </button>
+          </td>
           <td class="text-center">3/3</td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('D')" class="button button-small balanced APPcenter button-desafios"><i
@@ -142,7 +154,10 @@
           </td>
         </tr>
         <tr>
-          <td class="text-center"> E</td>
+          <td class="text-center">
+            <button ng-click="goMapa('E')" class="button button-small APPcenter button-desafios">E
+            </button>
+          </td>
           <td class="text-center"> 5/5</td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('E')" class="button button-small balanced APPcenter button-desafios"><i
@@ -156,7 +171,10 @@
           </td>
         </tr>
         <tr>
-          <td class="text-center"> F</td>
+          <td class="text-center">
+            <button ng-click="goMapa('F')" class="button button-small APPcenter button-desafios">F
+            </button>
+          </td>
           <td class="text-center"> 2/2</td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('F')" class="button button-small balanced APPcenter button-desafios"><i
@@ -170,7 +188,10 @@
           </td>
         </tr>
         <tr>
-          <td class="text-center"> G</td>
+          <td class="text-center">
+            <button ng-click="goMapa('G')" class="button button-small APPcenter button-desafios">G
+            </button>
+          </td>
           <td class="text-center"> 3/3</td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('G')" class="button button-small balanced APPcenter button-desafios"><i
@@ -184,7 +205,10 @@
           </td>
         </tr>
         <tr>
-          <td class="text-center"> H</td>
+          <td class="text-center">
+            <button ng-click="goMapa('H')" class="button button-small APPcenter button-desafios">H
+            </button>
+          </td>
           <td class="text-center"> 0/5</td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('H')" class="button button-small balanced APPcenter button-desafios"><i
