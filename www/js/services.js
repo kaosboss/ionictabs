@@ -507,7 +507,6 @@ angular.module('starter.services', [])
   .factory('$IbeaconScanner', ['$rootScope', '$window', '$regioes', '$gameFactory', '$timeout', function ($rootScope, $window, $regioes, $gameFactory, $timeout) {
     var beacons = {};
     var myRegion = null;
-    var myRegion = null;
 
     var uuid = '74278BDA-B644-4520-8F0C-720E1F6EF512'; // mandatory
     var identifier = 'PIs'; // mandatory
@@ -617,8 +616,8 @@ angular.module('starter.services', [])
 
       cordova.plugins.locationManager.setDelegate(delegate);
       //  required in iOS 8+
-      cordova.plugins.locationManager.requestWhenInUseAuthorization();
-      // cordova.plugins.locationManager.requestAlwaysAuthorization();
+      // cordova.plugins.locationManager.requestWhenInUseAuthorization();
+      cordova.plugins.locationManager.requestAlwaysAuthorization();
 
       cordova.plugins.locationManager.startRangingBeaconsInRegion(myRegion)
         .fail(function (e) {
@@ -1666,6 +1665,67 @@ angular.module('starter.services', [])
     var mapaIsDrawed = false;
     var aCircles = [];
 
+    var updateRegiaoVisitada = function (RI, PI) {
+      var count = 0;
+      var total = 0;
+      var found = false;
+
+      getRegioes().then(function (res) {
+        aCircles = JSON.parse(res || [{}]);
+
+        // $regioes.setTempRegioes($scope.aCircles);
+        // console.log("createCircles: GOT regioes from cordova service to aCircles", $scope.aCircles);
+        // drawCircles();
+        // aCircles = $regioes.getTempRegioes();
+        console.log("Mapa updateRegiaoVisitada: ", RI, PI, aCircles);
+        // if (aCircles)
+        aCircles.some(function (reg) {
+          if (reg.nome == RI) {
+            if (reg.PIs) {
+              count = 0;
+              total = 0;
+              reg.PIs.forEach(function (tpi) {
+                  if (tpi.visited)
+                    count++;
+                  total++;
+                  if (tpi.nome == PI) {
+                    // $rootScope.PI_descricao = tpi.descricao;
+                    // $scope.data.PI_descricao = tpi.descricao;
+                    // $scope.$apply();
+                    if (!tpi.visited) {
+                      tpi.visited = true;
+                      count++;
+                      found = true;
+                      console.log("Mapa updateRegiaoVisitada Found updated, visited PI: ", PI, count, total);
+                      // $regioes.setTempRegioes(aCircles);
+                    } else {
+                      console.log("Mapa updateRegiaoVisitada Found no need to update PI: ", PI, count, total);
+                    }
+                  }
+                }
+              );
+              if (found) {
+                if (count == total) {
+                  console.log("Mapa updateRegiaoVisitada: regiao completa:", reg);
+                  reg.completed = true;
+                  setRegioes(aCircles);
+                } else {
+                  setRegioes(aCircles);
+                  console.log("Mapa updateRegiaoVisitada regiao incompleta: PI visitado: %s", PI);
+                }
+                return true;
+              }
+            }
+          }
+
+        });
+        // if (found) {
+        //   $regioes.setRegioes(aCircles);
+        //   return true;
+        // }
+      });
+    };
+
     var convertRegiaoLongToShort = function (reg) {
       return regioes[reg];
     };
@@ -1766,7 +1826,8 @@ angular.module('starter.services', [])
         else
           return aCircles;
       },
-      setRegioesPromise: setRegioesPromise
+      setRegioesPromise: setRegioesPromise,
+      updateRegiaoVisitada: updateRegiaoVisitada
     }
   })
   .factory('perguntas', function ($http, $rootScope) {
