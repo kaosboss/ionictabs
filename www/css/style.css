@@ -642,7 +642,7 @@ td-card img {
 }
 
 .avatarLogin img {
-  width: 100px;
+  width: auto;
   height: 100px;
   border-radius: 50px;
   margin: auto;
@@ -1241,6 +1241,11 @@ fieldset {
 .button-desafios {
   border-radius: 19px;
   /*background-color: ;*/
+  color: #000;
+  background: #ffe8a3;
+  /*background: #8b9dc3;*/
+  /*border-radius: 1em;*/
+  /*font-size: 0.9em;*/
 }
 
 .button-next-login {
@@ -1255,6 +1260,14 @@ fieldset {
   color: #000;
   /*background: #ffe8a3;*/
   background: #8b9dc3;
+  border-radius: 1em;
+  font-size: 0.9em;
+}
+
+.button-old {
+  color: #000;
+  background: #ffe8a3;
+  /*background: #8b9dc3;*/
   border-radius: 1em;
   font-size: 0.9em;
 }
