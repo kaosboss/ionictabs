@@ -76,14 +76,15 @@
 
 
     <div class="padding tab-game">
-      <h3 align="center" style="margin-bottom: -10px;margin-top: -10px;">Status dos teus desafios</h3>
+      <h3 align="center" style="margin-bottom: -10px;margin-top: -10px;">Estado dos teus desafios</h3>
       <br>
       <table class="table-fill">
         <tr>
           <th>REGIÃO</th>
-          <th>PONTOS INTERESSE</th>
-          <th>DESAFIOS</th>
-          <th>QR CODE</th>
+          <th>PI</th>
+          <th>QUIZ</th>
+          <th>QR</th>
+          <th>FOTO</th>
         </tr>
         <tr>
           <td class="text-center">
@@ -109,6 +110,13 @@
           <td class="text-center">
             <button ng-click="goMapaQRGame('A')"
                     class="button button-small APPcenter button-desafios {{game.RI_A.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
+                       <td class="text-center">
+            <button ng-click="goMapaQRGame('A')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_A.FOTO ? 'button-balanced' : 'button-energized'}}">
               <i
                 class="icon ion-qr-scanner"></i>
             </button>
@@ -142,6 +150,13 @@
                 class="icon ion-qr-scanner"></i>
             </button>
           </td>
+                       <td class="text-center">
+            <button ng-click="goMapaQRGame('B')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_B.FOTO ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
         </tr>
         <tr>
           <td class="text-center">
@@ -167,6 +182,13 @@
           <td class="text-center">
             <button ng-click="goMapaQRGame('C')"
                     class="button button-small balanced APPcenter button-desafios {{game.RI_C.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
+                       <td class="text-center">
+            <button ng-click="goMapaQRGame('C')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_C.FOTO ? 'button-balanced' : 'button-energized'}}">
               <i
                 class="icon ion-qr-scanner"></i>
             </button>
@@ -200,6 +222,13 @@
                 class="icon ion-qr-scanner"></i>
             </button>
           </td>
+                       <td class="text-center">
+            <button ng-click="goMapaQRGame('D')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_D.FOTO ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
         </tr>
         <tr>
           <td class="text-center">
@@ -225,6 +254,13 @@
           <td class="text-center">
             <button ng-click="goMapaQRGame('E')"
                     class="button button-small balanced APPcenter button-desafios {{game.RI_E.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
+                       <td class="text-center">
+            <button ng-click="goMapaQRGame('E')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_E.FOTO ? 'button-balanced' : 'button-energized'}}">
               <i
                 class="icon ion-qr-scanner"></i>
             </button>
@@ -258,6 +294,13 @@
                 class="icon ion-qr-scanner"></i>
             </button>
           </td>
+                       <td class="text-center">
+            <button ng-click="goMapaQRGame('F')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_F.FOTO ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
         </tr>
         <tr>
           <td class="text-center">
@@ -283,6 +326,13 @@
           <td class="text-center">
             <button ng-click="goMapaQRGame('G')"
                     class="button button-small balanced APPcenter button-desafios {{game.RI_G.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
+                       <td class="text-center">
+            <button ng-click="goMapaQRGame('G')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_G.FOTO ? 'button-balanced' : 'button-energized'}}">
               <i
                 class="icon ion-qr-scanner"></i>
             </button>
@@ -316,7 +366,15 @@
                 class="icon ion-qr-scanner"></i>
             </button>
           </td>
+                <td class="text-center">
+            <button ng-click="goMapaQRGame('H')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_H.FOTO ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
         </tr>
+
       </table>
     </div>
 
