@@ -1231,6 +1231,15 @@ fieldset {
 }
 
 .button-next {
+  background: #ffe8a3;
+  color: #000;
+  /*background: #f19562;*/
+  /*border-radius: 4px;*/
+  font-size: 0.9em;
+  border-radius: 1em;
+}
+
+.button-next-new {
   /*background: #ffe8a3;*/
   color: #000;
   background: #f19562;
@@ -1242,7 +1251,7 @@ fieldset {
   border-radius: 19px;
   /*background-color: ;*/
   color: #000;
-  background: #ffe8a3;
+  /*background: #ffe8a3;*/
   /*background: #8b9dc3;*/
   /*border-radius: 1em;*/
   /*font-size: 0.9em;*/
@@ -1441,15 +1450,16 @@ legend {
 .tab-game th {
 
   color: #000000;
-  background: #fec659;
+  /*background: #fec659;*/
+  background: #f19562;
   border-bottom: 4px solid #9ea7af;
   border-right: 1px solid #343a45;
   font-size: 12px;
-  padding: 12PX;
+  padding: 12px;
   text-align: center;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   vertical-align: middle;
-
+  font-weight: bold;
 }
 
 .tab-game th:first-child {

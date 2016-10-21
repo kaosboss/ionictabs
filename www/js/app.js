@@ -749,9 +749,23 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         if ($rootScope.mypop.queue) {
           console.log("ShowPopUP: Got event, but popup ON, skipping, but queue: ", $rootScope.mypop);
           $rootScope.popupQueue.push($rootScope.mypop);
+          $timeout(function () {
+            showPopupQueue();
+          }, 5000);
         }
       }
     });
+
+    var showPopupQueue = function () {
+      if ($rootScope.popupQueue.length > 0) {
+        if (!$scope.popupON) {
+          $scope.showPopup($rootScope.popupQueue.pop());
+        }
+        $timeout(function () {
+          showPopupQueue();
+        }, 5000);
+      }
+    };
 
     goMapaPopup = function () {
       $state.go("tab.mapa", {
@@ -1141,7 +1155,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
             // contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
             contentHtml: '',
-            titleContentHtml: '<img class="img-responsive img-thumbnail" src="' + thumb_src + '"><p>' + caption + '</p>'
+            titleContentHtml: '<img class="img-responsive" src="' + thumb_src + '"><p>' + caption + '</p>'
           });
 
         $ionicScrollDelegate.resize();
@@ -1180,7 +1194,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           badgeClass: 'bg-royal',
           // badgeIconClass : 'ion-checkmark',
           title: title || 'Foto - Album',
-          titleContentHtml: '<img class="img-responsive img-thumbnail" src="' + thumb + '">',
+          titleContentHtml: '<img class="img-responsive" src="' + thumb + '">',
           when: when + " na " + $rootScope.currentRI_descricao,
           contentHtml: caption
         });
@@ -1195,7 +1209,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             badgeIconClass: 'bg-dark',
             title: title || 'Quinta Pedagógica',
             when: when,
-            titleContentHtml: '<img class="img-responsive img-thumbnail" src="' + thumb + '">',
+            titleContentHtml: '<img class="img-responsive" src="' + thumb + '">',
             contentHtml: caption
           });
 
@@ -2703,8 +2717,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             if (dist < circleRadius) {
               console.log("in circle: %s", aCircles[f].nome);
 
-              if (aCircles[f].locked || !aCircles[f].visited) {
-                aCircles[f].locked = false;
+              // if (aCircles[f].locked || !aCircles[f].visited) {
+              if (!aCircles[f].visited) {
+                // aCircles[f].locked = false;
                 aCircles[f].visited = true;
                 $regioes.setRegioes(aCircles);
                 $gameFactory.addPoints("regioes");
@@ -2850,7 +2865,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 reg.marcador = file;
                 $scope.marcador = file;
                 // if (!$scope.regiaoLoaded) {
-                if (!$scope.regiao) {
+                // if (!$scope.regiao) {
                   // $scope.regiao = {};
                   // loadRegiao($scope.RI);
                   // $scope.regiao = angular.copy(reg);
@@ -2860,7 +2875,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                   // });
                   console.warn("Createcircles: regiao not loaded");
                   $scope.regiaoLoaded = true;
-                }
+                // }
                 // $scope.regiao = clone(aCircles[i]);
                 // $scope.regiaoLoaded = true;
                 // console.warn("Createcircles: regiao not loaded");
@@ -2945,7 +2960,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             $timeout(function () {
               $scope.regiao.headeron = $gameFactory.isHeaderOn($scope.regiao.nome);
               if (($scope.regiao.completed) && (!$scope.regiao.quizDone)) {
-                console.warn("circles Regiao completed ", reg);
+                console.warn("circles Regiao completed ", $scope.regiao.nome);
                 $scope.data.buttonColor = YELLOW;
                 $window.document.getElementById("floating-button").children[0].style.backgroundColor = YELLOW;
               } else if ($scope.regiao.quizDone) {
@@ -3119,11 +3134,81 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
   })
   // .controller('GameCtrl', function ($rootScope, $scope, $state, $window, $timeout, $ionicTabsDelegate, $regioes) {
-  .controller('GameCtrl', function ($rootScope, $scope, $state, $window, $timeout, $gameFactory) {
+  .controller('GameCtrl', function ($rootScope, $scope, $state, $window, $timeout, $gameFactory, $regioes) {
     console.log("Game controller ready");
 
     $scope.score = $gameFactory.getScore();
     $scope.header = $gameFactory.gameHeaderValue();
+
+    $scope.game = {
+      "RI_A": {
+        "REGIAO": false,
+        "QUIZ": false,
+        "FOTO": false,
+        "PIS": false,
+        "QR": false
+      },
+      "RI_B": {
+        "REGIAO": false,
+        "QUIZ": false,
+        "PIS": false,
+        "FOTO": false,
+        "QR": false
+      },
+      "RI_C": {
+        "REGIAO": false,
+        "FOTO": false,
+        "PIS": false,
+        "QUIZ": false,
+        "QR": false
+      },
+      "RI_D": {
+        "REGIAO": false,
+        "QUIZ": false,
+        "FOTO": false,
+        "PIS": false,
+        "QR": false
+      },
+      "RI_E": {
+        "REGIAO": false,
+        "QUIZ": false,
+        "FOTO": false,
+        "PIS": false,
+        "QR": false
+      },
+      "RI_F": {
+        "REGIAO": false,
+        "QUIZ": false,
+        "PIS": false,
+        "FOTO": false,
+        "QR": false
+      },
+      "RI_G": {
+        "REGIAO": false,
+        "QUIZ": false,
+        "FOTO": false,
+        "PIS": false,
+        "QR": false
+      },
+      "RI_H": {
+        "REGIAO": false,
+        "QUIZ": false,
+        "FOTO": false,
+        "PIS": false,
+        "QR": false
+      }
+    };
+
+    $regioes.getRegioes().then(function (res) {
+      var regioes = JSON.parse(res || [{}]);
+      regioes.forEach(function (reg) {
+        $scope.game[reg.nome].REGIAO = reg.visited;
+        $scope.game[reg.nome].QUIZ = reg.quizDone;
+        $scope.game[reg.nome].FOTO = reg.fotoDone;
+        $scope.game[reg.nome].QR = reg.qrDone;
+        $scope.game[reg.nome].PIS = reg.completed;
+      });
+    });
 
     $scope.closeGameHeader = function () {
       $scope.header = false;
@@ -3189,7 +3274,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       switch (level) {
         case "":
-          level = "five";
+          level = "zero";
           break;
         case "nivel1":
           level = "twentyfive";
@@ -3205,7 +3290,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           break;
       }
       $window.document.getElementById(level).checked = true;
-    }, 300);
+    }, 500);
 
     $scope.showDesafios_help = function () {
       $rootScope.showPopup({
@@ -3555,10 +3640,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // $timeout(function () {
       //   $rootScope.showPopup({templateUrl: 'templates/popups/fim_onboarding.html'});
       $gameFactory.addPoints("onboarding");
-      $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
-        if (res == "Sim")
-          $gameFactory.addPoints("presencial");
-      });
+      // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
+      //   if (res == "Sim")
+      //     $gameFactory.addPoints("presencial");
+      // });
 
       // },300);
     };
@@ -3568,10 +3653,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // $timeout(function () {
       //   $rootScope.showPopup({templateUrl: 'templates/popups/fim_onboarding.html'});
       $gameFactory.addPoints("onboarding");
-      $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
-        if (res == "Sim")
-          $gameFactory.addPoints("presencial");
-      });
+      // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
+      //   if (res == "Sim")
+      //     $gameFactory.addPoints("presencial");
+      // });
       // },300);
     };
     // Called to navigate to the main app
