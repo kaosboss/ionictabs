@@ -17,19 +17,19 @@
         <label for="zero" class="label">0</label>
 
         <input type="radio" disabled class="radio" name="progress" value="twentyfive" id="twentyfive">
-        <label for="five" class="label">1</label>
+        <label for="twentyfive" class="label">1</label>
 
         <input type="radio" disabled class="radio" name="progress" value="fifty" id="fifty">
-        <label for="twentyfive" class="label">2</label>
+        <label for="fifty" class="label">2</label>
 
         <input type="radio" disabled class="radio" name="progress" value="seventyfive" id="seventyfive">
-        <label for="fifty" class="label">3</label>
+        <label for="seventyfive" class="label">3</label>
 
         <input type="radio" disabled class="radio" name="progress" value="onehundred" id="onehundred">
-        <label for="seventyfive" class="label">4</label>
+        <label for="onehundred" class="label">4</label>
 
         <!--<input type="radio" disabled class="radio" name="progress" value="onehundred" id="onehundred">-->
-            <!--<label for="onehundred" class="label">5</label>-->
+        <!--<label for="onehundred" class="label">5</label>-->
 
         <div class="progress">
           <div class="progress-bar"></div>
@@ -87,137 +87,233 @@
         </tr>
         <tr>
           <td class="text-center">
-            <button ng-click="goMapa('A')" class="button button-small APPcenter button-desafios">A
-            </button>
-          </td>
-          <td class="text-center"> 4/4</td>
-          <td class="text-center">
-            <button ng-click="goMapaQuizGame('A')" class="button button-small APPcenter button-desafios"><i
-              class="icon ion-clipboard"></i>
+            <button ng-click="goMapa('A')"
+                    class="button button-small APPcenter button-desafios {{game.RI_A.REGIAO ? 'button-balanced' : 'button-energized'}}">
+              A
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame('A')" class="button button-small APPcenter button-desafios"><i
-              class="icon ion-qr-scanner"></i>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td class="text-center">
-            <button ng-click="goMapa('B')" class="button button-small APPcenter button-desafios">B
-            </button>
-          </td>
-          <td class="text-center"> 5/5</td>
-          <td class="text-center">
-            <button ng-click="goMapaQuizGame('B')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-clipboard"></i>
+            <button ng-click="goMapa('A')"
+                    class="button button-small APPcenter button-desafios {{game.RI_A.PIS ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame('B')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-qr-scanner"></i>
+            <button ng-click="goMapaQuizGame('A')"
+                    class="button button-small APPcenter button-desafios {{game.RI_A.QUIZ ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQRGame('A')"
+                    class="button button-small APPcenter button-desafios {{game.RI_A.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
             </button>
           </td>
         </tr>
         <tr>
           <td class="text-center">
-            <button ng-click="goMapa('C')" class="button button-small APPcenter button-desafios">C
-            </button>
-          </td>
-          <td class="text-center"> 6/6</td>
-          <td class="text-center">
-            <button ng-click="goMapaQuizGame('C')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-clipboard"></i>
+            <button ng-click="goMapa('B')"
+                    class="button button-small APPcenter button-desafios {{game.RI_B.REGIAO ? 'button-balanced' : 'button-energized'}}">
+              B
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame('C')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-qr-scanner"></i>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td class="text-center">
-            <button ng-click="goMapa('D')" class="button button-small APPcenter button-desafios">D
-            </button>
-          </td>
-          <td class="text-center">3/3</td>
-          <td class="text-center">
-            <button ng-click="goMapaQuizGame('D')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-clipboard"></i>
+            <button ng-click="goMapa('B')"
+                    class="button button-small APPcenter button-desafios {{game.RI_B.PIS ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame('D')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-qr-scanner"></i>
+            <button ng-click="goMapaQuizGame('B')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_B.QUIZ ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQRGame('B')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_B.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
             </button>
           </td>
         </tr>
         <tr>
           <td class="text-center">
-            <button ng-click="goMapa('E')" class="button button-small APPcenter button-desafios">E
-            </button>
-          </td>
-          <td class="text-center"> 5/5</td>
-          <td class="text-center">
-            <button ng-click="goMapaQuizGame('E')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-clipboard"></i>
+            <button ng-click="goMapa('C')"
+                    class="button button-small APPcenter button-desafios {{game.RI_C.REGIAO ? 'button-balanced' : 'button-energized'}}">
+              C
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame('E')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-qr-scanner"></i>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td class="text-center">
-            <button ng-click="goMapa('F')" class="button button-small APPcenter button-desafios">F
-            </button>
-          </td>
-          <td class="text-center"> 2/2</td>
-          <td class="text-center">
-            <button ng-click="goMapaQuizGame('F')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-clipboard"></i>
+            <button ng-click="goMapa('C')"
+                    class="button button-small APPcenter button-desafios {{game.RI_C.PIS ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame('F')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-qr-scanner"></i>
+            <button ng-click="goMapaQuizGame('C')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_C.QUIZ ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQRGame('C')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_C.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
             </button>
           </td>
         </tr>
         <tr>
           <td class="text-center">
-            <button ng-click="goMapa('G')" class="button button-small APPcenter button-desafios">G
-            </button>
-          </td>
-          <td class="text-center"> 3/3</td>
-          <td class="text-center">
-            <button ng-click="goMapaQuizGame('G')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-clipboard"></i>
+            <button ng-click="goMapa('D')"
+                    class="button button-small APPcenter button-desafios {{game.RI_D.REGIAO ? 'button-balanced' : 'button-energized'}}">
+              D
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame('G')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-qr-scanner"></i>
+            <button ng-click="goMapa('D')"
+                    class="button button-small APPcenter button-desafios {{game.RI_D.PIS ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQuizGame('D')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_D.QUIZ ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQRGame('D')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_D.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
             </button>
           </td>
         </tr>
         <tr>
           <td class="text-center">
-            <button ng-click="goMapa('H')" class="button button-small APPcenter button-desafios">H
-            </button>
-          </td>
-          <td class="text-center"> 0/5</td>
-          <td class="text-center">
-            <button ng-click="goMapaQuizGame('H')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-clipboard"></i>
+            <button ng-click="goMapa('E')"
+                    class="button button-small APPcenter button-desafios {{game.RI_E.REGIAO ? 'button-balanced' : 'button-energized'}}">
+              E
             </button>
           </td>
           <td class="text-center">
-            <button ng-click="goMapaQRGame('H')" class="button button-small balanced APPcenter button-desafios"><i
-              class="icon ion-qr-scanner"></i>
+            <button ng-click="goMapa('E')"
+                    class="button button-small APPcenter button-desafios {{game.RI_E.PIS ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQuizGame('E')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_E.QUIZ ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQRGame('E')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_E.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td class="text-center">
+            <button ng-click="goMapa('F')"
+                    class="button button-small APPcenter button-desafios {{game.RI_F.REGIAO ? 'button-balanced' : 'button-energized'}}">
+              F
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapa('F')"
+                    class="button button-small APPcenter button-desafios {{game.RI_F.PIS ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQuizGame('F')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_F.QUIZ ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQRGame('F')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_F.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td class="text-center">
+            <button ng-click="goMapa('G')"
+                    class="button button-small APPcenter button-desafios {{game.RI_G.REGIAO ? 'button-balanced' : 'button-energized'}}">
+              G
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapa('G')"
+                    class="button button-small APPcenter button-desafios {{game.RI_G.PIS ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQuizGame('G')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_G.QUIZ ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQRGame('G')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_G.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td class="text-center">
+            <button ng-click="goMapa('H')"
+                    class="button button-small APPcenter button-desafios {{game.RI_H.REGIAO ? 'button-balanced' : 'button-energized'}}">
+              H
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapa('H')"
+                    class="button button-small APPcenter button-desafios {{game.RI_H.PIS ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQuizGame('H')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_H.QUIZ ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-clipboard"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button ng-click="goMapaQRGame('H')"
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_H.QR ? 'button-balanced' : 'button-energized'}}">
+              <i
+                class="icon ion-qr-scanner"></i>
             </button>
           </td>
         </tr>
