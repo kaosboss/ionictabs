@@ -251,7 +251,7 @@ angular.module('starter.services', [])
           });
           break;
 
-        case "desafio":
+        case "desafios":
           // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
           //   if (res == "Sim") {
           if (gameInfo["playerInfo"]["scoreCard"][value][1]) {
@@ -306,7 +306,7 @@ angular.module('starter.services', [])
       var change = false;
       var delay = false;
       for (var levelName in gameInfo) {
-        if (!gameInfo.hasOwnProperty(levelName) || (!gameInfo[levelName].nivel)) continue;
+        if (!gameInfo.hasOwnProperty(levelName) || (!gameInfo[levelName])) continue;
 
         var level = gameInfo[levelName];
         console.log("gameInfo Sevice: ", levelName, level);
@@ -328,12 +328,15 @@ angular.module('starter.services', [])
 
           case "reward":
             if (level.locked) {
+            console.warn("gameFactory: rewards combos: ", level.combos);
               if (level.combos) {
                 var count = 0, total = 0;
                 level.combos.forEach(function (item) {
+
                   total++;
                   if (!gameInfo[item].locked)
                     count++;
+                  console.warn("gameFactory: rewards combos: ", item, gameInfo[item].locked);
                 });
                 if (count == total) {
                   if (!change) {
@@ -347,9 +350,9 @@ angular.module('starter.services', [])
             break;
 
           case "badge":
-
+            console.warn("gameFactory: badge combos: ", levelName);
             if (level.locked)
-              if (gameInfo["playerInfo"].scoreCard[levelName][1] == 0) {
+              if (gameInfo["playerInfo"]["scoreCard"][levelName][1] == 0) {
                 if (!change) {
                   level.locked = false;
                   change = true;
@@ -379,7 +382,7 @@ angular.module('starter.services', [])
         $eventFactory.addInHouseEvent({
           title: "Título de progressão",
           image: "img/game/badges/badge_" + latestLevel + ".png",
-          caption: "Parabéns! Atingiste o nível",
+          caption: "Parabéns!",
           thumb: "img/game/badges/badge_" + latestLevel + ".png"
         });
         // $rootScope.$broadcast('ADD_JOURNAL', {

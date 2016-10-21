@@ -212,7 +212,7 @@
     "centerX": 135,
     "centerY": 70,
     "radius": 32,
-    "locked": true,
+    "locked": false,
     "visited": false,
     "banner": "Esta é a região com mais água da Quinta! Para além da água vais também ficar a saber mais de uma das árvores mais inteligentes que existe!",
     "PIs": [
@@ -340,7 +340,7 @@
     "centerX": 75,
     "centerY": 110,
     "radius": 31,
-    "locked": true,
+    "locked": false,
     "visited": false,
     "banner": "Nesta região vais ficar a conhecer a Romã e vais também ficar a saber quais as características do Montado.",
     "PIs": [
@@ -453,7 +453,7 @@
     "centerX": 205,
     "centerY": 130,
     "radius": 20,
-    "locked": true,
+    "locked": false,
     "visited": false,
     "banner": "Aqui, vou mostrar-te árvores que vieram da China, vou-te falar de árvores que vivem mais de 2.000 anos e de plantas que se movem com o sol...",
     "PIs": [
