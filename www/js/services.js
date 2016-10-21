@@ -251,7 +251,7 @@ angular.module('starter.services', [])
           });
           break;
 
-        case "desafio":
+        case "desafios":
           // $cordovaSQLite.getVarFromDB("info", "APPtutorial").then(function (res) {
           //   if (res == "Sim") {
           if (gameInfo["playerInfo"]["scoreCard"][value][1]) {
@@ -350,9 +350,9 @@ angular.module('starter.services', [])
             break;
 
           case "badge":
-
+            console.warn("gameFactory: badge combos: ", levelName);
             if (level.locked)
-              if (gameInfo["playerInfo"].scoreCard[levelName][1] == 0) {
+              if (gameInfo["playerInfo"]["scoreCard"][levelName][1] == 0) {
                 if (!change) {
                   level.locked = false;
                   change = true;

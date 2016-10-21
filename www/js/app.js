@@ -1700,7 +1700,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           if (regioes[f].nome == $scope.QR_RI) {
             if (!regioes[f].qrDone) {
               regioes[f].qrDone = true;
-              $gameFactory.addPoints("desafio");
+              $gameFactory.addPoints("desafios");
               found = true;
             }
           }
@@ -4150,7 +4150,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               if (regioes[f].nome == RI) {
                 if (!regioes[f].quizDone) {
                   regioes[f].quizDone = true;
-                  $gameFactory.addPoints("desafio");
+                  $gameFactory.addPoints("desafios");
                 }
                 found = true;
               }
