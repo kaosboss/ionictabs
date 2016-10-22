@@ -105,7 +105,7 @@ body {
 /*}*/
 .myPopup > .popup {
   border-radius: 5px !important;
-  width: 250px;
+  width: 260px;
   max-height: 331px;
 }
 
@@ -211,6 +211,21 @@ body {
 .APPmain .textWrap {
   white-space: normal;
   line-height: 120%;
+}
+.platform-android .APPmain .textWrapSmall {
+  white-space: normal;
+  line-height: 110%;
+}
+.platform-ios .APPmain .textWrapSmall {
+  white-space: normal;
+  line-height: 120%;
+}
+
+.platform-ios .mapa {
+  height: 350px
+}
+.platform-android .mapa {
+  height: 298px
 }
 
 .APPfull {
@@ -589,8 +604,21 @@ td-card img {
 
 .captionPIs {
   right: 10px;
+  bottom: -4px;
+  /*top: 0px;*/
+  position: absolute;
+}
+.captionDesafios {
+  right: 10px;
   bottom: 15px;
   /*top: 0px;*/
+  position: absolute;
+}
+.platform-android .captionDesafios {
+  right: 10px;
+  bottom: 15px;
+  /*top: 0px;*/
+  font-size: medium;
   position: absolute;
 }
 
@@ -923,23 +951,23 @@ form *:focus {
   outline: 0;
 }
 
-@-webkit-keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
+/*@-webkit-keyframes fadeIn {*/
+  /*from {*/
+    /*opacity: 0;*/
+  /*}*/
+  /*to {*/
+    /*opacity: 1;*/
+  /*}*/
+/*}*/
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
+/*@keyframes fadeIn {*/
+  /*from {*/
+    /*opacity: 0;*/
+  /*}*/
+  /*to {*/
+    /*opacity: 1;*/
+  /*}*/
+/*}*/
 
 /* atividade detalhe*/
 
@@ -1528,9 +1556,13 @@ legend {
   background-color: rgba(255, 255, 255, 1);
 }
 
-.popup-head {
-  padding: 5px;
-}
+/*.popup-head {*/
+  /*padding: 5px;*/
+/*}*/
+
+/*.popup-head {*/
+  /*padding: 5px;*/
+/*}*/
 
 .myPopupLegenda .popup-head {
   padding: 5px;

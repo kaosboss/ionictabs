@@ -990,10 +990,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $scope.data.caption = "\n\n\n";
       }
 
-      // An elaborate, custom popup
       if (!edit)
         caption = $ionicPopup.show({
-          cssClass: "myPopup",
+          cssClass: "myPopupCaption",
           // template: '<textarea ng-model="data.caption" name="Text1" rows="2"></textarea>',
           templateUrl: 'templates/template_caption.html',
           title: 'Album',
@@ -1003,7 +1002,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             {text: 'Cancelar'},
             {
               text: '<b>Guardar</b>',
-              type: 'button-positive',
+              type: 'button-next-new',
               onTap: function (e) {
                 if (!$scope.data.caption) {
                   e.preventDefault();
@@ -1025,7 +1024,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           buttons: [
             {
               text: 'Cancelar',
-              type: 'button-small button-positive'
+              type: 'button-small button-clear'
             },
             {
               text: '<b><i class="glyphicon icon ion-trash-a"></i></b>',
@@ -1195,7 +1194,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // badgeIconClass : 'ion-checkmark',
           title: title || 'Foto - Album',
           titleContentHtml: '<img class="img-responsive" src="' + thumb + '">',
-          when: when + " na " + $rootScope.currentRI_descricao,
+          when: when + " - " + $rootScope.currentRI_descricao,
           contentHtml: caption
         });
       } else
@@ -1566,13 +1565,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       var fotoDone = function () {
         var found = false;
         var regioes = {};
+        var RI = $regioes.convertRegiaoLongToShort($rootScope.currentRI);
 
         $regioes.getRegioes().then(function (res) {
           regioes = JSON.parse(res || [{}]);
           console.log("fotoCompleto: GOT regioes from cordova service: ", regioes);
           for (var f = 0; f < regioes.length; f++) {
             console.log("f: %s ri: %s r_cur: %s", f, regioes[f].descricao, $rootScope.currentRI);
-            if (regioes[f].descricao == $rootScope.currentRI) {
+            if (regioes[f].nome == RI) {
               if (!regioes[f].fotoDone) {
                 regioes[f].fotoDone = true;
                 $gameFactory.addPoints("foto");
@@ -2296,6 +2296,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       };
 
+    $scope.goBack = function () {
+      $ionicHistory.goBack();
+    };
+
       goQR = function (RI) {
         console.log("Go QR", RI);
         // if ($stateParams.RI != "ALL") {
@@ -2720,11 +2724,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               console.log("in circle: %s", aCircles[f].nome);
 
               // if (aCircles[f].locked || !aCircles[f].visited) {
-              if (!aCircles[f].foto || !aCircles[f].visited) {
+              if (!aCircles[f].fotoDone || !aCircles[f].visited) {
                 // if (!aCircles[f].visited) {
                 // aCircles[f].locked = false;
                 aCircles[f].visited = true;
-                aCircles[f].foto = true;
+                aCircles[f].fotoDone = true;
                 $regioes.setRegioes(aCircles);
                 $gameFactory.addPoints("regioes");
                 // createCircles();
@@ -2885,7 +2889,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 // console.warn("Createcircles: regiao not loaded");
                 // }
                 // $scope.regiao.completed = aCircles[i].completed;
-                // $scope.regiao.headeron = $gameFactory.isHeaderOn(reg.nome);
+                $scope.regiao.headeron = $gameFactory.isHeaderOn(reg.nome);
 
                 $timeout(function () {
                   if ((reg.completed) && (!reg.quizDone)) {
