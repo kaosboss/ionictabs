@@ -1,5 +1,9 @@
 <ion-view view-title="{{$root.PI_descricao}}" cache-view="false">
-
+  <ion-nav-buttons>
+    <button class="button button-clear icon icon-left ion-chevron-left" ng-click="goBack()">
+      <i class="mynav icon-left ion-chevron-left"></i>
+    </button>
+  </ion-nav-buttons>
   <ion-content class="has-header has-tabs APPmain" scroll="true">
 
     <div class="APPfull">
@@ -9,9 +13,7 @@
           <p style="margin-left: 2px; margin-top: 0px;" align="center" class="textWrap">Se há um fruto que sabe mesmo bem é o figo! Pena que só haja no verão...</p>
         </ion-item>
         <!--<img class="APPimg" src="img/atividades_quinta_pedagogica.jpg">-->
-        <img class="APPimg" src="img/mapa/PIs/PI_26.jpg"
-             ng-image-appear responsive transition-duration="2s" animation="fadeIn" animation-duration="2s"
-             easing="ease-out">
+        <img class="APPimg animated fadeIn" src="img/mapa/PIs/PI_26.jpg">
         <!--<img class="animated slideInUp" src="img/atividades/SNP_background_arborismo.jpg">-->
       </div>
 
