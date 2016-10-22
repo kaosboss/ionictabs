@@ -990,7 +990,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $scope.data.caption = "\n\n\n";
       }
 
-      // An elaborate, custom popup
       if (!edit)
         caption = $ionicPopup.show({
           cssClass: "myPopupCaption",
