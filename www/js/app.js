@@ -1564,13 +1564,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
 
       var fotoDone = function () {
+        var found = false;
+        var regioes = {};
+
         $regioes.getRegioes().then(function (res) {
-          var found = false;
-          var RI = $rootScope.currentRI;
-          var regioes = JSON.parse(res || [{}]);
-          console.log("fotoCompleto: GOT regioes from cordova service");
+          regioes = JSON.parse(res || [{}]);
+          console.log("fotoCompleto: GOT regioes from cordova service: ", regioes);
           for (var f = 0; f < regioes.length; f++) {
-            if (regioes[f].descricao == RI) {
+            console.log("f: %s ri: %s r_cur: %s", f, regioes[f].descricao, $rootScope.currentRI);
+            if (regioes[f].descricao == $rootScope.currentRI) {
               if (!regioes[f].fotoDone) {
                 regioes[f].fotoDone = true;
                 $gameFactory.addPoints("foto");
@@ -1588,7 +1590,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             //   scope.goMapa();
             // }, 200);
           } else
-            console.warn("fotoCompleto RI not found", RI);
+            console.warn("fotoCompleto RI not found", $rootScope.currentRI);
         });
       };
 
@@ -2718,9 +2720,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               console.log("in circle: %s", aCircles[f].nome);
 
               // if (aCircles[f].locked || !aCircles[f].visited) {
-              if (!aCircles[f].visited) {
+              if (!aCircles[f].foto || !aCircles[f].visited) {
+                // if (!aCircles[f].visited) {
                 // aCircles[f].locked = false;
                 aCircles[f].visited = true;
+                aCircles[f].foto = true;
                 $regioes.setRegioes(aCircles);
                 $gameFactory.addPoints("regioes");
                 // createCircles();
@@ -3290,7 +3294,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           break;
       }
       $window.document.getElementById(level).checked = true;
-    }, 500);
+    }, 350);
 
     $scope.showDesafios_help = function () {
       $rootScope.showPopup({

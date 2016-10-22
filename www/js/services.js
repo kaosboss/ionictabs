@@ -225,6 +225,7 @@ angular.module('starter.services', [])
     };
 
     var getScore = function () {
+      if (gameInfo["playerInfo"])
       return gameInfo["playerInfo"].pontos;
     };
     var getNivelAtual = function () {
