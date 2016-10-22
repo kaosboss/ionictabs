@@ -1,4 +1,9 @@
-<ion-view view-title="Mapa">
+<ion-view view-title="Mapa da Quinta Pedagógica">
+  <ion-nav-buttons>
+    <button class="button button-clear icon icon-left ion-chevron-left" ng-click="goBack()">
+      <i class="mynav icon-left ion-chevron-left"></i>
+    </button>
+  </ion-nav-buttons>
   <!--button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}"-->
   <ion-floating-button ng-if="regiao.radius" button-class="" click="goQuiz()" has-footer="true"
   button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}"

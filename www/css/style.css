@@ -1612,6 +1612,7 @@ legend {
 
 .SNPbar {
   background-color: #fec659;
+  color: #000;
 }
 
 .SNPtabs {
@@ -1637,4 +1638,17 @@ legend {
   border-color: #fec659;
   background-color: #fec659;
   color: #000;
+}
+
+/* nav */
+
+.mynav {
+  color: #000;
+  left: 15px;
+  position: absolute;
+}
+
+.platform-android .bar .title {
+  left: 20px;
+  right: 5px;
 }
