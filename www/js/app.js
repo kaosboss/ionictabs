@@ -1653,7 +1653,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // }
     }, false);
   })
-  .controller("BarCodeReaderController", function ($rootScope, $scope, $cordovaBarcodeScanner, $ionicSlideBoxDelegate, perguntas, $stateParams, $state, $regioes, $timeout, $gameFactory) {
+  .controller("BarCodeReaderController", function ($rootScope, $scope, $cordovaBarcodeScanner, $ionicSlideBoxDelegate, perguntas, $stateParams, $state, $regioes, $timeout, $gameFactory, $ionicHistory) {
     console.log("ionic controller BarCodeReaderController ready");
 
     var stopped = true;
@@ -1666,6 +1666,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       buttonClass: "",
       buttonStart: "",
     };
+
+    $scope.goBack = function () {
+      $ionicHistory.goBack();
+    };
+
     $scope.closeQRHeader = function () {
       $scope.header = false;
       $gameFactory.QRHeaderValue('OFF');
@@ -4034,7 +4039,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
     };
   })
-  .directive('quiz', function ($timeout, $state, $regioes, $gameFactory, $ionicHistory, $rootScope, $gameFactory) {
+  .directive('quiz', function ($timeout, $state, $regioes, $gameFactory, $ionicHistory, $rootScope) {
     return {
       restrict: 'AE',
       scope: {},
@@ -4052,6 +4057,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           scope.header = false;
           $gameFactory.quizHeaderValue('OFF');
           // $scope.headeron = false;
+        };
+
+        scope.goBack = function () {
+          $ionicHistory.goBack();
         };
 
         scope.goMapa = function (res) {
@@ -4242,7 +4251,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
     }
   })
-  .controller('MapaPICtrl', function ($rootScope, $stateParams, $regioes) {
+  .controller('MapaPICtrl', function ($scope, $rootScope, $stateParams, $regioes, $ionicHistory) {
     console.log("mapaPICtrl controller ready");
 
     // $scope.header = $gameFactory.gameHeaderValue();
@@ -4253,6 +4262,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // };
     $regioes.updateRegiaoVisitada($stateParams.RI, $stateParams.PI);
 
+    $scope.goBack = function () {
+      $ionicHistory.goBack();
+    };
 
   })
   .controller('MapaPIdesafiosCtrl', function ($rootScope, $stateParams, $regioes) {
