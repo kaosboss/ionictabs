@@ -48,6 +48,8 @@
   "reward_entrada": {
     "imagem": "img/game/badges/badge_reward_entrada.png",
     "locked": true,
+    "descricao": "Desconto na entrada do SNP",
+    "parabens": "Parabéns! Por teres atingido o nivel de Professor acabaste de ganhar um desconto de 50% na tua entrada no SNP",
     "combos": [
       "nivel2"
     ],
@@ -56,6 +58,8 @@
   "reward_grupo": {
     "imagem": "img/game/badges/badge_reward_grupo.png",
     "locked": true,
+    "descricao": "Desconto na entrada para grupo de 4 pax no SNP",
+    "parabens": "Parabéns! Por teres conquistado todos os titulos de exploração acabaste de ganhar um desconto de 50% na entrada do SNP para ti e para mais 3 amigos na tua próxima visita.",
     "combos": [
       "foto",
       "desafios",
@@ -66,6 +70,8 @@
   "reward_merchandize": {
     "imagem": "img/game/badges/badge_reward_merchandize.png",
     "locked": true,
+    "descricao": "Merchandizing SNP",
+    "parabens": "Parabéns! Por teres atingido o nivel de Mestre acabaste de ganhar merchandizing do SNP.",
     "combos": [
       "nivel1",
       "nivel2",
