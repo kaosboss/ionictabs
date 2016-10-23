@@ -1023,8 +1023,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           scope: $scope,
           buttons: [
             {
-              text: 'Cancelar'
-              // type: 'button-small button-clear'
+              text: 'Cancelar',
+              type: 'button-small'
             },
             {
               text: '<b><i class="glyphicon icon ion-trash-a"></i></b>',
