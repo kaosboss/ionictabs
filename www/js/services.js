@@ -162,7 +162,7 @@ angular.module('starter.services', [])
     return {
       addInHouseEvent: function (args) {
         console.log("$eventFactory: addInHouseEvent enter: ", args);
-        if (eventHanlder){
+        if (eventHanlder) {
           $rootScope.$broadcast('ADD_JOURNAL', args);
           console.warn("$eventFactory: broadcast ADD_JOURNAL");
         }
@@ -226,7 +226,7 @@ angular.module('starter.services', [])
 
     var getScore = function () {
       if (gameInfo["playerInfo"])
-      return gameInfo["playerInfo"].pontos;
+        return gameInfo["playerInfo"].pontos;
     };
     var getNivelAtual = function () {
       return gameInfo["playerInfo"].nivelAtual;
@@ -304,6 +304,8 @@ angular.module('starter.services', [])
 
       var temp = gameInfo["playerInfo"].nivelAtual;
       var latestLevel = "";
+      var latestParabens = "";
+      var latestDescricao = "";
       var change = false;
       var delay = false;
       for (var levelName in gameInfo) {
@@ -319,8 +321,10 @@ angular.module('starter.services', [])
                 if (!change) {
                   level.locked = false;
                   change = true;
-                  latestLevel = levelName;
                   gameInfo["playerInfo"].nivelAtual = latestLevel;
+                  latestLevel = levelName;
+                  latestParabens = level.parabens;
+                  latestDescricao = level.descricao;
                 } else delay = true;
               }
               console.warn("process gameinfo: " + levelName + " = " + level);
@@ -329,7 +333,7 @@ angular.module('starter.services', [])
 
           case "reward":
             if (level.locked) {
-            console.warn("gameFactory: rewards combos: ", level.combos);
+              console.warn("gameFactory: rewards combos: ", level.combos);
               if (level.combos) {
                 var count = 0, total = 0;
                 level.combos.forEach(function (item) {
@@ -344,6 +348,8 @@ angular.module('starter.services', [])
                     level.locked = false;
                     change = true;
                     latestLevel = levelName;
+                    latestParabens = level.parabens;
+                    latestDescricao = level.descricao;
                   } else delay = true;
                 }
               }
@@ -358,6 +364,8 @@ angular.module('starter.services', [])
                   level.locked = false;
                   change = true;
                   latestLevel = levelName;
+                  latestParabens = level.parabens;
+                  latestDescricao = level.descricao;
                 } else delay = true;
               }
 
@@ -373,7 +381,6 @@ angular.module('starter.services', [])
             //
             // });
             break;
-
         }
       }
 
@@ -381,9 +388,9 @@ angular.module('starter.services', [])
       if ((change)) {
         // alert lastest level popup badge
         $eventFactory.addInHouseEvent({
-          title: "Título de progressão",
+          title: latestDescricao,
           image: "img/game/badges/badge_" + latestLevel + ".png",
-          caption: "Parabéns!",
+          caption: latestParabens,
           thumb: "img/game/badges/badge_" + latestLevel + ".png"
         });
         // $rootScope.$broadcast('ADD_JOURNAL', {
@@ -524,8 +531,41 @@ angular.module('starter.services', [])
       "64005": "Regiao de interesse E",
       "64006": "Regiao de interesse F",
       "64007": "Regiao de interesse G",
-      "64008": "Regiao de interesse H",
+      "64008": "Regiao de interesse H"
     };
+
+    var regioesNomes = {
+      "Regiao de interesse A": "RI_A",
+      "Regiao de interesse B": "RI_B",
+      "Regiao de interesse C": "RI_C",
+      "Regiao de interesse D": "RI_D",
+      "Regiao de interesse E": "RI_E",
+      "Regiao de interesse F": "RI_F",
+      "Regiao de interesse G": "RI_G",
+      "Regiao de interesse H": "RI_H"
+    };
+
+    var limit = {
+      "RI_A": 10,
+      "RI_B": 10,
+      "RI_C": 10,
+      "RI_D": 10,
+      "RI_E": 10,
+      "RI_F": 10,
+      "RI_G": 10,
+      "RI_H": 10
+    };
+    var calibrate = {
+      "RI_A": 0,
+      "RI_B": 0,
+      "RI_C": 0,
+      "RI_D": 0,
+      "RI_E": 0,
+      "RI_F": 0,
+      "RI_G": 0,
+      "RI_H": 0
+    };
+var popup = {};
 
     var scanning = false;
 
@@ -562,58 +602,112 @@ angular.module('starter.services', [])
         for (i = 0; i < pluginResult.beacons.length; i++) {
           pluginResult.beacons[i].nome = nomes[pluginResult.beacons[i].minor];
           uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
-          if ((!beacons[uniqueBeaconKey])) {
-            $rootScope.currentRI = pluginResult.beacons[i].nome;
-            // console.log("Device busy: %s", $rootScope.deviceBUSY);
-            // if (!$rootScope.deviceBUSY) {
-            // console.log("Device free not busy");
-            beacons[uniqueBeaconKey] = pluginResult.beacons[i];
-            $rootScope.beacons = beacons;
-            if ($rootScope.enableBeacons) {
-              var regioes = $regioes.getAllRegioesList();
-              $regioes.getRegioes().then(function (res) {
-                var found = false;
-                var aCircles = JSON.parse(res || [{}]);
-                console.log("IBEACON: GOT regioes from cordova service to aCircles", aCircles);
-                var change = false;
-                for (var f = 0; f <= aCircles.length - 1; f++) {
-                  if (aCircles[f].nome == regioes[$rootScope.currentRI]) {
-                    $rootScope.currentRI_descricao = aCircles[f].descricao;
-                    if (aCircles[f].locked) {
-                      aCircles[f].locked = false;
-                      change = true;
-                    }
-                    if (!aCircles[f].visited) {
-                      aCircles[f].visited = true;
-                      $timeout(function () {
-                        $gameFactory.addPoints("regioes");
-                      }, 500);
-                      change = true;
-                    }
-                    found = true;
-                  }
-                }
-                if (change) {
-                  console.log("IBEACON: UPDATE: GOT regioes from cordova service to aCircles", aCircles);
-                  // $rootScope.regioes = aCircles;
-                  $regioes.setRegioes(aCircles);
-                }
-              });
-              $rootScope.$broadcast('RI_FOUND');
-              console.log("Sending broadcast RI_FOUND");
 
-            } else
-              console.log("Disabled: enabled beacons for broadcast RI_FOUND");
-            // } else console.log("Device BUSY for broadcast RI_FOUND, queue?");
-          } else {
-            beacons[uniqueBeaconKey] = pluginResult.beacons[i];
-            $rootScope.beacons = beacons;
-            if (sendUpdates) {
-              $rootScope.$broadcast('BEACONS_UPDATE');
-              console.log("Sending broadcast BEACONS_UPDATE");
+          if ((!beacons[uniqueBeaconKey])) {
+            if (Number(pluginResult.beacons[i].accuracy) <= limit[regioesNomes[pluginResult.beacons[i].nome]]) {
+              $rootScope.currentRI = pluginResult.beacons[i].nome;
+              // console.log("Device busy: %s", $rootScope.deviceBUSY);
+              if (!$rootScope.deviceBUSY) {
+                // console.log("Device free not busy");
+                beacons[uniqueBeaconKey] = pluginResult.beacons[i];
+                popup[uniqueBeaconKey] = true;
+                $rootScope.beacons = beacons;
+                if ($rootScope.enableBeacons) {
+                  regioes = $regioes.getAllRegioesList();
+                  $regioes.getRegioes().then(function (res) {
+                    var found = false;
+                    var aCircles = JSON.parse(res || [{}]);
+                    console.log("IBEACON: GOT regioes from cordova service to aCircles", aCircles);
+                    var change = false;
+                    for (var f = 0; f <= aCircles.length - 1; f++) {
+                      if (aCircles[f].nome == regioes[$rootScope.currentRI]) {
+                        $rootScope.currentRI_descricao = aCircles[f].descricao;
+                        if (aCircles[f].locked) {
+                          aCircles[f].locked = false;
+                          change = true;
+                        }
+                        if (!aCircles[f].visited) {
+                          aCircles[f].visited = true;
+                          $timeout(function () {
+                            $gameFactory.addPoints("regioes");
+                          }, 500);
+                          change = true;
+                        }
+                        found = true;
+                      }
+                    }
+                    if (change) {
+                      console.log("IBEACON: UPDATE: GOT regioes from cordova service to aCircles", aCircles);
+                      // $rootScope.regioes = aCircles;
+                      $regioes.setRegioes(aCircles);
+                    }
+                  });
+                  $rootScope.$broadcast('RI_FOUND');
+                  console.log("Sending broadcast RI_FOUND");
+
+                } else
+                  console.log("Disabled: enabled beacons for broadcast RI_FOUND");
+              } else console.log("Device BUSY for broadcast RI_FOUND, queue?");
             }
+
+          } else {
+
+            beacons[uniqueBeaconKey] = pluginResult.beacons[i];
+            if (!popup[uniqueBeaconKey]) {
+              if (Number(pluginResult.beacons[i].accuracy) <= limit[regioesNomes[pluginResult.beacons[i].nome]]) {
+                $rootScope.currentRI = pluginResult.beacons[i].nome;
+                // console.log("Device busy: %s", $rootScope.deviceBUSY);
+                if (!$rootScope.deviceBUSY) {
+                  // console.log("Device free not busy");
+                  // beacons[uniqueBeaconKey] = pluginResult.beacons[i];
+                  popup[uniqueBeaconKey] = true;
+                  // $rootScope.beacons = beacons;
+                  if ($rootScope.enableBeacons) {
+                    var regioes = $regioes.getAllRegioesList();
+                    $regioes.getRegioes().then(function (res) {
+                      var found = false;
+                      var aCircles = JSON.parse(res || [{}]);
+                      console.log("IBEACON: GOT regioes from cordova service to aCircles", aCircles);
+                      var change = false;
+                      for (var f = 0; f <= aCircles.length - 1; f++) {
+                        if (aCircles[f].nome == regioes[$rootScope.currentRI]) {
+                          $rootScope.currentRI_descricao = aCircles[f].descricao;
+                          if (aCircles[f].locked) {
+                            aCircles[f].locked = false;
+                            change = true;
+                          }
+                          if (!aCircles[f].visited) {
+                            aCircles[f].visited = true;
+                            $timeout(function () {
+                              $gameFactory.addPoints("regioes");
+                            }, 500);
+                            change = true;
+                          }
+                          found = true;
+                        }
+                      }
+                      if (change) {
+                        console.log("IBEACON: UPDATE: GOT regioes from cordova service to aCircles", aCircles);
+                        // $rootScope.regioes = aCircles;
+                        $regioes.setRegioes(aCircles);
+                      }
+                    });
+                    $rootScope.$broadcast('RI_FOUND');
+                    console.log("Sending broadcast RI_FOUND");
+
+                  } else
+                    console.log("Disabled: enabled beacons for broadcast RI_FOUND");
+                } else
+                  console.log("Device BUSY for broadcast RI_FOUND, queue?");
+              }
+              $rootScope.beacons = beacons;
+              if (sendUpdates) {
+                $rootScope.$broadcast('BEACONS_UPDATE');
+                console.log("Sending broadcast BEACONS_UPDATE");
+              }
+            }
+            // console.log("FOUND: ", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity)
           }
-          // console.log("FOUND: ", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity)
         }
         // $scope.$apply();
       };
@@ -631,6 +725,10 @@ angular.module('starter.services', [])
           console.log("Done: START SCAN", e);
           scanning = true;
         });
+    };
+
+    showPopupRI = function () {
+
     };
 
     stopBeaconScan = function () {
