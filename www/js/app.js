@@ -2851,7 +2851,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             // drawedMapa = true;
           };
           //canvas.addEventListener("touchend", touchUp, false);
-          canvas.addEventListener("click", touchUp, false);
+          canvas2.addEventListener("click", touchUp, false);
           //image.src ="http://i.imgur.com/p3gjnKa.jpg";
           // image.className = "img-responsive";
           image.src = "img/mapaqtapedagogica2.png";

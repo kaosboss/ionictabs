@@ -233,9 +233,9 @@ body {
   height: 100%;
 }
 
-.APPimg {
-  /*width: 100%;*/
-  /*height: 100%;*/
+.APPimgAtividades {
+  width: 100%;
+  height: auto;
 }
 
 /*Tinder cards PI*/
