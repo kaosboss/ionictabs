@@ -1,11 +1,14 @@
-<ion-view view-title="Percursos Pedestres">
+<ion-view view-title="Percursos Pedestres" cache-view="false">
+  <ion-nav-buttons>
+    <button class="button button-clear icon icon-left ion-chevron-left" ng-click="goBack()">
+      <i class="mynav icon-left ion-chevron-left"></i>
+    </button>
+  </ion-nav-buttons>
   <ion-content class="has-header has-tabs" scroll="true">
 
     <div class="APPfull">
       <div class="APPheader">
-        <img class="APPimg" src="img/atividades/atividades_percursos_pedestres.jpg"
-             ng-image-appear responsive transition-duration="0.8s" animation="fadeInUp" animation-duration="0.8s"
-             easing="ease-out">
+        <img class="APPimg animated slideInUp" src="img/atividades/atividades_percursos_pedestres.jpg">
       </div>
 
       <div class="APPmain">

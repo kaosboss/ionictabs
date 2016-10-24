@@ -4,6 +4,8 @@
     "imagem": "img/game/badges/badge_nivel1.png",
     "locked": true,
     "pontos": 9,
+    "descricao": "Título de progressão",
+    "parabens": "Parabéns!",
     "tipo": "nivel"
   },
   "nivel2": {
@@ -11,6 +13,8 @@
     "imagem": "img/game/badges/badge_nivel2.png",
     "locked": true,
     "pontos": 31,
+    "descricao": "Título de progressão",
+    "parabens": "Parabéns!",
     "tipo": "nivel"
   },
   "nivel3": {
@@ -18,6 +22,8 @@
     "imagem": "img/game/badges/badge_nivel3.png",
     "locked": true,
     "pontos": 93,
+    "descricao": "Título de progressão",
+    "parabens": "Parabéns!",
     "tipo": "nivel"
   },
   "nivel4": {
@@ -25,24 +31,32 @@
     "imagem": "img/game/badges/badge_nivel4.png",
     "locked": true,
     "pontos": 260,
+    "descricao": "Título de progressão",
+    "parabens": "Parabéns!",
     "tipo": "nivel"
   },
   "foto": {
     "imagem": "img/game/badges/badge_foto.png",
     "locked": true,
     "pontos": 260,
+    "descricao": "Título de progressão",
+    "parabens": "Parabéns!",
     "tipo": "badge"
   },
   "desafios": {
     "imagem": "img/game/badges/badge_desafios.png",
     "locked": true,
     "pontos": 260,
+    "descricao": "Título de progressão",
+    "parabens": "Parabéns!",
     "tipo": "badge"
   },
   "regioes": {
     "imagem": "img/game/badges/badge_regioes.png",
     "locked": true,
     "pontos": 260,
+    "descricao": "Desconto na entrada do SNP",
+    "parabens": "Parabéns! Por teres atingido o nivel de Professor acabaste de ganhar um desconto de 50% na tua entrada no SNP",
     "tipo": "badge"
   },
   "reward_entrada": {
