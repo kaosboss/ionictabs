@@ -166,25 +166,21 @@
         "id": 14,
         "nome": "PI_14",
         "descricao": "Pomar de citrinos"
-      },
-      {
-        "id": 15,
-        "nome": "PI_15",
-        "descricao": "Sobreiro"
       }
+
     ],
     "quizDone": false,
     "qrDone": false,
     "fotoDone": false,
     "Quiz": [
       {
-        "question": "Como se chama a árvore da cortiça?",
+        "question": "Como se diz laranja em Grego?",
         "options": [
-          "Sobreiro",
-          "Corticeiro",
-          "Pinheiro"
+          "Laranjus",
+          "Portugália",
+          "Laranja"
         ],
-        "answer": 0
+        "answer": 1
       },
       {
         "question": "Qual a origem dos damascos?",
@@ -196,13 +192,13 @@
         "answer": 0
       },
       {
-        "question": "De quantos em quantos anos é retirada a cortiça?",
+        "question": "Onde é que existem a maior parte das ovelhas saloias?",
         "options": [
-          "8 em 8",
-          "9 em 9",
-          "10 em 10"
+          "Lisboa",
+          "Porto",
+          "Setubal"
         ],
-        "answer": 1
+        "answer": 2
       }
     ]
   },
@@ -216,6 +212,11 @@
     "visited": false,
     "banner": "Esta é a região com mais água da Quinta! Para além da água vais também ficar a saber mais de uma das árvores mais inteligentes que existe!",
     "PIs": [
+      {
+        "id": 15,
+        "nome": "PI_15",
+        "descricao": "Sobreiro"
+      },
       {
         "id": 16,
         "nome": "PI_16",
@@ -255,13 +256,13 @@
         "answer": 2
       },
       {
-        "question": "Quantas nascentes permanentes existem na Quinta Pedagógica?",
+        "question": "De quantos em quantos anos é retirada a cortiça?",
         "options": [
-          "1",
-          "2",
-          "3"
+          "8 em 8",
+          "9 em 9",
+          "10 em 10"
         ],
-        "answer": 0
+        "answer": 1
       }
     ]
   },

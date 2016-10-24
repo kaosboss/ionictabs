@@ -4,8 +4,8 @@
   <ion-content class="APPmain">
     <ion-item ng-show="header" class="APPmain item-thumbnail-left item-borderless list-item">
       <img class="" style="width: 65px;" src="img/galo_desenho.png"/>
-      <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrapSmall">Olá Explorador da Natureza, estas
-        mesmo perto de seres o mestre do parque! Queres melhorar o teu resultado? {{score}} pontos</p>
+      <p style="margin-left: -30px; margin-top: 0px;" align="center" class="textWrapSmall">Olá Explorador da Natureza, aqui podes ver todos os teus títulos e recompensas assim como saber
+        o que falta fazer para teres a pontuação máxima da quinta pedagógica! Queres melhorar o teu resultado? Neste momento estás com {{score}} pontos</p>
       <span ng-click="closeGameHeader()" class="captionDesafios" style="font-size: small">[<a href="" style="opacity:1;"
                                                                                          class="subdued button-small button-light ion-close"></a> ]
       </span>
@@ -36,7 +36,7 @@
         </div>
       </div>
     </ion-item>
-
+<!-- Graficos com as percentagens das regiões e pis completos
     <ion-item class="item-borderless animated fadeIn">
 
       <div class="row">
@@ -73,7 +73,7 @@
         </div>
       </div>
     </ion-item>
-
+-->
 
     <div class="padding tab-game">
       <h3 align="center" style="margin-bottom: -10px;margin-top: -10px;">Estado dos teus desafios</h3>
@@ -377,6 +377,59 @@
 
       </table>
     </div>
+
+    <div class="desafios_help">
+
+      <h4 align="center" style="margin-bottom: 0px; margin-top: 10px;">Títulos de progressão</h4>
+      <div class="" ng-click="showDesafios_help()">
+        <div>
+          <table align="center" style="margin-top: 15px; margin-left: auto; margin-right: auto" >
+          <tr>
+            <td><img class="startBadges" id="nivel1" src="img/game/badges/badge_nivel1.png" widtd="35" height="35"></td>
+            <td><img class="startBadges" id="nivel2" src="img/game/badges/badge_nivel2.png" widtd="35" height="35"></td>
+            <td><img class="startBadges" id="nivel3" src="img/game/badges/badge_nivel3.png" widtd="35" height="35"></td>
+            <td><img class="startBadges" id="nivel4" src="img/game/badges/badge_nivel4.png" widtd="35" height="35"></td>
+          </tr>
+        </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="desafios_help">
+
+      <h4 align="center" style="margin-bottom: 0px; margin-top: 10px;">Títulos de exploração</h4>
+      <div class="" ng-click="showDesafios_help()">
+        <div>
+          <table align="center" style="margin-top: 15px; margin-left: auto; margin-right: auto" >
+          <tr>
+            <td><img class="startBadges" id="regioes" src="img/game/badges/badge_regioes.png" widtd="35" height="35"></td>
+            <td><img class="startBadges" id="foto" src="img/game/badges/badge_foto.png" widtd="35" height="35"></td>
+            <td><img class="startBadges" id="desafios" src="img/game/badges/badge_desafios.png" widtd="35" height="35"></td>
+          </tr>
+        </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="desafios_help">
+
+      <h4 align="center" style="margin-bottom: 0px; margin-top: 10px;">Recompensas</h4>
+      <div class="" ng-click="showDesafios_help()">
+        <div>
+          <table align="center" style="margin-top: 15px; margin-left: auto; margin-right: auto" >
+          <tr>
+            <td><img class="startBadges" id="regioes" src="img/game/badges/badge_regioes.png" widtd="35" height="35"></td>
+            <td><img class="startBadges" id="foto" src="img/game/badges/badge_foto.png" widtd="35" height="35"></td>
+            <td><img class="startBadges" id="desafios" src="img/game/badges/badge_desafios.png" widtd="35" height="35"></td>
+          </tr>
+        </table>
+        </div>
+      </div>
+
+    </div>
+
 
     <div ng-controller="PopupCtrl"></div>
   </ion-content>
