@@ -604,7 +604,7 @@ var popup = {};
           uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
 
           if ((!beacons[uniqueBeaconKey])) {
-            if (Number(pluginResult.beacons[i].accuracy) <= limit[regioesNomes[pluginResult.beacons[i].nome]]) {
+            if ((Number(pluginResult.beacons[i].accuracy) <= limit[regioesNomes[pluginResult.beacons[i].nome]]) && (Number(pluginResult.beacons[i].accuracy)>0)) {
               $rootScope.currentRI = pluginResult.beacons[i].nome;
               // console.log("Device busy: %s", $rootScope.deviceBUSY);
               if (!$rootScope.deviceBUSY) {

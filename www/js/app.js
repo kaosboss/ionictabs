@@ -2704,9 +2704,21 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         console.log("Mapactrl ready");
         // $scope.aCircles = [];
         var canvas = document.getElementById('imageView');
+        var canvas2 = document.getElementById('imageView2');
+        if (canvas2) {
+          var context2 = canvas2.getContext('2d');
+          context2.imageSmoothingEnabled = false;
+          context2.mozImageSmoothingEnabled = false;
+          context2.webkitImageSmoothingEnabled = false;
+          context2.msImageSmoothingEnabled = false;
+        }
         if (canvas) {
           var regioes = $regioes.getAllRegioesList();
           var context = canvas.getContext('2d');
+          context.imageSmoothingEnabled = false;
+          context.mozImageSmoothingEnabled = false;
+          context.webkitImageSmoothingEnabled = false;
+          context.msImageSmoothingEnabled = false;
         } else console.error("no canvas");
 
         touchUp = function (e) {
@@ -2775,15 +2787,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 if (($scope.regiao.completed) && (!$scope.regiao.quizDone)) {
                   console.warn("touchup Regiao completed ", $scope.regiao);
                   $scope.data.buttonColor = YELLOW;
-                  $window.document.getElementById("floating-button").children[0].style.backgroundColor = YELLOW;
+                  // $window.document.getElementById("floating-button").children[0].style.backgroundColor = YELLOW;
                 } else if ($scope.regiao.quizDone) {
                   console.warn("touchup quiz completed ", $scope.regiao);
                   $scope.data.buttonColor = GREEN;
-                  $window.document.getElementById("floating-button").children[0].style.backgroundColor = GREEN;
+                  // $window.document.getElementById("floating-button").children[0].style.backgroundColor = GREEN;
                 } else {
                   console.warn("touchup not open ", $scope.regiao);
                   $scope.data.buttonColor = RED;
-                  $window.document.getElementById("floating-button").children[0].style.backgroundColor = RED;
+                  // $window.document.getElementById("floating-button").children[0].style.backgroundColor = RED;
                 }
 
                 $scope.$apply();
@@ -2822,6 +2834,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // context.shadowColor = "rgb(0,0,0)";
 
           //image
+          context.imageSmoothingEnabled = false;
+          context.mozImageSmoothingEnabled = false;
+          context.webkitImageSmoothingEnabled = false;
+          context.msImageSmoothingEnabled = false;
           var image = new Image();
           image.onload = function () {
             //alert("load");
@@ -2904,15 +2920,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                   if ((reg.completed) && (!reg.quizDone)) {
                     console.warn("circles Regiao completed ", reg);
                     $scope.data.buttonColor = YELLOW;
-                    $window.document.getElementById("floating-button").children[0].style.backgroundColor = YELLOW;
+                    // $window.document.getElementById("floating-button").children[0].style.backgroundColor = YELLOW;
                   } else if (reg.quizDone) {
                     console.warn("circles quiz completed ", $scope.regiao);
                     $scope.data.buttonColor = GREEN;
-                    $window.document.getElementById("floating-button").children[0].style.backgroundColor = GREEN;
+                    // $window.document.getElementById("floating-button").children[0].style.backgroundColor = GREEN;
                   } else {
                     console.warn("circles not open ", $scope.regiao);
                     $scope.data.buttonColor = RED;
-                    $window.document.getElementById("floating-button").children[0].style.backgroundColor = RED;
+                    // $window.document.getElementById("floating-button").children[0].style.backgroundColor = RED;
                   }
                 }, 200);
 
@@ -2979,15 +2995,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               if (($scope.regiao.completed) && (!$scope.regiao.quizDone)) {
                 console.warn("circles Regiao completed ", $scope.regiao.nome);
                 $scope.data.buttonColor = YELLOW;
-                $window.document.getElementById("floating-button").children[0].style.backgroundColor = YELLOW;
+                // $window.document.getElementById("floating-button").children[0].style.backgroundColor = YELLOW;
               } else if ($scope.regiao.quizDone) {
                 console.warn("circles quiz completed ", $scope.regiao);
                 $scope.data.buttonColor = GREEN;
-                $window.document.getElementById("floating-button").children[0].style.backgroundColor = GREEN;
+                // $window.document.getElementById("floating-button").children[0].style.backgroundColor = GREEN;
               } else {
                 console.warn("circles not open ", $scope.regiao);
                 $scope.data.buttonColor = RED;
-                $window.document.getElementById("floating-button").children[0].style.backgroundColor = RED;
+                // $window.document.getElementById("floating-button").children[0].style.backgroundColor = RED;
               }
             }, 300);
           });
@@ -3010,6 +3026,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           var color = blue;
           var file = oCircle.nome;
           // var file = "RI_A";
+
 
           // context.beginPath();
           // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -3066,7 +3083,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
             // context.closePath();
             // context.clip();
-            context.drawImage(img, centerX - 12, centerY - (43));
+            // context2.clearRect(0,0, 0 , 0);
+            context2.drawImage(img, centerX - 12, centerY - (43));
             // context.restore();
 
             // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -3096,6 +3114,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         };
 
         drawCircles = function () {
+          context2.clearRect(0, 0, canvas.width, canvas.height);
           for (var f = 0; f <= aCircles.length - 1; f++) {
             drawCircle(aCircles[f]);
           }
@@ -3240,6 +3259,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       });
       $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI});
     };
+  $scope.goDesafios = function (RI) {
+    // console.log("tab game, go journal");
+      $state.go("tab.camera");
+    };
 
     $scope.goMapaQRGame = function (RI) {
       // $ionicHistory.goBack();
@@ -3307,7 +3330,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           break;
       }
       $window.document.getElementById(level).checked = true;
-    }, 350);
+    }, 500);
 
     $scope.showDesafios_help = function () {
       $rootScope.showPopup({
