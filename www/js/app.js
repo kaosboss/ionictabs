@@ -1023,8 +1023,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           scope: $scope,
           buttons: [
             {
-              text: 'Cancelar',
-              type: 'button-small button-clear'
+              text: 'Cancelar'
+              // type: 'button-small button-clear'
             },
             {
               text: '<b><i class="glyphicon icon ion-trash-a"></i></b>',
@@ -1721,7 +1721,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // $timeout(function () {
           //   scope.goMapa();
           // }, 200);
-        } else{
+        } else {
           console.warn("Qrcompleto RI not found: ", $scope.QR_RI);
           $scope.goMapa('ok');
         }
@@ -2301,9 +2301,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       };
 
-    $scope.goBack = function () {
-      $ionicHistory.goBack();
-    };
+      $scope.goBack = function () {
+        $ionicHistory.goBack();
+      };
 
       goQR = function (RI) {
         console.log("Go QR", RI);
@@ -2732,10 +2732,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               if (!aCircles[f].fotoDone || !aCircles[f].visited) {
                 // if (!aCircles[f].visited) {
                 // aCircles[f].locked = false;
-                aCircles[f].visited = true;
-                aCircles[f].fotoDone = true;
-                $regioes.setRegioes(aCircles);
-                $gameFactory.addPoints("regioes");
+                if (!aCircles[f].fotoDone) {
+                  aCircles[f].fotoDone = true;
+                  $gameFactory.addPoints("foto");
+                } else {
+                  $regioes.setRegioes(aCircles);
+                  $gameFactory.addPoints("regioes");
+                  aCircles[f].visited = true;
+                }
                 // createCircles();
               }
 
@@ -2879,15 +2883,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 $scope.marcador = file;
                 // if (!$scope.regiaoLoaded) {
                 // if (!$scope.regiao) {
-                  // $scope.regiao = {};
-                  // loadRegiao($scope.RI);
-                  // $scope.regiao = angular.copy(reg);
-                  // $timeout(function () {
-                  angular.copy(reg, $scope.regiao);
-                  //   angular.copy(reg.PIs, $scope.regiao.PIs);
-                  // });
-                  console.warn("Createcircles: regiao not loaded");
-                  $scope.regiaoLoaded = true;
+                // $scope.regiao = {};
+                // loadRegiao($scope.RI);
+                // $scope.regiao = angular.copy(reg);
+                // $timeout(function () {
+                angular.copy(reg, $scope.regiao);
+                //   angular.copy(reg.PIs, $scope.regiao.PIs);
+                // });
+                console.warn("Createcircles: regiao not loaded");
+                $scope.regiaoLoaded = true;
                 // }
                 // $scope.regiao = clone(aCircles[i]);
                 // $scope.regiaoLoaded = true;
@@ -3259,7 +3263,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse E", quiz: true})
       // $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI});
       // } else {
-        $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI, qr: true});
+      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI, qr: true});
       // }
     };
 
@@ -3278,7 +3282,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       });
       // $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI});
       // } else {
-        $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse "  + RI, quiz: true})
+      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI, quiz: true})
       // }
     };
 
@@ -3349,9 +3353,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             progressPie = $window.document.getElementsByName("progress-pie-" + unique)[0];
             deg = 360 * percent / 100;
             if (percent > 50) {
-              progressPie.classList.add('gt-50');
+              if (progressPie) {
+                progressPie.classList.add('gt-50');
+              }
             }
-            progressElem.style = "transform: rotate(" + deg + "deg);";
+            if (progressElem) {
+              progressElem.style = "transform: rotate(" + deg + "deg);";
+            }
           });
         });
       } else {
