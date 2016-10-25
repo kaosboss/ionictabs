@@ -2894,9 +2894,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 else if (reg.completed)
                   file += "_green";
                 else file += "_orange";
-                file += ".png";
-                reg.marcador = file;
-                $scope.marcador = file;
+                // file += ".png";
+                reg.marcador = file + ".png";
+                $scope.marcador = file + ".png";
                 // if (!$scope.regiaoLoaded) {
                 // if (!$scope.regiao) {
                 // $scope.regiao = {};
@@ -2974,7 +2974,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 //   // $scope.$apply();
                 // }
                 var idMarcador = $window.document.getElementById('marcador');
-                idMarcador.src = 'img/mapa/marcadores/' + file;
+                idMarcador.src = 'img/mapa/marcadores/' + file + "_90.png" ;
                 idMarcador.classList.add('animated', 'bounce');
                 found = true;
                 // console.log("Some FOUND: reg.nome, reg, scope.ri ", reg.nome, reg, $scope.RI, $scope.regiao, idMarcador);
@@ -3063,11 +3063,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // console.log("image: ", img);
           // if (!img) {
           var img = new Image();
+          img.width = 40;
           console.log("created img id: ", oCircle.nome);
-          if (color == "red") {
-            img.classList.add("here");
-            console.log("added class img ", oCircle.nome);
-          }
+          // if (color == "red") {
+          //   img.classList.add("here");
+          //   console.log("added class img ", oCircle.nome);
+          // }
           // img.id = oCircle.nome;
           // } else
           //   console.log("found img id: ", oCircle.nome);
@@ -3084,7 +3085,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             // context.closePath();
             // context.clip();
             // context2.clearRect(0,0, 0 , 0);
-            context2.drawImage(img, centerX - 12, centerY - (43));
+            context2.drawImage(img, centerX - 12, centerY - (43), 40, 43);
             // context.restore();
 
             // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
