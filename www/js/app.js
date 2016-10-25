@@ -2778,10 +2778,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 else if (aCircles[f].completed)
                   file += "_green";
                 else file += "_orange";
-                file += ".png";
-                $scope.regiao.marcador = file;
+                file += "_90.png";
+                $scope.regiao.marcador = file ;
                 $scope.marcador = file;
-                console.log("file: ", file, aCircles[f], $scope.marcador);
+                console.log("file: ", file + ".png", aCircles[f], $scope.marcador);
                 $scope.regiao.headeron = $gameFactory.isHeaderOn($scope.regiao.nome);
                 $rootScope.APP.regiaoLoaded = aCircles[f].nome;
                 if (($scope.regiao.completed) && (!$scope.regiao.quizDone)) {
@@ -2916,7 +2916,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 // $scope.regiao.completed = aCircles[i].completed;
                 $scope.regiao.headeron = $gameFactory.isHeaderOn(reg.nome);
 
-                $timeout(function () {
+                // $timeout(function () {
                   if ((reg.completed) && (!reg.quizDone)) {
                     console.warn("circles Regiao completed ", reg);
                     $scope.data.buttonColor = YELLOW;
@@ -2930,7 +2930,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                     $scope.data.buttonColor = RED;
                     // $window.document.getElementById("floating-button").children[0].style.backgroundColor = RED;
                   }
-                }, 200);
+                // }, 200);
 
                 // $scope.$apply();
 
@@ -2978,7 +2978,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 idMarcador.classList.add('animated', 'bounce');
                 found = true;
                 // console.log("Some FOUND: reg.nome, reg, scope.ri ", reg.nome, reg, $scope.RI, $scope.regiao, idMarcador);
-                // return true;
+                return true;
               }
             });
             // if ($scope.regiao.headeron) {
@@ -2990,22 +2990,22 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             // $regioes.setTempRegioes($scope.aCircles);
             console.log("createCircles: GOT regioes from cordova service to aCircles", aCircles);
             drawCircles();
-            $timeout(function () {
-              $scope.regiao.headeron = $gameFactory.isHeaderOn($scope.regiao.nome);
-              if (($scope.regiao.completed) && (!$scope.regiao.quizDone)) {
-                console.warn("circles Regiao completed ", $scope.regiao.nome);
-                $scope.data.buttonColor = YELLOW;
-                // $window.document.getElementById("floating-button").children[0].style.backgroundColor = YELLOW;
-              } else if ($scope.regiao.quizDone) {
-                console.warn("circles quiz completed ", $scope.regiao);
-                $scope.data.buttonColor = GREEN;
-                // $window.document.getElementById("floating-button").children[0].style.backgroundColor = GREEN;
-              } else {
-                console.warn("circles not open ", $scope.regiao);
-                $scope.data.buttonColor = RED;
-                // $window.document.getElementById("floating-button").children[0].style.backgroundColor = RED;
-              }
-            }, 300);
+            // $timeout(function () {
+            //   $scope.regiao.headeron = $gameFactory.isHeaderOn($scope.regiao.nome);
+            //   if (($scope.regiao.completed) && (!$scope.regiao.quizDone)) {
+            //     console.warn("circles Regiao completed ", $scope.regiao.nome);
+            //     $scope.data.buttonColor = YELLOW;
+            //     // $window.document.getElementById("floating-button").children[0].style.backgroundColor = YELLOW;
+            //   } else if ($scope.regiao.quizDone) {
+            //     console.warn("circles quiz completed ", $scope.regiao);
+            //     $scope.data.buttonColor = GREEN;
+            //     // $window.document.getElementById("floating-button").children[0].style.backgroundColor = GREEN;
+            //   } else {
+            //     console.warn("circles not open ", $scope.regiao);
+            //     $scope.data.buttonColor = RED;
+            //     // $window.document.getElementById("floating-button").children[0].style.backgroundColor = RED;
+            //   }
+            // }, 300);
           });
         };
 
@@ -3064,6 +3064,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // if (!img) {
           var img = new Image();
           img.width = 40;
+          img.style.opacity = "0.5";
           console.log("created img id: ", oCircle.nome);
           // if (color == "red") {
           //   img.classList.add("here");
@@ -3084,8 +3085,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
             // context.closePath();
             // context.clip();
-            // context2.clearRect(0,0, 0 , 0);
+            // console.log("draw circles on load: ");
+            context2.clearRect(centerX - 12, centerY - (43), 40 , 43);
             context2.drawImage(img, centerX - 12, centerY - (43), 40, 43);
+            // img.style.opacity = "0";
             // context.restore();
 
             // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -3115,7 +3118,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         };
 
         drawCircles = function () {
-          context2.clearRect(0, 0, canvas.width, canvas.height);
+          // context2.clearRect(0, 0, canvas.width, canvas.height);
           for (var f = 0; f <= aCircles.length - 1; f++) {
             drawCircle(aCircles[f]);
           }
