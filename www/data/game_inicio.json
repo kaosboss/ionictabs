@@ -1,4 +1,7 @@
 {
+  "nivel0": {
+    "nome": "Explorador da Natureza"
+  },
   "nivel1": {
     "nivel": true,
     "imagem": "img/game/badges/badge_nivel1.png",
@@ -6,7 +9,8 @@
     "pontos": 9,
     "descricao": "Título de progressão",
     "parabens": "Parabéns!",
-    "tipo": "nivel"
+    "tipo": "nivel",
+    "nome": "Curioso"
   },
   "nivel2": {
     "nivel": true,
@@ -15,7 +19,8 @@
     "pontos": 31,
     "descricao": "Título de progressão",
     "parabens": "Parabéns!",
-    "tipo": "nivel"
+    "tipo": "nivel",
+    "nome": "Aprendiz"
   },
   "nivel3": {
     "nivel": true,
@@ -24,7 +29,8 @@
     "pontos": 93,
     "descricao": "Título de progressão",
     "parabens": "Parabéns!",
-    "tipo": "nivel"
+    "tipo": "nivel",
+    "nome": "Professor"
   },
   "nivel4": {
     "nivel": true,
@@ -33,7 +39,8 @@
     "pontos": 260,
     "descricao": "Título de progressão",
     "parabens": "Parabéns!",
-    "tipo": "nivel"
+    "tipo": "nivel",
+    "nome": "Mestre"
   },
   "foto": {
     "imagem": "img/game/badges/badge_foto.png",
@@ -96,7 +103,7 @@
   },
   "playerInfo": {
     "pontos": 1,
-    "nivelAtual": "",
+    "nivelAtual": "nivel0",
     "scoreCard": {
       "onboarding": [
         5,
