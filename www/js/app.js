@@ -2380,7 +2380,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               else if (reg.completed)
                 file += "_green";
               else file += "_orange";
-              file += ".png";
+              file += "_90.png";
               // $scope.regiao.headeron = true;
               $scope.regiao.headeron = $gameFactory.isHeaderOn(reg.nome);
               $scope.regiao.marcador = file;
