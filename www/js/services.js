@@ -232,6 +232,10 @@ angular.module('starter.services', [])
       return gameInfo["playerInfo"].nivelAtual;
     };
 
+    var getGameInfo = function () {
+      return gameInfo;
+    };
+
     var getNivelAtualNome = function () {
       return gameInfo[gameInfo["playerInfo"].nivelAtual].nome;
     };
@@ -517,7 +521,8 @@ angular.module('starter.services', [])
       getScore: getScore,
       getNivelAtual: getNivelAtual,
       getNivelAtualNome: getNivelAtualNome,
-      mapaHandler: mapaHandler
+      mapaHandler: mapaHandler,
+      getGameInfo: getGameInfo
     }
   })
   .factory('$IbeaconScanner', ['$rootScope', '$window', '$regioes', '$gameFactory', '$timeout', function ($rootScope, $window, $regioes, $gameFactory, $timeout) {
