@@ -232,6 +232,10 @@ angular.module('starter.services', [])
       return gameInfo["playerInfo"].nivelAtual;
     };
 
+    var getNivelAtualNome = function () {
+      return gameInfo[gameInfo["playerInfo"].nivelAtual].nome;
+    };
+
     var addPoints = function (value) {
       var temp = gameInfo["playerInfo"];
       console.log("$gamefac: add points, playerinfo : ", value, gameInfo["playerInfo"], gameInfo["playerInfo"]["scoreCard"]);
@@ -321,10 +325,10 @@ angular.module('starter.services', [])
                 if (!change) {
                   level.locked = false;
                   change = true;
-                  gameInfo["playerInfo"].nivelAtual = latestLevel;
                   latestLevel = levelName;
                   latestParabens = level.parabens;
                   latestDescricao = level.descricao;
+                  gameInfo["playerInfo"].nivelAtual = latestLevel;
                 } else delay = true;
               }
               console.warn("process gameinfo: " + levelName + " = " + level);
@@ -512,6 +516,7 @@ angular.module('starter.services', [])
       addPoints: addPoints,
       getScore: getScore,
       getNivelAtual: getNivelAtual,
+      getNivelAtualNome: getNivelAtualNome,
       mapaHandler: mapaHandler
     }
   })

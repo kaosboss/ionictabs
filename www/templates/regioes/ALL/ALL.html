@@ -5,9 +5,9 @@
     </button>
   </ion-nav-buttons>
   <!--button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}"-->
-  <ion-floating-button ng-if="regiao.radius" button-class="" click="goQuiz()" has-footer="true"
-  button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}"
-                       icon="ion-clipboard"
+  <ion-floating-button ng-if="regiao.radius" button-class="" click="goQR()" has-footer="true"
+  button-color="{{(regiao.qrDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.qrDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.qrDone)  ? '#ec6157': ''}}"
+                       icon="ion-qr-scanner"
                        iconColor="#fff">
   </ion-floating-button>
   <!--button-color="#ec6157"-->
