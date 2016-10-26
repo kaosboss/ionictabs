@@ -2341,7 +2341,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // if ($stateParams.RI != "ALL") {
         //   $ionicTabsDelegate.select(3);
         //   $timeout(function () {
-        if ($scope.regiao.locked) {
+        if ($scope.regiao.completed) {
           $rootScope.showPopup({templateUrl: 'templates/popups/desafio_locked_qr.html'});
           return;
         }
@@ -3210,6 +3210,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     $scope.score = $gameFactory.getScore();
     $scope.header = $gameFactory.gameHeaderValue();
     $scope.nivelAtual = $gameFactory.getNivelAtualNome();
+    var gameInfo = $gameFactory.getGameInfo();
 
     $scope.game = {
       "RI_A": {
@@ -3269,6 +3270,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         "QR": false
       }
     };
+
+    $timeout(function () {
+      for (var levelName in gameInfo) {
+        if (!gameInfo.hasOwnProperty(levelName)) continue;
+
+        var level = gameInfo[levelName];
+        console.log("gameInfo3: ", levelName, level);
+
+        if (!level.locked) {
+          var elem = $window.document.getElementById(levelName);
+          if (elem) {
+            elem.classList.add("clearBadge");
+            console.warn("GameInfo unlocked: " + levelName);
+          }
+          else console.warn("GameInfo: elem not found");
+        }
+      }
+    }, 1000);
 
     $regioes.getRegioes().then(function (res) {
       var regioes = JSON.parse(res || [{}]);
