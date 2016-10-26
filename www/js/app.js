@@ -3271,25 +3271,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }
     };
 
-    $timeout(function () {
-      for (var levelName in gameInfo) {
-        if (!gameInfo.hasOwnProperty(levelName)) continue;
-
-        var level = gameInfo[levelName];
-        console.log("gameInfo3: ", levelName, level);
-
-        if (!level.locked) {
-          var elem = $window.document.getElementById(levelName);
-          if (elem) {
-            elem.classList.add("clearBadge");
-            console.warn("GameInfo unlocked: " + levelName);
-          }
-          else console.warn("GameInfo: elem not found");
-        }
-      }
-    }, 1000);
-
     $regioes.getRegioes().then(function (res) {
+
       var regioes = JSON.parse(res || [{}]);
       regioes.forEach(function (reg) {
         $scope.game[reg.nome].REGIAO = reg.visited;
@@ -3298,6 +3281,25 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $scope.game[reg.nome].QR = reg.qrDone;
         $scope.game[reg.nome].PIS = reg.completed;
       });
+
+      $timeout(function () {
+        for (var levelName in gameInfo) {
+          if (!gameInfo.hasOwnProperty(levelName)) continue;
+
+          var level = gameInfo[levelName];
+          console.log("gameInfo3: ", levelName, level);
+
+          if (!level.locked) {
+            var elem = $window.document.getElementById(levelName);
+            if (elem) {
+              elem.classList.add("clearBadge");
+              console.warn("GameInfo unlocked: " + levelName);
+            }
+            else console.warn("GameInfo: elem not found");
+          }
+        }
+      }, 600);
+
     });
 
     $scope.closeGameHeader = function () {
