@@ -96,7 +96,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       $rootScope.popupQueue = [];
 
       $rootScope.smallDevice = false;
-      $rootScope.currentRI = "região de interesse";
+      $rootScope.currentRI = "Quinta pedagógica";
       $rootScope.currentRI_descricao = "Quinta pedagógica";
       $rootScope.showPopup = function (popup) {
         $rootScope.mypop = popup;
@@ -108,7 +108,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           template: msg || '',
           title: 'Notificação',
           subTitle: '',
-          buttonText: "Ok"
+          buttonText: "Ok",
+          queue: true
         };
         $rootScope.$broadcast("SHOW_POPUP");
       };
@@ -279,7 +280,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           }, function (err) {
             alert(err);
           });
-          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (id integer primary key autoincrement, `IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT, `when` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, `title` TEXT, `auto` TEXT)", []).then(function (res) {
+          $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS `journal` (id integer primary key autoincrement, `IMG`	TEXT, `caption`	TEXT, `thumbnail`	TEXT, `thumbnail_data`	TEXT, `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, `title` TEXT, `auto` TEXT, `whendb`	TEXT)", []).then(function (res) {
             cw("Table journal", res);
           }, function (err) {
             alert(err);
@@ -758,7 +759,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     var showPopupQueue = function () {
       if ($rootScope.popupQueue.length > 0) {
-        if (!$scope.popupON) {
+        if ((!$scope.popupON) && (!$rootScope.deviceBUSY)) {
           $scope.showPopup($rootScope.popupQueue.pop());
         }
         $timeout(function () {
@@ -775,7 +776,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
     // A confirm dialog
-    $scope.showRI = function () {
+    $scope.showRI = function (uniqueBeaconKey) {
       if ($rootScope.popupON) {
         console.log("rootScope POPUP is ON, leaving");
         return;
@@ -791,7 +792,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         buttons: [
           {
             text: 'Ficar',
-            type: 'button-popup'
+            type: 'button-popup',
+            onTap: function (e) {
+              $timeout(function () {
+                $rootScope.beacons[uniqueBeaconKey] = 0;
+              }, 30000);
+            }
           },
           {
             text: '<b>Visitar</b>',
@@ -891,12 +897,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }, 60000);
     };
 
-    $scope.$on('RI_FOUND', function (e) {
+    $scope.$on('RI_FOUND', function (e, args) {
       // do something
       // console.log("POPUP controller scope.on RI_FOUND, enter.");
       if (!$scope.popupON) {
         $scope.currentRI = $rootScope.currentRI;
-        $scope.showRI();
+        $scope.showRI(args.uniqueBeaconKey);
       }
       // else
       // console.log("Got event, but popup ON, skipping");
@@ -1141,24 +1147,29 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       //     footerContentHtml: '<a href="#/tab/regiao/RI_D/PI_16">ir para a região</a>'
       //   });
 
-      if (NOTI_PUSH) {
-        $scope.events.push(
-          {
-            // id: 0,
-            badgeClass: 'mascoteAvatar',
-            badgeIconClass: 'bg-dark',
-            // badgeIconClass : 'ion-ionic',
-            // badgeIconClass : 'avatar',
-            title: title || 'Quinta Pedagógica',
-            when: when,
-
-            // contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
-            contentHtml: '',
-            titleContentHtml: '<img class="img-responsive" src="' + thumb_src + '"><p>' + caption + '</p>'
-          });
-
-        $ionicScrollDelegate.resize();
-      }
+      // if (NOTI_PUSH) {
+      //   var max = 0;
+      //   $scope.events.forEach(function (event) {
+      //     if (event.id > max)
+      //       max = event.id;
+      //   });
+      //   $scope.events.push(
+      //     {
+      //       // id: 0,
+      //       badgeClass: 'mascoteAvatar',
+      //       badgeIconClass: 'bg-dark',
+      //       // badgeIconClass : 'ion-ionic',
+      //       // badgeIconClass : 'avatar',
+      //       title: title || 'Quinta Pedagógica',
+      //       when: when,
+      //
+      //       // contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
+      //       contentHtml: '',
+      //       titleContentHtml: '<img class="img-responsive" src="' + thumb_src + '"><p>' + caption + '</p>'
+      //     });
+      //
+      //   $ionicScrollDelegate.resize();
+      // }
 
       query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto) VALUES (?,?,?,?,?)";
       // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
@@ -1167,6 +1178,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // $scope.captureImageId = res.insertId;
         console.log(message, pic_src, res);
         // alert(message);
+        if (NOTI_PUSH) {
+          $scope.events.push(
+            {
+              id: res.insertId,
+              badgeClass: 'mascoteAvatar',
+              badgeIconClass: 'bg-dark',
+              // badgeIconClass : 'ion-ionic',
+              // badgeIconClass : 'avatar',
+              title: title || 'Quinta Pedagógica',
+              when: when,
+
+              // contentHtml: '<img ng-image-appear placeholder class="img-responsive img-thumbnail" src="img/atividades_quinta_pedagogica_small.jpg"><p>Bem vindo à Quinta Pedagógica do Sesimbra Natura Park, vou ser o teu guia.</p>'
+              contentHtml: '',
+              titleContentHtml: '<img class="img-responsive" src="' + thumb_src + '"><p>' + caption + '</p>'
+            });
+
+          $ionicScrollDelegate.resize();
+        }
       }, function (err) {
         console.error(err);
         alert(err);
@@ -1183,6 +1212,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var d = new Date();
         when = d.toDateString();
       }
+      var RI = $regioes.convertRegiaoLongToShort($rootScope.currentRI);
+      // var RI = "Hello";
+
       if (auto == "NO") {
 
         $scope.events.push({
@@ -1194,7 +1226,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // badgeIconClass : 'ion-checkmark',
           title: title || 'Foto - Album',
           titleContentHtml: '<img class="img-responsive" src="' + thumb + '">',
-          when: when + " - " + $rootScope.currentRI_descricao,
+          when: when,
           contentHtml: caption
         });
       } else
@@ -1312,7 +1344,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       function done(evt) {
         console.warn("Write completed.");
-        $scope.addEvent($scope.captureImageId, $scope.captureImage, $scope.thumbNailName, "", 0, 0, 'Foto - Album', "NO");
+
+        var timestamp=new Date().getTime();
+        var todate=new Date(timestamp).getDate();
+        var tomonth=new Date(timestamp).getMonth()+1;
+        var toyear=new Date(timestamp).getFullYear();
+        var whendb=toyear+'/'+tomonth+'/'+todate + " " + $rootScope.currentRI;
+
+        $scope.addEvent($scope.captureImageId, $scope.captureImage, $scope.thumbNailName, "", 0, whendb, 'Foto - Album', "NO");
         $ionicLoading.hide();
         $scope.showCaption();
       }
@@ -1417,7 +1456,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             var message = "SELECTED -> " + res.rows.item(res.rows.length - 1).IMG;
             // $scope.showAlert(message);
             for (var f = 0; f < res.rows.length; f++)
-              $scope.addEvent(res.rows.item(f).id, res.rows.item(f).IMG, res.rows.item(f).thumbnail_data, res.rows.item(f).caption, 1, res.rows.item(f).when, res.rows.item(f).title, res.rows.item(f).auto);
+              $scope.addEvent(res.rows.item(f).id, res.rows.item(f).IMG, res.rows.item(f).thumbnail_data, res.rows.item(f).caption, 1, res.rows.item(f).whendb, res.rows.item(f).title, res.rows.item(f).auto);
 
 
             $ionicScrollDelegate.resize();
@@ -1526,17 +1565,23 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // $scope.addEvent(entry.toURL(), thumbNailName);
           // $ionicScrollDelegate.resize();
           fotoDone();
+          var timestamp=new Date().getTime();
+          var todate=new Date(timestamp).getDate();
+          var tomonth=new Date(timestamp).getMonth()+1;
+          var toyear=new Date(timestamp).getFullYear();
+          var whendb=toyear+'/'+tomonth+'/'+todate + " " + $rootScope.currentRI;
+          // alert(whendb);
 
-          query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto) VALUES (?,?,?,?,?)";
+          query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto, whendb) VALUES (?,?,?,?,?,?)";
           // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
-          $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "Sem comentário.", $scope.thumbNailName, 'Foto - Album', 'NO']).then(function (res) {
+          $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "Sem comentário.", $scope.thumbNailName, 'Foto - Album', 'NO', whendb]).then(function (res) {
             var message = "INSERT ID -> " + res.insertId;
             $scope.captureImageId = res.insertId;
             console.log(message, entry.toURL(), res);
             // alert(message);
           }, function (err) {
             console.error(err);
-            alert(err);
+            // alert(err);
           });
           $rootScope.deviceBUSY = 0;
         });
@@ -2341,7 +2386,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // if ($stateParams.RI != "ALL") {
         //   $ionicTabsDelegate.select(3);
         //   $timeout(function () {
-        if ($scope.regiao.completed) {
+        if ($scope.regiao.locked) {
           $rootScope.showPopup({templateUrl: 'templates/popups/desafio_locked_qr.html'});
           return;
         }
@@ -2373,7 +2418,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         if (JUSTGO) {
           if (QR)
             $timeout(function () {
-              goQR(RI);
+              $scope.goQR(RI);
             }, 300);
           if (QUIZ)
             $timeout(function () {
@@ -2739,7 +2784,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           var context2 = canvas2.getContext('2d');
           context2.imageSmoothingEnabled = false;
           context2.mozImageSmoothingEnabled = false;
-          context2.webkitImageSmoothingEnabled = false;
           context2.msImageSmoothingEnabled = false;
         }
         if (canvas) {
@@ -2747,7 +2791,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           var context = canvas.getContext('2d');
           context.imageSmoothingEnabled = false;
           context.mozImageSmoothingEnabled = false;
-          context.webkitImageSmoothingEnabled = false;
           context.msImageSmoothingEnabled = false;
         } else console.error("no canvas");
 
@@ -2866,7 +2909,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           //image
           context.imageSmoothingEnabled = false;
           context.mozImageSmoothingEnabled = false;
-          context.webkitImageSmoothingEnabled = false;
           context.msImageSmoothingEnabled = false;
           var image = new Image();
           image.onload = function () {
@@ -3290,7 +3332,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           console.log("gameInfo3: ", levelName, level);
 
           if (!level.locked) {
-            var elem = $window.document.getElementById(levelName);
+            var elem = null;
+            if (level.tipo != "nivel")
+              elem = $window.document.getElementById(levelName);
+            else
+              elem = $window.document.getElementById(levelName+"1");
             if (elem) {
               elem.classList.add("clearBadge");
               console.warn("GameInfo unlocked: " + levelName);
@@ -3384,9 +3430,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         case "nivel4":
           level = "onehundred";
           break;
+        default:
+          level = "zero";
       }
+      console.log("gamelevel: level");
       $window.document.getElementById(level).checked = true;
-    }, 300);
+    }, 600);
 
     $scope.showDesafios_help = function () {
       $rootScope.showPopup({

@@ -5,8 +5,10 @@
     </button>
   </ion-nav-buttons>
   <!--button-color="{{(regiao.quizDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.quizDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.quizDone)  ? '#ec6157': ''}}"-->
+  <!--button-color="{{(regiao.qrDone && regiao.visited)  ? '#33cd5f': ''}}{{(regiao.visited && !regiao.qrDone)  ? '#fec659': ''}}{{(!regiao.visited && !regiao.qrDone)  ? '#ec6157': ''}}"-->
+
   <ion-floating-button ng-if="regiao.radius" button-class="" click="goQR()" has-footer="true"
-  button-color="{{(regiao.qrDone && regiao.completed)  ? '#33cd5f': ''}}{{(regiao.completed && !regiao.qrDone)  ? '#fec659': ''}}{{(!regiao.completed && !regiao.qrDone)  ? '#ec6157': ''}}"
+  button-color="{{(regiao.qrDone && regiao.visited)  ? '#33cd5f': ''}}{{(!regiao.locked && !regiao.qrDone)  ? '#fec659': ''}}{{(regiao.locked && !regiao.qrDone)  ? '#ec6157': ''}}"
                        icon="ion-qr-scanner"
                        iconColor="#fff">
   </ion-floating-button>
