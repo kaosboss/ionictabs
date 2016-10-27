@@ -575,7 +575,8 @@ angular.module('starter.services', [])
       "RI_G": 0,
       "RI_H": 0
     };
-var popup = {};
+    var popup = {};
+    var lastBtKey = null;
 
     var scanning = false;
 
@@ -614,7 +615,7 @@ var popup = {};
           uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
 
           if ((!beacons[uniqueBeaconKey])) {
-            if ((Number(pluginResult.beacons[i].accuracy) <= limit[regioesNomes[pluginResult.beacons[i].nome]]) && (Number(pluginResult.beacons[i].accuracy)>0)) {
+            if ((Number(pluginResult.beacons[i].accuracy) <= limit[regioesNomes[pluginResult.beacons[i].nome]]) && (Number(pluginResult.beacons[i].accuracy) > 0)) {
               $rootScope.currentRI = pluginResult.beacons[i].nome;
               // console.log("Device busy: %s", $rootScope.deviceBUSY);
               if (!$rootScope.deviceBUSY) {
@@ -652,12 +653,21 @@ var popup = {};
                       $regioes.setRegioes(aCircles);
                     }
                   });
-                  $rootScope.$broadcast('RI_FOUND');
+                  $rootScope.$broadcast('RI_FOUND', {uniqueBeaconKey: uniqueBeaconKey});
                   console.log("Sending broadcast RI_FOUND");
 
                 } else
                   console.log("Disabled: enabled beacons for broadcast RI_FOUND");
-              } else console.log("Device BUSY for broadcast RI_FOUND, queue?");
+              } else {
+                console.log("Device BUSY for broadcast RI_FOUND, queue?");
+                if (lastBtKey == null) {
+                  lastBtKey = uniqueBeaconKey;
+                  $timeout(function () {
+                    popup[lastBtKey] = false;
+                    lastBtKey = null;
+                  }, 10000);
+                }
+              }
             }
 
           } else {
@@ -702,7 +712,7 @@ var popup = {};
                         $regioes.setRegioes(aCircles);
                       }
                     });
-                    $rootScope.$broadcast('RI_FOUND');
+                    $rootScope.$broadcast('RI_FOUND', {uniqueBeaconKey: uniqueBeaconKey});
                     console.log("Sending broadcast RI_FOUND");
 
                   } else
