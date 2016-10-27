@@ -4146,6 +4146,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // });
 
     $scope.clickedLike = function (item) {
+
       item.like = !item.like;
       if (item.like)
         item.likes += 1;
@@ -4421,11 +4422,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
   })
-  .controller('MapaPIdesafiosCtrl', function ($rootScope, $stateParams, $regioes) {
+  .controller('MapaPIdesafiosCtrl', function ($ionicHistory, $scope) {
     console.log("MapaPIdesafiosCtrl controller ready");
 
     // $scope.header = $gameFactory.gameHeaderValue();
-
+    $scope.goBack = function () {
+      $ionicHistory.goBack();
+    };
     // $scope.closeGameHeader = function () {
     //   $scope.header = false;
     //   $gameFactory.gameHeaderValue('OFF');

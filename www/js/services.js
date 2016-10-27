@@ -561,14 +561,14 @@ angular.module('starter.services', [])
     };
 
     var limit = {
-      "RI_A": 10,
-      "RI_B": 10,
-      "RI_C": 10,
-      "RI_D": 10,
-      "RI_E": 10,
-      "RI_F": 10,
-      "RI_G": 10,
-      "RI_H": 10
+      "RI_A": 15,
+      "RI_B": 15,
+      "RI_C": 15,
+      "RI_D": 15,
+      "RI_E": 15,
+      "RI_F": 15,
+      "RI_G": 15,
+      "RI_H": 15
     };
     var calibrate = {
       "RI_A": 0,

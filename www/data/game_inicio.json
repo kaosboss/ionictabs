@@ -63,14 +63,14 @@
     "locked": true,
     "pontos": 260,
     "descricao": "Título de exploração",
-    "parabens": "Parabéns! Por teres atingido o nivel de Aprendiz acabaste de ganhar um desconto de 50% na tua entrada no SNP",
+    "parabens": "Parabéns! Por teres visitado todas as regiões da Quinta",
     "tipo": "badge"
   },
   "reward_entrada": {
     "imagem": "img/game/badges/badge_reward_entrada.png",
     "locked": true,
     "descricao": "Desconto na entrada do SNP",
-    "parabens": "Parabéns! Por teres atingido o nivel de Professor acabaste de ganhar um desconto de 50% na tua entrada no SNP",
+    "parabens": "Parabéns! Por teres atingido o nivel de Aprendiz acabaste de ganhar um desconto de 50% na tua entrada no SNP",
     "combos": [
       "nivel2"
     ],

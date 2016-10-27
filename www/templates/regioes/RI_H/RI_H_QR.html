@@ -1,4 +1,8 @@
-<ion-view view-title="Caça ao código QR"  cache-view="false">
+<ion-view view-title="Caça ao código QR" cache-view="false">
+  <ion-nav-buttons>
+    <button class="button button-clear icon icon-left ion-chevron-left" ng-click="goBack()"><i
+      class="mynav icon-left ion-chevron-left"></i></button>
+  </ion-nav-buttons>
 
   <ion-content class="QRcode" class="padding" ng-controller="BarCodeReaderController">
 
@@ -14,8 +18,9 @@
 
     <div ng-if="startted" class="button-bar APPmain">
       <ion-item id="headerQR" ng-show="header" class="item-thumbnail-left item-borderless list-item">
-        <img class="thumb_pantufas" src="img/pantufas_PIs/pantufas_explica.png"  style="width:80px;height:80px;">
-        <p style="margin-left: -30px; margin-top: 0px;" align="left" class="textWrap">Estás preparado? vamos fazer o jogo da caça ao QRCode. Tens de conseguir ler um código QR de um ponto de interesse
+        <img class="thumb_pantufas" src="img/pantufas_PIs/pantufas_explica.png" style="width:80px;height:80px;">
+        <p style="margin-left: -30px; margin-top: 0px;" align="left" class="textWrap">Estás preparado? vamos fazer o
+          jogo da caça ao QRCode. Tens de conseguir ler um código QR de um ponto de interesse
           desta região, vai, descobre e ganha! </p>
         <span ng-click="closeQRHeader()" class="captionPIs" style="font-size: small">[<a href="" style="opacity:1;"
                                                                                          class="subdued button-small button-light ion-close"></a> ]
@@ -39,7 +44,7 @@
       </div>
 
       <br>
-      <button ng-click="getBarcode()" class="button button-next APPcenter">Caça QRodes  <i
+      <button ng-click="getBarcode()" class="button button-next APPcenter">Caça QRodes <i
         class="icon ion-qr-scanner"></i>
       </button>
       <br>
