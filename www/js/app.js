@@ -109,7 +109,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           title: 'Notificação',
           subTitle: '',
           buttonText: "Ok",
-          queue: true
+          // queue: true
         };
         $rootScope.$broadcast("SHOW_POPUP");
       };
@@ -584,14 +584,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               //   buttonText: "OK",
               //   template: "O bluetooth está desligado, sem alertas de interesse"
               // });
-              $rootScope.showAlert("O bluetooth está desligado, sem alertas de interesse");
+              $rootScope.showAlert("O bluetooth está desligado, não vais receber alertas de interesse na Quinta");
             });
 
             if (device.platform === 'iOS') {
               msg = msg + " IOS: isAuthorized: " + cordova.plugins.BluetoothStatus.iosAuthorized;
               if (!cordova.plugins.BluetoothStatus.BTenabled) {
                 console.log("TURN BT ON - IOS");
-                $scope.showBT("Liga o Bluetooth para os avisos de localizaçao na Quinta");
+                $scope.showBT("Liga o Bluetooth para receberes alertas de interesse na Quinta");
               } else {
                 $IbeaconScanner.startBeaconScan();
               }
@@ -1002,7 +1002,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // template: '<textarea ng-model="data.caption" name="Text1" rows="2"></textarea>',
           templateUrl: 'templates/template_caption.html',
           title: 'Album',
-          subTitle: 'Adicione uma descrição à foto',
+          subTitle: 'Adiciona uma descrição à foto',
           scope: $scope,
           buttons: [
             {text: 'Cancelar'},
@@ -1182,6 +1182,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           $scope.events.push(
             {
               id: res.insertId,
+              inHouse: true,
               badgeClass: 'mascoteAvatar',
               badgeIconClass: 'bg-dark',
               // badgeIconClass : 'ion-ionic',
@@ -1220,6 +1221,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $scope.events.push({
           // image: thumb,
           id: id,
+          inHouse: false,
           edit: true,
           image_src: img,
           badgeClass: 'bg-royal',
@@ -1235,7 +1237,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         $scope.events.push(
           {
-            id: 0,
+            id: id,
+            inHouse: true,
             badgeClass: 'mascoteAvatar',
             badgeIconClass: 'bg-dark',
             title: title || 'Quinta Pedagógica',
@@ -1725,6 +1728,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.goBack = function () {
       $ionicHistory.goBack();
+    };
+
+    $scope.goMapaQR = function () {
+      $state.go("tab.mapa", {
+        RI: "ALL",
+        PI: ""
+      });
     };
 
     $scope.closeQRHeader = function () {
@@ -2468,7 +2478,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               // drawedMapa = false;
               if (QR)
                 $timeout(function () {
-                  goQR(RI);
+                  $scope.goQR(RI);
                 }, 600);
               if (QUIZ)
                 $timeout(function () {
@@ -2814,19 +2824,20 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               console.log("in circle: %s", aCircles[f].nome);
 
               // if (aCircles[f].locked || !aCircles[f].visited) {
-              if (!aCircles[f].fotoDone || !aCircles[f].visited) {
-                // if (!aCircles[f].visited) {
-                // aCircles[f].locked = false;
-                if (!aCircles[f].fotoDone) {
-                  aCircles[f].fotoDone = true;
-                  $gameFactory.addPoints("foto");
-                } else {
-                  $regioes.setRegioes(aCircles);
-                  $gameFactory.addPoints("regioes");
-                  aCircles[f].visited = true;
-                }
-                // createCircles();
-              }
+              // if (!aCircles[f].fotoDone || !aCircles[f].visited) {
+              //   // if (!aCircles[f].visited) {
+              //   // aCircles[f].locked = false;
+              //   if (!aCircles[f].fotoDone) {
+              //     aCircles[f].fotoDone = true;
+              //     $gameFactory.addPoints("foto");
+              //   }
+              //   if (!aCircles[f].visited) {
+              //     $regioes.setRegioes(aCircles);
+              //     $gameFactory.addPoints("regioes");
+              //     aCircles[f].visited = true;
+              //   }
+              //   // createCircles();
+              // }
 
               if (aCircles[f].locked) {
                 $rootScope.showPopup({templateUrl: 'templates/popups/regiao_locked.html'});
@@ -4197,6 +4208,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         scope.goBack = function () {
           $ionicHistory.goBack();
+        };
+
+        scope.goMapaQuiz = function () {
+          $state.go("tab.mapa", {
+            RI: "ALL",
+            PI: ""
+          });
         };
 
         scope.goMapa = function (res) {
