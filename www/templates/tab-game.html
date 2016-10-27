@@ -4,8 +4,8 @@
   <ion-content class="APPmain">
     <ion-item ng-show="header" class="APPmain item-thumbnail-left item-borderless list-item">
      <img class="thumb_pantufas" src="img/pantufas_PIs/pantufas_explica.png"  style="width:80px;height:80px;">
-      <p style="margin-left: -10px; margin-top: 0px;" align="center" class="textWrapSmall">Olá {{nivelAtual}}, aqui podes ver todos os teus títulos e recompensas assim como saber
-        o que falta fazer para teres a pontuação máxima da quinta pedagógica! Queres melhorar o teu resultado? Neste momento estás com {{score}} pontos</p>
+      <p style="margin-left: -10px; margin-top: 0px;" align="center" class="miniTextos">Olá {{nivelAtual}}, aqui podes ver todos os teus títulos e recompensas assim como saber
+        o que falta fazer para teres a pontuação máxima da quinta pedagógica! Queres melhorar o teu resultado?</p>
       <span ng-click="closeGameHeader()" class="captionDesafios" style="font-size: small">[<a href="" style="opacity:1;"
                                                                                          class="subdued button-small button-light ion-close"></a> ]
       </span>
@@ -102,7 +102,7 @@
           </td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('A')"
-                    class="button button-small APPcenter button-desafios {{game.RI_A.QUIZ ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small APPcenter button-desafios {{game.RI_A.QUIZ ? 'button-balanced' : ''}} {{(game.RI_A.PIS && !game.RI_A.QUIZ) ? 'button-energized' : ''}} {{(!game.RI_A.PIS && !game.RI_A.QUIZ) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-clipboard"></i>
             </button>
@@ -116,7 +116,7 @@
           </td>
                        <td class="text-center">
             <button ng-click="goDesafios('A')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_A.FOTO ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_A.FOTO ? 'button-balanced' : ''}} {{(game.RI_A.REGIAO && !game.RI_A.FOTO) ? 'button-energized' : ''}} {{(!game.RI_A.REGIAO && !game.RI_A.FOTO) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-camera"></i>
             </button>
@@ -138,7 +138,7 @@
           </td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('B')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_B.QUIZ ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_B.QUIZ ? 'button-balanced' : ''}} {{(game.RI_B.PIS && !game.RI_B.QUIZ) ? 'button-energized' : ''}} {{(!game.RI_B.PIS && !game.RI_B.QUIZ) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-clipboard"></i>
             </button>
@@ -152,7 +152,7 @@
           </td>
                        <td class="text-center">
             <button ng-click="goDesafios('B')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_B.FOTO ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_B.FOTO ? 'button-balanced' : ''}} {{(game.RI_B.REGIAO && !game.RI_B.FOTO) ? 'button-energized' : ''}} {{(!game.RI_B.REGIAO && !game.RI_B.FOTO) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-camera"></i>
             </button>
@@ -167,14 +167,14 @@
           </td>
           <td class="text-center">
             <button ng-click="goMapa('C')"
-                    class="button button-small APPcenter button-desafios {{game.RI_C.PIS ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small APPcenter button-desafios {{game.RI_C.QUIZ ? 'button-balanced' : 'button-energized'}}">
               <i
                 class="icon ion-location"></i>
             </button>
           </td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('C')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_C.QUIZ ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_C.QUIZ ? 'button-balanced' : ''}} {{(game.RI_C.PIS && !game.RI_C.QUIZ) ? 'button-energized' : ''}} {{(!game.RI_C.PIS && !game.RI_C.QUIZ) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-clipboard"></i>
             </button>
@@ -188,7 +188,7 @@
           </td>
                        <td class="text-center">
             <button ng-click="goDesafios('C')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_C.FOTO ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_C.FOTO ? 'button-balanced' : ''}} {{(game.RI_C.REGIAO && !game.RI_C.FOTO) ? 'button-energized' : ''}} {{(!game.RI_C.REGIAO && !game.RI_C.FOTO) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-camera"></i>
             </button>
@@ -210,7 +210,7 @@
           </td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('D')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_D.QUIZ ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_D.QUIZ ? 'button-balanced' : ''}} {{(game.RI_D.PIS && !game.RI_D.QUIZ) ? 'button-energized' : ''}} {{(!game.RI_D.PIS && !game.RI_D.QUIZ) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-clipboard"></i>
             </button>
@@ -224,7 +224,7 @@
           </td>
                        <td class="text-center">
             <button ng-click="goDesafios('D')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_D.FOTO ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_D.FOTO ? 'button-balanced' : ''}} {{(game.RI_D.REGIAO && !game.RI_D.FOTO) ? 'button-energized' : ''}} {{(!game.RI_D.REGIAO && !game.RI_D.FOTO) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-camera"></i>
             </button>
@@ -239,14 +239,14 @@
           </td>
           <td class="text-center">
             <button ng-click="goMapa('E')"
-                    class="button button-small APPcenter button-desafios {{game.RI_E.PIS ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small APPcenter button-desafios {{game.RI_E.QUIZ ? 'button-balanced' : 'button-energized'}}">
               <i
                 class="icon ion-location"></i>
             </button>
           </td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('E')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_E.QUIZ ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_E.QUIZ ? 'button-balanced' : ''}} {{(game.RI_E.PIS && !game.RI_E.QUIZ) ? 'button-energized' : ''}} {{(!game.RI_E.PIS && !game.RI_E.QUIZ) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-clipboard"></i>
             </button>
@@ -260,7 +260,7 @@
           </td>
                        <td class="text-center">
             <button ng-click="goDesafios('E')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_E.FOTO ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_E.FOTO ? 'button-balanced' : ''}} {{(game.RI_A.REGIAO && !game.RI_A.FOTO) ? 'button-energized' : ''}} {{(!game.RI_A.REGIAO && !game.RI_A.FOTO) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-camera"></i>
             </button>
@@ -282,7 +282,7 @@
           </td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('F')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_F.QUIZ ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_F.QUIZ ? 'button-balanced' : ''}} {{(game.RI_F.PIS && !game.RI_F.QUIZ) ? 'button-energized' : ''}} {{(!game.RI_F.PIS && !game.RI_F.QUIZ) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-clipboard"></i>
             </button>
@@ -296,7 +296,7 @@
           </td>
                        <td class="text-center">
             <button ng-click="goDesafios('F')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_F.FOTO ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_F.FOTO ? 'button-balanced' : ''}} {{(game.RI_F.REGIAO && !game.RI_F.FOTO) ? 'button-energized' : ''}} {{(!game.RI_F.REGIAO && !game.RI_F.FOTO) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-camera"></i>
             </button>
@@ -311,14 +311,14 @@
           </td>
           <td class="text-center">
             <button ng-click="goMapa('G')"
-                    class="button button-small APPcenter button-desafios {{game.RI_G.PIS ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small APPcenter button-desafios {{game.RI_G.QUIZ ? 'button-balanced' : 'button-energized'}}">
               <i
                 class="icon ion-location"></i>
             </button>
           </td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('G')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_G.QUIZ ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_G.QUIZ ? 'button-balanced' : ''}} {{(game.RI_G.PIS && !game.RI_G.QUIZ) ? 'button-energized' : ''}} {{(!game.RI_G.PIS && !game.RI_G.QUIZ) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-clipboard"></i>
             </button>
@@ -332,7 +332,7 @@
           </td>
                        <td class="text-center">
             <button ng-click="goDesafios('G')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_G.FOTO ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_G.FOTO ? 'button-balanced' : ''}} {{(game.RI_G.REGIAO && !game.RI_G.FOTO) ? 'button-energized' : ''}} {{(!game.RI_G.REGIAO && !game.RI_G.FOTO) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-camera"></i>
             </button>
@@ -347,14 +347,14 @@
           </td>
           <td class="text-center">
             <button ng-click="goMapa('H')"
-                    class="button button-small APPcenter button-desafios {{game.RI_H.PIS ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small APPcenter button-desafios {{game.RI_H.QUIZ ? 'button-balanced' : 'button-energized'}}">
               <i
                 class="icon ion-location"></i>
             </button>
           </td>
           <td class="text-center">
             <button ng-click="goMapaQuizGame('H')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_H.QUIZ ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_H.QUIZ ? 'button-balanced' : ''}} {{(game.RI_H.PIS && !game.RI_H.QUIZ) ? 'button-energized' : ''}} {{(!game.RI_H.PIS && !game.RI_H.QUIZ) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-clipboard"></i>
             </button>
@@ -368,7 +368,7 @@
           </td>
                 <td class="text-center">
             <button ng-click="goDesafios('H')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_H.FOTO ? 'button-balanced' : 'button-energized'}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_H.FOTO ? 'button-balanced' : ''}} {{(game.RI_H.REGIAO && !game.RI_H.FOTO) ? 'button-energized' : ''}} {{(!game.RI_H.REGIAO && !game.RI_H.FOTO) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-camera"></i>
             </button>
