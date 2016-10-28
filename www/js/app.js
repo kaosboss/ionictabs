@@ -1727,7 +1727,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     });
 
     $scope.goBack = function () {
-      $ionicHistory.goBack();
+      $state.go("tab.mapa", {
+        RI: "ALL",
+        PI: ""
+      });
     };
 
     $scope.goMapaQR = function () {
@@ -1768,7 +1771,30 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $timeout(function () {
           $rootScope.$broadcast("QUIZ_POPUP", {desafio: "ok"});
         }, 600);
+
+
       // $ionicHistory.goBack();
+      // $scope.regiao.PIs.some(function (tpi) {
+      //   // console.warn("tpi:", tpi);
+      //   if (tpi.visited)
+      //     count++;
+      //   if (PI.nome == tpi.nome) {
+      //     $gameFactory.setHeaderOff($scope.regiao.nome);
+      //     if (!tpi.visited) {
+      //       tpi.visited = true;
+      //       // console.warn("pi descicao", tpi.descricao);
+      //       $rootScope.PI_descricao = tpi.descricao;
+      //       // $scope.$apply();
+      //       console.log("found PI goPI, marked visited: ", PI);
+      //       // return true;
+      //     } else {
+      //       $rootScope.PI_descricao = tpi.descricao;
+      //       console.log("found PI goPI: ", tpi);
+      //       // $scope.$apply();
+      //       // return true;
+      //     }
+      //   }
+      // });
       $state.go("tab.mapaPI", {
         RI: $scope.QR_RI,
         PI: $scope.QR_PI
@@ -1778,7 +1804,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     QRcompleto = function () {
       $regioes.getRegioes().then(function (res) {
         var found = false;
-        // var RI = $rootScope.APP.regiaoLoaded;
         var RI = $scope.QR_RI;
         var regioes = JSON.parse(res || [{}]);
         console.log("qrCompleto: GOT regioes from cordova service");
@@ -3370,7 +3395,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         RI: "ALL",
         PI: ""
       });
-      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI});
+      $timeout(function () {
+        $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI});
+      }, 300);
     };
     $scope.goDesafios = function (RI) {
       // console.log("tab game, go journal");
@@ -3399,7 +3426,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse E", quiz: true})
       // $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI});
       // } else {
-      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI, qr: true});
+      $timeout(function () {
+        $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI, qr: true});
+      }, 300);
+
       // }
     };
 
@@ -3418,7 +3448,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       });
       // $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI});
       // } else {
-      $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI, quiz: true})
+      $timeout(function () {
+        $rootScope.$broadcast('GO_REGIAO', {regiao: "Regiao de interesse " + RI, quiz: true})
+      }, 300);
       // }
     };
 
@@ -4146,6 +4178,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     // });
 
     $scope.clickedLike = function (item) {
+
       item.like = !item.like;
       if (item.like)
         item.likes += 1;
@@ -4418,14 +4451,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.goBack = function () {
       $ionicHistory.goBack();
+      // $state.go("tab.mapa", {
+      //   RI: "ALL",
+      //   PI: ""
+      // });
     };
 
   })
-  .controller('MapaPIdesafiosCtrl', function ($rootScope, $stateParams, $regioes) {
+  .controller('MapaPIdesafiosCtrl', function ($ionicHistory, $scope) {
     console.log("MapaPIdesafiosCtrl controller ready");
 
     // $scope.header = $gameFactory.gameHeaderValue();
-
+    $scope.goBack = function () {
+      $ionicHistory.goBack();
+      // $state.go("tab.mapa", {
+      //   RI: "ALL",
+      //   PI: ""
+      // });
+    };
     // $scope.closeGameHeader = function () {
     //   $scope.header = false;
     //   $gameFactory.gameHeaderValue('OFF');

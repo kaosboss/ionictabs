@@ -29,7 +29,7 @@
               <i class="icon ion-chevron-right icon-accessory"></i>
               <p>
                 <a href="#" class="subdued">{{item.likes ? item.likes : '?' }} likes</a>
-                <a href="#" class="{{ item.like ? 'assertive' : 'subdued'}} button-small button-light ion-heart"></a>
+                <a href="" ng-click="clickedLike(item)" stop-event="click" ion-stop-event="click" class="enable-pointer-events {{ item.like ? 'assertive' : 'subdued'}} button-small button-light ion-heart"></a>
               </p>
               <ion-option-button class="button-positive"
                                  ng-click="clickedLike(item)">

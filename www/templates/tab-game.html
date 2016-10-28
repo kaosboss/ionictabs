@@ -5,7 +5,7 @@
     <ion-item ng-show="header" class="APPmain item-thumbnail-left item-borderless list-item">
      <img class="thumb_pantufas" src="img/pantufas_PIs/pantufas_explica.png"  style="width:80px;height:80px;">
       <p style="margin-left: -10px; margin-top: 0px;" align="center" class="miniTextos">Olá {{nivelAtual}}, aqui podes ver todos os teus títulos e recompensas assim como saber
-        o que falta fazer para teres a pontuação máxima da quinta pedagógica! Queres melhorar o teu resultado?</p>
+        o que falta fazer para teres a pontuação máxima da Quinta pedagógica</p>
       <span ng-click="closeGameHeader()" class="captionDesafios" style="font-size: small">[<a href="" style="opacity:1;"
                                                                                          class="subdued button-small button-light ion-close"></a> ]
       </span>
@@ -260,7 +260,7 @@
           </td>
                        <td class="text-center">
             <button ng-click="goDesafios('E')"
-                    class="button button-small balanced APPcenter button-desafios {{game.RI_E.FOTO ? 'button-balanced' : ''}} {{(game.RI_A.REGIAO && !game.RI_A.FOTO) ? 'button-energized' : ''}} {{(!game.RI_A.REGIAO && !game.RI_A.FOTO) ? 'button-assertive' : ''}}">
+                    class="button button-small balanced APPcenter button-desafios {{game.RI_E.FOTO ? 'button-balanced' : ''}} {{(game.RI_E.REGIAO && !game.RI_E.FOTO) ? 'button-energized' : ''}} {{(!game.RI_E.REGIAO && !game.RI_E.FOTO) ? 'button-assertive' : ''}}">
               <i
                 class="icon ion-camera"></i>
             </button>

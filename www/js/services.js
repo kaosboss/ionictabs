@@ -561,14 +561,14 @@ angular.module('starter.services', [])
     };
 
     var limit = {
-      "RI_A": 10,
-      "RI_B": 10,
-      "RI_C": 10,
-      "RI_D": 10,
-      "RI_E": 10,
-      "RI_F": 10,
-      "RI_G": 10,
-      "RI_H": 10
+      "RI_A": 15,
+      "RI_B": 15,
+      "RI_C": 15,
+      "RI_D": 15,
+      "RI_E": 15,
+      "RI_F": 15,
+      "RI_G": 15,
+      "RI_H": 15
     };
     var calibrate = {
       "RI_A": 0,
@@ -1772,7 +1772,7 @@ angular.module('starter.services', [])
     };
 
   })
-  .factory("$regioes", function ($cordovaSQLite) {
+  .factory("$regioes", function ($cordovaSQLite, $rootScope) {
 
     console.log("Factory $regioes");
 
@@ -1817,8 +1817,7 @@ angular.module('starter.services', [])
                   total++;
                   if (tpi.nome == PI) {
                     // $rootScope.PI_descricao = tpi.descricao;
-                    // $scope.data.PI_descricao = tpi.descricao;
-                    // $scope.$apply();
+                    $rootScope.PI_descricao = tpi.descricao;
                     if (!tpi.visited) {
                       tpi.visited = true;
                       count++;
