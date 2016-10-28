@@ -1772,7 +1772,7 @@ angular.module('starter.services', [])
     };
 
   })
-  .factory("$regioes", function ($cordovaSQLite) {
+  .factory("$regioes", function ($cordovaSQLite, $rootScope) {
 
     console.log("Factory $regioes");
 
@@ -1817,8 +1817,7 @@ angular.module('starter.services', [])
                   total++;
                   if (tpi.nome == PI) {
                     // $rootScope.PI_descricao = tpi.descricao;
-                    // $scope.data.PI_descricao = tpi.descricao;
-                    // $scope.$apply();
+                    $rootScope.PI_descricao = tpi.descricao;
                     if (!tpi.visited) {
                       tpi.visited = true;
                       count++;
