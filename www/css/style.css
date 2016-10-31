@@ -208,6 +208,10 @@ body {
 /*overflow: hidden;*/
 /*margin-top: -1px;*/
 /*}*/
+.APPmain .miniTextos {
+  white-space: normal;
+}
+
 .APPmain .textWrap {
   white-space: normal;
   line-height: 120%;
@@ -992,6 +996,15 @@ form *:focus {
   font-size: medium;
   /*background: #2a2a2a;*/
   margin-top: -15px;
+}
+
+.miniTextos {
+  font: 13px/20px "Brandon", Tahoma, Verdana, sans-serif;
+  color: #404040;
+  font-size: medium;
+  /*white-space: normal;*/
+  /*background: #2a2a2a;*/
+  /*margin-top: -15px;*/
 }
 
 .container {

@@ -167,10 +167,15 @@ angular.module('starter.services', [])
           console.warn("$eventFactory: broadcast ADD_JOURNAL");
         }
         else {
+          var timestamp=new Date().getTime();
+          var todate=new Date(timestamp).getDate();
+          var tomonth=new Date(timestamp).getMonth()+1;
+          var toyear=new Date(timestamp).getFullYear();
+          var whendb=toyear+'/'+tomonth+'/'+todate + " " + $rootScope.currentRI;
           console.warn("$eventFactory: no event handler, inserting: ", args);
-          var query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto) VALUES (?,?,?,?,?)";
+          var query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto, whendb) VALUES (?,?,?,?,?,?)";
           // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
-          $cordovaSQLite.execute($cordovaSQLite.getDB(), query, [args.image, args.caption, args.thumb, args.title, 'YES']).then(function (res) {
+          $cordovaSQLite.execute($cordovaSQLite.getDB(), query, [args.image, args.caption, args.thumb, args.title, 'YES', whendb]).then(function (res) {
             var message = "addInHouseEvent: INSERT ID -> " + res.insertId;
             // $scope.captureImageId = res.insertId;
             console.log(message, args.image, res);
@@ -556,14 +561,14 @@ angular.module('starter.services', [])
     };
 
     var limit = {
-      "RI_A": 10,
-      "RI_B": 10,
-      "RI_C": 10,
-      "RI_D": 10,
-      "RI_E": 10,
-      "RI_F": 10,
-      "RI_G": 10,
-      "RI_H": 10
+      "RI_A": 15,
+      "RI_B": 15,
+      "RI_C": 15,
+      "RI_D": 15,
+      "RI_E": 15,
+      "RI_F": 15,
+      "RI_G": 15,
+      "RI_H": 15
     };
     var calibrate = {
       "RI_A": 0,
@@ -1767,7 +1772,7 @@ angular.module('starter.services', [])
     };
 
   })
-  .factory("$regioes", function ($cordovaSQLite) {
+  .factory("$regioes", function ($cordovaSQLite, $rootScope) {
 
     console.log("Factory $regioes");
 
@@ -1812,8 +1817,7 @@ angular.module('starter.services', [])
                   total++;
                   if (tpi.nome == PI) {
                     // $rootScope.PI_descricao = tpi.descricao;
-                    // $scope.data.PI_descricao = tpi.descricao;
-                    // $scope.$apply();
+                    $rootScope.PI_descricao = tpi.descricao;
                     if (!tpi.visited) {
                       tpi.visited = true;
                       count++;
