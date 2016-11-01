@@ -897,6 +897,87 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }, 60000);
     };
 
+    $scope.showQuiz = function () {
+      if ($rootScope.popupON) {
+        console.log("rootScope POPUP is ON, leaving");
+        return;
+      }
+
+      $scope.popupON = 1;
+      $rootScope.popupON = 1;
+      var confirmPopup2 = $ionicPopup.confirm({
+        cssClass: "myPopup",
+        // title: 'RI: ' + $scope.currentRI,
+        templateUrl: 'templates/popups/quiz_regiao.html',
+        scope: $scope,
+        buttons: [
+          {
+            text: 'Ficar',
+            type: 'button-popup',
+            onTap: function (e) {
+            }
+          },
+          {
+            text: '<i class="icon ion-clipboard"></i>',
+            type: 'button-popup',
+            onTap: function (e) {
+              console.log("Confirmed navigation to quiz", $state);
+
+              if ($state.current.name != "tab.mapa") {
+                // $state.go("tab.mapa", {});
+                $rootScope.APP.start_quiz = true;
+                goMapaPopup();
+                // $ionicTabsDelegate.select(3);
+                $timeout(function () {
+                //   $rootScope.APP.start_qr = true;
+                //   $ionicTabsDelegate.select(3);
+                //   // $rootScope.APP.regiao_descoberta = true;
+                //   // $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI})
+                  $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, quiz: true})
+                }, 500);
+
+              } else {
+                $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, quiz: true})
+              }
+
+              // if ($state.current.name != "tab.mapa") {
+              //   // $state.go("tab.mapa", {});
+              //   $ionicTabsDelegate.select(3);
+              //   $ionicTabsDelegate.select(3);
+              //   // $rootScope.APP.start_qr = true;
+              //   $timeout(function () {
+              //     // $ionicTabsDelegate.select(3);
+              //     // $rootScope.APP.start_qr = true;
+              //     /$rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})/ $rootScope.APP.regiao_descoberta = true;
+              //     // $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})
+              //     $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, qr: true})
+              //   }, 200);
+              // } else {
+              //
+              // }
+              return 1;
+            }
+          }
+        ]
+      });
+
+      confirmPopup2.then(function (res) {
+        if (res) {
+          console.log('resposta confirmacao de regiao - sim, ver conteudo', res);
+        } else {
+          console.log('Nao, ficar onde estou - nao', res);
+        }
+        $scope.popupON = 0;
+        $rootScope.popupON = 0;
+      });
+
+      $timeout(function () {
+        confirmPopup2.close();
+        $scope.popupON = 0;
+        $rootScope.popupON = 0;
+      }, 60000);
+    };
+
     $scope.$on('RI_FOUND', function (e, args) {
       // do something
       // console.log("POPUP controller scope.on RI_FOUND, enter.");
@@ -904,6 +985,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $scope.currentRI = $rootScope.currentRI;
         $scope.showRI(args.uniqueBeaconKey);
       }
+      // else
+      // console.log("Got event, but popup ON, skipping");
+    });
+
+    $scope.$on('SHOW_QUIZ', function (e, args) {
+      // do something
+      // console.log("POPUP controller scope.on RI_FOUND, enter.");
+      // if (!$scope.popupON) {
+      //   $scope.currentRI = $rootScope.currentRI;
+        $scope.showQuiz();
+      // }
       // else
       // console.log("Got event, but popup ON, skipping");
     });
@@ -1348,11 +1440,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       function done(evt) {
         console.warn("Write completed.");
 
-        var timestamp=new Date().getTime();
-        var todate=new Date(timestamp).getDate();
-        var tomonth=new Date(timestamp).getMonth()+1;
-        var toyear=new Date(timestamp).getFullYear();
-        var whendb=toyear+'/'+tomonth+'/'+todate + " " + $rootScope.currentRI;
+        var timestamp = new Date().getTime();
+        var todate = new Date(timestamp).getDate();
+        var tomonth = new Date(timestamp).getMonth() + 1;
+        var toyear = new Date(timestamp).getFullYear();
+        var whendb = toyear + '/' + tomonth + '/' + todate + " " + $rootScope.currentRI;
 
         $scope.addEvent($scope.captureImageId, $scope.captureImage, $scope.thumbNailName, "", 0, whendb, 'Foto - Album', "NO");
         $ionicLoading.hide();
@@ -1516,7 +1608,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       function successCopy(entry) {
         console.log("Android: Success copied file, new URL: %s", entry.toURL(), entry);
 
-        if (device.platform === 'Android') {
+        if ((device.platform === 'Android') && (Number(ionic.Platform.version()) >= 5)) {
           cordova.plugins.MediaScannerPlugin.scanFile(entry.toURL(),
             function (res) {
               console.warn("succes in add file to media scannner", res);
@@ -1568,11 +1660,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // $scope.addEvent(entry.toURL(), thumbNailName);
           // $ionicScrollDelegate.resize();
           fotoDone();
-          var timestamp=new Date().getTime();
-          var todate=new Date(timestamp).getDate();
-          var tomonth=new Date(timestamp).getMonth()+1;
-          var toyear=new Date(timestamp).getFullYear();
-          var whendb=toyear+'/'+tomonth+'/'+todate + " " + $rootScope.currentRI;
+          var timestamp = new Date().getTime();
+          var todate = new Date(timestamp).getDate();
+          var tomonth = new Date(timestamp).getMonth() + 1;
+          var toyear = new Date(timestamp).getFullYear();
+          var whendb = toyear + '/' + tomonth + '/' + todate + " " + $rootScope.currentRI;
           // alert(whendb);
 
           query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto, whendb) VALUES (?,?,?,?,?,?)";
@@ -1841,7 +1933,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       var found = false;
 
       console.log(res);
-      if ((res[0]) && (res[1])) {
+      if (res.length == 2) {
+        if ((res[0].indexOf("RI_") == -1) || (res[1].indexOf("PI_") == -1)) {
+          return;
+        }
+        if (!perguntas.checkPI(res[0], res[1]))
+          return;
+
+
+        $scope.QR_PI = res[1];
         if (res[0] == $scope.QR_RI) {
           // score += 20;
           for (var f = 0; f < $scope.PIs.length; f++) {
@@ -1883,7 +1983,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             QRcompleto();
           }, 300);
 
-        } else $scope.goQRmapa("nok");
+        } else {
+          $scope.QR_RI = res[0];
+          $scope.goPI_QR(false);
+        }
+        // $scope.goQRmapa("nok");
       } else {
         console.log("QR code not found in regiao: ", BCD);
       }
@@ -3025,6 +3129,11 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 $scope.regiao.headeron = $gameFactory.isHeaderOn(reg.nome);
 
                 // $timeout(function () {
+                if ((reg.completed) && ($gameFactory.isShowOn(reg.nome)) )  {
+                  $gameFactory.setShowOff(reg.nome);
+                  $rootScope.$broadcast('SHOW_QUIZ');
+                }
+
                 if ((reg.completed) && (!reg.quizDone)) {
                   console.warn("circles Regiao completed ", reg);
                   $scope.data.buttonColor = YELLOW;
@@ -3139,13 +3248,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // context.beginPath();
           // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
 
-          if ($rootScope.currentRI) {
-            if (regioes[$rootScope.currentRI] == oCircle.nome) {
-              color = red;
-              oCircle.locked = false;
-            }
-          }
-
           if (oCircle.locked)
             file += "_red";
           else if (oCircle.completed)
@@ -3172,7 +3274,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // if (!img) {
           var img = new Image();
           img.width = 40;
-          img.style.opacity = "0.5";
+          // img.style.opacity = "0.5";
           console.log("created img id: ", oCircle.nome);
           // if (color == "red") {
           //   img.classList.add("here");
@@ -3198,6 +3300,36 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             context2.drawImage(img, centerX - 12, centerY - (43), 40, 43);
             // img.style.opacity = "0";
             // context.restore();
+            if ($rootScope.currentRI) {
+              if (regioes[$rootScope.currentRI] == oCircle.nome) {
+                var pixels = context2.getImageData(centerX - 12, centerY - (43), 40, 43);
+                console.log("filterimage: currentRI: pixels: ", regioes[$rootScope.currentRI], pixels);
+                var d = pixels.data;
+                // var threshold = 150;
+                // for (var i=0; i<d.length; i+=4) {
+                //   var r = d[i];
+                //   var g = d[i+1];
+                //   var b = d[i+2];
+                //   var v = (0.2126*r + 0.7152*g + 0.0722*b >= threshold) ? 255 : 0;
+                //   d[i] = d[i+1] = d[i+2] = v
+                // }
+                var dst = pixels.data;
+                for (var i=0; i<d.length; i+=4) {
+                  dst[i] = 255-d[i];
+                  dst[i+1] = 255-d[i+1];
+                  dst[i+2] = 255-d[i+2];
+                  dst[i+3] = d[i+3];
+                }
+                var adjustment = 70;
+                for (var i=0; i<d.length; i+=4) {
+                  d[i] += adjustment;
+                  d[i+1] += adjustment;
+                  d[i+2] += adjustment;
+                }
+                context2.putImageData(pixels, centerX - 12, centerY - (43));
+              }
+            }
+
 
             // context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
             // context.lineWidth = 1;
@@ -3372,7 +3504,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             if (level.tipo != "nivel")
               elem = $window.document.getElementById(levelName);
             else
-              elem = $window.document.getElementById(levelName+"1");
+              elem = $window.document.getElementById(levelName + "1");
             if (elem) {
               elem.classList.add("clearBadge");
               console.warn("GameInfo unlocked: " + levelName);
