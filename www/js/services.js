@@ -167,11 +167,11 @@ angular.module('starter.services', [])
           console.warn("$eventFactory: broadcast ADD_JOURNAL");
         }
         else {
-          var timestamp=new Date().getTime();
-          var todate=new Date(timestamp).getDate();
-          var tomonth=new Date(timestamp).getMonth()+1;
-          var toyear=new Date(timestamp).getFullYear();
-          var whendb=toyear+'/'+tomonth+'/'+todate + " " + $rootScope.currentRI;
+          var timestamp = new Date().getTime();
+          var todate = new Date(timestamp).getDate();
+          var tomonth = new Date(timestamp).getMonth() + 1;
+          var toyear = new Date(timestamp).getFullYear();
+          var whendb = toyear + '/' + tomonth + '/' + todate + " " + $rootScope.currentRI;
           console.warn("$eventFactory: no event handler, inserting: ", args);
           var query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto, whendb) VALUES (?,?,?,?,?,?)";
           // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
@@ -196,6 +196,16 @@ angular.module('starter.services', [])
   .factory('$gameFactory', function ($http, $cordovaSQLite, $rootScope, $eventFactory) {
 
     var headers = {
+      "RI_A": true,
+      "RI_B": true,
+      "RI_C": true,
+      "RI_D": true,
+      "RI_E": true,
+      "RI_F": true,
+      "RI_G": true,
+      "RI_H": true
+    };
+    var headers2 = {
       "RI_A": true,
       "RI_B": true,
       "RI_C": true,
@@ -516,6 +526,13 @@ angular.module('starter.services', [])
       isHeaderOn: function (RI) {
         return headers[RI];
       },
+      setShowOff: function (RI) {
+        headers2[RI] = false;
+      },
+      isShowOn: function (RI) {
+        return headers2[RI];
+      },
+
       quizHeaderValue: quizHeaderValue,
       gameHeaderValue: gameHeaderValue,
       QRHeaderValue: QRHeaderValue,
@@ -2516,6 +2533,19 @@ angular.module('starter.services', [])
         for (var f = 0; f < regioes_inicio.length; f++) {
           if (regioes_inicio[f].nome == RI)
             return regioes_inicio[f].PIs;
+        }
+      },
+      checkPI: function (RI, PI) {
+        console.log("perguntas: checkPI RI: ", RI, PI, regioes_inicio);
+        for (var f = 0; f < regioes_inicio.length; f++) {
+          if (regioes_inicio[f].nome == RI) {
+            return regioes_inicio[f].PIs.some(function (tpi) {
+              if (tpi.nome == PI) {
+                console.log("Found RI: PI:", RI, PI);
+                return true;
+              }
+            })
+          }
         }
       },
       getQuiz: function (RI) {
