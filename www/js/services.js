@@ -193,7 +193,7 @@ angular.module('starter.services', [])
       // }
     }
   })
-  .factory('$gameFactory', function ($http, $cordovaSQLite, $rootScope, $eventFactory) {
+  .factory('$gameFactory', function ($http, $cordovaSQLite, $rootScope, $eventFactory, $timeout) {
 
     var headers = {
       "RI_A": true,
@@ -330,6 +330,9 @@ angular.module('starter.services', [])
       var latestParabens = "";
       var latestDescricao = "";
       var change = false;
+
+
+      // do {
       var delay = false;
       for (var levelName in gameInfo) {
         if (!gameInfo.hasOwnProperty(levelName) || (!gameInfo[levelName])) continue;
@@ -429,11 +432,23 @@ angular.module('starter.services', [])
       } else
         console.warn("process gameinfo: no level change");
 
-      // if (delay)
-      //   $timeout(function () {
-      //     processGameInfo();
-      //     delay = false;
-      //   }, 60000);
+      if (delay)
+      $timeout(function () {
+        delayed();
+      }, 2000);
+      // } while (delay);
+
+    };
+
+    var delayed = function () {
+      console.log("delayed: ", $rootScope.popupON);
+      if (!$rootScope.popupON)
+        processGameInfo();
+      else
+        $timeout(function () {
+          delayed();
+          // delay = false;
+        }, 1000);
     };
 
     var getGameInicio = function () {
@@ -751,13 +766,22 @@ angular.module('starter.services', [])
             // console.log("FOUND: ", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity)
           }
         }
+        if (!$rootScope.deviceBUSY)
+        if (sendUpdates) {
+          $rootScope.$broadcast('BEACONS_UPDATE', { beacons: pluginResult.beacons});
+          console.log("Sending broadcast BEACONS_UPDATE");
+        }
         // $scope.$apply();
       };
 
       cordova.plugins.locationManager.setDelegate(delegate);
       //  required in iOS 8+
-      // cordova.plugins.locationManager.requestWhenInUseAuthorization();
-      cordova.plugins.locationManager.requestAlwaysAuthorization();
+      if (ionic.Platform.platform() == "android") {
+        cordova.plugins.locationManager.requestAlwaysAuthorization();
+      } else
+        cordova.plugins.locationManager.requestAlwaysAuthorization();
+        // cordova.plugins.locationManager.requestWhenInUseAuthorization();
+      // cordova.plugins.locationManager.requestAlwaysAuthorization();
 
       cordova.plugins.locationManager.startRangingBeaconsInRegion(myRegion)
         .fail(function (e) {
@@ -1804,6 +1828,17 @@ angular.module('starter.services', [])
       "Regiao de interesse H": "RI_H"
     };
 
+    var regioes_short = {
+      "RI_A": "Regiao de interesse A",
+      "RI_B": "Regiao de interesse B",
+      "RI_C": "Regiao de interesse C",
+      "RI_D": "Regiao de interesse D",
+      "RI_E": "Regiao de interesse E",
+      "RI_F": "Regiao de interesse F",
+      "RI_G": "Regiao de interesse G",
+      "RI_H": "Regiao de interesse H"
+    };
+
     var regioesDesafios = null;
     var tempRegioes = [];
     var mapaIsDrawed = false;
@@ -1873,6 +1908,10 @@ angular.module('starter.services', [])
       return regioes[reg];
     };
 
+    var convertRegiaoShortToLong = function (reg) {
+      return regioes_short[reg];
+    };
+
     var getAllRegioesList = function () {
       return regioes;
     };
@@ -1938,6 +1977,7 @@ angular.module('starter.services', [])
       getRegioes: getRegioes,
       convertRegiaoLongToShort: convertRegiaoLongToShort,
       getAllRegioesList: getAllRegioesList,
+      convertRegiaoShortToLong: convertRegiaoShortToLong,
       drawedMapa: function (value) {
         var ret = false;
 
