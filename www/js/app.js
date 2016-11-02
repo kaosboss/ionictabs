@@ -220,9 +220,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           $rootScope.netWorktype = $cordovaNetwork.getNetwork();
           // $scope.netWork.isOffline = $cordovaNetwork.isOffline();
 
+          if (!likes.isDataLoading())
+            likes.init();
+
           if ($cordovaNetwork.isOnline()) {
-            if (!likes.isDataLoading())
-              likes.init();
             if (!news.checked())
               news.checkNews();
           }
@@ -677,8 +678,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         $rootScope.enableBeacons = true;
 
-        $scope.$on("BEACONS_UPDATE", function (e) {
-          $scope.beacons = $rootScope.beacons;
+        $scope.$on("BEACONS_UPDATE", function (e, args) {
+          $scope.beacons = args.beacons;
           console.log("Received broadcast BEACONS_UPDATE");
           $scope.$apply();
         });
@@ -736,6 +737,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       $timeout(function () {
         myPopup.close();
+        $scope.popupON = 0;
+        $rootScope.popupON = 0;
       }, mypop.timeout);
     };
 
@@ -744,6 +747,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       console.log("POPUP controller enter.");
       if (!$scope.popupON) {
         $scope.popupON = 1;
+        $rootScope.popupON = 1;
         $scope.showPopup($rootScope.mypop);
       }
       else {
@@ -897,7 +901,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }, 60000);
     };
 
-    $scope.showQuiz = function () {
+    $scope.showQuiz = function (RI) {
       if ($rootScope.popupON) {
         console.log("rootScope POPUP is ON, leaving");
         return;
@@ -929,15 +933,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 goMapaPopup();
                 // $ionicTabsDelegate.select(3);
                 $timeout(function () {
-                //   $rootScope.APP.start_qr = true;
-                //   $ionicTabsDelegate.select(3);
-                //   // $rootScope.APP.regiao_descoberta = true;
-                //   // $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI})
-                  $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, quiz: true})
+                  //   $rootScope.APP.start_qr = true;
+                  //   $ionicTabsDelegate.select(3);
+                  //   // $rootScope.APP.regiao_descoberta = true;
+                  //   // $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI})
+                  $rootScope.$broadcast('GO_REGIAO', {regiao: RI, quiz: true})
                 }, 500);
 
               } else {
-                $rootScope.$broadcast('GO_REGIAO', {regiao: $scope.currentRI, quiz: true})
+                $rootScope.$broadcast('GO_REGIAO', {regiao: RI, quiz: true})
               }
 
               // if ($state.current.name != "tab.mapa") {
@@ -994,7 +998,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       // console.log("POPUP controller scope.on RI_FOUND, enter.");
       // if (!$scope.popupON) {
       //   $scope.currentRI = $rootScope.currentRI;
-        $scope.showQuiz();
+      $scope.showQuiz(args.regiao);
       // }
       // else
       // console.log("Got event, but popup ON, skipping");
@@ -3129,9 +3133,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 $scope.regiao.headeron = $gameFactory.isHeaderOn(reg.nome);
 
                 // $timeout(function () {
-                if ((reg.completed) && ($gameFactory.isShowOn(reg.nome)) )  {
+                if ((reg.completed) && ($gameFactory.isShowOn(reg.nome)) && (!reg.quizDone)) {
                   $gameFactory.setShowOff(reg.nome);
-                  $rootScope.$broadcast('SHOW_QUIZ');
+                  $rootScope.$broadcast('SHOW_QUIZ', {regiao: $regioes.convertRegiaoShortToLong(reg.nome)});
                 }
 
                 if ((reg.completed) && (!reg.quizDone)) {
@@ -3314,17 +3318,17 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 //   d[i] = d[i+1] = d[i+2] = v
                 // }
                 var dst = pixels.data;
-                for (var i=0; i<d.length; i+=4) {
-                  dst[i] = 255-d[i];
-                  dst[i+1] = 255-d[i+1];
-                  dst[i+2] = 255-d[i+2];
-                  dst[i+3] = d[i+3];
+                for (var i = 0; i < d.length; i += 4) {
+                  dst[i] = 255 - d[i];
+                  dst[i + 1] = 255 - d[i + 1];
+                  dst[i + 2] = 255 - d[i + 2];
+                  dst[i + 3] = d[i + 3];
                 }
                 var adjustment = 70;
-                for (var i=0; i<d.length; i+=4) {
+                for (var i = 0; i < d.length; i += 4) {
                   d[i] += adjustment;
-                  d[i+1] += adjustment;
-                  d[i+2] += adjustment;
+                  d[i + 1] += adjustment;
+                  d[i + 2] += adjustment;
                 }
                 context2.putImageData(pixels, centerX - 12, centerY - (43));
               }
@@ -3515,6 +3519,74 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       }, 600);
 
     });
+
+    // $scope.$on('LEVELUP', function (e, args) {
+    //
+    //   $scope.score = $gameFactory.getScore();
+    //   $scope.header = $gameFactory.gameHeaderValue();
+    //   $scope.nivelAtual = $gameFactory.getNivelAtualNome();
+    //   // var gameInfo = $gameFactory.getGameInfo();
+    //   var gameInfo = args.gameInfo;
+    //
+    //   $regioes.getRegioes().then(function (res) {
+    //
+    //     var regioes = JSON.parse(res || [{}]);
+    //     regioes.forEach(function (reg) {
+    //       $scope.game[reg.nome].REGIAO = reg.visited;
+    //       $scope.game[reg.nome].QUIZ = reg.quizDone;
+    //       $scope.game[reg.nome].FOTO = reg.fotoDone;
+    //       $scope.game[reg.nome].QR = reg.qrDone;
+    //       $scope.game[reg.nome].PIS = reg.completed;
+    //     });
+    //
+    //   });
+    //
+    //   // $timeout(function () {
+    //     for (var levelName in gameInfo) {
+    //       if (!gameInfo.hasOwnProperty(levelName)) continue;
+    //
+    //       var level = gameInfo[levelName];
+    //       console.log("gameInfo3: ", levelName, level);
+    //
+    //       if (!level.locked) {
+    //         var elem = null;
+    //         if (level.tipo != "nivel")
+    //           elem = $window.document.getElementById(levelName);
+    //         else
+    //           elem = $window.document.getElementById(levelName + "1");
+    //         if (elem) {
+    //           elem.classList.add("clearBadge");
+    //           console.warn("GameInfo unlocked: " + levelName);
+    //         }
+    //         else console.warn("GameInfo: elem not found");
+    //       }
+    //     }
+    //   // }, 100);
+    //
+    //   // $timeout(function () {
+    //     for (var levelName in gameInfo) {
+    //       if (!gameInfo.hasOwnProperty(levelName)) continue;
+    //
+    //       var level = gameInfo[levelName];
+    //       console.log("gameInfo3: ", levelName, level);
+    //
+    //       if (!level.locked) {
+    //         var elem = null;
+    //         if (level.tipo != "nivel")
+    //           elem = $window.document.getElementById(levelName);
+    //         else
+    //           elem = $window.document.getElementById(levelName + "1");
+    //         if (elem) {
+    //           elem.classList.add("clearBadge");
+    //           console.warn("GameInfo unlocked: " + levelName);
+    //         }
+    //         else console.warn("GameInfo: elem not found");
+    //       }
+    //     }
+    //   // }, 100);
+    //
+    // });
+
 
     $scope.closeGameHeader = function () {
       $scope.header = false;

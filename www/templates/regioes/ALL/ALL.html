@@ -8,7 +8,7 @@
   <!--button-color="{{(regiao.qrDone && regiao.visited)  ? '#33cd5f': ''}}{{(regiao.visited && !regiao.qrDone)  ? '#fec659': ''}}{{(!regiao.visited && !regiao.qrDone)  ? '#ec6157': ''}}"-->
   <!--button-color="{{(regiao.qrDone && regiao.visited)  ? '#33cd5f': ''}}{{(!regiao.locked && !regiao.qrDone)  ? '#fec659': ''}}{{(regiao.locked && !regiao.qrDone)  ? '#ec6157': ''}}"-->
   <!--button-color="{{regiao.qrDone  ? '#33cd5f': '#fec659'}}"-->
-  <ion-floating-button ng-if="regiao.radius" button-class="" click="goQR()" has-footer="true"
+  <ion-floating-button ng-if="regiao.radius" class="animated bounce" button-class="" click="goQR()" has-footer="true"
                        button-color="#2AC9AA"
                        icon="ion-qr-scanner"
                        iconColor="#fff">
