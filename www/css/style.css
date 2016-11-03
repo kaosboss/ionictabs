@@ -1272,9 +1272,9 @@ fieldset {
 }
 
 .button-next {
-  background: #ffe8a3;
+  /*background: #ffe8a3;*/
   color: #000;
-  /*background: #f19562;*/
+  background: #f19562;
   /*border-radius: 4px;*/
   font-size: 0.9em;
   border-radius: 1em;

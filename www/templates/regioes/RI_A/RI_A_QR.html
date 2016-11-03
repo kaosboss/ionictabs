@@ -17,13 +17,12 @@
     <!--</div>-->
 
     <div class="APPheader">
-         <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
+       <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
          <img class="thumb_pantufas" src="img/pantufas_PIs/pantufas_explica.png" style="width:80px;height:80px;">
-         <p style="margin-left: 2px; margin-top: 0px;white-space: normal;" align="center" class="textWrap">Estás preparado? <br> Vamos fazer o jogo da caça ao QR Code. Tens de conseguir ler um código QR de um ponto de interesse desta região.<br> Vai, descobre e ganha! </p>
+         <p style="margin-left: 2px; margin-top: 0px;white-space: normal;" align="center" class="textWrap"> Estás preparado? <br>Neste desafio tens de acertar num QR Code referente a um ponto de interesse desta região.</p>
        </ion-item>
     </div>
     <div class="padding tab-game">
-      <br>
      <table class="table-fill">
        <tr>
          <th height="40">Pontos de interesse da região</th>
@@ -31,7 +30,7 @@
        <tr>
          <td class="text-center">
            <ion-list class="list-borderless">
-             <ion-item id="PI_{{item.id}}" ng-click="listClick($index)" ng-repeat="item in PIs" class="animated fadeInLeft">
+             <ion-item id="PI_{{item.id}}" ng-click="listClick($index)" ng-repeat="item in PIs" class="animated fadeInLeft" style="padding: 10px">
                  <h3 align="center" style="width: 100%" class="">{{item.descricao}}</h3>
              </ion-item>
            </ion-list>
@@ -41,8 +40,7 @@
      <br>
     </div>
     <div class="QRList" ng-if="startted">
-         <button ng-click="getBarcode()" class="button button-next APPcenter">Iniciar caça ao QRCode <i
-           class="icon ion-qr-scanner"></i>
+         <button ng-click="getBarcode()" class="button button-next APPcenter">Caça ao QRCode &nbsp; <i class="icon ion-qr-scanner"></i>
          </button>
          <br>
     </div>
