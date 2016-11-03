@@ -918,13 +918,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         scope: $scope,
         buttons: [
           {
-            text: 'Ficar',
+            text: 'Não',
             type: 'button-popup',
             onTap: function (e) {
             }
           },
           {
-            text: '<i class="icon ion-clipboard"></i>',
+            // text: '<i class="icon ion-clipboard"></i>',
+            text: 'Sim',
             type: 'button-popup',
             onTap: function (e) {
               console.log("Confirmed navigation to quiz", $state);
@@ -2099,6 +2100,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           $scope.code = barcodeData.text;
           $scope.barcodeData = barcodeData;
           $rootScope.deviceBUSY = 0;
+
+          if (barcodeData.cancelled)
+            $rootScope.fromPI = true;
 
           checkQR(barcodeData);
 

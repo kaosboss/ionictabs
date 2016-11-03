@@ -802,10 +802,11 @@ angular.module('starter.services', [])
           }
         }
         if (!$rootScope.deviceBUSY)
-          if (sendUpdates) {
-            $rootScope.$broadcast('BEACONS_UPDATE', {beacons: pluginResult.beacons});
-            console.log("Sending broadcast BEACONS_UPDATE");
-          }
+          if (pluginResult.beacons.length > 0)
+            if (sendUpdates) {
+              $rootScope.$broadcast('BEACONS_UPDATE', {beacons: pluginResult.beacons});
+              console.log("Sending broadcast BEACONS_UPDATE");
+            }
         // $scope.$apply();
       };
 
