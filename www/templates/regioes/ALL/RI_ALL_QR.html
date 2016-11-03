@@ -1,24 +1,64 @@
-<div class="APPheader">
-    <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
-     <img class="thumb_pantufas" src="img/pantufas_PIs/pantufas_explica.png" style="width:80px;height:80px;">
-     <p style="margin-left: 2px; margin-top: 0px;" align="center" class="textWrap">Carregaste no botão de leitura de QR Code e agora? Vou te explicar para que serve!
-     </p>
-    </ion-item>
+<ion-view view-title="Caça ao código QR" cache-view="false">
+  <ion-nav-buttons>
+    <button class="button button-clear icon icon-left ion-chevron-left" ng-click="goBack()">
+      <i class="mynav icon-left ion-chevron-left"></i>
+    </button>
+  </ion-nav-buttons>
+  <ion-content class="QRcode padding" ng-controller="BarCodeReaderController">
+    <div ng-init="initALL()"></div>
+
+    <div ng-if="!isAuto">
+    <div class="APPheader APPmain">
+      <ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">
+        <img class="thumb_pantufas" src="img/pantufas_PIs/pantufas_explica.png" style="width:80px;height:80px;">
+        <p style="margin-left: 2px; margin-top: 0px;" align="center" class="textWrap">Carregaste no botão de leitura de
+          QR Code e agora? Vou te explicar para que serve!
+        </p>
+      </ion-item>
+    </div>
+
+    <div>
+
+      <p class="APPcenter" align="center">
+        Sempre que queiras saber informação sobre o que estás a ver, podes carregar neste botão e ler qualquer QRCode
+        que esteja na
+        quinta para ter acesso à informação daquele ponto de interesse.
+      </p>
+
+      <div>
+        <img src="img/pantufas_PIs/pantufas_apresenta.png"
+             style="margin:auto;display:block;padding-bottom:10px;width:100px;height:100px;">
+        <!--<img src="img/SNP.jpg">-->
+      </div>
+      <p class="APPcenter" align="center">
+        Visto que já sabes qual a função deste botão queres voltar a ver esta ajuda?
+      </p>
+      <div class="row">
+        <button ng-click="getBarcode('NOHELP')" class="button button-next APPcenter">Não
+        </button>
+        <button ng-click="getBarcode('HELP')" class="button button-next APPcenter">Iniciar caça ao QRCode <i
+          class="icon ion-qr-scanner"></i>
+        </button>
+      </div>
+    </div>
 </div>
 
-<div>
+    <!--<div ng-if="restart">-->
+      <!--<div class="APPheader APPmain">-->
+        <!--<ion-item class="item-thumbnail-left item-borderless list-item animated slideInRight">-->
+          <!--<img class="thumb_pantufas" src="img/pantufas_PIs/pantufas_explica.png" style="width:80px;height:80px;">-->
+          <!--<p style="margin-left: 2px; margin-top: 0px;" align="center" class="textWrap">Texto para ler mais QRs-->
+          <!--</p>-->
+        <!--</ion-item>-->
+      <!--</div>-->
 
-  <p class="APPcenter" align="center">
-    Sempre que queiras saber informação sobre o que estás a ver, podes carregar neste botão e ler qualquer QRCode que esteja na
-    quinta para ter acesso à informação daquele ponto de interesse.
-  </p>
+      <!--<div class="row">-->
+        <!--<button ng-click="getBarcode()" class="button button-next APPcenter">Ir à caça de mais QRCodes <i-->
+          <!--class="icon ion-qr-scanner"></i>-->
+        <!--</button>-->
+      <!--</div>-->
+      <!--</div>-->
 
-  <div >
-    <img src="img/pantufas_PIs/pantufas_apresenta.png" style="margin:auto;display:block;padding-bottom:10px;width:100px;height:100px;">
-    <!--<img src="img/SNP.jpg">-->
-  </div>
-  <p class="APPcenter" align="center">
-    Visto que já sabes qual a função deste botão queres voltar a ver esta ajuda?
-  </p>
 
-</div>
+  </ion-content>
+</ion-view>
