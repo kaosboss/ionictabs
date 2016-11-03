@@ -97,6 +97,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       $rootScope.smallDevice = false;
       $rootScope.currentRI = "Quinta pedagógica";
+      $rootScope.closestRI = "Quinta pedagógica";
       $rootScope.currentRI_descricao = "Quinta pedagógica";
       $rootScope.showPopup = function (popup) {
         $rootScope.mypop = popup;
@@ -405,7 +406,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               title: "Welcome Back!",
               image: "img/journal/atividades_quinta_pedagogica_small.jpg",
               caption: "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia!",
-              thumb: "img/journal/atividades_quinta_pedagogica_small.jpg"
+              thumb: "img/journal/atividades_quinta_pedagogica_small.jpg",
+              auto: true
             });
             // $scope.addInHouseEvent("Welcome Back!", "img/journal/atividades_quinta_pedagogica_small.jpg", "Instalaste a aplicação da Quinta Pedagógica do Sesimbra Natura Park, eu vou ser o teu guia!", "img/journal/atividades_quinta_pedagogica_small.jpg", true);
 
@@ -1612,7 +1614,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       function successCopy(entry) {
         console.log("Android: Success copied file, new URL: %s", entry.toURL(), entry);
 
-        if ((device.platform === 'Android') && (Number(ionic.Platform.version()) >= 5)) {
+        if ((device.platform === 'Android') && (Number(ionic.Platform.version()) > 4.9)) {
           cordova.plugins.MediaScannerPlugin.scanFile(entry.toURL(),
             function (res) {
               console.warn("succes in add file to media scannner", res);
@@ -1863,6 +1865,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
     $scope.goPI_QR = function (pop) {
+
+      $rootScope.QRALL = false;
+
       if (pop)
         $timeout(function () {
           $rootScope.$broadcast("QUIZ_POPUP", {desafio: "ok"});
@@ -1898,6 +1903,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
     };
 
     QRcompleto = function () {
+
       $regioes.getRegioes().then(function (res) {
         var found = false;
         var RI = $scope.QR_RI;
@@ -1939,10 +1945,25 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       console.log(res);
       if (res.length == 2) {
         if ((res[0].indexOf("RI_") == -1) || (res[1].indexOf("PI_") == -1)) {
+          if ($rootScope.QRALL) {
+            $state.go("tab.mapa", {
+              RI: "ALL",
+              PI: ""
+            });
+            $rootScope.QRALL = false;
+          }
           return;
         }
-        if (!perguntas.checkPI(res[0], res[1]))
+        if (!perguntas.checkPI(res[0], res[1])) {
+          if ($rootScope.QRALL) {
+            $state.go("tab.mapa", {
+              RI: "ALL",
+              PI: ""
+            });
+            $rootScope.QRALL = false;
+          }
           return;
+        }
 
 
         $scope.QR_PI = res[1];
@@ -1994,6 +2015,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         // $scope.goQRmapa("nok");
       } else {
         console.log("QR code not found in regiao: ", BCD);
+        if ($rootScope.QRALL) {
+          $state.go("tab.mapa", {
+            RI: "ALL",
+            PI: ""
+          });
+          $rootScope.QRALL = false;
+        }
       }
 
     };
@@ -2032,8 +2060,30 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       $scope.goMapa("nok");
     };
 
-    $scope.getBarcode = function () {
-      console.log("Calling scanbarcode");
+    $scope.initALL = function () {
+      if (!$rootScope.fromPI) {
+        $scope.isAuto = !$gameFactory.qrHelpValue();
+        if ($scope.isAuto)
+          $scope.getBarcode();
+      } else {
+        $scope.isAuto = !$gameFactory.qrHelpValue();
+        // $scope.restart = true;
+        $rootScope.fromPI = false;
+        // $ionicHistory.goBack();
+        $state.go("tab.mapa", {
+          RI: "ALL",
+          PI: ""
+        });
+      }
+    };
+
+    $scope.getBarcode = function (HELP) {
+      console.log("Calling scanbarcode", HELP);
+      if (HELP) {
+        if (HELP == "NOHELP") {
+          $gameFactory.qrHelpValue("OFF");
+        }
+      }
       $rootScope.deviceBUSY = 1;
       $cordovaBarcodeScanner
         .scan({
@@ -2522,6 +2572,24 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         $ionicHistory.goBack();
       };
 
+      $scope.goAllQR = function () {
+        console.log("Go ALL QR");
+        // if ($stateParams.RI != "ALL") {
+        //   $ionicTabsDelegate.select(3);
+        //   $timeout(function () {
+
+        // if ($scope.regiao.locked) {
+        //   $rootScope.showPopup({templateUrl: 'templates/popups/desafio_locked_qr.html'});
+        //   return;
+        // }
+        $rootScope.QRALL = true;
+        $state.go("tab.mapaPIdesafios", {
+          RI: "",
+          PI: "",
+          tipo: "QRALL"
+        });
+      };
+
       $scope.goQR = function (RI) {
         if (!RI)
           RI = $scope.regiao.nome;
@@ -2723,6 +2791,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // }
           if ($rootScope.APP.start_qr) {
             $rootScope.APP.start_qr = false;
+            $scope.goingQR = true;
             console.log("mapa onbefore enter, start qr", $regioes.convertRegiaoLongToShort($rootScope.currentRI));
             // $scope.RI = $regioes.convertRegiaoLongToShort($rootScope.currentRI);
             // loadRegiao($regioes.convertRegiaoLongToShort($rootScope.currentRI));
@@ -3001,6 +3070,12 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 console.log("file: ", file + ".png", aCircles[f], $scope.marcador);
                 $scope.regiao.headeron = $gameFactory.isHeaderOn($scope.regiao.nome);
                 $rootScope.APP.regiaoLoaded = aCircles[f].nome;
+
+                // if (($scope.regiao.completed) && ($gameFactory.isShowOn($scope.regiao.nome)) && (!$scope.regiao.quizDone)) {
+                //   $gameFactory.setShowOff($scope.regiao.nome);
+                //   $rootScope.$broadcast('SHOW_QUIZ', {regiao: $regioes.convertRegiaoShortToLong($scope.regiao.nome)});
+                // }
+
                 if (($scope.regiao.completed) && (!$scope.regiao.quizDone)) {
                   console.warn("touchup Regiao completed ", $scope.regiao);
                   $scope.data.buttonColor = YELLOW;
@@ -3122,7 +3197,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 angular.copy(reg, $scope.regiao);
                 //   angular.copy(reg.PIs, $scope.regiao.PIs);
                 // });
-                console.warn("Createcircles: regiao not loaded");
+                console.warn("Createcircles: regiao not loaded. goifnqr : ", $scope.goingQR);
                 $scope.regiaoLoaded = true;
                 // }
                 // $scope.regiao = clone(aCircles[i]);
@@ -3133,7 +3208,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
                 $scope.regiao.headeron = $gameFactory.isHeaderOn(reg.nome);
 
                 // $timeout(function () {
-                if ((reg.completed) && ($gameFactory.isShowOn(reg.nome)) && (!reg.quizDone)) {
+                if ((!$scope.goingQR) && (reg.completed) && ($gameFactory.isShowOn(reg.nome)) && (!reg.quizDone)) {
                   $gameFactory.setShowOff(reg.nome);
                   $rootScope.$broadcast('SHOW_QUIZ', {regiao: $regioes.convertRegiaoShortToLong(reg.nome)});
                 }
@@ -3304,8 +3379,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             context2.drawImage(img, centerX - 12, centerY - (43), 40, 43);
             // img.style.opacity = "0";
             // context.restore();
-            if ($rootScope.currentRI) {
-              if (regioes[$rootScope.currentRI] == oCircle.nome) {
+            if ($rootScope.closestRI) {
+              if (regioes[$rootScope.closestRI] == oCircle.nome) {
                 var pixels = context2.getImageData(centerX - 12, centerY - (43), 40, 43);
                 console.log("filterimage: currentRI: pixels: ", regioes[$rootScope.currentRI], pixels);
                 var d = pixels.data;
@@ -4777,6 +4852,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             templateUrl: function ($stateParams) {
               console.log("mapaPIdesafios state params: ", $stateParams);
 
+              if ($stateParams.tipo == "QRALL") {
+                console.log(' returned templates/regioes/RI_ALL_QR.html');
+                return 'templates/regioes/ALL/RI_ALL_QR.html';
+              }
               if ($stateParams.tipo == "QR") {
                 console.log(' returned templates/regioes/' + $stateParams.RI + '/' + $stateParams.PI + '_QR.html');
                 return 'templates/regioes/' + $stateParams.RI + '/' + $stateParams.PI + '_QR.html';

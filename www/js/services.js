@@ -171,7 +171,10 @@ angular.module('starter.services', [])
           var todate = new Date(timestamp).getDate();
           var tomonth = new Date(timestamp).getMonth() + 1;
           var toyear = new Date(timestamp).getFullYear();
-          var whendb = toyear + '/' + tomonth + '/' + todate + " " + $rootScope.currentRI;
+          if (!args.auto)
+            var whendb = toyear + '/' + tomonth + '/' + todate + " " + $rootScope.closestRI;
+          else
+            var whendb = toyear + '/' + tomonth + '/' + todate;
           console.warn("$eventFactory: no event handler, inserting: ", args);
           var query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto, whendb) VALUES (?,?,?,?,?,?)";
           // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
@@ -228,6 +231,7 @@ angular.module('starter.services', [])
     var quizHeader = true;
     var gameHeader = true;
     var QRHeader = true;
+    var qrHelp = true;
     var gameInfo = null;
     var playerInfo = null;
     var mapaHanlerVar = false;
@@ -417,7 +421,8 @@ angular.module('starter.services', [])
           title: latestDescricao,
           image: "img/game/badges/badge_" + latestLevel + ".png",
           caption: latestParabens,
-          thumb: "img/game/badges/badge_" + latestLevel + ".png"
+          thumb: "img/game/badges/badge_" + latestLevel + ".png",
+          auto: true
         });
         // $rootScope.$broadcast('ADD_JOURNAL', {
         //   title: "Título de progressão",
@@ -433,9 +438,9 @@ angular.module('starter.services', [])
         console.warn("process gameinfo: no level change");
 
       if (delay)
-      $timeout(function () {
-        delayed();
-      }, 2000);
+        $timeout(function () {
+          delayed();
+        }, 2000);
       // } while (delay);
 
     };
@@ -534,6 +539,28 @@ angular.module('starter.services', [])
         return gameHeader;
     };
 
+    var qrHelpValue = function (value) {
+
+      var ret = false;
+
+      if (value == "ON")
+        value = true;
+      else if (value == "OFF")
+        value = false;
+      else if (value == undefined)
+        ret = true;
+
+      if (!ret)
+        console.warn("gameFactory setting game header:", value, qrHelp);
+      else
+        console.warn("gameFactory getting game header:", value, qrHelp);
+
+      if (!ret)
+        qrHelp = value;
+      else
+        return qrHelp;
+    };
+
     return {
       setHeaderOff: function (RI) {
         headers[RI] = false;
@@ -559,7 +586,8 @@ angular.module('starter.services', [])
       getNivelAtual: getNivelAtual,
       getNivelAtualNome: getNivelAtualNome,
       mapaHandler: mapaHandler,
-      getGameInfo: getGameInfo
+      getGameInfo: getGameInfo,
+      qrHelpValue: qrHelpValue
     }
   })
   .factory('$IbeaconScanner', ['$rootScope', '$window', '$regioes', '$gameFactory', '$timeout', function ($rootScope, $window, $regioes, $gameFactory, $timeout) {
@@ -593,14 +621,14 @@ angular.module('starter.services', [])
     };
 
     var limit = {
-      "RI_A": 15,
-      "RI_B": 15,
-      "RI_C": 15,
-      "RI_D": 15,
-      "RI_E": 15,
-      "RI_F": 15,
-      "RI_G": 15,
-      "RI_H": 15
+      "RI_A": 16,
+      "RI_B": 16,
+      "RI_C": 16,
+      "RI_D": 16,
+      "RI_E": 16,
+      "RI_F": 16,
+      "RI_G": 16,
+      "RI_H": 16
     };
     var calibrate = {
       "RI_A": 0,
@@ -647,13 +675,20 @@ angular.module('starter.services', [])
         // cordova.plugins.locationManager.appendToDeviceLog('didRangeBeaconsInRegion:' + JSON.stringify(pluginResult));
         // console.log("event, plug res: UUID: %s prox: %s lenght: %s", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity, pluginResult.beacons[i].length, event, pluginResult.beacons[i]);
         var uniqueBeaconKey;
+        var minDist = 100;
         for (i = 0; i < pluginResult.beacons.length; i++) {
           pluginResult.beacons[i].nome = nomes[pluginResult.beacons[i].minor];
           uniqueBeaconKey = pluginResult.beacons[i].uuid + ":" + pluginResult.beacons[i].major + ":" + pluginResult.beacons[i].minor;
+          var dist = Number(pluginResult.beacons[i].accuracy);
+          if ((dist < minDist) && (dist > 0)) {
+            minDist = Number(pluginResult.beacons[i].accuracy);
+            $rootScope.closestRI = nomes[pluginResult.beacons[i].minor];
+          }
 
           if ((!beacons[uniqueBeaconKey])) {
             if ((Number(pluginResult.beacons[i].accuracy) <= limit[regioesNomes[pluginResult.beacons[i].nome]]) && (Number(pluginResult.beacons[i].accuracy) > 0)) {
               $rootScope.currentRI = pluginResult.beacons[i].nome;
+
               // console.log("Device busy: %s", $rootScope.deviceBUSY);
               if (!$rootScope.deviceBUSY) {
                 // console.log("Device free not busy");
@@ -760,17 +795,17 @@ angular.module('starter.services', [])
               $rootScope.beacons = beacons;
               if (sendUpdates) {
                 $rootScope.$broadcast('BEACONS_UPDATE');
-                console.log("Sending broadcast BEACONS_UPDATE");
+                // console.log("Sending broadcast BEACONS_UPDATE");
               }
             }
             // console.log("FOUND: ", pluginResult.beacons[i].uuid, pluginResult.beacons[i].proximity)
           }
         }
         if (!$rootScope.deviceBUSY)
-        if (sendUpdates) {
-          $rootScope.$broadcast('BEACONS_UPDATE', { beacons: pluginResult.beacons});
-          console.log("Sending broadcast BEACONS_UPDATE");
-        }
+          if (sendUpdates) {
+            $rootScope.$broadcast('BEACONS_UPDATE', {beacons: pluginResult.beacons});
+            console.log("Sending broadcast BEACONS_UPDATE");
+          }
         // $scope.$apply();
       };
 
@@ -780,7 +815,7 @@ angular.module('starter.services', [])
         cordova.plugins.locationManager.requestAlwaysAuthorization();
       } else
         cordova.plugins.locationManager.requestAlwaysAuthorization();
-        // cordova.plugins.locationManager.requestWhenInUseAuthorization();
+      // cordova.plugins.locationManager.requestWhenInUseAuthorization();
       // cordova.plugins.locationManager.requestAlwaysAuthorization();
 
       cordova.plugins.locationManager.startRangingBeaconsInRegion(myRegion)
@@ -1848,6 +1883,9 @@ angular.module('starter.services', [])
       var count = 0;
       var total = 0;
       var found = false;
+
+      // $gameFactory.qrHelpValue("ON");
+      $rootScope.fromPI = true;
 
       getRegioes().then(function (res) {
         aCircles = JSON.parse(res || [{}]);
