@@ -518,7 +518,7 @@ td-card img {
 
 .tm.tm-scroll.mascoteAvatar {
   /* This image is 687 wide by 1024 tall, similar to your aspect ratio */
-  background-image: url('../img/galo_desenho.png');
+  background-image: url('../img/pantufas_desenho.png');
 
   /* make a square container */
   width: 50px;
@@ -536,7 +536,7 @@ td-card img {
 
 .mascoteAvatarDesenho {
   /* This image is 687 wide by 1024 tall, similar to your aspect ratio */
-  background-image: url('../img/galo_desenho.png');
+  background-image: url('../img/pantufas_desenho.png');
 
   /* make a square container */
   width: 50px;
