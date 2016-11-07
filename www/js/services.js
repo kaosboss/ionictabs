@@ -2659,6 +2659,7 @@ angular.module('starter.services', [])
     }
 
     function b64toBlob(b64Data, contentType, sliceSize) {
+      if (debugCam) alert("blob enter: " + contentType);
       contentType = contentType || '';
       sliceSize = sliceSize || 512;
 
@@ -2677,8 +2678,9 @@ angular.module('starter.services', [])
 
         byteArrays.push(byteArray);
       }
-
+      if (debugCam) alert("blob leaving1");
       var blob = new Blob(byteArrays, {type: contentType});
+      if (debugCam) alert("blob leaving2");
       return blob;
     }
 

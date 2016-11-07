@@ -10,6 +10,7 @@ var noBLE = 1;
 var RED = "#ec6157";
 var YELLOW = "#fec659";
 var GREEN = "#33cd5f";
+var debugCam = 0;
 
 cw = function (value) {
   initialOutput += value + '\n';
@@ -1021,6 +1022,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     var myFolderApp = "images";
     var myRootFolderApp = $rootScope.albumFolder || "SNP-Quinta";
+    var device = $cordovaDevice.getDevice();
 
     // $ionicModal.fromTemplateUrl('templates/template_caption.html', {
     //   scope: $scope,
@@ -1446,6 +1448,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       function done(evt) {
         console.warn("Write completed.");
+        if (debugCam) alert("Write completed.");
 
         var timestamp = new Date().getTime();
         var todate = new Date(timestamp).getDate();
@@ -1468,11 +1471,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var DataBlob = blob.b64toBlob(content, contentType);
 
         console.log("Starting to write the file :3");
+        if (debugCam) alert("Starting to write the file :3");
 
         window.resolveLocalFileSystemURL(folderpath, function (dir) {
           console.log("Access to the directory granted succesfully");
           dir.getFile(filename, {create: true}, function (file) {
             console.log("File created succesfully.", file.toURL());
+            if (debugCam) alert("File created succesfully." + file.toURL());
             $scope.thumb_file = file.toURL();
             file.createWriter(function (fileWriter) {
               console.log("Writing content to file");
@@ -1500,18 +1505,21 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var dataType = block[0].split(":")[1];// In this case "image/png"
 // get the real base64 content of the file
         var realData = block[1].split(",")[1];// In this case "iVBORw0KGg...."
-
+        if (debugCam) alert("sveThumb");
         savebase64AsImageFile(folderpath, filename, realData, dataType);
         console.log("saveThumbToFile", folderpath, filename, contentType);
       };
 
       resizeImage = function (img_path) {
         var q = $q.defer();
+        if (debugCam) alert("resizing enter");
         $window.imageResizer.resizeImage(function (success_resp) {
           // console.log('success, img re-size: ' + JSON.stringify(success_resp));
           console.log('success, img re-size: ');
+          if (debugCam) alert("resizing ok done");
           q.resolve(success_resp);
         }, function (fail_resp) {
+          if (debugCam) alert("resizing fail");
           console.log('fail, img re-size: ' + JSON.stringify(fail_resp));
           q.reject(fail_resp);
         }, img_path, 100, 0, {
@@ -1585,6 +1593,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       });
 
       function movePic(file) {
+        if (debugCam) alert("Moving pic");
         // window.resolveLocalFileSystemURI(file, resolveOnSuccess, resOnError);
         window.resolveLocalFileSystemURL(file, resolveOnSuccess, resOnError);
       }
@@ -1595,6 +1604,8 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var n = d.getTime();
         $scope.newFile = n;
         $scope.newFileName = n + ".jpg";
+
+        if (debugCam) alert("Moving pic, OK");
 
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSys) {
 
@@ -1614,11 +1625,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
       function successCopy(entry) {
         console.log("Android: Success copied file, new URL: %s", entry.toURL(), entry);
-
+        if (debugCam) alert("Success copied file");
         if ((device.platform === 'Android') && (Number(ionic.Platform.version()) > 4.9)) {
+          if (debugCam)  alert(">4.9 media scanner");
           cordova.plugins.MediaScannerPlugin.scanFile(entry.toURL(),
             function (res) {
               console.warn("succes in add file to media scannner", res);
+              if (debugCam) alert("media scanner ok");
             }, function (err) {
               console.error("Error add file to media scannner", err);
             });
@@ -1628,7 +1641,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 //Callback function when the file has been moved successfully - inserting the complete path
       function successMove(entry) {
 
+        if (debugCam) alert("Moving pic, success");
+
         if (device.platform === 'Android') {
+          if (debugCam) alert("checking for dir " + cordova.file.externalRootDirectory);
           console.warn("checking for dir " + cordova.file.externalRootDirectory);
           window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function (fileEntry) {
 
@@ -1650,6 +1666,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         resizeImage(entry.toURL()).then(function (res) {
           console.log("RESize RES: ", res);
+          if (debugCam) alert("resize pic then");
           // $scope.allImages.push({
           //   src: "data:image/png;base64," + res.imageData,
           //   img: entry.toURL()
@@ -1657,7 +1674,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           // $scope.$apply();
           $scope.thumbNailName = $scope.saveDir.nativeURL + "thumb_" + $scope.newFile + ".png";
           console.warn("ThumbFile: ", $scope.thumbNailName);
+          if (debugCam) alert("ThumbFile: " + $scope.thumbNailName);
           // saveThumbToFile($scope.saveDir, res.imageData);
+
           saveThumbToFile($scope.saveDir, "data:image/png;base64," + res.imageData);
 
           // $ionicLoading.hide();
@@ -1692,11 +1711,13 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       function resDirOnError(error) {
         console.log("DIR ERROR", error, error.code);
         $rootScope.deviceBUSY = 0;
+        if (debugCam)  alert("DIR ERROR");
       }
 
       function resGetdirOnError(error) {
         console.log("GET DIR ERROR", error, error.code);
         $rootScope.deviceBUSY = 0;
+        if (debugCam) alert("GET DIR ERROR");
       }
 
       function resGetDirImagesOnError(error) {
@@ -1707,12 +1728,15 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       function resOnError(error) {
         console.log("COPY ERROR: ", error, error.code);
         $rootScope.deviceBUSY = 0;
+        if (debugCam) alert("COPY ERROR: "+ error+ error.code);
       }
 
       var fotoDone = function () {
         var found = false;
         var regioes = {};
         var RI = $regioes.convertRegiaoLongToShort($rootScope.currentRI);
+
+        if (debugCam) alert("foto done");
 
         $regioes.getRegioes().then(function (res) {
           regioes = JSON.parse(res || [{}]);
@@ -1749,30 +1773,46 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           return;
         $scope.takingPicture = 1;
 
+        var options = {};
+
         if (device.platform === 'iOS') {
-          $ionicLoading.show();
+          // $ionicLoading.show();
+          options = {
+            quality: 75,
+              // destinationType: Camera.DestinationType.FILE_URI,
+              destinationType: Camera.DestinationType.NATIVE_URI,
+            encodingType: 0,
+            targetWidth: 640,
+            targetHeight: 480,
+            correctOrientation: true,
+            saveToPhotoAlbum: true
+          }
+        } else {
+          if (debugCam) alert("android");
+          options = {
+            quality: 75,
+              // destinationType: Camera.DestinationType.FILE_URI,
+              destinationType: Camera.DestinationType.NATIVE_URI,
+            encodingType: 0,
+            targetWidth: 640,
+            targetHeight: 480,
+            correctOrientation: true,
+            saveToPhotoAlbum: false
+          }
         }
 
-        navigator.camera.getPicture(onSuccess, onFail, {
-          quality: 75,
-          // destinationType: Camera.DestinationType.FILE_URI,
-          destinationType: Camera.DestinationType.NATIVE_URI,
-          encodingType: 0,
-          targetWidth: 640,
-          targetHeight: 480,
-          correctOrientation: true,
-          saveToPhotoAlbum: true
-        });
+        navigator.camera.getPicture(onSuccess, onFail, options);
 
         function onSuccess(imageURI) {
 
           // if (device.platform === 'iOS') {
           //   $ionicLoading.hide();
           // }
+          if (debugCam) alert("pic taken");
 
           console.log(imageURI);
-          if (device.platform === 'Android')
-            $ionicLoading.show();
+          // if (device.platform === 'Android')
+          //   $ionicLoading.show();
 
           $scope.takingPicture = 0;
           // $scope.lastPhoto = imageURI;
@@ -1782,6 +1822,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
         function onFail(message) {
           console.error('Failed because: ' + message);
+          if (debugCam) alert('Failed because: ' + message);
           $scope.takingPicture = 0;
           $ionicLoading.hide();
         }
@@ -3961,6 +4002,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
               console.warn("DIR: ", directory);
               thumbresizeImage(imageURI.toURL()).then(function (res) {
                 console.log("RESize RES: ", res);
+                if (debugCam) alert("RESize RES: " + res);
                 saveThumbToFile(directory, "data:image/jpg;base64," + res.imageData);
 
                 $rootScope.deviceBUSY = 0;
@@ -4049,6 +4091,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     var savebase64AsImageFile = function (folderpath, filename, content, contentType) {
       // Convert the base64 string in a Blob
+      if (debugCam) alert("savebase64 " + contentType);
       var DataBlob = blob.b64toBlob(content, contentType);
 
       console.log("Starting to write the file :4", folderpath);
