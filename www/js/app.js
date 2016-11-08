@@ -1235,7 +1235,16 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
 
     $scope.addInHouseEvent = function (title, pic_src, caption, thumb_src, NOTI_PUSH) {
       var d = new Date();
-      var when = d.toDateString();
+      // var when = d.toDateString();
+
+      var timestamp = new Date().getTime();
+      var todate = new Date(timestamp).getDate();
+      var tomonth = new Date(timestamp).getMonth() + 1;
+      var toyear = new Date(timestamp).getFullYear();
+      // if (!args.auto)
+      //   var whendb = toyear + '/' + tomonth + '/' + todate + " " + $rootScope.closestRI;
+      // else
+        var when = toyear + '/' + tomonth + '/' + todate;
       // $scope.events.push(
       //   {
       //     badgeClass: 'bg-positive',
@@ -1272,9 +1281,9 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       //   $ionicScrollDelegate.resize();
       // }
 
-      query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto) VALUES (?,?,?,?,?)";
+      query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto, whendb) VALUES (?,?,?,?,?,?)";
       // $cordovaSQLite.execute($scope.db, query, [entry.toURL(), "No caption yet!", "data:image/png;base64," + res.imageData]).then(function (res) {
-      $cordovaSQLite.execute($scope.db, query, [pic_src, caption, thumb_src, title, 'YES']).then(function (res) {
+      $cordovaSQLite.execute($scope.db, query, [pic_src, caption, thumb_src, title, 'YES', when]).then(function (res) {
         var message = "INSERT ID -> " + res.insertId;
         // $scope.captureImageId = res.insertId;
         console.log(message, pic_src, res);
@@ -1314,7 +1323,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var d = new Date();
         when = d.toDateString();
       }
-      var RI = $regioes.convertRegiaoLongToShort($rootScope.currentRI);
+      var RI = $regioes.convertRegiaoLongToShort($rootScope.closestRI);
       // var RI = "Hello";
 
       if (auto == "NO") {
@@ -1454,7 +1463,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
         var todate = new Date(timestamp).getDate();
         var tomonth = new Date(timestamp).getMonth() + 1;
         var toyear = new Date(timestamp).getFullYear();
-        var whendb = toyear + '/' + tomonth + '/' + todate + " " + $rootScope.currentRI;
+        var whendb = toyear + '/' + tomonth + '/' + todate + " " + $rootScope.closestRI;
 
         $scope.addEvent($scope.captureImageId, $scope.captureImage, $scope.thumbNailName, "", 0, whendb, 'Foto - Album', "NO");
         $ionicLoading.hide();
@@ -1690,7 +1699,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           var todate = new Date(timestamp).getDate();
           var tomonth = new Date(timestamp).getMonth() + 1;
           var toyear = new Date(timestamp).getFullYear();
-          var whendb = toyear + '/' + tomonth + '/' + todate + " " + $rootScope.currentRI;
+          var whendb = toyear + '/' + tomonth + '/' + todate + " " + $rootScope.closestRI;
           // alert(whendb);
 
           query = "INSERT INTO `journal` (IMG,caption, thumbnail_data, title, auto, whendb) VALUES (?,?,?,?,?,?)";
@@ -1734,7 +1743,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
       var fotoDone = function () {
         var found = false;
         var regioes = {};
-        var RI = $regioes.convertRegiaoLongToShort($rootScope.currentRI);
+        var RI = $regioes.convertRegiaoLongToShort($rootScope.closestRI);
 
         if (debugCam) alert("foto done");
 
@@ -1742,7 +1751,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
           regioes = JSON.parse(res || [{}]);
           console.log("fotoCompleto: GOT regioes from cordova service: ", regioes);
           for (var f = 0; f < regioes.length; f++) {
-            console.log("f: %s ri: %s r_cur: %s", f, regioes[f].descricao, $rootScope.currentRI);
+            console.log("f: %s ri: %s r_cur: %s", f, regioes[f].descricao, $rootScope.closestRI);
             if (regioes[f].nome == RI) {
               if (!regioes[f].fotoDone) {
                 regioes[f].fotoDone = true;
@@ -1761,7 +1770,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngSanitize', 'ionic.ion.imageCa
             //   scope.goMapa();
             // }, 200);
           } else
-            console.warn("fotoCompleto RI not found", $rootScope.currentRI);
+            console.warn("fotoCompleto RI not found", $rootScope.closestRI);
         });
       };
 
